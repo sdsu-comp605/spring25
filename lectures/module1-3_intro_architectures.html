@@ -182,7 +182,7 @@
         </ul>
         <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../syllabus.html">Syllabus</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../lectures.html">Slides</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../lectures.html">Lectures</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="module1-1_first_class.html">1) First Class: Reproducibility and Git</a></li>
 
 
@@ -384,34 +384,31 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">3) Introduction to Computer Architectures</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#architectures">Architectures</a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#architectures">1. Architectures</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a-von-neumann-architecture">A von Neumann Architecture:</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a-contemporary-architecture">A contemporary architecture:</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#my-laptop">My laptop:</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a-double-socket-compute-node-with-two-gpus">A double-socket compute node with two GPUs</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#block-diagrams">Block diagrams</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#ring-bus-xeon-e5-2600-family">Ring bus (Xeon E5-2600 family)</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#mesh-bus-xeon-scalable-family">Mesh bus (Xeon Scalable family)</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#multi-socket-configurations">Multi-socket configurations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a-double-socket-compute-node-with-two-gpus">A double-socket compute node with two GPUs:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#block-diagrams">Block diagrams:</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#ring-bus-xeon-e5-2600-family">Ring bus (Xeon E5-2600 family):</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#mesh-bus-xeon-scalable-family">Mesh bus (Xeon Scalable family):</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#multi-socket-configurations">Multi-socket configurations:</a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#multiple-nodes-go-into-racks-or-cabinets">Multiple nodes go into <strong>racks</strong> or <strong>cabinets</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#terminology">Terminology</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#terminology">Terminology:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#memory">2. Memory</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#how-expensive-is-it-to-access-memory">How expensive is it to access memory?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#how-your-program-accesses-memory">How your program accesses memory</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#let-s-compare-three-code-samples">Let’s compare three code samples</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-happens-when-you-request-a-cache-line">What happens when you request a cache line?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#operating-system-effects">Operating system effects</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#further-resources">Further resources</a></li>
 </ul>
 </li>
 </ul>
-</li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#how-your-program-accesses-memory">How your program accesses memory</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#let-s-compare-three-code-samples">Let’s compare three code samples</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-happens-when-you-request-a-cache-line">What happens when you request a cache line?</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#operating-system-effects">Operating system effects</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#further-resources">Further resources</a></li>
-</ul>
-</li>
-</ul>
-
             </nav>
         </div>
     </div>
@@ -425,11 +422,12 @@ document.write(`
   <section class="tex2jax_ignore mathjax_ignore" id="introduction-to-computer-architectures">
 <h1>3) Introduction to Computer Architectures<a class="headerlink" href="#introduction-to-computer-architectures" title="Link to this heading">#</a></h1>
 <p>Today:</p>
-<ul class="simple">
-<li><p>Cores, caches, and memory</p></li>
-</ul>
+<ol class="arabic simple">
+<li><p>Architectures</p></li>
+<li><p>Memory</p></li>
+</ol>
 <section id="architectures">
-<h2>Architectures<a class="headerlink" href="#architectures" title="Link to this heading">#</a></h2>
+<h2>1. Architectures<a class="headerlink" href="#architectures" title="Link to this heading">#</a></h2>
 <section id="a-von-neumann-architecture">
 <h3>A <a class="reference external" href="https://en.wikipedia.org/wiki/Von_Neumann_architecture">von Neumann Architecture</a>:<a class="headerlink" href="#a-von-neumann-architecture" title="Link to this heading">#</a></h3>
 <p><img alt="von Neumann architecture" src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Von_Neumann_Architecture.svg/2880px-Von_Neumann_Architecture.svg.png" /></p>
@@ -444,38 +442,38 @@ document.write(`
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>lstopo<span class="w"> </span>--output-format<span class="w"> </span>svg<span class="w"> </span>&gt;<span class="w"> </span>lstopo-my_laptop_architecture.svg
 </pre></div>
 </div>
-<p><img alt="lstopo-my-laptop-architecture" src="lectures/img/lstopo-my_laptop_architecture.svg" /></p>
+<p><img alt="lstopo-my-laptop-architecture" src="lectures/img/my_XPS15_architecture.png" /></p>
 </section>
 <section id="a-double-socket-compute-node-with-two-gpus">
-<h3>A double-socket compute node with two GPUs<a class="headerlink" href="#a-double-socket-compute-node-with-two-gpus" title="Link to this heading">#</a></h3>
+<h3>A double-socket compute node with two GPUs:<a class="headerlink" href="#a-double-socket-compute-node-with-two-gpus" title="Link to this heading">#</a></h3>
 <p>2x Xeon Ivy-Bridge-EP <a class="reference external" href="https://ark.intel.com/content/www/us/en/ark/products/75277/intel-xeon-processor-e5-2680-v2-25m-cache-2-80-ghz.html">E5-2680v2</a> + 2x NVIDIA GPUs (from 2013, with hwloc v1.11).
 GPUs are reported as CUDA devices and X11 display :1.0: (from the <a class="reference external" href="https://www-lb.open-mpi.org/projects/hwloc/lstopo/">hwloc gallery</a>)
 <img alt="" src="https://www-lb.open-mpi.org/projects/hwloc/lstopo/images/2XeonE5v2+2cuda+1display_v1.11.png" /></p>
 </section>
 <section id="block-diagrams">
-<h3>Block diagrams<a class="headerlink" href="#block-diagrams" title="Link to this heading">#</a></h3>
+<h3>Block diagrams:<a class="headerlink" href="#block-diagrams" title="Link to this heading">#</a></h3>
 <p>A block diagram from a vendor can include additional information about how cores are physically connected.</p>
 <section id="ring-bus-xeon-e5-2600-family">
-<h4>Ring bus (Xeon E5-2600 family)<a class="headerlink" href="#ring-bus-xeon-e5-2600-family" title="Link to this heading">#</a></h4>
+<h4>Ring bus (Xeon E5-2600 family):<a class="headerlink" href="#ring-bus-xeon-e5-2600-family" title="Link to this heading">#</a></h4>
 <p><img alt="Intel Xeon E5-2600" src="https://software.intel.com/sites/default/files/managed/e3/a4/xeon-processor-scalable-family-tech-overview-fig04.png" /></p>
 </section>
 <section id="mesh-bus-xeon-scalable-family">
-<h4>Mesh bus (Xeon Scalable family)<a class="headerlink" href="#mesh-bus-xeon-scalable-family" title="Link to this heading">#</a></h4>
+<h4>Mesh bus (Xeon Scalable family):<a class="headerlink" href="#mesh-bus-xeon-scalable-family" title="Link to this heading">#</a></h4>
 <p><img alt="Intel Xeon Scalable" src="https://software.intel.com/sites/default/files/managed/5a/03/xeon-processor-scalable-family-tech-overview-fig05.png" /></p>
 </section>
 <section id="multi-socket-configurations">
-<h4>Multi-socket configurations<a class="headerlink" href="#multi-socket-configurations" title="Link to this heading">#</a></h4>
+<h4>Multi-socket configurations:<a class="headerlink" href="#multi-socket-configurations" title="Link to this heading">#</a></h4>
 <p><img alt="4-socket ring" src="https://software.intel.com/sites/default/files/managed/77/f2/xeon-processor-scalable-family-tech-overview-fig07.png" /></p>
 <p><a class="reference external" href="https://software.intel.com/en-us/articles/intel-xeon-processor-scalable-family-technical-overview">https://software.intel.com/en-us/articles/intel-xeon-processor-scalable-family-technical-overview</a></p>
 </section>
 </section>
 <section id="multiple-nodes-go-into-racks-or-cabinets">
 <h3>Multiple nodes go into <strong>racks</strong> or <strong>cabinets</strong><a class="headerlink" href="#multiple-nodes-go-into-racks-or-cabinets" title="Link to this heading">#</a></h3>
-<p><img alt="Blue Gene/P Racks" src="lectures/BlueGenePRacks.png" /></p>
+<p><img alt="Blue Gene/P Racks" src="lectures/img/BlueGenePRacks.png" /></p>
 <p><img alt="OLCF Summit" src="https://www.olcf.ornl.gov/wp-content/uploads/2018/06/summit-1.jpg" /></p>
 </section>
 <section id="terminology">
-<h3>Terminology<a class="headerlink" href="#terminology" title="Link to this heading">#</a></h3>
+<h3>Terminology:<a class="headerlink" href="#terminology" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><strong>Core</strong> (virtual and physical): has a single program counter (logically sequential processing of instructions)</p></li>
 <li><p><strong>Memory channel</strong>: e.g., DDR4-2400: transfers 64 bits (8 bytes) at a rate of 2400 MHz = 15.36 GB/s</p></li>
@@ -484,6 +482,9 @@ GPUs are reported as CUDA devices and X11 display :1.0: (from the <a class="refe
 <li><p><strong>Compute node</strong>: one or more sockets, plus memory, network card, etc.</p></li>
 </ul>
 </section>
+</section>
+<section id="memory">
+<h2>2. Memory<a class="headerlink" href="#memory" title="Link to this heading">#</a></h2>
 <section id="how-expensive-is-it-to-access-memory">
 <h3>How expensive is it to access memory?<a class="headerlink" href="#how-expensive-is-it-to-access-memory" title="Link to this heading">#</a></h3>
 <p>What does that mean?  How would we measure?</p>
@@ -491,10 +492,8 @@ GPUs are reported as CUDA devices and X11 display :1.0: (from the <a class="refe
 <p><a class="reference external" href="https://people.eecs.berkeley.edu/~rcs/research/interactive_latency.html">Interactive</a></p>
 <p><a class="reference external" href="https://www.anandtech.com/show/14694/amd-rome-epyc-2nd-gen/7">Variation by vendor</a></p>
 </section>
-</section>
-</section>
-<section class="tex2jax_ignore mathjax_ignore" id="how-your-program-accesses-memory">
-<h1>How your program accesses memory<a class="headerlink" href="#how-your-program-accesses-memory" title="Link to this heading">#</a></h1>
+<section id="how-your-program-accesses-memory">
+<h3>How your program accesses memory<a class="headerlink" href="#how-your-program-accesses-memory" title="Link to this heading">#</a></h3>
 <div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">double</span><span class="w"> </span><span class="n">a</span><span class="p">[</span><span class="mi">1000</span><span class="p">];</span>
 
 <span class="kt">void</span><span class="w"> </span><span class="nf">foo</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
@@ -513,8 +512,9 @@ GPUs are reported as CUDA devices and X11 display :1.0: (from the <a class="refe
 <p>Only one instruction here accesses memory, and the performance will be affected greatly by where that memory resides (which level of cache, where in DRAM).</p>
 <p>Most architectures today have <strong>64-byte cache lines</strong>: all transfers from main memory (DRAM) to and from cache operate in units of 64 bytes.</p>
 <p><img alt="" src="http://static.duartes.org/img/blogPosts/L1CacheExample.png" /></p>
+</section>
 <section id="let-s-compare-three-code-samples">
-<h2>Let’s compare three code samples<a class="headerlink" href="#let-s-compare-three-code-samples" title="Link to this heading">#</a></h2>
+<h3>Let’s compare three code samples<a class="headerlink" href="#let-s-compare-three-code-samples" title="Link to this heading">#</a></h3>
 <div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="n">N</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
 <span class="w">    </span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
 </pre></div>
@@ -529,22 +529,23 @@ GPUs are reported as CUDA devices and X11 display :1.0: (from the <a class="refe
 </div>
 </section>
 <section id="what-happens-when-you-request-a-cache-line">
-<h2>What happens when you request a cache line?<a class="headerlink" href="#what-happens-when-you-request-a-cache-line" title="Link to this heading">#</a></h2>
+<h3>What happens when you request a cache line?<a class="headerlink" href="#what-happens-when-you-request-a-cache-line" title="Link to this heading">#</a></h3>
 <p><img alt="" src="http://static.duartes.org/img/blogPosts/memoryRead.png" /></p>
 </section>
 <section id="operating-system-effects">
-<h2>Operating system effects<a class="headerlink" href="#operating-system-effects" title="Link to this heading">#</a></h2>
+<h3>Operating system effects<a class="headerlink" href="#operating-system-effects" title="Link to this heading">#</a></h3>
 <p>Most systems today use virtual addressing, so every address in your program needs to be translated to a physical address before looking for it (in cache or memory).  Fortunately, there is hardware to assist with this: the Translation Lookaside Buffer (TLB).</p>
 <p><img alt="Virtual memory and the page table" src="https://drawings.jvns.ca/drawings/pagetable.svg" /></p>
 </section>
 <section id="further-resources">
-<h2>Further resources<a class="headerlink" href="#further-resources" title="Link to this heading">#</a></h2>
+<h3>Further resources<a class="headerlink" href="#further-resources" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><a class="reference external" href="https://jvns.ca/blog/2016/12/03/how-much-memory-is-my-process-using-/">Julia Evans (2016): How much memory is my process using?</a></p></li>
 <li><p><a class="reference external" href="https://manybutfinite.com/post/intel-cpu-caches/">Gustavo Duarte (2009): Cache: a place for concealment and safekeeping</a></p></li>
 <li><p><a class="reference external" href="https://manybutfinite.com/post/getting-physical-with-memory/">Gustavo Duarte (2009): Getting Physical With Memory</a></p></li>
 <li><p><a class="reference external" href="https://www.akkadia.org/drepper/cpumemory.pdf">Ulrich Drepper (2007): What Every Programmer Should Know About Memory</a></p></li>
 </ul>
+</section>
 </section>
 </section>
 
@@ -594,34 +595,31 @@ GPUs are reported as CUDA devices and X11 display :1.0: (from the <a class="refe
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">3) Introduction to Computer Architectures</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#architectures">Architectures</a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#architectures">1. Architectures</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a-von-neumann-architecture">A von Neumann Architecture:</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a-contemporary-architecture">A contemporary architecture:</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#my-laptop">My laptop:</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a-double-socket-compute-node-with-two-gpus">A double-socket compute node with two GPUs</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#block-diagrams">Block diagrams</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#ring-bus-xeon-e5-2600-family">Ring bus (Xeon E5-2600 family)</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#mesh-bus-xeon-scalable-family">Mesh bus (Xeon Scalable family)</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#multi-socket-configurations">Multi-socket configurations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a-double-socket-compute-node-with-two-gpus">A double-socket compute node with two GPUs:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#block-diagrams">Block diagrams:</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#ring-bus-xeon-e5-2600-family">Ring bus (Xeon E5-2600 family):</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#mesh-bus-xeon-scalable-family">Mesh bus (Xeon Scalable family):</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#multi-socket-configurations">Multi-socket configurations:</a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#multiple-nodes-go-into-racks-or-cabinets">Multiple nodes go into <strong>racks</strong> or <strong>cabinets</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#terminology">Terminology</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#terminology">Terminology:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#memory">2. Memory</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#how-expensive-is-it-to-access-memory">How expensive is it to access memory?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#how-your-program-accesses-memory">How your program accesses memory</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#let-s-compare-three-code-samples">Let’s compare three code samples</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-happens-when-you-request-a-cache-line">What happens when you request a cache line?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#operating-system-effects">Operating system effects</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#further-resources">Further resources</a></li>
 </ul>
 </li>
 </ul>
-</li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#how-your-program-accesses-memory">How your program accesses memory</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#let-s-compare-three-code-samples">Let’s compare three code samples</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-happens-when-you-request-a-cache-line">What happens when you request a cache line?</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#operating-system-effects">Operating system effects</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#further-resources">Further resources</a></li>
-</ul>
-</li>
-</ul>
-
   </nav></div>
 
 </div></div>
