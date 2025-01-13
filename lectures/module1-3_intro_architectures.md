@@ -1,9 +1,11 @@
 # 3) Introduction to Computer Architectures
 
 Today:
-- Cores, caches, and memory
+1. Architectures
+2. Memory
 
-## Architectures
+
+## 1. Architectures
 
 ### A [von Neumann Architecture](https://en.wikipedia.org/wiki/Von_Neumann_architecture):
 
@@ -23,22 +25,26 @@ lstopo --output-format svg > lstopo-my_laptop_architecture.svg
 
 ![lstopo-my-laptop-architecture](img/lstopo-my_laptop_architecture.svg)
 
-### A double-socket compute node with two GPUs
+### A double-socket compute node with two GPUs:
+
 2x Xeon Ivy-Bridge-EP [E5-2680v2](https://ark.intel.com/content/www/us/en/ark/products/75277/intel-xeon-processor-e5-2680-v2-25m-cache-2-80-ghz.html) + 2x NVIDIA GPUs (from 2013, with hwloc v1.11).
 GPUs are reported as CUDA devices and X11 display :1.0: (from the [hwloc gallery](https://www-lb.open-mpi.org/projects/hwloc/lstopo/))
 ![](https://www-lb.open-mpi.org/projects/hwloc/lstopo/images/2XeonE5v2+2cuda+1display_v1.11.png)
 
-### Block diagrams
+### Block diagrams:
 
 A block diagram from a vendor can include additional information about how cores are physically connected.
 
-#### Ring bus (Xeon E5-2600 family)
+#### Ring bus (Xeon E5-2600 family):
+
 ![Intel Xeon E5-2600](https://software.intel.com/sites/default/files/managed/e3/a4/xeon-processor-scalable-family-tech-overview-fig04.png)
 
-#### Mesh bus (Xeon Scalable family)
+#### Mesh bus (Xeon Scalable family):
+
 ![Intel Xeon Scalable](https://software.intel.com/sites/default/files/managed/5a/03/xeon-processor-scalable-family-tech-overview-fig05.png)
 
-#### Multi-socket configurations
+#### Multi-socket configurations:
+
 
 ![4-socket ring](https://software.intel.com/sites/default/files/managed/77/f2/xeon-processor-scalable-family-tech-overview-fig07.png)
 
@@ -50,13 +56,15 @@ https://software.intel.com/en-us/articles/intel-xeon-processor-scalable-family-t
 
 ![OLCF Summit](https://www.olcf.ornl.gov/wp-content/uploads/2018/06/summit-1.jpg)
 
-### Terminology
+### Terminology:
 
 * **Core** (virtual and physical): has a single program counter (logically sequential processing of instructions)
 * **Memory channel**: e.g., DDR4-2400: transfers 64 bits (8 bytes) at a rate of 2400 MHz = 15.36 GB/s
 * **Socket** or **CPU**: contains multiple cores in a single piece* of silicon
 * **Non-Uniform Memory Access (NUMA)**: different channels may be different distances from a core
 * **Compute node**: one or more sockets, plus memory, network card, etc.
+
+## 2. Memory
 
 ### How expensive is it to access memory?
 
@@ -68,7 +76,7 @@ What does that mean?  How would we measure?
 
 [Variation by vendor](https://www.anandtech.com/show/14694/amd-rome-epyc-2nd-gen/7)
 
-# How your program accesses memory
+### How your program accesses memory
 
 ```c
 double a[1000];
@@ -115,13 +123,13 @@ for (int i=0; i<N; i++)
 
 ![](http://static.duartes.org/img/blogPosts/memoryRead.png)
 
-## Operating system effects
+### Operating system effects
 
 Most systems today use virtual addressing, so every address in your program needs to be translated to a physical address before looking for it (in cache or memory).  Fortunately, there is hardware to assist with this: the Translation Lookaside Buffer (TLB).
 
 ![Virtual memory and the page table](https://drawings.jvns.ca/drawings/pagetable.svg)
 
-## Further resources
+### Further resources
 
 * [Julia Evans (2016): How much memory is my process using?](https://jvns.ca/blog/2016/12/03/how-much-memory-is-my-process-using-/)
 * [Gustavo Duarte (2009): Cache: a place for concealment and safekeeping](https://manybutfinite.com/post/intel-cpu-caches/)

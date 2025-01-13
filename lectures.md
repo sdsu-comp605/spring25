@@ -1,4 +1,4 @@
-# Slides
+# Lectures
 
 The class material may include Jupyter-based notebooks.
 
