@@ -8,3 +8,4 @@ chapters:
 - file: lectures
   sections:
   - file: lectures/module1-1_first_class.ipynb
+  - file: lectures/module1-2_linux.ipynb
