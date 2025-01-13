@@ -555,13 +555,13 @@ $ git config --global user.email &quot;your_email_address@example.com&quot;
 <section id="forks-and-branches">
 <h4>Forks and branches<a class="headerlink" href="#forks-and-branches" title="Link to this heading">#</a></h4>
 <p>Create your own fork of the desired repository and check out your copy. For example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ git clone https://github.com/sdsu-comp526/fall24.git
-$ cd fall24
-$ git remote add your_username https://yourusername@github.com/sdsu-comp526/fall24.git
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ git clone https://github.com/sdsu-comp605/spring25.git
+$ cd spring25
+$ git remote add your_username https://yourusername@github.com/sdsu-comp605/spring25.git
 </pre></div>
 </div>
 <p>What is the difference between using the <code class="docutils literal notranslate"><span class="pre">https</span></code> or the <code class="docutils literal notranslate"><span class="pre">ssh</span></code> protocol? If you use <code class="docutils literal notranslate"><span class="pre">https</span></code> the primary downside for most people is that you must enter your Git password/token every time you push. While it gets added to a cache, it’s not configured to cache permanently (though this can be changed). With SSH keys, it just uses the key file on disk every time so you don’t have to enter your Git password/token at every push. Check this guide to <a class="reference external" href="https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent">generate SSH keys and add them to the ssh-agent</a>.</p>
-<p>Now you have two remote repositories: <code class="docutils literal notranslate"><span class="pre">origin</span></code>, which is your fork (hosted on your cloud account), and <code class="docutils literal notranslate"><span class="pre">upstream</span></code>, which is the main <code class="docutils literal notranslate"><span class="pre">sdsu-comp526/fall24</span></code> repository.</p>
+<p>Now you have two remote repositories: <code class="docutils literal notranslate"><span class="pre">origin</span></code>, which is your fork (hosted on your cloud account), and <code class="docutils literal notranslate"><span class="pre">upstream</span></code>, which is the main <code class="docutils literal notranslate"><span class="pre">sdsu-comp605/spring25</span></code> repository.</p>
 <p>When part of an organization, people who contribute to an open-source project do not generally fork the repository, but <code class="docutils literal notranslate"><span class="pre">clone</span></code> it directly on their local machine. If you are not sure about the differences <a class="reference external" href="https://www.toolsqa.com/git/difference-between-git-clone-and-git-fork/#:~:text=When%20you%20fork%20a%20repository,with%20the%20help%20of%20Git.">between forking and cloning</a>, check this helpful article.</p>
 <p>Create a branch for your feature; this will hold your contribution:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ git checkout -b &lt;branchname&gt;
@@ -626,10 +626,11 @@ first, and then <code class="docutils literal notranslate"><span class="pre">git
 </section>
 <section id="push-changes-to-your-own-repository">
 <h4>Push changes to your own repository<a class="headerlink" href="#push-changes-to-your-own-repository" title="Link to this heading">#</a></h4>
-<p>If you want your changes on your local machine to go onto your online repository do</p>
+<p>If you want your changes on your local machine to go onto your online repository, while sitting on the <code class="docutils literal notranslate"><span class="pre">main</span></code> branch, do</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">push</span> <span class="n">your_username</span> <span class="n">main</span>
 </pre></div>
 </div>
+<p>However, it is <strong>not</strong> a good practice to work off the <code class="docutils literal notranslate"><span class="pre">main</span></code> branch.</p>
 </section>
 <section id="contributing-to-remote-repositories">
 <h4>Contributing to remote repositories<a class="headerlink" href="#contributing-to-remote-repositories" title="Link to this heading">#</a></h4>
