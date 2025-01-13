@@ -23,7 +23,7 @@ We can get this kind of information for our machine using [hwloc](https://www.op
 lstopo --output-format svg > lstopo-my_laptop_architecture.svg
 ```
 
-![lstopo-my-laptop-architecture](img/lstopo-my_laptop_architecture.svg)
+![lstopo-my-laptop-architecture](img/my_XPS15_architecture.png)
 
 ### A double-socket compute node with two GPUs:
 
@@ -52,7 +52,7 @@ https://software.intel.com/en-us/articles/intel-xeon-processor-scalable-family-t
 
 ### Multiple nodes go into **racks** or **cabinets**
 
-![Blue Gene/P Racks](BlueGenePRacks.png)
+![Blue Gene/P Racks](img/BlueGenePRacks.png)
 
 ![OLCF Summit](https://www.olcf.ornl.gov/wp-content/uploads/2018/06/summit-1.jpg)
 
