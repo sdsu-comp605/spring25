@@ -87,11 +87,11 @@ Grading breakdown:
 - Assignment 4 (10%): due Friday, April 11, by midnight (AOE)
 - Assignment 5 (10%): due Friday, April 25, by midnight (AOE)
 
-- **Midterm project**: (%15): The midterm/final project choice and proposal will need to be discussed with your teacher, before its submission by Friday, March 14. Please make sure to use plenty of Office Hours to discuss your midterm/final project Proposal before submitting it. This project is broken down in two deadlines:
+- **Midterm project**: (15%): The midterm/final project choice and proposal will need to be discussed with your teacher, before its submission by Friday, March 14. Please make sure to use plenty of Office Hours to discuss your midterm/final project Proposal before submitting it. This project is broken down in two deadlines:
     * Part 1, due Friday, March 14, by midnight (AOE): Community project analysis and proposal.
     * Part 2, due Friday, March 28, by midnight (AOE): Community project contribution proposal and creation of an Issue.
 
-- **Final project** (%35): this project is broken down in two deadlines:
+- **Final project** (35%): this project is broken down in two deadlines:
     * Part 1: due Friday, April 18, by midnight (AOE): Creation of a Pull/Merge Request
     * Part 2: Monday, May 05 and Wednesday, May 07: In class oral presentations.
 
