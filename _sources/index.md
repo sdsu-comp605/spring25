@@ -22,6 +22,7 @@ Welcome to **Scientific Computing**, Comp-605
 
 * Books and additional resources
   - [Hager and Wellein (2010), **Introduction to High Performance Computing for Scientists and Engineers**](https://blogs.fau.de/hager/hpc-book)
+  - [Rauber and Rünger (2010), **Parallel Programming for Multicore and Cluster Systems**, Springer, ISBN 9783642048173](https://books.google.com/books/about/Parallel_Programming.html?id=wWogxOmA3wMC)
   - [van de Geijn, Myers, Parikh (2019): **LAFF on Programming for High Performance**](http://www.cs.utexas.edu/users/flame/laff/pfhp/index.html) (free online)
   - [Eijkhout, Chow, van de Geijn (2017), **Introduction to High-Performance Scientific Computing**](http://pages.tacc.utexas.edu/~eijkhout/istc/istc.html) (free PDF)
   - [Grama, Gupta, Karypis, Kumar (2003), **Introduction to Parallel Computing**](https://www-users.cs.umn.edu/~karypis/parbook/)
