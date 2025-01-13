@@ -1,0 +1,735 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Syllabus &#8212; Scientific Computing</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'syllabus';</script>
+    <link rel="icon" href="_static/SDSU-comp605_logo.svg"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Slides" href="lectures.html" />
+    <link rel="prev" title="Welcome" href="index.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/SDSU-comp605_logo.svg" class="logo__image only-light" alt="Scientific Computing - Home"/>
+    <script>document.write(`<img src="_static/SDSU-comp605_logo.svg" class="logo__image only-dark" alt="Scientific Computing - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="index.html">
+                    Welcome
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Syllabus</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="lectures.html">Slides</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="lectures/module1-1_first_class.html">1) First Class: Reproducibility and Git</a></li>
+
+
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/sdsu-comp605/spring25" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/sdsu-comp605/spring25/issues/new?title=Issue%20on%20page%20%2Fsyllabus.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/syllabus.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Syllabus</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#logistics">Logistics</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#instructor-valeria-barra">Instructor: Valeria Barra</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#organization-and-course-design">Organization and course design</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#student-learning-outcomes">Student Learning Outcomes</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#expectations">Expectations</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#assessment-grading-policy-and-schedule">Assessment, grading policy and schedule</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#github">GitHub</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#course-materials-programming-languages-and-environment">Course materials, programming languages and environment</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#target-audience-preparation-and-prerequisites">Target audience, Preparation and Prerequisites</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#classroom-behavior">Classroom Behavior</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#resources-for-students">Resources for students</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#accommodation-for-disabilities">Accommodation for Disabilities</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#preferred-student-names-and-pronouns">Preferred Student Names and Pronouns</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#academic-honesty">Academic Honesty</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#use-of-ai">Use of AI</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sexual-misconduct-discrimination-harassment-and-or-related-retaliation">Sexual Misconduct, Discrimination, Harassment and/or Related Retaliation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#religious-holidays">Religious Holidays</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#land-acknowledgment">Land Acknowledgment</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="syllabus">
+<h1>Syllabus<a class="headerlink" href="#syllabus" title="Link to this heading">#</a></h1>
+<section id="logistics">
+<h2>Logistics<a class="headerlink" href="#logistics" title="Link to this heading">#</a></h2>
+<p><em>Course name</em>: Comp-605</p>
+<p><em>Course term</em>: Spring 2025</p>
+<p><em>Class time</em>: <strong>M-W-F: 9-9:50 am</strong></p>
+<p><em>Mode of delivery</em>: <strong>in person</strong></p>
+<p><em>Location</em>: <strong>LH 445</strong></p>
+<section id="instructor-valeria-barra">
+<h3>Instructor: <a class="reference external" href="https://valeriabarra.org">Valeria Barra</a><a class="headerlink" href="#instructor-valeria-barra" title="Link to this heading">#</a></h3>
+<p>Pronouns: (she/her/hers)</p>
+<p>Email: vbarra &#64; sdsu . edu</p>
+<p>Office location: announced on the course <a class="reference external" href="https://sdsu.instructure.com/courses/171936">Canvas page</a></p>
+<p><strong>Office Hours</strong>: announced on the course <a class="reference external" href="https://sdsu.instructure.com/courses/171936">Canvas page</a> or by appointment.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Office hours are an important time for asking questions, solving problems, discussing broader academic and career strategies, and providing feedback so I can make the class serve your needs and those of people with similar experiences and interests.</p>
+</div>
+</section>
+</section>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">#</a></h2>
+<p>This course will develop the skills necessary to reason about performance of applications and modern architectures, to identify
+opportunities and side-effects of changes, to develop high-performance software, to transfer algorithmic patterns and lessons learned from different domains, and to communicate such analyses with diverse
+stakeholders.</p>
+<p>These skills are important for research and development of numerical methods and performance-sensitive science and engineering
+applications, or obtaining allocations via, e.g., NSF’s <a class="reference external" href="https://www.xsede.org/">XSEDE</a> and DOE <a class="reference external" href="https://science.osti.gov/ascr/Facilities/Accessing-ASCR-Facilities">ASCR facilities</a>, as well as in jobs affiliated with computing facilities at National Labs, (see for instance this <a class="reference external" href="https://www.alcf.anl.gov/about/careers">ANL careers page</a>), industry, and academia.</p>
+<p>We will introduce widely-used parallel programming models such as OpenMP, MPI, and CUDA, as well as ubiquitous parallel libraries, but the purpose of the course is not to teach interfaces, but to develop skills that will be durable and transferrable across different paradigms.</p>
+</section>
+<section id="organization-and-course-design">
+<h2>Organization and course design<a class="headerlink" href="#organization-and-course-design" title="Link to this heading">#</a></h2>
+<p>We will start by giving an introduction to version control and reproducibility, which are key aspects of modern computational sciences. These will serve as the foundation for the workflow that students will follow for all of their assignments during the course. We will then introduce the Linux filesystem and basic shell commands.</p>
+<p>This course does not assume prior experience with parallel programming. It will use Linux command-line tools, and some activities will involve batch computing environments (SLURM). Most exercises and class demos will use the C and Julia programming languages, though you can use any appropriate language for projects. Some of the exercises will involve techniques and methods from numerical computing (e.g., COMP 526). I will do my best to avoid assuming prior knowledge of these topics, and to provide resources for you to learn or refresh your memory as we use them.</p>
+</section>
+<section id="student-learning-outcomes">
+<h2>Student Learning Outcomes<a class="headerlink" href="#student-learning-outcomes" title="Link to this heading">#</a></h2>
+<p>Upon completing this course, students will be able to</p>
+<ol class="arabic simple">
+<li><p>contribute to collaborative software with the use of version control systems, such as <code class="docutils literal notranslate"><span class="pre">git</span></code></p></li>
+<li><p>explore some numerical linear algebra with focus on efficiency of algorithms</p></li>
+<li><p>evaluate the accuracy and performance of algorithms</p></li>
+<li><p>develop effective numerical software, taking into account accuracy and cost</p></li>
+<li><p>analize performance of serial codes</p></li>
+<li><p>develop parallel algorithms and their implementations</p></li>
+<li><p>identify various levels of parallelism in a problem</p></li>
+<li><p>evaluate the applicability of using each level of parallelism</p></li>
+<li><p>analize and develop distributed memory programs with the Message Passing Interface (MPI)</p></li>
+<li><p>explore multithreaded programming and vectorization with OpenMP</p></li>
+<li><p>define and analyze performance metrics and standards (strong/weak scaling, memory bandwidth, roofline analysis, etc)</p></li>
+<li><p>use profiling tools and debuggers</p></li>
+<li><p>explore GPU programming</p></li>
+<li><p>write programs mostly in Julia and C</p></li>
+</ol>
+<section id="expectations">
+<h3>Expectations<a class="headerlink" href="#expectations" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p>Enter with a growth mindset, practice adaptive coping, and nurture your intrinsic motivation</p></li>
+<li><p>Attend class (in-person) and participate in discussions</p></li>
+<li><p>Make an honest attempt at activities, projects, etc.</p></li>
+<li><p>Interact with the class notebooks and read reference material</p></li>
+<li><p>Individual or group projects</p></li>
+</ol>
+<p><img alt="" src="_images/Henry2019-Table1.png" /></p>
+</section>
+</section>
+<section id="assessment-grading-policy-and-schedule">
+<h2>Assessment, grading policy and schedule<a class="headerlink" href="#assessment-grading-policy-and-schedule" title="Link to this heading">#</a></h2>
+<p>This class will have some homework assignments, midterm and final projects. The midterm/final project will be an individual or group project (depending on the number of students registered) and will be agreed upon with the instructor. There will be a final oral presentation for each final project. Moreover, a final report must be delivered. Instructions about what is expected for all homework assignments and final presentations as well as for the final report will be provided.</p>
+<p>Grading breakdown:</p>
+<ul class="simple">
+<li><p>Participation (can include engagement in class, attendance, use of office hours, etc) (5%)</p></li>
+<li><p>Assignment 1 (5%): due Friday, February 7, by midnight (AOE)</p></li>
+<li><p>Assignment 2 (10%): due Friday, February 21, by midnight (AOE)</p></li>
+<li><p>Assignment 3 (10%): due Friday, March 07, by midnight (AOE)</p></li>
+<li><p>Assignment 4 (10%): due Friday, April 11, by midnight (AOE)</p></li>
+<li><p>Assignment 5 (10%): due Friday, April 25, by midnight (AOE)</p></li>
+<li><p><strong>Midterm project</strong>: (%15): The midterm/final project choice and proposal will need to be discussed with your teacher, before its submission by Friday, March 14. Please make sure to use plenty of Office Hours to discuss your midterm/final project Proposal before submitting it. This project is broken down in two deadlines:</p>
+<ul>
+<li><p>Part 1, due Friday, March 14, by midnight (AOE): Community project analysis and proposal.</p></li>
+<li><p>Part 2, due Friday, March 28, by midnight (AOE): Community project contribution proposal and creation of an Issue.</p></li>
+</ul>
+</li>
+<li><p><strong>Final project</strong> (%35): this project is broken down in two deadlines:</p>
+<ul>
+<li><p>Part 1: due Friday, April 18, by midnight (AOE): Creation of a Pull/Merge Request</p></li>
+<li><p>Part 2: Monday, May 05 and Wednesday, May 07: In class oral presentations.</p></li>
+</ul>
+</li>
+</ul>
+<p>Assignments will be distributed no later than a week prior to the due date.</p>
+<p>The schedule is subject to change (the instructor will announce any changes).</p>
+<p><strong>Late submission and absences policy</strong>: if you submit your assignments late, there is an increasing penalty (10% off for up to 24 hours late, 20% off for 24-48 hours late). No assignments will be graded if submitted later than 48 hours late.</p>
+<p>Any student who cannot attend class or submit assignments by their due date for serious issues (e.g., medical emergencies) or participation in university activities (e.g., official university travel for conferences or sports) that can be documented, should communicate those to your instructor as soon as possible before the deadline.</p>
+</section>
+<section id="github">
+<h2>GitHub<a class="headerlink" href="#github" title="Link to this heading">#</a></h2>
+<p>We’ll use Git with GitHub Classroom for assignments and feedback.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>If you don’t have a GitHub account, follow these <a class="reference external" href="https://sdsu-research-ci.github.io/github/students/creating-account">instructions</a> from the SDSU Research &amp; Cyberinfrastructure <a class="reference external" href="https://sdsu-research-ci.github.io/github">website</a> and <a class="reference external" href="https://sdsu-research-ci.github.io/github/students/creating-account#linking-your-sdsuid">link it to your SDSUid</a>.</p>
+<ul class="simple">
+<li><p>Use a personal email account rather than the SDSU one, so that you won’t have problems accessing your GitHub account in the future.</p></li>
+<li><p>Choose your username wisely! Most likely you will use this again in professional settings in your career.</p></li>
+</ul>
+</div>
+<p>We will use Canvas for announcements and grades posting. Please do <em>not</em> submit your assignments in Canvas.</p>
+</section>
+<section id="course-materials-programming-languages-and-environment">
+<h2>Course materials, programming languages and environment<a class="headerlink" href="#course-materials-programming-languages-and-environment" title="Link to this heading">#</a></h2>
+<p>I will provide all free course materials and suggested readings on the <a class="reference external" href="https://sdsu-comp605.github.io/spring25/">class website</a>. If you prefer to read a print-out version, please talk to me. I will use a combination of programming languages for lectures and activities in class.</p>
+<p>Most HPC facilities use a Linux operating system and many open source software packages and libraries will have the best documentation and testing on Linux systems. You can use any environment for your local development environment, or use the SDSU’s <a class="reference external" href="https://jupyterhub.sdsu.edu/">JupyterHub</a> to experiment and develop without a local install. If you have never logged in before, check SDSU’s Research &amp; Cyberinfrastructure <a class="reference external" href="https://sdsu-research-ci.github.io/instructionalcluster/students">resources for students</a>.</p>
+</section>
+<section id="target-audience-preparation-and-prerequisites">
+<h2>Target audience, Preparation and Prerequisites<a class="headerlink" href="#target-audience-preparation-and-prerequisites" title="Link to this heading">#</a></h2>
+<p>This course does not assume prior experience with parallel programming.</p>
+<p>It will use Linux command-line tools, and some activities will involve batch computing environments (SLURM).</p>
+<p>Prior exposure to the Linux/Unix operating system is useful, but not required (we will give a brief introduction). Familiarity with numerical linear algebra and/or numerical analysis is helpful.</p>
+<p>Some of the exercises will involve techniques from <a class="reference external" href="https://sdsu-comp526.github.io/fall24/index.html">COMP 526</a>. However, I will do my best to avoid assuming prior knowledge of these topics, and to provide resources for you to learn or refresh your memory as we use them.</p>
+<p>Everyone here is capable of succeeding in the course, but the effort level will be higher if most of the topics above are new to you.</p>
+<p>Regardless of your preparation, it is normal to feel lost sometimes. A big part of pragmatic HPC is learning to efficiently answer your questions through documentation, online resources, and even consulting the code or running experiments. (Most of our software stack is open source.)  That said, it’s easy to lose lots of time in a rabbit hole.</p>
+<p>My hope is that you will have the courage to dive into that rabbit hole occasionally, but also to ask questions when stuck and to budget your time for such excursions so that you can complete assignments on-time without compromising your work/life balance.</p>
+<p>The target audience is comprised of students in computational science, applied mathematics, or a quantitative science or engineering field.</p>
+<p>Catalog Prerequisites:</p>
+<ul class="simple">
+<li><p>Graduate standing and knowledge of the C programming language or FORTRAN or <a class="reference external" href="https://sdsu-comp526.github.io/fall24/index.html">COMP 526</a>.</p></li>
+</ul>
+<p>Good to know:</p>
+<ul class="simple">
+<li><p>Numerical Linear Algebra</p></li>
+<li><p>Domain Decomposition</p></li>
+</ul>
+</section>
+<section id="classroom-behavior">
+<h2>Classroom Behavior<a class="headerlink" href="#classroom-behavior" title="Link to this heading">#</a></h2>
+<p>Both students and faculty are responsible for maintaining an appropriate learning environment in all instructional settings, whether in person, remote, or online. Those who fail to adhere to such behavioral standards may be subject to discipline. Professional courtesy and sensitivity are especially important with respect to individuals and topics dealing with race, color, national origin, sex, pregnancy, age, disability (visible or invisible), creed, religion, sexual orientation, gender identity, gender expression, veteran status, political affiliation, or political philosophy.</p>
+</section>
+<section id="resources-for-students">
+<h2>Resources for students<a class="headerlink" href="#resources-for-students" title="Link to this heading">#</a></h2>
+<p>Every student is encouraged to read the <a class="reference external" href="https://docs.google.com/document/d/1rXNpNGs1K7nIxcS73o6R-fxZqPIWQwS9gHD7XpIqjhM/edit#heading=h.apbuhr7p11ak">SDSU Student Academic Success Handbook</a> (includes essential information for students). Please, watch this <a class="reference external" href="https://drive.google.com/file/d/1eViqiJ3TDjuA6a-342aLZMpFTzGCXzUJ/view?usp=drivesdk">video</a>.</p>
+</section>
+<section id="accommodation-for-disabilities">
+<h2>Accommodation for Disabilities<a class="headerlink" href="#accommodation-for-disabilities" title="Link to this heading">#</a></h2>
+<p>If you think you may qualify for accommodations because of a disability, please contact <a class="reference external" href="https://sds.sdsu.edu/">SDSU Student Ability Success Center</a> and make your faculty member aware in a timely manner so that your needs can be addressed. Please allow 10-14 business days for this process.</p>
+</section>
+<section id="preferred-student-names-and-pronouns">
+<h2>Preferred Student Names and Pronouns<a class="headerlink" href="#preferred-student-names-and-pronouns" title="Link to this heading">#</a></h2>
+<p>We recognize that students’ legal information doesn’t always align with how they identify. Class rosters are provided to the instructor with the student’s legal name. If you feel that the name that appears on the class roster does not reflect your preferred name or pronoun, let your faculty member know.</p>
+</section>
+<section id="academic-honesty">
+<h2>Academic Honesty<a class="headerlink" href="#academic-honesty" title="Link to this heading">#</a></h2>
+<p>SDSU has strict codes of conduct and policies regarding <a class="reference external" href="https://sacd.sdsu.edu/student-rights/academic-dishonesty/cheating-and-plagiarism">cheating and plagiarism</a>. Become familiar with the policy and what constitutes plagiarism. Any cheating or plagiarism will result in failing this class and a disciplinary review by the University. These actions may lead to probation, suspension, or expulsion.</p>
+<p>This course requires you to complete various assignments that assess your understanding and application of the course content. You are expected to do your own work and cite any sources you use and collaborators appropriately. You are personally responsible for understanding and verifying the code that you submit and include appropriate documentation.</p>
+</section>
+<section id="use-of-ai">
+<h2>Use of AI<a class="headerlink" href="#use-of-ai" title="Link to this heading">#</a></h2>
+<p>In May 2024, the University Senate extended its definition of plagiarism to include the un-cited use of generative AI applications, specifically: “representing work produced by generative Artificial Intelligence as one’s own.” Academic freedom ensures that instructors are empowered to determine whether students may use genAI in their classes and to what extent. To minimize confusion, we report here a statement regarding the use of AI in this class.</p>
+<p>Students should not use generative AI applications in this course except as approved by the instructor and cited. Any use of generative AI outside of instructor-approved guidelines constitutes misuse. Misuse of generative AI is a violation of the course policy on academic honesty and will be reported to the Center for Student Rights and Responsibilities</p>
+</section>
+<section id="sexual-misconduct-discrimination-harassment-and-or-related-retaliation">
+<h2>Sexual Misconduct, Discrimination, Harassment and/or Related Retaliation<a class="headerlink" href="#sexual-misconduct-discrimination-harassment-and-or-related-retaliation" title="Link to this heading">#</a></h2>
+<p>SDSU is committed to fostering an inclusive and welcoming learning, working, and living environment. SDSU will not tolerate acts of sexual misconduct (harassment, exploitation, and assault), intimate partner violence (dating or domestic violence), stalking, or protected-class discrimination or harassment by or against members of our community. Individuals who believe they have been subject to misconduct or retaliatory actions for reporting a concern should contact the <a class="reference external" href="https://titleix.sdsu.edu/report-an-incident-landing">SDSU Title IX Office</a>.</p>
+<p>Please know that faculty and responsible employees have a responsibility to inform the Title IX Office when made aware of incidents of sexual misconduct, dating and domestic violence, stalking, discrimination, harassment, and/or related retaliation, to ensure that individuals impacted receive information about their rights, support resources, and reporting options.</p>
+</section>
+<section id="religious-holidays">
+<h2>Religious Holidays<a class="headerlink" href="#religious-holidays" title="Link to this heading">#</a></h2>
+<p>According to the University Policy File, students should notify instructors of planned absences for religious observances by the end of the second week of classes. See the campus policy regarding religious observances for full details.</p>
+</section>
+<section id="land-acknowledgment">
+<h2>Land Acknowledgment<a class="headerlink" href="#land-acknowledgment" title="Link to this heading">#</a></h2>
+<p>For millennia, the Kumeyaay people have been a part of this land. This land has nourished, healed, protected and embraced them for many generations in a relationship of balance and harmony. As members of the San Diego State University community, we acknowledge this legacy. We promote this balance and harmony. We find inspiration from this land, the land of the Kumeyaay.</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "sdsu-comp605/spring25",
+            ref: "main",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="index.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Welcome</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="lectures.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Slides</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#logistics">Logistics</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#instructor-valeria-barra">Instructor: Valeria Barra</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#organization-and-course-design">Organization and course design</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#student-learning-outcomes">Student Learning Outcomes</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#expectations">Expectations</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#assessment-grading-policy-and-schedule">Assessment, grading policy and schedule</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#github">GitHub</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#course-materials-programming-languages-and-environment">Course materials, programming languages and environment</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#target-audience-preparation-and-prerequisites">Target audience, Preparation and Prerequisites</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#classroom-behavior">Classroom Behavior</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#resources-for-students">Resources for students</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#accommodation-for-disabilities">Accommodation for Disabilities</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#preferred-student-names-and-pronouns">Preferred Student Names and Pronouns</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#academic-honesty">Academic Honesty</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#use-of-ai">Use of AI</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sexual-misconduct-discrimination-harassment-and-or-related-retaliation">Sexual Misconduct, Discrimination, Harassment and/or Related Retaliation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#religious-holidays">Religious Holidays</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#land-acknowledgment">Land Acknowledgment</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Valeria Barra
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
