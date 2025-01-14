@@ -95,10 +95,17 @@ Grading breakdown:
     * Part 1: due Friday, April 18, by midnight (AOE): Creation of a Pull/Merge Request
     * Part 2: Monday, May 05 and Wednesday, May 07: In class oral presentations.
 
-
 Assignments will be distributed no later than a week prior to the due date.
 
 The schedule is subject to change (the instructor will announce any changes).
+
+### Details on Midterm and Final projects
+
+#### Community contributions and analysis
+
+Over the course of the semester, you will follow the development activities of an _active_ open source project of your choosing. This should be a project with an active developer community, hopefully from multiple institutions, that discuss their rationale in public, such as a mailing list and/or GitHub/GitLab Issues and Pull Requests or Slack/Discord channels. You will write and present about the performance and capability needs of key stakeholders, the way project resources are allocated, their metrics for success, and any notable achievements made over the course of the semester.
+
+Your Final Project will be to make a contribution to be merged by the project of your choice. Adding new examples and/or improving documentation are extremely valuable contributions, but you may also add features or improve implementations. You can also analyze an existing bug or working example, comment on the implementation performance, and compare with other similar implementations from other packages/libraries. Please respect the time of project maintainers and reviewers by learning about the project and its expectations and process, communicating in advance, and leaving plenty of time for multiple rounds of review and revision.
 
 **Late submission and absences policy**: if you submit your assignments late, there is an increasing penalty (10% off for up to 24 hours late, 20% off for 24-48 hours late). No assignments will be graded if submitted later than 48 hours late.
 
