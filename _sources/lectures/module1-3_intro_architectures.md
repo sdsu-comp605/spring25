@@ -11,6 +11,20 @@ Today:
 
 ![von Neumann architecture](https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Von_Neumann_Architecture.svg/2880px-Von_Neumann_Architecture.svg.png)
 
+The original document by von Neumann in 1945 describes a design architecture for an electronic digital computer with these components:
+
+- A processing unit with both an arithmetic logic unit and processor registers
+- A control unit that includes an instruction register and a program counter
+- Memory that stores data and instructions
+- External mass storage
+- Input and output mechanisms
+
+The term **von Neumann architecture** has evolved to refer to any _stored-program_ computer in which an instruction fetch and a data operation cannot occur at the same time (since they share a common bus). This is referred to as the _von Neumann bottleneck_, which often limits the performance of the corresponding system.
+
+A stored-program computer uses the same underlying mechanism to encode _both_ program instructions and data as opposed to designs which use a mechanism such as discrete plugboard wiring or fixed control circuitry for instruction implementation.
+
+The vast majority of modern computers use the same hardware mechanism to encode and store both data and program instructions, but have _caches_ between the CPU and memory, and, for the caches closest to the CPU, have separate caches for instructions and data, so that most instruction and data fetches use separate buses (_split-cache architecture_).
+
 ### A contemporary architecture:
 
 ![Core 2](http://static.duartes.org/img/blogPosts/physicalMemoryAccess.png)
@@ -23,7 +37,7 @@ We can get this kind of information for our machine using [hwloc](https://www.op
 lstopo --output-format svg > lstopo-my_laptop_architecture.svg
 ```
 
-![lstopo-my-laptop-architecture](img/my_XPS15_architecture.png)
+![lstopo my laptop architecture](../img/my_XPS15_architecture.png "My laptop architecture")
 
 ### A double-socket compute node with two GPUs:
 
@@ -37,24 +51,25 @@ A block diagram from a vendor can include additional information about how cores
 
 #### Ring bus (Xeon E5-2600 family):
 
-![Intel Xeon E5-2600](https://software.intel.com/sites/default/files/managed/e3/a4/xeon-processor-scalable-family-tech-overview-fig04.png)
+![Intel Xeon E5-2600](../img/Xeon_E5-2600.png "Xeon E5-2600 family")
 
-#### Mesh bus (Xeon Scalable family):
+#### Mesh bus ([Xeon Scalable family](https://www.intel.com/content/www/us/en/developer/articles/technical/xeon-processor-scalable-family-technical-overview.html)):
 
-![Intel Xeon Scalable](https://software.intel.com/sites/default/files/managed/5a/03/xeon-processor-scalable-family-tech-overview-fig05.png)
+![Intel Xeon Scalable](../img/Xeon_scalable_family.png "Xeon scalable family")
 
 #### Multi-socket configurations:
 
+A 4-socket ring configuration:
 
-![4-socket ring](https://software.intel.com/sites/default/files/managed/77/f2/xeon-processor-scalable-family-tech-overview-fig07.png)
-
-https://software.intel.com/en-us/articles/intel-xeon-processor-scalable-family-technical-overview
+![4-socket ring](../img/xeon-processor-scalable-family-4-socket-ring-config.png "Intel Xeon processor scalable family 4-socket ring configuration")
 
 ### Multiple nodes go into **racks** or **cabinets**
 
-![Blue Gene/P Racks](img/BlueGenePRacks.png)
+![Blue Gene/P Racks](../img/BlueGenePRacks.png)
 
 ![OLCF Summit](https://www.olcf.ornl.gov/wp-content/uploads/2018/06/summit-1.jpg)
+
+![Oak Ridge National Lab Frontier](../img/Frontier.jpg)
 
 ### Terminology:
 
@@ -70,13 +85,12 @@ https://software.intel.com/en-us/articles/intel-xeon-processor-scalable-family-t
 
 What does that mean?  How would we measure?
 
-[McKenney (2013): Laws of Physics](http://www.rdrop.com/~paulmck/RCU/RCU.2013.01.22d.PLMW.pdf)
+> #### Recommended Readings:
+> - [McKenney (2013): Laws of Physics](http://www.rdrop.com/~paulmck/RCU/RCU.2013.01.22d.PLMW.pdf)
+> - [Latency Numbers Every Programmer Should Know (Interactive)](https://people.eecs.berkeley.edu/~rcs/research/interactive_latency.html)
+> - [Variation by vendor: Latency in AMD Memory Subsystems](https://www.anandtech.com/show/14694/amd-rome-epyc-2nd-gen/7)
 
-[Interactive](https://people.eecs.berkeley.edu/~rcs/research/interactive_latency.html)
-
-[Variation by vendor](https://www.anandtech.com/show/14694/amd-rome-epyc-2nd-gen/7)
-
-### How your program accesses memory
+### How your program accesses memory:
 
 ```c
 double a[1000];
@@ -129,7 +143,7 @@ Most systems today use virtual addressing, so every address in your program need
 
 ![Virtual memory and the page table](https://drawings.jvns.ca/drawings/pagetable.svg)
 
-### Further resources
+### Further resources:
 
 * [Julia Evans (2016): How much memory is my process using?](https://jvns.ca/blog/2016/12/03/how-much-memory-is-my-process-using-/)
 * [Gustavo Duarte (2009): Cache: a place for concealment and safekeeping](https://manybutfinite.com/post/intel-cpu-caches/)

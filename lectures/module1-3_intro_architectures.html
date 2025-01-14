@@ -401,11 +401,11 @@ document.write(`
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#memory">2. Memory</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#how-expensive-is-it-to-access-memory">How expensive is it to access memory?</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#how-your-program-accesses-memory">How your program accesses memory</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#how-your-program-accesses-memory">How your program accesses memory:</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#let-s-compare-three-code-samples">Let’s compare three code samples</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-happens-when-you-request-a-cache-line">What happens when you request a cache line?</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#operating-system-effects">Operating system effects</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#further-resources">Further resources</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#further-resources">Further resources:</a></li>
 </ul>
 </li>
 </ul>
@@ -431,6 +431,17 @@ document.write(`
 <section id="a-von-neumann-architecture">
 <h3>A <a class="reference external" href="https://en.wikipedia.org/wiki/Von_Neumann_architecture">von Neumann Architecture</a>:<a class="headerlink" href="#a-von-neumann-architecture" title="Link to this heading">#</a></h3>
 <p><img alt="von Neumann architecture" src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Von_Neumann_Architecture.svg/2880px-Von_Neumann_Architecture.svg.png" /></p>
+<p>The original document by von Neumann in 1945 describes a design architecture for an electronic digital computer with these components:</p>
+<ul class="simple">
+<li><p>A processing unit with both an arithmetic logic unit and processor registers</p></li>
+<li><p>A control unit that includes an instruction register and a program counter</p></li>
+<li><p>Memory that stores data and instructions</p></li>
+<li><p>External mass storage</p></li>
+<li><p>Input and output mechanisms</p></li>
+</ul>
+<p>The term <strong>von Neumann architecture</strong> has evolved to refer to any <em>stored-program</em> computer in which an instruction fetch and a data operation cannot occur at the same time (since they share a common bus). This is referred to as the <em>von Neumann bottleneck</em>, which often limits the performance of the corresponding system.</p>
+<p>A stored-program computer uses the same underlying mechanism to encode <em>both</em> program instructions and data as opposed to designs which use a mechanism such as discrete plugboard wiring or fixed control circuitry for instruction implementation.</p>
+<p>The vast majority of modern computers use the same hardware mechanism to encode and store both data and program instructions, but have <em>caches</em> between the CPU and memory, and, for the caches closest to the CPU, have separate caches for instructions and data, so that most instruction and data fetches use separate buses (<em>split-cache architecture</em>).</p>
 </section>
 <section id="a-contemporary-architecture">
 <h3>A contemporary architecture:<a class="headerlink" href="#a-contemporary-architecture" title="Link to this heading">#</a></h3>
@@ -442,7 +453,7 @@ document.write(`
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>lstopo<span class="w"> </span>--output-format<span class="w"> </span>svg<span class="w"> </span>&gt;<span class="w"> </span>lstopo-my_laptop_architecture.svg
 </pre></div>
 </div>
-<p><img alt="lstopo-my-laptop-architecture" src="lectures/img/my_XPS15_architecture.png" /></p>
+<p><img alt="lstopo my laptop architecture" src="../_images/my_XPS15_architecture.png" /></p>
 </section>
 <section id="a-double-socket-compute-node-with-two-gpus">
 <h3>A double-socket compute node with two GPUs:<a class="headerlink" href="#a-double-socket-compute-node-with-two-gpus" title="Link to this heading">#</a></h3>
@@ -455,22 +466,23 @@ GPUs are reported as CUDA devices and X11 display :1.0: (from the <a class="refe
 <p>A block diagram from a vendor can include additional information about how cores are physically connected.</p>
 <section id="ring-bus-xeon-e5-2600-family">
 <h4>Ring bus (Xeon E5-2600 family):<a class="headerlink" href="#ring-bus-xeon-e5-2600-family" title="Link to this heading">#</a></h4>
-<p><img alt="Intel Xeon E5-2600" src="https://software.intel.com/sites/default/files/managed/e3/a4/xeon-processor-scalable-family-tech-overview-fig04.png" /></p>
+<p><img alt="Intel Xeon E5-2600" src="../_images/Xeon_E5-2600.png" /></p>
 </section>
 <section id="mesh-bus-xeon-scalable-family">
-<h4>Mesh bus (Xeon Scalable family):<a class="headerlink" href="#mesh-bus-xeon-scalable-family" title="Link to this heading">#</a></h4>
-<p><img alt="Intel Xeon Scalable" src="https://software.intel.com/sites/default/files/managed/5a/03/xeon-processor-scalable-family-tech-overview-fig05.png" /></p>
+<h4>Mesh bus (<a class="reference external" href="https://www.intel.com/content/www/us/en/developer/articles/technical/xeon-processor-scalable-family-technical-overview.html">Xeon Scalable family</a>):<a class="headerlink" href="#mesh-bus-xeon-scalable-family" title="Link to this heading">#</a></h4>
+<p><img alt="Intel Xeon Scalable" src="../_images/Xeon_scalable_family.png" /></p>
 </section>
 <section id="multi-socket-configurations">
 <h4>Multi-socket configurations:<a class="headerlink" href="#multi-socket-configurations" title="Link to this heading">#</a></h4>
-<p><img alt="4-socket ring" src="https://software.intel.com/sites/default/files/managed/77/f2/xeon-processor-scalable-family-tech-overview-fig07.png" /></p>
-<p><a class="reference external" href="https://software.intel.com/en-us/articles/intel-xeon-processor-scalable-family-technical-overview">https://software.intel.com/en-us/articles/intel-xeon-processor-scalable-family-technical-overview</a></p>
+<p>A 4-socket ring configuration:</p>
+<p><img alt="4-socket ring" src="../_images/xeon-processor-scalable-family-4-socket-ring-config.png" /></p>
 </section>
 </section>
 <section id="multiple-nodes-go-into-racks-or-cabinets">
 <h3>Multiple nodes go into <strong>racks</strong> or <strong>cabinets</strong><a class="headerlink" href="#multiple-nodes-go-into-racks-or-cabinets" title="Link to this heading">#</a></h3>
-<p><img alt="Blue Gene/P Racks" src="lectures/img/BlueGenePRacks.png" /></p>
+<p><img alt="Blue Gene/P Racks" src="../_images/BlueGenePRacks.png" /></p>
 <p><img alt="OLCF Summit" src="https://www.olcf.ornl.gov/wp-content/uploads/2018/06/summit-1.jpg" /></p>
+<p><img alt="Oak Ridge National Lab Frontier" src="../_images/Frontier.jpg" /></p>
 </section>
 <section id="terminology">
 <h3>Terminology:<a class="headerlink" href="#terminology" title="Link to this heading">#</a></h3>
@@ -488,12 +500,17 @@ GPUs are reported as CUDA devices and X11 display :1.0: (from the <a class="refe
 <section id="how-expensive-is-it-to-access-memory">
 <h3>How expensive is it to access memory?<a class="headerlink" href="#how-expensive-is-it-to-access-memory" title="Link to this heading">#</a></h3>
 <p>What does that mean?  How would we measure?</p>
-<p><a class="reference external" href="http://www.rdrop.com/~paulmck/RCU/RCU.2013.01.22d.PLMW.pdf">McKenney (2013): Laws of Physics</a></p>
-<p><a class="reference external" href="https://people.eecs.berkeley.edu/~rcs/research/interactive_latency.html">Interactive</a></p>
-<p><a class="reference external" href="https://www.anandtech.com/show/14694/amd-rome-epyc-2nd-gen/7">Variation by vendor</a></p>
+<blockquote>
+<div><h4 class="rubric" id="recommended-readings">Recommended Readings:</h4>
+<ul class="simple">
+<li><p><a class="reference external" href="http://www.rdrop.com/~paulmck/RCU/RCU.2013.01.22d.PLMW.pdf">McKenney (2013): Laws of Physics</a></p></li>
+<li><p><a class="reference external" href="https://people.eecs.berkeley.edu/~rcs/research/interactive_latency.html">Latency Numbers Every Programmer Should Know (Interactive)</a></p></li>
+<li><p><a class="reference external" href="https://www.anandtech.com/show/14694/amd-rome-epyc-2nd-gen/7">Variation by vendor: Latency in AMD Memory Subsystems</a></p></li>
+</ul>
+</div></blockquote>
 </section>
 <section id="how-your-program-accesses-memory">
-<h3>How your program accesses memory<a class="headerlink" href="#how-your-program-accesses-memory" title="Link to this heading">#</a></h3>
+<h3>How your program accesses memory:<a class="headerlink" href="#how-your-program-accesses-memory" title="Link to this heading">#</a></h3>
 <div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">double</span><span class="w"> </span><span class="n">a</span><span class="p">[</span><span class="mi">1000</span><span class="p">];</span>
 
 <span class="kt">void</span><span class="w"> </span><span class="nf">foo</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
@@ -538,7 +555,7 @@ GPUs are reported as CUDA devices and X11 display :1.0: (from the <a class="refe
 <p><img alt="Virtual memory and the page table" src="https://drawings.jvns.ca/drawings/pagetable.svg" /></p>
 </section>
 <section id="further-resources">
-<h3>Further resources<a class="headerlink" href="#further-resources" title="Link to this heading">#</a></h3>
+<h3>Further resources:<a class="headerlink" href="#further-resources" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><a class="reference external" href="https://jvns.ca/blog/2016/12/03/how-much-memory-is-my-process-using-/">Julia Evans (2016): How much memory is my process using?</a></p></li>
 <li><p><a class="reference external" href="https://manybutfinite.com/post/intel-cpu-caches/">Gustavo Duarte (2009): Cache: a place for concealment and safekeeping</a></p></li>
@@ -621,11 +638,11 @@ GPUs are reported as CUDA devices and X11 display :1.0: (from the <a class="refe
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#memory">2. Memory</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#how-expensive-is-it-to-access-memory">How expensive is it to access memory?</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#how-your-program-accesses-memory">How your program accesses memory</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#how-your-program-accesses-memory">How your program accesses memory:</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#let-s-compare-three-code-samples">Let’s compare three code samples</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-happens-when-you-request-a-cache-line">What happens when you request a cache line?</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#operating-system-effects">Operating system effects</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#further-resources">Further resources</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#further-resources">Further resources:</a></li>
 </ul>
 </li>
 </ul>
