@@ -57,10 +57,13 @@
     <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'lectures/module1-3_intro_architectures';</script>
     <link rel="icon" href="../_static/SDSU-comp605_logo.svg"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="4) Introduction to Vectorization" href="module1-4_intro_vectorization.html" />
     <link rel="prev" title="2) The Linux Filesystem and commands" href="module1-2_linux.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -187,6 +190,7 @@
 
 <li class="toctree-l2"><a class="reference internal" href="module1-2_linux.html">2) The Linux Filesystem and commands</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">3) Introduction to Computer Architectures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module1-4_intro_vectorization.html">4) Introduction to Vectorization</a></li>
 </ul>
 </details></li>
 </ul>
@@ -400,7 +404,11 @@ document.write(`
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#memory">2. Memory</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#how-expensive-is-it-to-access-memory">How expensive is it to access memory?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cache">2.1 Cache</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#how-is-memory-accessed">How is memory accessed?</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#how-we-define-what-limits-performance">How we define what limits performance:</a></li>
+</ul>
+</li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#how-your-program-accesses-memory">How your program accesses memory:</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#let-s-compare-three-code-samples">Let’s compare three code samples</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-happens-when-you-request-a-cache-line">What happens when you request a cache line?</a></li>
@@ -422,6 +430,10 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="introduction-to-computer-architectures">
 <h1>3) Introduction to Computer Architectures<a class="headerlink" href="#introduction-to-computer-architectures" title="Link to this heading">#</a></h1>
+<p>Last time:</p>
+<ul class="simple">
+<li><p>Introduction to Linux File System and commands</p></li>
+</ul>
 <p>Today:</p>
 <ol class="arabic simple">
 <li><p>Architectures</p></li>
@@ -498,9 +510,56 @@ GPUs are reported as CUDA devices and X11 display :1.0: (from the <a class="refe
 </section>
 <section id="memory">
 <h2>2. Memory<a class="headerlink" href="#memory" title="Link to this heading">#</a></h2>
-<section id="how-expensive-is-it-to-access-memory">
-<h3>How expensive is it to access memory?<a class="headerlink" href="#how-expensive-is-it-to-access-memory" title="Link to this heading">#</a></h3>
-<p>What does that mean?  How would we measure?</p>
+<section id="cache">
+<h3>2.1 Cache<a class="headerlink" href="#cache" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Caches are low-capacity, high-speed memories that are commonly integrated on the CPU die. The need for caches can be easily understood by realizing that data transfer rates to main memory are painfully slow compared to the CPU’s arithmetic performance.</p></li>
+<li><p>While peak performance soars at several GFlops/sec per core, <strong>memory bandwidth</strong>, i.e., the rate at which data can be transferred from memory to the CPU, is still stuck at a couple of GBytes/sec, which is entirely insufficient to feed all arithmetic units and keep them busy continuously.</p></li>
+<li><p>This tells us that Moore’s Law, which for more than thirty years reassured scientists that no matter which technology was implemented to build computer chips, their “complexity” or general “capability” doubled about every 24 months, is not only <em>not</em> valid anymore, but even if it was, it would not be useful in increasing performance on modern complex architectures.</p></li>
+<li><p>To make matters worse, in order to transfer a single data item (usually one or two Douple Precision (DP) words) from memory, an initial waiting time called <strong>latency</strong> passes until data can actually flow. Thus, latency is often defined as the time it takes to “transfer a zero-byte message”.</p></li>
+<li><p>Memory latency is usually of the order of several hundred CPU cycles and is composed of different contributions from memory chips, the chipset and the processor.</p></li>
+<li><p>Advances in memory performance show up at a much slower rate than the rate of improvement in chip complexity. The term <em>DRAM gap</em> has been coined for the increasing “distance” between CPU and memory in terms of latency and bandwidth.</p></li>
+<li><p>Caches can alleviate the effects of the DRAM gap in many cases. Usually there are at least two <em>levels</em> of cache , called <em>L1</em> and <em>L2</em>, respectively.</p></li>
+<li><p>L1 is normally split into two parts, one for instructions (<em>I-cache</em>, <em>L1I</em>) and one for data (<em>L1D</em>).</p></li>
+<li><p>Outer cache levels are normally <em>unified</em>, storing data as well as instructions.</p></li>
+<li><p>In general, the “closer” a cache is to the CPU’s registers, i.e., the higher its bandwidth and the lower its latency, the smaller it must be to keep administration overhead low.</p></li>
+</ul>
+<section id="how-is-memory-accessed">
+<h4>How is memory accessed?<a class="headerlink" href="#how-is-memory-accessed" title="Link to this heading">#</a></h4>
+<ul class="simple">
+<li><p>Whenever the CPU issues a read request (”<em>load</em>”) for transferring a data item to a register, first-level cache logic checks whether this item already resides in cache.</p>
+<ul>
+<li><p>If it does, this is called a <strong>cache hit</strong> and the request can be satisfied immediately, with low latency.</p></li>
+<li><p>In case of a <strong>cache miss</strong>, however, data must be fetched from outer cache levels or, in the worst case, from main memory.</p></li>
+<li><p>If all cache entries are occupied, a hardware-implemented algorithm <em>evicts</em> old items from cache and replaces them with new data.</p></li>
+</ul>
+</li>
+<li><p>The sequence of events for a cache miss on a “<em>write</em>” is generally more involved.</p></li>
+<li><p>Instruction caches are usually of minor importance since scientific codes tend to be largely loop-based; <em>I-cache</em> misses are rare events compared to <em>D-cache</em> misses.</p></li>
+<li><p>Caches can only have a positive effect on performance if the data access pattern of an application shows some <strong>locality of reference</strong>. More specifically, data items that
+have been loaded into a cache are to be used again “soon enough” to not have been evicted in the meantime. This is also called <strong>temporal locality</strong>.</p></li>
+<li><p>Unfortunately, supporting temporal locality is not sufficient. Many applications show <em>streaming</em> patterns where large amounts of data are loaded into the CPU, modified, and written back without the potential of reuse “in time”.</p></li>
+<li><p>In order to reduce the latency penalty for streaming,
+caches feature a peculiar organization into <strong>cache lines</strong>.</p></li>
+<li><p>The advantage of cache lines is that the latency penalty of a cache miss occurs only on the first miss on an item belonging to a line. The line is fetched from memory as a
+whole; neighboring items can then be loaded from cache with much lower latency, increasing the <em>cache hit ratio</em>.</p></li>
+<li><p>So if the application shows some <em>spatial locality</em> (as it often appens when discretizing Partial Differential Equations (PDEs)), i.e., if the probability of successive accesses to neighboring items is high, the latency problem can be significantly reduced.</p></li>
+<li><p>The downside of cache lines is that erratic data access patterns are not supported.</p>
+<ul>
+<li><p>On the contrary, not only does each load incur a miss and subsequent latency penalty, it also leads to the transfer of a whole cache line, polluting the memory bus with data that will probably never be used.</p></li>
+<li><p>The effective bandwidth available to the application will
+thus be low.</p></li>
+</ul>
+</li>
+<li><p>On the whole, however, the advantages of using cache lines prevail, and very few processor manufacturers have provided means of bypassing the mechanism.</p></li>
+</ul>
+</section>
+<section id="how-we-define-what-limits-performance">
+<h4>How we define what limits performance:<a class="headerlink" href="#how-we-define-what-limits-performance" title="Link to this heading">#</a></h4>
+<ul class="simple">
+<li><p>When performance is governed by main memory bandwidth and latency — the code is <strong>memory-bound</strong>.</p></li>
+<li><p>In order for an application to be truly <strong>cache-bound</strong>, i.e., decouple from main memory so that performance is not governed by memory bandwidth or latency any more, the <em>cache hit ratio</em> (sometimes denoted by <em><span class="math notranslate nohighlight">\(\gamma\)</span></em>) must be large enough so the time it takes to process in-cache data becomes larger than the time for reloading it. If and when this happens depends of course on the details of the operations performed.</p></li>
+</ul>
 <blockquote>
 <div><h4 class="rubric" id="recommended-readings">Recommended Readings:</h4>
 <ul class="simple">
@@ -509,6 +568,7 @@ GPUs are reported as CUDA devices and X11 display :1.0: (from the <a class="refe
 <li><p><a class="reference external" href="https://www.anandtech.com/show/14694/amd-rome-epyc-2nd-gen/7">Variation by vendor: Latency in AMD Memory Subsystems</a></p></li>
 </ul>
 </div></blockquote>
+</section>
 </section>
 <section id="how-your-program-accesses-memory">
 <h3>How your program accesses memory:<a class="headerlink" href="#how-your-program-accesses-memory" title="Link to this heading">#</a></h3>
@@ -889,6 +949,15 @@ GPUs are reported as CUDA devices and X11 display :1.0: (from the <a class="refe
         <p class="prev-next-title">2) The Linux Filesystem and commands</p>
       </div>
     </a>
+    <a class="right-next"
+       href="module1-4_intro_vectorization.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">4) Introduction to Vectorization</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
 </div>
                 </footer>
               
@@ -921,7 +990,11 @@ GPUs are reported as CUDA devices and X11 display :1.0: (from the <a class="refe
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#memory">2. Memory</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#how-expensive-is-it-to-access-memory">How expensive is it to access memory?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cache">2.1 Cache</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#how-is-memory-accessed">How is memory accessed?</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#how-we-define-what-limits-performance">How we define what limits performance:</a></li>
+</ul>
+</li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#how-your-program-accesses-memory">How your program accesses memory:</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#let-s-compare-three-code-samples">Let’s compare three code samples</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-happens-when-you-request-a-cache-line">What happens when you request a cache line?</a></li>

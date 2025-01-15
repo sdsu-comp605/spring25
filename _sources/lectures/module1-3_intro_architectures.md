@@ -1,9 +1,13 @@
 # 3) Introduction to Computer Architectures
 
+Last time:
+
+- Introduction to Linux File System and commands
+
 Today:
+
 1. Architectures
 2. Memory
-
 
 ## 1. Architectures
 
@@ -81,9 +85,54 @@ A 4-socket ring configuration:
 
 ## 2. Memory
 
-### How expensive is it to access memory?
+### 2.1 Cache
 
-What does that mean?  How would we measure?
+- Caches are low-capacity, high-speed memories that are commonly integrated on the CPU die. The need for caches can be easily understood by realizing that data transfer rates to main memory are painfully slow compared to the CPU’s arithmetic performance.
+
+- While peak performance soars at several GFlops/sec per core, **memory bandwidth**, i.e., the rate at which data can be transferred from memory to the CPU, is still stuck at a couple of GBytes/sec, which is entirely insufficient to feed all arithmetic units and keep them busy continuously.
+
+- This tells us that Moore’s Law, which for more than thirty years reassured scientists that no matter which technology was implemented to build computer chips, their "complexity" or general "capability" doubled about every 24 months, is not only _not_ valid anymore, but even if it was, it would not be useful in increasing performance on modern complex architectures.
+
+- To make matters worse, in order to transfer a single data item (usually one or two Douple Precision (DP) words) from memory, an initial waiting time called **latency** passes until data can actually flow. Thus, latency is often defined as the time it takes to "transfer a zero-byte message".
+
+- Memory latency is usually of the order of several hundred CPU cycles and is composed of different contributions from memory chips, the chipset and the processor.
+
+- Advances in memory performance show up at a much slower rate than the rate of improvement in chip complexity. The term _DRAM gap_ has been coined for the increasing "distance" between CPU and memory in terms of latency and bandwidth.
+
+- Caches can alleviate the effects of the DRAM gap in many cases. Usually there are at least two _levels_ of cache , called _L1_ and _L2_, respectively.
+
+- L1 is normally split into two parts, one for instructions (_I-cache_, _L1I_) and one for data (_L1D_).
+
+- Outer cache levels are normally _unified_, storing data as well as instructions.
+
+- In general, the "closer" a cache is to the CPU’s registers, i.e., the higher its bandwidth and the lower its latency, the smaller it must be to keep administration overhead low.
+
+#### How is memory accessed?
+
+- Whenever the CPU issues a read request ("_load_") for transferring a data item to a register, first-level cache logic checks whether this item already resides in cache.
+  * If it does, this is called a **cache hit** and the request can be satisfied immediately, with low latency.
+  * In case of a **cache miss**, however, data must be fetched from outer cache levels or, in the worst case, from main memory.
+  * If all cache entries are occupied, a hardware-implemented algorithm _evicts_ old items from cache and replaces them with new data.
+- The sequence of events for a cache miss on a "_write_" is generally more involved.
+- Instruction caches are usually of minor importance since scientific codes tend to be largely loop-based; _I-cache_ misses are rare events compared to _D-cache_ misses.
+- Caches can only have a positive effect on performance if the data access pattern of an application shows some **locality of reference**. More specifically, data items that
+have been loaded into a cache are to be used again "soon enough" to not have been evicted in the meantime. This is also called **temporal locality**.
+- Unfortunately, supporting temporal locality is not sufficient. Many applications show _streaming_ patterns where large amounts of data are loaded into the CPU, modified, and written back without the potential of reuse "in time".
+- In order to reduce the latency penalty for streaming,
+caches feature a peculiar organization into **cache lines**.
+- The advantage of cache lines is that the latency penalty of a cache miss occurs only on the first miss on an item belonging to a line. The line is fetched from memory as a
+whole; neighboring items can then be loaded from cache with much lower latency, increasing the _cache hit ratio_.
+- So if the application shows some _spatial locality_ (as it often appens when discretizing Partial Differential Equations (PDEs)), i.e., if the probability of successive accesses to neighboring items is high, the latency problem can be significantly reduced.
+- The downside of cache lines is that erratic data access patterns are not supported.
+  * On the contrary, not only does each load incur a miss and subsequent latency penalty, it also leads to the transfer of a whole cache line, polluting the memory bus with data that will probably never be used.
+  * The effective bandwidth available to the application will
+thus be low.
+- On the whole, however, the advantages of using cache lines prevail, and very few processor manufacturers have provided means of bypassing the mechanism.
+
+#### How we define what limits performance:
+- When performance is governed by main memory bandwidth and latency — the code is **memory-bound**.
+- In order for an application to be truly **cache-bound**, i.e., decouple from main memory so that performance is not governed by memory bandwidth or latency any more, the _cache hit ratio_ (sometimes denoted by _$\gamma$_) must be large enough so the time it takes to process in-cache data becomes larger than the time for reloading it. If and when this happens depends of course on the details of the operations performed.
+
 
 > #### Recommended Readings:
 > - [McKenney (2013): Laws of Physics](http://www.rdrop.com/~paulmck/RCU/RCU.2013.01.22d.PLMW.pdf)

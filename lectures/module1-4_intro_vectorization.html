@@ -2,13 +2,13 @@
 <!DOCTYPE html>
 
 
-<html lang="en" data-content_root="./" >
+<html lang="en" data-content_root="../" >
 
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Welcome &#8212; Scientific Computing</title>
+    <title>4) Introduction to Vectorization &#8212; Scientific Computing</title>
   
   
   
@@ -18,52 +18,50 @@
   </script>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
 
   
-  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
-    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=a3416100" />
-    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
-    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
-    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
-    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
-<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
-  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
-    <script src="_static/doctools.js?v=9a2dae69"></script>
-    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
-    <script src="_static/copybutton.js?v=f281be69"></script>
-    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="_static/togglebutton.js?v=4a39c7ea"></script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
-    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
-    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'index';</script>
-    <link rel="icon" href="_static/SDSU-comp605_logo.svg"/>
-    <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Syllabus" href="syllabus.html" />
+    <script>DOCUMENTATION_OPTIONS.pagename = 'lectures/module1-4_intro_vectorization';</script>
+    <link rel="icon" href="../_static/SDSU-comp605_logo.svg"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="3) Introduction to Computer Architectures" href="module1-3_intro_architectures.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -95,7 +93,7 @@
     <div class="search-button__overlay"></div>
     <div class="search-button__search-container">
 <form class="bd-search d-flex align-items-center"
-      action="search.html"
+      action="../search.html"
       method="get">
   <i class="fa-solid fa-magnifying-glass"></i>
   <input type="search"
@@ -126,8 +124,6 @@
       
       
       
-        
-      
       <div class="bd-sidebar-primary bd-sidebar">
         
 
@@ -146,7 +142,7 @@
     
   
 
-<a class="navbar-brand logo" href="#">
+<a class="navbar-brand logo" href="../index.html">
   
   
   
@@ -157,8 +153,8 @@
       
     
     
-    <img src="_static/SDSU-comp605_logo.svg" class="logo__image only-light" alt="Scientific Computing - Home"/>
-    <script>document.write(`<img src="_static/SDSU-comp605_logo.svg" class="logo__image only-dark" alt="Scientific Computing - Home"/>`);</script>
+    <img src="../_static/SDSU-comp605_logo.svg" class="logo__image only-light" alt="Scientific Computing - Home"/>
+    <script>document.write(`<img src="../_static/SDSU-comp605_logo.svg" class="logo__image only-dark" alt="Scientific Computing - Home"/>`);</script>
   
   
 </a></div>
@@ -177,21 +173,21 @@
     <div class="bd-toc-item navbar-nav active">
         
         <ul class="nav bd-sidenav bd-sidenav__home-link">
-            <li class="toctree-l1 current active">
-                <a class="reference internal" href="#">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../index.html">
                     Welcome
                 </a>
             </li>
         </ul>
-        <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="syllabus.html">Syllabus</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="lectures.html">Lectures</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="lectures/module1-1_first_class.html">1) First Class: Reproducibility and Git</a></li>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../syllabus.html">Syllabus</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../lectures.html">Lectures</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="module1-1_first_class.html">1) First Class: Reproducibility and Git</a></li>
 
 
-<li class="toctree-l2"><a class="reference internal" href="lectures/module1-2_linux.html">2) The Linux Filesystem and commands</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lectures/module1-3_intro_architectures.html">3) Introduction to Computer Architectures</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lectures/module1-4_intro_vectorization.html">4) Introduction to Vectorization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module1-2_linux.html">2) The Linux Filesystem and commands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module1-3_intro_architectures.html">3) Introduction to Computer Architectures</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">4) Introduction to Vectorization</a></li>
 </ul>
 </details></li>
 </ul>
@@ -265,7 +261,7 @@
       
       
       
-      <li><a href="https://github.com/sdsu-comp605/spring25/issues/new?title=Issue%20on%20page%20%2Findex.html&body=Your%20issue%20content%20here." target="_blank"
+      <li><a href="https://github.com/sdsu-comp605/spring25/issues/new?title=Issue%20on%20page%20%2Flectures/module1-4_intro_vectorization.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm btn-source-issues-button dropdown-item"
    title="Open an issue"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -295,7 +291,7 @@
       
       
       
-      <li><a href="_sources/index.md" target="_blank"
+      <li><a href="../_sources/lectures/module1-4_intro_vectorization.md" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -366,7 +362,9 @@ document.write(`
   </button>
 `);
 </script>
-
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
 </div></div>
       
     </div>
@@ -377,11 +375,23 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Welcome</h1>
+    <h1>4) Introduction to Vectorization</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#single-thread-performance-trends">1. Single-thread performance trends</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#further-resources">Further resources</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">2. Introduction to Vectorization</a></li>
+</ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -391,51 +401,47 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="welcome">
-<h1>Welcome<a class="headerlink" href="#welcome" title="Link to this heading">#</a></h1>
-<p>Welcome to <strong>Scientific Computing</strong>, Comp-605</p>
-<div class="admonition-logistics admonition">
-<p class="admonition-title">Logistics</p>
+  <section class="tex2jax_ignore mathjax_ignore" id="introduction-to-vectorization">
+<h1>4) Introduction to Vectorization<a class="headerlink" href="#introduction-to-vectorization" title="Link to this heading">#</a></h1>
+<p>Last time:</p>
 <ul class="simple">
-<li><p>Office hours: announced on the course <a class="reference external" href="https://sdsu.instructure.com/courses/171936">Canvas page</a> or by appointment.</p></li>
+<li><p>Introduction to architectures</p></li>
+<li><p>Memory</p></li>
 </ul>
-</div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Who am I?</p>
+<p>Today:</p>
+<ol class="arabic simple">
+<li><p>Single-thread performance trends</p></li>
+<li><p>Introduction to Vectorization</p></li>
+</ol>
+<section id="single-thread-performance-trends">
+<h2>1. Single-thread performance trends<a class="headerlink" href="#single-thread-performance-trends" title="Link to this heading">#</a></h2>
+<p>Single-thread performance has increased significantly
+since ~2004 when clock frequency stagnated?</p>
+<p><img alt="42 years of microprocessor data" src="https://www.karlrupp.net/wp-content/uploads/2018/02/42-years-processor-trend.png" /></p>
+<p>This is a result of doing more per clock cycle.</p>
+<p><img alt="Flops per clock cycle" src="https://www.karlrupp.net/wp-content/uploads/2013/06/flops-per-cycle-sp.png" /></p>
+<p>Let’s visit some slides:</p>
 <ul class="simple">
-<li><p><em>Assistant Professor</em> in the Department of Mathematics &amp; Statistics and the Computational Science Research Center</p></li>
-<li><p>Previously:</p>
+<li><p><a class="reference external" href="https://moodle.rrze.uni-erlangen.de/pluginfile.php/12916/mod_resource/content/6/01_IntroArchitecture.pdf">Georg Hager (2019): Modern Computer Architucture</a></p></li>
+</ul>
+<section id="further-resources">
+<h3>Further resources<a class="headerlink" href="#further-resources" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><a class="reference external" href="https://software.intel.com/sites/landingpage/IntrinsicsGuide/#">Intel Intrinsics Guide</a></p></li>
+<li><p>Wikichip</p>
 <ul>
-<li><p>Research Software Engineer for 3+ years at Caltech, in the <a class="reference external" href="https://clima.caltech.edu/">CliMA</a> group</p></li>
-<li><p>Postdoctoral Research Associate at CU Boulder, in <a class="reference external" href="https://jedbrown.org/">Jed Brown</a>’s <a class="reference external" href="https://phypid.org/">PhyPID</a> group</p></li>
-<li><p>PhD in Applied Math from NJIT</p></li>
-<li><p>some industry experience with CAD/CAM system development and at Pixar in the <a class="reference external" href="https://graphics.pixar.com/research/">Research</a> group</p></li>
+<li><p><a class="reference external" href="https://en.wikichip.org/wiki/intel/microarchitectures/cascade_lake">Intel Xeon: Cascade Lake</a></p></li>
+<li><p><a class="reference external" href="https://en.wikichip.org/wiki/amd/cores/rome">AMD EPYC gen2: Rome</a></p></li>
+<li><p><a class="reference external" href="https://en.wikichip.org/wiki/ibm/microarchitectures/power9">IBM POWER9</a></p></li>
 </ul>
 </li>
+<li><p><a class="reference external" href="https://www.agner.org/optimize/">Agner Fog’s website</a></p></li>
 </ul>
-</div>
-<div class="admonition-resources admonition">
-<p class="admonition-title">Resources</p>
-<ul class="simple">
-<li><p><a class="reference external" href="http://www.siam.org/students/memberships.php">SIAM Membership</a> is free for students (30% discount on SIAM books)</p></li>
-<li><p>Books and additional resources</p>
-<ul>
-<li><p><a class="reference external" href="https://blogs.fau.de/hager/hpc-book">Hager and Wellein (2010), <strong>Introduction to High Performance Computing for Scientists and Engineers</strong></a></p></li>
-<li><p><a class="reference external" href="https://books.google.com/books/about/Parallel_Programming.html?id=wWogxOmA3wMC">Rauber and Rünger (2010), <strong>Parallel Programming for Multicore and Cluster Systems</strong>, Springer, ISBN 9783642048173</a></p></li>
-<li><p><a class="reference external" href="http://www.cs.utexas.edu/users/flame/laff/pfhp/index.html">van de Geijn, Myers, Parikh (2019): <strong>LAFF on Programming for High Performance</strong></a> (free online)</p></li>
-<li><p><a class="reference external" href="http://pages.tacc.utexas.edu/~eijkhout/istc/istc.html">Eijkhout, Chow, van de Geijn (2017), <strong>Introduction to High-Performance Scientific Computing</strong></a> (free PDF)</p></li>
-<li><p><a class="reference external" href="https://www-users.cs.umn.edu/~karypis/parbook/">Grama, Gupta, Karypis, Kumar (2003), <strong>Introduction to Parallel Computing</strong></a></p></li>
-<li><p><a class="reference external" href="https://press.princeton.edu/titles/9763.html">Greenbaum and Chartier (2012), <strong>Numerical Methods Design, Analysis, and Computer Implementation of Algorithms</strong></a> – an excellent, comprehensive book.</p></li>
-<li><p><a class="reference external" href="https://web.stanford.edu/~boyd/vmls/">Boyd and Vandenberghe (2018), <strong>Introduction to Applied Linear Algebra</strong></a> – practical introduction to linear algebra for computer scientists; free PDF</p></li>
-<li><p><a class="reference external" href="http://bookstore.siam.org/ot50/">Trefethen and Bau (1997), <strong>Numerical Linear Algebra</strong></a> – fantastic, but limited to numerical linear algebra and covers more advanced topics.</p></li>
-<li><p><a class="reference external" href="http://physics.codes/">Scopatz and Huff (2015), <strong>Effective Computation in Physics</strong></a> – Python language, data science workflow, and computation.</p></li>
-</ul>
-</li>
-</ul>
-</div>
-<div class="toctree-wrapper compound">
-</div>
+</section>
+</section>
+<section id="id1">
+<h2>2. Introduction to Vectorization<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
+</section>
 </section>
 
     <script type="text/x-thebe-config">
@@ -451,7 +457,7 @@ document.write(`
         },
         kernelOptions: {
             name: "python3",
-            path: "./."
+            path: "./lectures"
         },
         predefinedOutput: true
     }
@@ -468,14 +474,14 @@ document.write(`
                 <footer class="prev-next-footer d-print-none">
                   
 <div class="prev-next-area">
-    <a class="right-next"
-       href="syllabus.html"
-       title="next page">
+    <a class="left-prev"
+       href="module1-3_intro_architectures.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Syllabus</p>
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">3) Introduction to Computer Architectures</p>
       </div>
-      <i class="fa-solid fa-angle-right"></i>
     </a>
 </div>
                 </footer>
@@ -483,6 +489,25 @@ document.write(`
             </div>
             
             
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#single-thread-performance-trends">1. Single-thread performance trends</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#further-resources">Further resources</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">2. Introduction to Vectorization</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
           </div>
@@ -527,8 +552,8 @@ By Valeria Barra
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
-<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
 
   <footer class="bd-footer">
   </footer>
