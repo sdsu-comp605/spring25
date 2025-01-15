@@ -10,3 +10,4 @@ chapters:
   - file: lectures/module1-1_first_class.ipynb
   - file: lectures/module1-2_linux.ipynb
   - file: lectures/module1-3_intro_architectures.md
+  - file: lectures/module1-4_intro_vectorization.md
