@@ -149,3 +149,98 @@ Most systems today use virtual addressing, so every address in your program need
 * [Gustavo Duarte (2009): Cache: a place for concealment and safekeeping](https://manybutfinite.com/post/intel-cpu-caches/)
 * [Gustavo Duarte (2009): Getting Physical With Memory](https://manybutfinite.com/post/getting-physical-with-memory/)
 * [Ulrich Drepper (2007): What Every Programmer Should Know About Memory](https://www.akkadia.org/drepper/cpumemory.pdf)
+
+### List of frequently found acronyms and abbreviations:
+
+| Acronym | Meaning |
+|:--------------------:|:-----------------------------:|
+| ASCII | American standard code for information interchange
+| ASIC | Application-specific integrated circuit
+| BIOS | Basic input/output system
+| BLAS | Basic linear algebra subroutines
+| CAF | Co-array Fortran
+| ccNUMA | Cache-coherent nonuniform memory access
+| CFD | Computational fluid dynamics
+| CISC | Complex instruction set computer
+| CL | Cache line
+| CPI | Cycles per instruction
+| CPU | Central processing unit
+| CRS | Compressed row storage
+| DDR | Double data rate
+| DMA | Direct memory access
+| DP | Double precision
+| DRAM | Dynamic random access memory
+| ED | Exact diagonalization
+| EPIC | Explicitly parallel instruction computing
+| Flop | Floating-point operation
+| FMA | Fused multiply-add
+| FP | Floating point
+| FPGA | Field-programmable gate array
+| FS | File system
+| FSB | Frontside bus
+| GCC | GNU compiler collection
+| GE | Gigabit Ethernet
+| GigE | Gigabit Ethernet
+| GNU | GNU (is not UNIX)
+| GPU | Graphics processing unit
+| GUI | Graphical user interface
+| HPC | High performance computing
+| HPF | High performance Fortran
+| HT | HyperTransport
+| IB | InfiniBand
+| ILP | Instruction-level parallelism
+| IMB | Intel MPI benchmarks
+| I/O | Input/output
+| IP | Internet protocol
+| JDS | Jagged diagonals storage
+| L1D | Level 1 data cache
+| L1I | Level 1 instruction cache
+| L2 | Level 2 cache
+| L3 | Level 3 cache
+| LD | Locality domain
+| LD | Load
+| LIKWID | _Like I knew what I’m doing_
+| LRU | Least recently used
+| LUP | Lattice site update
+| MESI | Modified/Exclusive/Shared/Invalid
+| MI | Memory interface
+| MIMD | Multiple instruction multiple data
+| MIPS | Million instructions per second
+| MMM | Matrix–matrix multiplication
+| MPI | Message passing interface
+| MPMD | Multiple program multiple data
+| MPP | Massively parallel processing
+| MVM | Matrix–vector multiplication
+| NORMA | No remote memory access
+| NRU | Not recently used
+| NUMA | Nonuniform memory access
+| OLC | Outer-level cache
+| OS | Operating system
+| PAPI | Performance application programming interface
+| PCI | Peripheral component interconnect
+| PGAS | Partitioned global address space
+| PLPA | Portable Linux processor affinity
+| POSIX | Portable operating system interface for Unix
+| PPP | Pipeline parallel processing
+| PVM | Parallel virtual machine
+| QDR | Quad data rate
+| QPI | QuickPath interconnect
+| RAM | Random access memory
+| RISC | Reduced instruction set computer
+| RFO | Read for ownership
+| SDR | Single data rate
+| SIMD | Single instruction multiple data
+| SISD | Single instruction single data
+| SMP | Symmetric multiprocessing
+| SMT | Simultaneous multithreading
+| SP | Single precision
+| SPMD | Single program multiple data
+| SSE | Streaming SIMD extensions
+| ST | Store
+| STL | Standard template library
+| SYSV | Unix System V
+| TBB | Threading building blocks
+| TCP | Transmission control protocol
+| TLB | Translation lookaside buffer
+| UMA | Uniform memory access
+| UPC | Unified parallel C
