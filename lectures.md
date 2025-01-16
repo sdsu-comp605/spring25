@@ -73,3 +73,9 @@ to run the notebook.
 
 * When saving, use `Kernel -> Restart & Clear Output` to keep the stored data and diffs in the notebook small.
 * For your images, several formats will do. Just keep in mind that PDF files are not web-friendly. PDF images can be converted to SVG using `pdf2svg`, and the result will still look sharp (unlike PNG) no matter the scale or zoom.
+
+## Online resources:
+
+- For the first part of our course, an online MOOC: [LAFF-On Programming for High Performance (LAFF-On-PfHP)](https://www.cs.utexas.edu/users/flame/laff/pfhp/LAFF-On-PfHP.html) will be particularly useful.
+
+I encourage you to watch the videos before class. When watching the videos, really you should be watching for the _big picture_ and we will revisit most of the material in lecture as well, mainly you will have a better learning experience if the in class lectures are the first time you've seen some of the material.

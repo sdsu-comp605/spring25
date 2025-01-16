@@ -20,6 +20,10 @@ Welcome to **Scientific Computing**, Comp-605
 
 * [SIAM Membership](http://www.siam.org/students/memberships.php) is free for students (30% discount on SIAM books)
 
+* [US-Research Software Engineer association](https://us-rse.org/) free professional association membership with lots of resources
+
+* [Women in HPC professional society](https://womeninhpc.org/) free professional association membership with lots of resources
+
 * Books and additional resources
   - [Hager and Wellein (2010), **Introduction to High Performance Computing for Scientists and Engineers**](https://blogs.fau.de/hager/hpc-book)
   - [Rauber and Rünger (2010), **Parallel Programming for Multicore and Cluster Systems**, Springer, ISBN 9783642048173](https://books.google.com/books/about/Parallel_Programming.html?id=wWogxOmA3wMC)

@@ -10,4 +10,6 @@ chapters:
   - file: lectures/module1-1_first_class.ipynb
   - file: lectures/module1-2_linux.ipynb
   - file: lectures/module1-3_intro_architectures.md
-  - file: lectures/module1-4_intro_vectorization.md
+  - file: lectures/module1-4_intro_vectorization.ipynb
+  - file: lectures/module2-1_cpu_optimization.ipynb
+  - file: lectures/module2-2_measuring_performance.ipynb
