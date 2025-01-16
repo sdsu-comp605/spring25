@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>4) Introduction to Vectorization &#8212; Scientific Computing</title>
+    <title>6) Measuring Performance &#8212; Scientific Computing</title>
   
   
   
@@ -59,12 +59,11 @@
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
     <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'lectures/module1-4_intro_vectorization';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'lectures/module2-2_measuring_performance';</script>
     <link rel="icon" href="../_static/SDSU-comp605_logo.svg"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="5) CPU Optimization: Matrix-Matrix Multiply" href="module2-1_cpu_optimization.html" />
-    <link rel="prev" title="3) Introduction to Computer Architectures" href="module1-3_intro_architectures.html" />
+    <link rel="prev" title="5) CPU Optimization: Matrix-Matrix Multiply" href="module2-1_cpu_optimization.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -190,9 +189,9 @@
 
 <li class="toctree-l2"><a class="reference internal" href="module1-2_linux.html">2) The Linux Filesystem and commands</a></li>
 <li class="toctree-l2"><a class="reference internal" href="module1-3_intro_architectures.html">3) Introduction to Computer Architectures</a></li>
-<li class="toctree-l2 current active"><a class="current reference internal" href="#">4) Introduction to Vectorization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module1-4_intro_vectorization.html">4) Introduction to Vectorization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="module2-1_cpu_optimization.html">5) CPU Optimization: Matrix-Matrix Multiply</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module2-2_measuring_performance.html">6) # Measuring Performance</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">6) Measuring Performance</a></li>
 </ul>
 </details></li>
 </ul>
@@ -297,7 +296,7 @@
       
       
       
-      <li><a href="https://github.com/sdsu-comp605/spring25/issues/new?title=Issue%20on%20page%20%2Flectures/module1-4_intro_vectorization.html&body=Your%20issue%20content%20here." target="_blank"
+      <li><a href="https://github.com/sdsu-comp605/spring25/issues/new?title=Issue%20on%20page%20%2Flectures/module2-2_measuring_performance.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm btn-source-issues-button dropdown-item"
    title="Open an issue"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -327,7 +326,7 @@
       
       
       
-      <li><a href="../_sources/lectures/module1-4_intro_vectorization.ipynb" target="_blank"
+      <li><a href="../_sources/lectures/module2-2_measuring_performance.ipynb" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -411,7 +410,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>4) Introduction to Vectorization</h1>
+    <h1>6) Measuring Performance</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -421,14 +420,7 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#single-thread-performance-trends">1. Single-thread performance trends</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#further-resources">Further resources</a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">2. Introduction to Vectorization</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example">Example:</a></li>
-</ul>
-</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">1. Measuring Performance</a></li>
 </ul>
             </nav>
         </div>
@@ -440,86 +432,69 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="introduction-to-vectorization">
-<h1>4) Introduction to Vectorization<a class="headerlink" href="#introduction-to-vectorization" title="Link to this heading">#</a></h1>
+  <section class="tex2jax_ignore mathjax_ignore" id="measuring-performance">
+<h1>6) Measuring Performance<a class="headerlink" href="#measuring-performance" title="Link to this heading">#</a></h1>
 <p>Last time:</p>
 <ul class="simple">
-<li><p>Introduction to architectures</p></li>
-<li><p>Memory</p></li>
+<li><p>CPU Optimization: Matrix-matrix multiplication</p></li>
 </ul>
 <p>Today:</p>
 <ol class="arabic simple">
-<li><p>Single-thread performance trends</p></li>
-<li><p>Introduction to Vectorization</p></li>
+<li><p>Measuring Performance</p></li>
 </ol>
-<section id="single-thread-performance-trends">
-<h2>1. Single-thread performance trends<a class="headerlink" href="#single-thread-performance-trends" title="Link to this heading">#</a></h2>
-<p>Single-thread performance has increased significantly
-since ~2004 when clock frequency stagnated (Moore’s law stopped)?</p>
-<p><img alt="42 years of microprocessor data" src="https://www.karlrupp.net/wp-content/uploads/2018/02/42-years-processor-trend.png" /></p>
-<p>Source: <a class="reference external" href="https://github.com/karlrupp/microprocessor-trend-data">Microprocessor Trend Data</a>.</p>
-<p>How is this possible?</p>
-<p>This is a result of doing more per clock cycle.</p>
-<p><img alt="Flops per clock cycle" src="https://www.karlrupp.net/wp-content/uploads/2013/06/flops-per-cycle-sp.png" /></p>
-<section id="further-resources">
-<h3>Further resources<a class="headerlink" href="#further-resources" title="Link to this heading">#</a></h3>
-<ul class="simple">
-<li><p><a class="reference external" href="https://software.intel.com/sites/landingpage/IntrinsicsGuide/#">Intel Intrinsics Guide</a></p></li>
-<li><p><a class="reference external" href="https://www.agner.org/optimize/">Agner Fog’s website</a></p></li>
-</ul>
-</section>
-</section>
 <section id="id1">
-<h2>2. Introduction to Vectorization<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
+<h2>1. Measuring Performance<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
+<p>Two of the standard approaches to assessing performance:</p>
 <ul class="simple">
-<li><p>History: Starting with the Cray 1 supercomputer, vector systems had dominated scientific and technical computing for a long time until powerful RISC-based massively parallel machines became available.</p></li>
-<li><p>Today, they are part of a niche market for high-end technical computing with extreme demands on memory bandwidth and time to solution.</p></li>
-<li><p>By design, vector processors show a much better ratio of real application performance to peak performance than standard microprocessors for suitable “<em>vectorizable</em>” code.</p></li>
-<li><p>They follow the <strong>SIMD (Single Instruction Multiple Data)</strong> paradigm which demands that a single machine instruction is automatically applied to a — presumably large — number of arguments of the same type, i.e., a <em>vector</em>.</p></li>
-<li><p>Most modern cache-based microprocessors have adopted some of those ideas in the form of <em>SIMD instruction set extensions</em>.</p></li>
-<li><p>For vector processors, machine instructions operate on <em>vector registers</em> which can hold a number of arguments, usually between 64 and 256 (double precision).</p></li>
-<li><p>The width of a vector register is called the vector length, usually denoted by <span class="math notranslate nohighlight">\(L_v\)</span>.</p></li>
-</ul>
-<section id="example">
-<h3>Example:<a class="headerlink" href="#example" title="Link to this heading">#</a></h3>
-<p>For getting reasonable performance out of a vector CPU, SIMD-type instructions must be employed.</p>
-<p>As a simple example we consider the addition, of two arrays:</p>
-<div class="highlight-Fortran notranslate"><div class="highlight"><pre><span></span><span class="n">A</span><span class="p">(</span><span class="mi">1</span><span class="p">:</span><span class="n">N</span><span class="p">)</span><span class="o">=</span><span class="n">B</span><span class="p">(</span><span class="mi">1</span><span class="p">:</span><span class="n">N</span><span class="p">)</span><span class="o">+</span><span class="n">C</span><span class="p">(</span><span class="mi">1</span><span class="p">:</span><span class="n">N</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>On a cache-based microprocessor this would result in a (possibly software-pipelined) loop over the elements of <code class="docutils literal notranslate"><span class="pre">A</span></code>, <code class="docutils literal notranslate"><span class="pre">B</span></code>, and <code class="docutils literal notranslate"><span class="pre">C</span></code>. For each index, two <em>loads</em> (one for <code class="docutils literal notranslate"><span class="pre">B</span></code> and one for <code class="docutils literal notranslate"><span class="pre">C</span></code>), one <em>addition</em> and one <em>store</em> (in the result vector <code class="docutils literal notranslate"><span class="pre">A</span></code>) operation would have to be executed, together with the required integer and branch logic to perform the loop.</p>
-<p>A vector CPU can issue a single instruction for a whole array if it is shorter than the vector length <span class="math notranslate nohighlight">\(L_v\)</span>:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">vload</span> <span class="n">V1</span><span class="p">(</span><span class="mi">1</span><span class="p">:</span><span class="n">N</span><span class="p">)</span> <span class="o">=</span> <span class="n">B</span><span class="p">(</span><span class="mi">1</span><span class="p">:</span><span class="n">N</span><span class="p">)</span>
-<span class="n">vload</span> <span class="n">V2</span><span class="p">(</span><span class="mi">1</span><span class="p">:</span><span class="n">N</span><span class="p">)</span> <span class="o">=</span> <span class="n">C</span><span class="p">(</span><span class="mi">1</span><span class="p">:</span><span class="n">N</span><span class="p">)</span>
-<span class="n">vadd</span> <span class="n">V3</span><span class="p">(</span><span class="mi">1</span><span class="p">:</span><span class="n">N</span><span class="p">)</span> <span class="o">=</span> <span class="n">V1</span><span class="p">(</span><span class="mi">1</span><span class="p">:</span><span class="n">N</span><span class="p">)</span> <span class="o">+</span> <span class="n">V2</span><span class="p">(</span><span class="mi">1</span><span class="p">:</span><span class="n">N</span><span class="p">)</span>
-<span class="n">vstore</span> <span class="n">A</span><span class="p">(</span><span class="mi">1</span><span class="p">:</span><span class="n">N</span><span class="p">)</span> <span class="o">=</span> <span class="n">V3</span><span class="p">(</span><span class="mi">1</span><span class="p">:</span><span class="n">N</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>Here, <code class="docutils literal notranslate"><span class="pre">V1</span></code>, <code class="docutils literal notranslate"><span class="pre">V2</span></code>, and <code class="docutils literal notranslate"><span class="pre">V3</span></code> denote <em>vector registers</em>.</p>
-<p>The distribution of vector indices across the pipeline tracks is automatic. If the array length is larger than the vector
-length, the loop must be <em>stripmined</em>, i.e., the original arrays are traversed in chunks of the vector length:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">do</span> <span class="n">S</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span><span class="n">N</span><span class="p">,</span><span class="n">Lv</span>
-    <span class="n">E</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">N</span><span class="p">,</span><span class="n">S</span><span class="o">+</span><span class="n">Lv</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
-    <span class="n">L</span> <span class="o">=</span> <span class="n">E</span><span class="o">-</span><span class="n">S</span><span class="o">+</span><span class="mi">1</span>
-    <span class="n">vload</span> <span class="n">V1</span><span class="p">(</span><span class="mi">1</span><span class="p">:</span><span class="n">L</span><span class="p">)</span> <span class="o">=</span> <span class="n">B</span><span class="p">(</span><span class="n">S</span><span class="p">:</span><span class="n">E</span><span class="p">)</span>
-    <span class="n">vload</span> <span class="n">V2</span><span class="p">(</span><span class="mi">1</span><span class="p">:</span><span class="n">L</span><span class="p">)</span> <span class="o">=</span> <span class="n">C</span><span class="p">(</span><span class="n">S</span><span class="p">:</span><span class="n">E</span><span class="p">)</span>
-    <span class="n">vadd</span> <span class="n">V3</span><span class="p">(</span><span class="mi">1</span><span class="p">:</span><span class="n">L</span><span class="p">)</span> <span class="o">=</span> <span class="n">V1</span><span class="p">(</span><span class="mi">1</span><span class="p">:</span><span class="n">L</span><span class="p">)</span> <span class="o">+</span> <span class="n">V2</span><span class="p">(</span><span class="mi">1</span><span class="p">:</span><span class="n">L</span><span class="p">)</span>
-    <span class="n">vstore</span> <span class="n">A</span><span class="p">(</span><span class="n">S</span><span class="p">:</span><span class="n">E</span><span class="p">)</span> <span class="o">=</span> <span class="n">V3</span><span class="p">(</span><span class="mi">1</span><span class="p">:</span><span class="n">L</span><span class="p">)</span>
-<span class="n">enddo</span>
-</pre></div>
-</div>
-<p>This is done automatically by the compiler.</p>
-<p>An operation like vector addition does not have to wait until its argument vector registers are completely filled but can commence after some initial arguments are available. This feature is called <em>chaining</em> and forms an essential requirement for
-different pipes (like <code class="docutils literal notranslate"><span class="pre">MULT</span></code> and <code class="docutils literal notranslate"><span class="pre">ADD</span></code>) to operate concurrently.</p>
-<ul class="simple">
-<li><p>Writing a program so that the compiler can generate effective SIMD vector instructions is called <strong>vectorization</strong>.</p>
+<li><p>Floating Point Operations per Second (FLOPS)</p>
 <ul>
-<li><p>Sometimes this requires reformulation of code or inserting source code directives in order to help the compiler identify SIMD parallelism.</p></li>
+<li><p>FLOPs = Floating Pointer Operations (careful on the small “s” vs big “S”) (see
+<a class="reference external" href="https://youtu.be/cRyVMrNNRCk?si=mttXpzKWQVQP9sSB">video: 1.1.1 GFLOPS</a>).</p></li>
+<li><p>How many floating point operations (add, subtract, multiply, and maybe
+divide) a code does per second.</p></li>
+<li><p>How to estimate: for matrix-matrix multiply we have 2 FLOP per inner loop,
+and a triply nested loop thus total <span class="math notranslate nohighlight">\(\text{FLOPs} = 2nmk\)</span>. The FLOPS are
+then <span class="math notranslate nohighlight">\(\text{FLOPS} = 2nmk / \text{time}\)</span>. Note that usually we use
+GigaFLOPS or GFLOPS: <span class="math notranslate nohighlight">\(\text{GFLOPS} = 2nmk / \text{time} / 10^9\)</span>.</p></li>
+<li><p>Calculate for one core of your machine:
+<div class="math notranslate nohighlight">
+\[
+\text{FLOPS} = \frac{\text{cycle}}{\text{second}} \frac{\text{FLOPs}}{\text{cycle}} 
+\]</div>
+</p>
+<ul>
+<li><p>cycles-per-second can be looked up for your CPU on your machine</p></li>
+<li><p>FLOPS-per-cycle can be tricky to find, is based on your processors
+microarchitecture and is most easily found on the <a class="reference external" href="https://en.wikipedia.org/wiki/Floating_point_operations_per_second#FLOPs_per_cycle_for_various_processors">Wikipedia FLOP page</a>.
+For instance my laptop has an Intel Core i5-8210Y CPU at 1.6 GHz. This
+is an Amber Lake processors with 16 FLOPs-per-cycle, and thus has a
+calculated FLOP rate of
+<div class="math notranslate nohighlight">
+\[
+  \text{FLOPS} = 1.6 \frac{\text{Gigacycles}}{\text{second}}
+                 16 \frac{\text{FLOPs}}{\text{cycle}}
+\]</div>
+
+(Note that some processors support turbo boost so you
+may see even higher performance unless turbo boost is disabled)</p></li>
 </ul>
 </li>
-<li><p>A necessary prerequisite for vectorization is the lack of true data dependencies across the iterations of a loop.</p></li>
 </ul>
-</section>
+</li>
+<li><p>Memory Bandwidth:</p>
+<ul>
+<li><p>Rate at which memory can be moved to semiconductor memory (typically from
+main memory).</p></li>
+<li><p>Can be looked up on manufacture page</p></li>
+<li><p>Measure in Gigabits-per-second (GiB/s) or GigaBytes-per-second (GB/s)</p>
+<ul>
+<li><p>GigaByte (GB): <span class="math notranslate nohighlight">\(1 \text{ GB} = 10^9 \text{ bytes} = 8 \times 10^9 \text{ bits}\)</span></p></li>
+<li><p>Gigabit (GiB): <span class="math notranslate nohighlight">\(1 \text{ GiB} = 10^9 \text{ bits}\)</span></p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
 </section>
 </section>
 
@@ -554,22 +529,13 @@ different pipes (like <code class="docutils literal notranslate"><span class="pr
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="module1-3_intro_architectures.html"
+       href="module2-1_cpu_optimization.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">3) Introduction to Computer Architectures</p>
-      </div>
-    </a>
-    <a class="right-next"
-       href="module2-1_cpu_optimization.html"
-       title="next page">
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
         <p class="prev-next-title">5) CPU Optimization: Matrix-Matrix Multiply</p>
       </div>
-      <i class="fa-solid fa-angle-right"></i>
     </a>
 </div>
                 </footer>
@@ -587,14 +553,7 @@ different pipes (like <code class="docutils literal notranslate"><span class="pr
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#single-thread-performance-trends">1. Single-thread performance trends</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#further-resources">Further resources</a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">2. Introduction to Vectorization</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example">Example:</a></li>
-</ul>
-</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">1. Measuring Performance</a></li>
 </ul>
   </nav></div>
 
