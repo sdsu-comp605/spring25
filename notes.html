@@ -182,10 +182,15 @@
         </ul>
         <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="syllabus.html">Syllabus</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="lectures.html">Slides</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="lectures.html">Lectures</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="lectures/module1-1_first_class.html">1) First Class: Reproducibility and Git</a></li>
 
 
+<li class="toctree-l2"><a class="reference internal" href="lectures/module1-2_linux.html">2) The Linux Filesystem and commands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lectures/module1-3_intro_architectures.html">3) Introduction to Computer Architectures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lectures/module1-4_intro_vectorization.html">4) Introduction to Vectorization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lectures/module2-1_cpu_optimization.html">5) CPU Optimization: Matrix-Matrix Multiply</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lectures/module2-2_measuring_performance.html">6) Measuring Performance</a></li>
 </ul>
 </details></li>
 </ul>
@@ -360,7 +365,9 @@ document.write(`
   </button>
 `);
 </script>
-
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
 </div></div>
       
     </div>
@@ -376,6 +383,14 @@ document.write(`
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#git-assignment">Git assignment:</a></li>
+</ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -399,6 +414,33 @@ document.write(`
 <li><p>Midterm Project: (%15) Proposal + Open Issue</p></li>
 <li><p>Final Project: (%35)</p></li>
 </ul>
+<section id="git-assignment">
+<h2>Git assignment:<a class="headerlink" href="#git-assignment" title="Link to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p>Make two commits, with the following commit messages “Commit 1” and “Commit 2”, respectively.</p></li>
+<li><p>Create a new branch, called newImage (which now refers to Commit 2) and commit again with the following commit message “Commit 3”. Oh no! The main branch moved but the newImage branch didn’t! That’s because we weren’t “on” the new branch, which is why the asterisk (*) was on main.</p></li>
+<li><p>Let’s tell git we want to checkout the branch with <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">checkout</span> <span class="pre">newImage</span></code>
+This will put us on the new branch before committing our changes:
+<code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">commit</span></code>.</p></li>
+<li><p>git merge: Make a new branch called <code class="docutils literal notranslate"><span class="pre">bugFix</span></code>. Checkout the <code class="docutils literal notranslate"><span class="pre">bugFix</span></code> branch with <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">checkout</span> <span class="pre">bugFix</span></code>. Commit once. Go back to main with <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">checkout</span></code>. Commit another time.
+Merge the branch <code class="docutils literal notranslate"><span class="pre">bugFix</span></code> into <code class="docutils literal notranslate"><span class="pre">main</span></code> with <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">merge</span></code>. (solution: <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">checkout</span> <span class="pre">-b</span> <span class="pre">bugFix</span></code>; <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">commit</span></code>; <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">checkout</span> <span class="pre">main</span></code>; <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">commit</span></code>; <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">merge</span> <span class="pre">bugFix</span></code>). Inspect the sequence with <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">log</span></code> or <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">reflog</span></code></p></li>
+<li><p>git rebase: Checkout a new branch named <code class="docutils literal notranslate"><span class="pre">bugFix</span></code>; Commit once; Go back to <code class="docutils literal notranslate"><span class="pre">main</span></code> and commit again; Check out <code class="docutils literal notranslate"><span class="pre">bugFix</span></code> again and rebase onto <code class="docutils literal notranslate"><span class="pre">main</span></code>.</p></li>
+</ol>
+<p>EC (for all):</p>
+<p>HEAD is the symbolic name for the currently checked out commit – it’s essentially what commit you’re working on top of.</p>
+<p>HEAD always points to the most recent commit which is reflected in the working tree. Most git commands which make changes to the working tree will start by changing HEAD.</p>
+<p>Normally HEAD points to a branch name (like bugFix). When you commit, the status of bugFix is altered and this change is visible through HEAD.</p>
+<p>“Detaching HEAD” just means attaching it to a commit instead of a branch.</p>
+<p>Or better, reset/revert:</p>
+<p><code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">reset</span></code> reverses changes by moving a branch reference backwards in time to an older commit. In this sense you can think of it as “rewriting history;” git reset will move a branch backwards as if the commit had never been made in the first place.</p>
+<p>Let’s see what that looks like: <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">reset</span> <span class="pre">HEAD~1</span></code>.</p>
+<p>While resetting works great for local branches on your own machine, its method of “rewriting history” doesn’t work for remote branches that others are using.</p>
+<p>In order to reverse changes and share those reversed changes with others, we need to use git revert. Let’s see it in action:
+<code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">revert</span> <span class="pre">HEAD</span></code>.</p>
+<ol class="arabic simple">
+<li><p>Start from a branch called <code class="docutils literal notranslate"><span class="pre">local</span></code>. Commit. Erase the last commit by using <code class="docutils literal notranslate"><span class="pre">reset</span></code> (solution: Use <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">reset</span> <span class="pre">HEAD~1</span></code>). Checkout a branch called <code class="docutils literal notranslate"><span class="pre">remote</span></code> and erase the last commit there (solution: <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">revert</span> <span class="pre">HEAD</span></code>).</p></li>
+</ol>
+</section>
 </section>
 
     <script type="text/x-thebe-config">
@@ -437,6 +479,21 @@ document.write(`
             </div>
             
             
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#git-assignment">Git assignment:</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
           </div>

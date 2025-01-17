@@ -188,6 +188,9 @@
 
 <li class="toctree-l2"><a class="reference internal" href="lectures/module1-2_linux.html">2) The Linux Filesystem and commands</a></li>
 <li class="toctree-l2"><a class="reference internal" href="lectures/module1-3_intro_architectures.html">3) Introduction to Computer Architectures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lectures/module1-4_intro_vectorization.html">4) Introduction to Vectorization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lectures/module2-1_cpu_optimization.html">5) CPU Optimization: Matrix-Matrix Multiply</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lectures/module2-2_measuring_performance.html">6) Measuring Performance</a></li>
 </ul>
 </details></li>
 </ul>
@@ -397,6 +400,7 @@ document.write(`
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#assessment-grading-policy-and-schedule">Assessment, grading policy and schedule</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#details-on-midterm-and-final-projects">Details on Midterm and Final projects</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#why-community-projects">Why community projects?</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#community-contributions-and-analysis">Community contributions and analysis</a></li>
 </ul>
 </li>
@@ -433,7 +437,7 @@ document.write(`
 <p><em>Course term</em>: Spring 2025</p>
 <p><em>Class time</em>: <strong>M-W-F: 9-9:50 am</strong></p>
 <p><em>Mode of delivery</em>: <strong>in person</strong></p>
-<p><em>Location</em>: <strong>LH 445</strong></p>
+<p><em>Location</em>: <strong>GMCS 305</strong></p>
 <section id="instructor-valeria-barra">
 <h3>Instructor: <a class="reference external" href="https://valeriabarra.org">Valeria Barra</a><a class="headerlink" href="#instructor-valeria-barra" title="Link to this heading">#</a></h3>
 <p>Pronouns: (she/her/hers)</p>
@@ -469,10 +473,9 @@ applications, or obtaining allocations via, e.g., NSF’s <a class="reference ex
 <li><p>evaluate the accuracy and performance of algorithms</p></li>
 <li><p>develop effective numerical software, taking into account accuracy and cost</p></li>
 <li><p>analize performance of serial codes</p></li>
-<li><p>develop parallel algorithms and their implementations</p></li>
+<li><p>analyze parallel algorithms and implement them</p></li>
 <li><p>identify various levels of parallelism in a problem</p></li>
-<li><p>evaluate the applicability of using each level of parallelism</p></li>
-<li><p>analize and develop distributed memory programs with the Message Passing Interface (MPI)</p></li>
+<li><p>analyze and develop distributed memory programs with the Message Passing Interface (MPI)</p></li>
 <li><p>explore multithreaded programming and vectorization with OpenMP</p></li>
 <li><p>define and analyze performance metrics and standards (strong/weak scaling, memory bandwidth, roofline analysis, etc)</p></li>
 <li><p>use profiling tools and debuggers</p></li>
@@ -519,6 +522,10 @@ applications, or obtaining allocations via, e.g., NSF’s <a class="reference ex
 <p>The schedule is subject to change (the instructor will announce any changes).</p>
 <section id="details-on-midterm-and-final-projects">
 <h3>Details on Midterm and Final projects<a class="headerlink" href="#details-on-midterm-and-final-projects" title="Link to this heading">#</a></h3>
+<section id="why-community-projects">
+<h4>Why community projects?<a class="headerlink" href="#why-community-projects" title="Link to this heading">#</a></h4>
+<p>Nowadays, the vital role of scientific software in research is widely recognized. Moreover, modern science is often conducted by large, collaborative multi-institutional aggregate teams scattered across the globe. To facilitate work across teams and to promote partnerships and collaborations, it is crucial for students to be exposed to open-source community projects and learn the best practices and standards by making contributions via software.</p>
+</section>
 <section id="community-contributions-and-analysis">
 <h4>Community contributions and analysis<a class="headerlink" href="#community-contributions-and-analysis" title="Link to this heading">#</a></h4>
 <p>Over the course of the semester, you will follow the development activities of an <em>active</em> open source project of your choosing. This should be a project with an active developer community, hopefully from multiple institutions, that discuss their rationale in public, such as a mailing list and/or GitHub/GitLab Issues and Pull Requests or Slack/Discord channels. You will write and present about the performance and capability needs of key stakeholders, the way project resources are allocated, their metrics for success, and any notable achievements made over the course of the semester.</p>
@@ -558,7 +565,7 @@ applications, or obtaining allocations via, e.g., NSF’s <a class="reference ex
 <p>The target audience is comprised of students in computational science, applied mathematics, or a quantitative science or engineering field.</p>
 <p>Catalog Prerequisites:</p>
 <ul class="simple">
-<li><p>Graduate standing and knowledge of the C programming language or FORTRAN or <a class="reference external" href="https://sdsu-comp526.github.io/fall24/index.html">COMP 526</a>.</p></li>
+<li><p>Graduate standing and knowledge of the C programming language or Fortran or <a class="reference external" href="https://sdsu-comp526.github.io/fall24/index.html">COMP 526</a>.</p></li>
 </ul>
 <p>Good to know:</p>
 <ul class="simple">
@@ -683,6 +690,7 @@ applications, or obtaining allocations via, e.g., NSF’s <a class="reference ex
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#assessment-grading-policy-and-schedule">Assessment, grading policy and schedule</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#details-on-midterm-and-final-projects">Details on Midterm and Final projects</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#why-community-projects">Why community projects?</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#community-contributions-and-analysis">Community contributions and analysis</a></li>
 </ul>
 </li>
