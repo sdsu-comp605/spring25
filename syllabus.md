@@ -35,7 +35,7 @@ opportunities and side-effects of changes, to develop high-performance software,
 stakeholders.
 
 These skills are important for research and development of numerical methods and performance-sensitive science and engineering
-applications, or obtaining allocations via, e.g., NSF's [XSEDE](https://www.xsede.org/) and DOE [ASCR facilities](https://science.osti.gov/ascr/Facilities/Accessing-ASCR-Facilities), as well as in jobs affiliated with computing facilities at National Labs, (see for instance this [ANL careers page](https://www.alcf.anl.gov/about/careers)), industry, and academia.
+applications, or obtaining allocations via, e.g., NSF's [XSEDE](https://www.xsede.org/), [ACCESS](https://allocations.access-ci.org/resources), and DOE [ASCR facilities](https://science.osti.gov/ascr/Facilities/Accessing-ASCR-Facilities), as well as in jobs affiliated with computing facilities at National Labs, (see for instance this [ANL careers page](https://www.alcf.anl.gov/about/careers)), industry, and academia.
 
 We will introduce widely-used parallel programming models such as OpenMP, MPI, and CUDA, as well as ubiquitous parallel libraries, but the purpose of the course is not to teach interfaces, but to develop skills that will be durable and transferrable across different paradigms.
 
