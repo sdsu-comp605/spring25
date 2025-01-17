@@ -435,6 +435,7 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#loop-ordering-pji">2.4 Loop ordering: pji</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#loop-ordering-jpi">2.5 Loop ordering: jpi</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#loop-ordering-jip">2.6 Loop ordering: jip</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#testing">Testing</a></li>
 </ul>
 </li>
 </ul>
@@ -549,6 +550,7 @@ C = C + A * B
 </pre></div>
 </div>
 <p>The loop ordering does not impact the correctness of the algorithm. Each of the loop orderings can be interpreted slightly differently.</p>
+<p>In the example above, we call “ijp” the loop ordering, since the loop index variables appear from outer most loop to inner most loop this way.</p>
 <section id="loop-ordering-ijp">
 <h3>2.1 Loop ordering: ijp<a class="headerlink" href="#loop-ordering-ijp" title="Link to this heading">#</a></h3>
 <p>Matrix times row vector (update rows of <span class="math notranslate nohighlight">\(C\)</span>)</p>
@@ -564,6 +566,32 @@ C = C + A * B
      \tilde{a}_{i}^T b_1 &amp; \cdots &amp; \tilde{a}_{i}^T b_m
    \end{bmatrix}
 \]</div>
+<p>Example in Julia:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="c"># matrix times row vector (update rows of `C`) with inner dot product</span>
+<span class="k">function</span><span class="w"> </span><span class="n">mygemm_ijp!</span><span class="p">(</span><span class="n">C</span><span class="p">,</span><span class="w"> </span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="n">B</span><span class="p">)</span>
+<span class="w">  </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+<span class="w">  </span><span class="n">_</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">B</span><span class="p">)</span>
+<span class="w">  </span><span class="nd">@assert</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">B</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">k</span>
+<span class="w">  </span><span class="nd">@assert</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">C</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="p">)</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="o">:</span><span class="n">m</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="o">:</span><span class="n">n</span>
+<span class="w">      </span><span class="k">for</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="o">:</span><span class="n">k</span>
+<span class="w">        </span><span class="nd">@inbounds</span><span class="w"> </span><span class="n">C</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">]</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="p">]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">B</span><span class="p">[</span><span class="n">p</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">]</span>
+<span class="w">      </span><span class="k">end</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>mygemm_ijp! (generic function with 1 method)
+</pre></div>
+</div>
+</div>
+</div>
 </section>
 <section id="loop-ordering-ipj">
 <h3>2.2 Loop ordering: ipj<a class="headerlink" href="#loop-ordering-ipj" title="Link to this heading">#</a></h3>
@@ -577,6 +605,33 @@ C = C + A * B
 \[
    \tilde{a}_{i}^T B = \sum_{p=1}^{k} \alpha_{ip} \tilde{b}_p^T
 \]</div>
+<p>Example in Julia:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="c"># matrix times row vector (update rows of `C`) with inner axpy</span>
+<span class="k">function</span><span class="w"> </span><span class="n">mygemm_ipj!</span><span class="p">(</span><span class="n">C</span><span class="p">,</span><span class="w"> </span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="n">B</span><span class="p">)</span>
+<span class="w">    </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+<span class="w">    </span><span class="n">_</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">B</span><span class="p">)</span>
+<span class="w">    </span><span class="nd">@assert</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">B</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">k</span>
+<span class="w">    </span><span class="nd">@assert</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">C</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="p">)</span>
+
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="o">:</span><span class="n">m</span>
+<span class="w">      </span><span class="k">for</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="o">:</span><span class="n">k</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="o">:</span><span class="n">n</span>
+<span class="w">          </span><span class="nd">@inbounds</span><span class="w"> </span><span class="n">C</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">]</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="p">]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">B</span><span class="p">[</span><span class="n">p</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">]</span>
+<span class="w">        </span><span class="k">end</span>
+<span class="w">      </span><span class="k">end</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>mygemm_ipj! (generic function with 1 method)
+</pre></div>
+</div>
+</div>
+</div>
 </section>
 <section id="loop-ordering-pij">
 <h3>2.3 Loop ordering: pij<a class="headerlink" href="#loop-ordering-pij" title="Link to this heading">#</a></h3>
@@ -595,6 +650,34 @@ C = C + A * B
     \alpha_{np} \tilde{b}_{p}^T
   \end{bmatrix}
 \end{split}\]</div>
+<p>Example in Julia:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="c"># Rank one update (repeatedly update all elements of `C`) with outer product</span>
+<span class="c"># using axpy with rows of `B`</span>
+<span class="k">function</span><span class="w"> </span><span class="n">mygemm_pij!</span><span class="p">(</span><span class="n">C</span><span class="p">,</span><span class="w"> </span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="n">B</span><span class="p">)</span>
+<span class="w">    </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+<span class="w">    </span><span class="n">_</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">B</span><span class="p">)</span>
+<span class="w">    </span><span class="nd">@assert</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">B</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">k</span>
+<span class="w">    </span><span class="nd">@assert</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">C</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="p">)</span>
+
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="o">:</span><span class="n">k</span>
+<span class="w">      </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="o">:</span><span class="n">m</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="o">:</span><span class="n">n</span>
+<span class="w">          </span><span class="nd">@inbounds</span><span class="w"> </span><span class="n">C</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">]</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="p">]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">B</span><span class="p">[</span><span class="n">p</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">]</span>
+<span class="w">        </span><span class="k">end</span>
+<span class="w">      </span><span class="k">end</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>mygemm_pij! (generic function with 1 method)
+</pre></div>
+</div>
+</div>
+</div>
 </section>
 <section id="loop-ordering-pji">
 <h3>2.4 Loop ordering: pji<a class="headerlink" href="#loop-ordering-pji" title="Link to this heading">#</a></h3>
@@ -611,6 +694,34 @@ C = C + A * B
     a_{p} \beta_{p1} &amp; \cdots &amp; a_{p} \beta_{pm}
   \end{bmatrix}
 \]</div>
+<p>Example in Julia:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="c"># Rank one update (repeatedly update all elements of `C`) with outer product</span>
+<span class="c"># using axpy with columns of `A`</span>
+<span class="k">function</span><span class="w"> </span><span class="n">mygemm_pji!</span><span class="p">(</span><span class="n">C</span><span class="p">,</span><span class="w"> </span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="n">B</span><span class="p">)</span>
+<span class="w">    </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+<span class="w">    </span><span class="n">_</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">B</span><span class="p">)</span>
+<span class="w">    </span><span class="nd">@assert</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">B</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">k</span>
+<span class="w">    </span><span class="nd">@assert</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">C</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="p">)</span>
+
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="o">:</span><span class="n">k</span>
+<span class="w">      </span><span class="k">for</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="o">:</span><span class="n">n</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="o">:</span><span class="n">m</span>
+<span class="w">          </span><span class="nd">@inbounds</span><span class="w"> </span><span class="n">C</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">]</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="p">]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">B</span><span class="p">[</span><span class="n">p</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">]</span>
+<span class="w">        </span><span class="k">end</span>
+<span class="w">      </span><span class="k">end</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>mygemm_pji! (generic function with 1 method)
+</pre></div>
+</div>
+</div>
+</div>
 </section>
 <section id="loop-ordering-jpi">
 <h3>2.5 Loop ordering: jpi<a class="headerlink" href="#loop-ordering-jpi" title="Link to this heading">#</a></h3>
@@ -624,6 +735,33 @@ C = C + A * B
 \[
   A b_j = \sum_{p=1}^{k} a_{p}\beta_{pj}
 \]</div>
+<p>Example in Julia:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="c"># matrix times column vector (update columns of `C`) with inner axpy</span>
+<span class="k">function</span><span class="w"> </span><span class="n">mygemm_jpi!</span><span class="p">(</span><span class="n">C</span><span class="p">,</span><span class="w"> </span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="n">B</span><span class="p">)</span>
+<span class="w">    </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+<span class="w">    </span><span class="n">_</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">B</span><span class="p">)</span>
+<span class="w">    </span><span class="nd">@assert</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">B</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">k</span>
+<span class="w">    </span><span class="nd">@assert</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">C</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="p">)</span>
+
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="o">:</span><span class="n">n</span>
+<span class="w">      </span><span class="k">for</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="o">:</span><span class="n">k</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="o">:</span><span class="n">m</span>
+<span class="w">          </span><span class="nd">@inbounds</span><span class="w"> </span><span class="n">C</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">]</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="p">]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">B</span><span class="p">[</span><span class="n">p</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">]</span>
+<span class="w">        </span><span class="k">end</span>
+<span class="w">      </span><span class="k">end</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>mygemm_jpi! (generic function with 1 method)
+</pre></div>
+</div>
+</div>
+</div>
 </section>
 <section id="loop-ordering-jip">
 <h3>2.6 Loop ordering: jip<a class="headerlink" href="#loop-ordering-jip" title="Link to this heading">#</a></h3>
@@ -642,6 +780,173 @@ C = C + A * B
     \tilde{a}_{n}^{T} b_{j}\\
   \end{bmatrix}
 \end{split}\]</div>
+<p>Example in Julia:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="c"># matrix times column vector (update columns of `C`) with inner dot product</span>
+<span class="k">function</span><span class="w"> </span><span class="n">mygemm_jip!</span><span class="p">(</span><span class="n">C</span><span class="p">,</span><span class="w"> </span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="n">B</span><span class="p">)</span>
+<span class="w">    </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+<span class="w">    </span><span class="n">_</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">B</span><span class="p">)</span>
+<span class="w">    </span><span class="nd">@assert</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">B</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">k</span>
+<span class="w">    </span><span class="nd">@assert</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">C</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="p">)</span>
+
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="o">:</span><span class="n">n</span>
+<span class="w">      </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="o">:</span><span class="n">m</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="o">:</span><span class="n">k</span>
+<span class="w">          </span><span class="nd">@inbounds</span><span class="w"> </span><span class="n">C</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">]</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="p">]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">B</span><span class="p">[</span><span class="n">p</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">]</span>
+<span class="w">        </span><span class="k">end</span>
+<span class="w">      </span><span class="k">end</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">  </span><span class="k">end</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>mygemm_jip! (generic function with 1 method)
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="testing">
+<h3>Testing<a class="headerlink" href="#testing" title="Link to this heading">#</a></h3>
+<p>We now want to test all these different implementations</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="c"># What modules / packages do we depend on</span>
+<span class="k">using</span><span class="w"> </span><span class="n">Random</span>
+<span class="k">using</span><span class="w"> </span><span class="n">LinearAlgebra</span>
+<span class="k">using</span><span class="w"> </span><span class="n">Printf</span>
+
+<span class="c"># To ensure repeatability</span>
+<span class="n">Random</span><span class="o">.</span><span class="n">seed!</span><span class="p">(</span><span class="mi">777</span><span class="p">)</span>
+
+<span class="c"># Don&#39;t let BLAS use lots of threads (since we are not multi-threaded yet!)</span>
+<span class="n">BLAS</span><span class="o">.</span><span class="n">set_num_threads</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="c"># C := α * A * B + β * C</span>
+<span class="n">refgemm!</span><span class="p">(</span><span class="n">C</span><span class="p">,</span><span class="w"> </span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="n">B</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mul!</span><span class="p">(</span><span class="n">C</span><span class="p">,</span><span class="w"> </span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="n">B</span><span class="p">,</span><span class="w"> </span><span class="n">one</span><span class="p">(</span><span class="n">eltype</span><span class="p">(</span><span class="n">C</span><span class="p">)),</span><span class="w"> </span><span class="n">one</span><span class="p">(</span><span class="n">eltype</span><span class="p">(</span><span class="n">C</span><span class="p">)))</span>
+
+<span class="c"># Algo 2.1: matrix times row vector (update rows of `C`) with inner dot product</span>
+<span class="n">mygemm!</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mygemm_ijp!</span>
+
+<span class="c"># Algo 2.2: matrix times row vector (update rows of `C`) with inner axpy</span>
+<span class="c"># mygemm! = mygemm_ipj!</span>
+
+<span class="c"># Algo 2.3: Rank one update (repeatedly update all elements of `C`) with outer product</span>
+<span class="c"># using axpy with rows of `B`</span>
+<span class="c"># mygemm! = mygemm_pij!</span>
+
+<span class="c"># Algo 2.4: Rank one update (repeatedly update all elements of `C`) with outer product</span>
+<span class="c"># using axpy with columns of `A`</span>
+<span class="c"># mygemm! = mygemm_pji!</span>
+
+<span class="c"># Algo 2.5: matrix times column vector (update columns of `C`) with inner axpy</span>
+<span class="c"># mygemm! = mygemm_jpi!</span>
+
+<span class="c"># Algo 2.6: matrix times column vector (update columns of `C`) with inner dot product</span>
+<span class="c"># mygemm! = mygemm_jip!</span>
+
+<span class="n">num_reps</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span>
+
+<span class="c"># What precision numbers to use</span>
+<span class="c"># FloatType = Float32</span>
+<span class="n">FloatType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">Float64</span>
+
+<span class="nd">@printf</span><span class="p">(</span><span class="s">&quot;size |      reference      |           </span><span class="si">%s</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">mygemm!</span><span class="p">)</span>
+<span class="nd">@printf</span><span class="p">(</span><span class="s">&quot;     |   seconds   GFLOPS  |   seconds   GFLOPS     diff</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
+
+<span class="c"># Size of square matrix to consider</span>
+<span class="k">for</span><span class="w"> </span><span class="n">nmk</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="mi">48</span><span class="o">:</span><span class="mi">48</span><span class="o">:</span><span class="mi">480</span>
+<span class="w">  </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nmk</span>
+<span class="w">  </span><span class="nd">@printf</span><span class="p">(</span><span class="s">&quot;</span><span class="si">%4d</span><span class="s"> |&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">nmk</span><span class="p">)</span>
+
+<span class="w">  </span><span class="n">gflops</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">1e-09</span>
+
+<span class="w">  </span><span class="c"># Create some random initial data</span>
+<span class="w">  </span><span class="n">A</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rand</span><span class="p">(</span><span class="n">FloatType</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="p">,</span><span class="w"> </span><span class="n">k</span><span class="p">)</span>
+<span class="w">  </span><span class="n">B</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rand</span><span class="p">(</span><span class="n">FloatType</span><span class="p">,</span><span class="w"> </span><span class="n">k</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
+<span class="w">  </span><span class="n">C</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rand</span><span class="p">(</span><span class="n">FloatType</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
+
+<span class="w">  </span><span class="c"># Make a copy of C for resetting data later</span>
+<span class="w">  </span><span class="n">C_old</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">copy</span><span class="p">(</span><span class="n">C</span><span class="p">)</span>
+
+<span class="w">  </span><span class="c"># &quot;truth&quot;</span>
+<span class="w">  </span><span class="n">C_ref</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">B</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">C</span>
+
+<span class="w">  </span><span class="c"># Compute the reference timings</span>
+<span class="w">  </span><span class="n">best_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">typemax</span><span class="p">(</span><span class="n">FloatType</span><span class="p">)</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="n">iter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="o">:</span><span class="n">num_reps</span>
+<span class="w">    </span><span class="c"># Reset C to the original data</span>
+<span class="w">    </span><span class="n">C</span><span class="w"> </span><span class="o">.=</span><span class="w"> </span><span class="n">C_old</span><span class="p">;</span>
+<span class="w">    </span><span class="n">run_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nd">@elapsed</span><span class="w"> </span><span class="n">refgemm!</span><span class="p">(</span><span class="n">C</span><span class="p">,</span><span class="w"> </span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="n">B</span><span class="p">);</span>
+<span class="w">    </span><span class="n">best_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">min</span><span class="p">(</span><span class="n">run_time</span><span class="p">,</span><span class="w"> </span><span class="n">best_time</span><span class="p">)</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="w">  </span><span class="c"># Make sure that we have the right answer!</span>
+<span class="w">  </span><span class="nd">@assert</span><span class="w"> </span><span class="n">C</span><span class="w"> </span><span class="o">≈</span><span class="w"> </span><span class="n">C_ref</span>
+<span class="w">  </span><span class="n">best_perf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">gflops</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">best_time</span>
+
+<span class="w">  </span><span class="c"># Print the reference implementation timing</span>
+<span class="w">  </span><span class="nd">@printf</span><span class="p">(</span><span class="s">&quot;  </span><span class="si">%4.2e</span><span class="s"> </span><span class="si">%8.2f</span><span class="s">  |&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">best_time</span><span class="p">,</span><span class="w"> </span><span class="n">best_perf</span><span class="p">)</span>
+
+<span class="w">  </span><span class="c"># Compute the timing for mygemm! implementation</span>
+<span class="w">  </span><span class="n">best_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">typemax</span><span class="p">(</span><span class="n">FloatType</span><span class="p">)</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="n">iter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="o">:</span><span class="n">num_reps</span>
+<span class="w">    </span><span class="c"># Reset C to the original data</span>
+<span class="w">    </span><span class="n">C</span><span class="w"> </span><span class="o">.=</span><span class="w"> </span><span class="n">C_old</span><span class="p">;</span>
+<span class="w">    </span><span class="n">run_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nd">@elapsed</span><span class="w"> </span><span class="n">mygemm!</span><span class="p">(</span><span class="n">C</span><span class="p">,</span><span class="w"> </span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="n">B</span><span class="p">);</span>
+<span class="w">    </span><span class="n">best_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">min</span><span class="p">(</span><span class="n">run_time</span><span class="p">,</span><span class="w"> </span><span class="n">best_time</span><span class="p">)</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="w">  </span><span class="n">best_perf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">gflops</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">best_time</span>
+
+<span class="w">  </span><span class="c"># Compute the error (difference between our implementation and the reference)</span>
+<span class="w">  </span><span class="n">diff</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">norm</span><span class="p">(</span><span class="n">C</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">C_ref</span><span class="p">,</span><span class="w"> </span><span class="nb">Inf</span><span class="p">)</span>
+
+<span class="w">  </span><span class="c"># Print mygemm! implementations</span>
+<span class="w">  </span><span class="nd">@printf</span><span class="p">(</span><span class="s">&quot;  </span><span class="si">%4.2e</span><span class="s"> </span><span class="si">%8.2f</span><span class="s">   </span><span class="si">%.2e</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">best_time</span><span class="p">,</span><span class="w"> </span><span class="n">best_perf</span><span class="p">,</span><span class="w"> </span><span class="n">diff</span><span class="p">)</span>
+
+<span class="w">  </span><span class="nd">@printf</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>size |      reference      |           mygemm_ijp!
+     |   seconds   GFLOPS  |   seconds   GFLOPS     diff
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  48 |  7.03e-06    31.46  |
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  8.34e-05     2.65   7.11e-15
+  96 |  4.38e-05    40.37  |  8.67e-04     2.04   1.42e-14
+ 144 |  1.36e-04    43.87  |  3.10e-03     1.93   3.55e-14
+ 192 |  3.12e-04    45.38  |  7.77e-03     1.82   3.55e-14
+ 240 |  5.83e-04    47.40  |  1.49e-02     1.86   5.68e-14
+ 288 |  1.00e-03    47.79  |
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  2.65e-02     1.80   1.85e-13
+ 336 |  1.58e-03    47.96  |
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  4.20e-02     1.81   2.13e-13
+ 384 |  2.33e-03    48.65  |
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  8.83e-02     1.28   2.42e-13
+ 432 |  3.26e-03    49.46  |
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  8.91e-02     1.81   2.84e-13
+ 480 |  4.46e-03    49.55  |
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  1.24e-01     1.78   3.41e-13
+</pre></div>
+</div>
+</div>
+</div>
 </section>
 </section>
 </section>
@@ -655,16 +960,16 @@ C = C + A * B
         },
         codeMirrorConfig: {
             theme: "abcdef",
-            mode: "python"
+            mode: "julia-1.10"
         },
         kernelOptions: {
-            name: "python3",
+            name: "julia-1.10",
             path: "./lectures"
         },
         predefinedOutput: true
     }
     </script>
-    <script>kernelName = 'python3'</script>
+    <script>kernelName = 'julia-1.10'</script>
 
                 </article>
               
@@ -724,6 +1029,7 @@ C = C + A * B
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#loop-ordering-pji">2.4 Loop ordering: pji</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#loop-ordering-jpi">2.5 Loop ordering: jpi</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#loop-ordering-jip">2.6 Loop ordering: jip</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#testing">Testing</a></li>
 </ul>
 </li>
 </ul>

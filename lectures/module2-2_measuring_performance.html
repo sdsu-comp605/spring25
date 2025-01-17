@@ -421,6 +421,19 @@ document.write(`
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">1. Measuring Performance</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction-to-performance-modeling">2. Introduction to Performance Modeling</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#terms">Terms</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-vector-triad-benchmark">2.1 The vector triad benchmark</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#example-in-fortran">Example in Fortran:</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-stream-triad-benchmark">2.2 The STREAM Triad benchmark:</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dense-matrix-multiplication">Dense matrix multiplication</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#estimating-time">Estimating time</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
             </nav>
         </div>
@@ -441,12 +454,15 @@ document.write(`
 <p>Today:</p>
 <ol class="arabic simple">
 <li><p>Measuring Performance</p></li>
+<li><p>Introduction to Performance Modeling<br />
+2.1 The vector triad benchmark<br />
+2.2 The STREAM triad benchmark</p></li>
 </ol>
 <section id="id1">
 <h2>1. Measuring Performance<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
 <p>Two of the standard approaches to assessing performance:</p>
 <ul class="simple">
-<li><p>Floating Point Operations per Second (FLOPS)</p>
+<li><p>Floating Point Operations per Second (FLOP/S)</p>
 <ul>
 <li><p>FLOPs = Floating Pointer Operations (careful on the small “s” vs big “S”) (see
 <a class="reference external" href="https://youtu.be/cRyVMrNNRCk?si=mttXpzKWQVQP9sSB">video: 1.1.1 GFLOPS</a>).</p></li>
@@ -459,14 +475,14 @@ GigaFLOPS or GFLOPS: <span class="math notranslate nohighlight">\(\text{GFLOPS} 
 <li><p>Calculate for one core of your machine:
 <div class="math notranslate nohighlight">
 \[
-\text{FLOPS} = \frac{\text{cycle}}{\text{second}} \frac{\text{FLOPs}}{\text{cycle}} 
+\text{FLOP/S} = \frac{\text{cycle}}{\text{second}} \frac{\text{FLOPs}}{\text{cycle}} 
 \]</div>
 </p>
 <ul>
 <li><p>cycles-per-second can be looked up for your CPU on your machine</p></li>
-<li><p>FLOPS-per-cycle can be tricky to find, is based on your processors
+<li><p>FLOP/S-per-cycle can be tricky to find, is based on your processors
 microarchitecture and is most easily found on the <a class="reference external" href="https://en.wikipedia.org/wiki/Floating_point_operations_per_second#FLOPs_per_cycle_for_various_processors">Wikipedia FLOP page</a>.
-For instance my laptop has an Intel Core i5-8210Y CPU at 1.6 GHz. This
+For instance, consider a laptop with an Intel Core i5-8210Y CPU at 1.6 GHz. This
 is an Amber Lake processors with 16 FLOPs-per-cycle, and thus has a
 calculated FLOP rate of
 <div class="math notranslate nohighlight">
@@ -496,6 +512,230 @@ main memory).</p></li>
 </li>
 </ul>
 </section>
+<section id="introduction-to-performance-modeling">
+<h2>2. Introduction to Performance Modeling<a class="headerlink" href="#introduction-to-performance-modeling" title="Link to this heading">#</a></h2>
+<p>Models give is a conceptual and roughly quantitative framework by which to answer the following types of questions.</p>
+<ul class="simple">
+<li><p>Why is an implementation exhibiting its observed performance?</p></li>
+<li><p>How will performance change if we:</p>
+<ul>
+<li><p>optimize this component?</p></li>
+<li><p>buy new hardware? (Which new hardware?)</p></li>
+<li><p>run a different configuration?</p></li>
+</ul>
+</li>
+<li><p>While conceptualizing a new algorithm, what performance can we expect and what will be bottlenecks?</p></li>
+</ul>
+<p>Models are a guide for performance, but not an absolute.</p>
+<section id="terms">
+<h3>Terms<a class="headerlink" href="#terms" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Symbol</p></th>
+<th class="head"><p>Meaning</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(n\)</span></p></td>
+<td><p>Input parameter related to problem size</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(W\)</span></p></td>
+<td><p>Amount of work to solve problem <span class="math notranslate nohighlight">\(n\)</span></p></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(T\)</span></p></td>
+<td><p>Execution time</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(R\)</span></p></td>
+<td><p>Rate at which work is done</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="the-vector-triad-benchmark">
+<h3>2.1 The vector triad benchmark<a class="headerlink" href="#the-vector-triad-benchmark" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Fathoming the chief performance characteristics of a processor or system is one of the purposes of <em>low-level benchmarking</em>.</p></li>
+<li><p>A low-level benchmark is a program that tries to test some specific feature of the architecture like, e.g., peak performance or memory bandwidth.</p></li>
+<li><p>One of the prominent examples is the <em>vector triad</em>, introduced by Schönauer (self-edition, 2000). It comprises a nested loop, the inner level executing a multiply add operation on the elements of three vectors and storing the result in a fourth.</p></li>
+</ul>
+<section id="example-in-fortran">
+<h4>Example in Fortran:<a class="headerlink" href="#example-in-fortran" title="Link to this heading">#</a></h4>
+<p>See the following implementation as a Fortran code snippet:</p>
+<div class="highlight-Fortran notranslate"><div class="highlight"><pre><span></span><span class="kt">double precision</span><span class="p">,</span><span class="w"> </span><span class="k">dimension</span><span class="p">(</span><span class="n">N</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">A</span><span class="p">,</span><span class="n">B</span><span class="p">,</span><span class="n">C</span><span class="p">,</span><span class="n">D</span>
+<span class="kt">double precision</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">S</span><span class="p">,</span><span class="n">E</span><span class="p">,</span><span class="n">MFLOPS</span>
+
+<span class="k">do </span><span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">N</span><span class="w">                                </span><span class="c">!initialize arrays</span>
+<span class="w">    </span><span class="n">A</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.d0</span><span class="p">;</span><span class="w"> </span><span class="n">B</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1.d0</span>
+<span class="w">    </span><span class="n">C</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">2.d0</span><span class="p">;</span><span class="w"> </span><span class="n">D</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">3.d0</span>
+<span class="k">enddo</span>
+
+<span class="k">call </span><span class="n">get_walltime</span><span class="p">(</span><span class="n">S</span><span class="p">)</span><span class="w">                    </span><span class="c">! get time stamp</span>
+
+<span class="k">do </span><span class="n">j</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">R</span>
+<span class="w">    </span><span class="k">do </span><span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">N</span>
+<span class="w">        </span><span class="n">A</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">B</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">C</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">D</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w">       </span><span class="c">! 3 loads, 1 store</span>
+<span class="w">    </span><span class="k">enddo </span>
+<span class="k">    if</span><span class="p">(</span><span class="n">A</span><span class="p">(</span><span class="mi">2</span><span class="p">).</span><span class="n">lt</span><span class="p">.</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="k">call </span><span class="n">dummy</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">B</span><span class="p">,</span><span class="n">C</span><span class="p">,</span><span class="n">D</span><span class="p">)</span><span class="w">   </span><span class="c">! prevent loop interchange</span>
+<span class="k">enddo</span>
+
+<span class="k">call </span><span class="n">get_walltime</span><span class="p">(</span><span class="n">E</span><span class="p">)</span><span class="w">                    </span><span class="c">! get time stamp again</span>
+
+<span class="n">MFLOPS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">R</span><span class="o">*</span><span class="n">N</span><span class="o">*</span><span class="mf">2.d0</span><span class="o">/</span><span class="p">((</span><span class="n">E</span><span class="o">-</span><span class="n">S</span><span class="p">)</span><span class="o">*</span><span class="mf">1.d6</span><span class="p">)</span><span class="w">          </span><span class="c">! compute MFlop/sec rate</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>The purpose of this benchmark is to measure the performance of data transfers between memory and arithmetic units of a processor.</p></li>
+<li><p>On the inner level, three <em>load streams</em> for arrays <code class="docutils literal notranslate"><span class="pre">B</span></code>, <code class="docutils literal notranslate"><span class="pre">C</span></code> and <code class="docutils literal notranslate"><span class="pre">D</span></code> and one <em>store stream</em> for <code class="docutils literal notranslate"><span class="pre">A</span></code> are active.</p></li>
+<li><p>Depending on <code class="docutils literal notranslate"><span class="pre">N</span></code>, this loop might execute in a very small time, which would be hard to measure. The outer loop thus repeats the triad <code class="docutils literal notranslate"><span class="pre">R</span></code> times so that execution time becomes large enough to be accurately measurable. In practice one would choose <code class="docutils literal notranslate"><span class="pre">R</span></code> according to <code class="docutils literal notranslate"><span class="pre">N</span></code> so that the overall execution time stays roughly constant for different <code class="docutils literal notranslate"><span class="pre">N</span></code>.</p></li>
+</ul>
+<p>Observations:</p>
+<ul class="simple">
+<li><p>The aim of the masked-out call to the <code class="docutils literal notranslate"><span class="pre">dummy()</span></code> subroutine is to prevent the compiler from doing an obvious optimization: Without the call, the compiler might discover that the inner loop does not depend at all on the outer loop index <code class="docutils literal notranslate"><span class="pre">j</span></code> and drop the outer loop right away.</p></li>
+<li><p>The possible call to <code class="docutils literal notranslate"><span class="pre">dummy()</span></code> fools the compiler into believing that the arrays may change between outer loop iterations. This effectively prevents the optimization described, and the additional cost is negligible because the condition is always false (which the compiler does not know in advance).</p></li>
+<li><p>Please note that the most sensible time measure in benchmarking is <em>wallclock time</em>, also called <em>elapsed time</em>. Any other “time” that the system may provide, first and foremost the much stressed CPU time, is prone to misinterpretation because there
+might be contributions from I/O, context switches, other processes, etc., which CPU time cannot encompass (this is especially true for parallel programs).</p></li>
+</ul>
+<p><img alt="vector triad performance graph" src="../_images/vector_triad_perf_graph.png" /></p>
+<p>In the above graph, we see the serial vector triad performance versus loop length for several generations of In-
+tel processor architectures (clock speed and year of introduction is indicated in the legend), and the NEC
+SX-8 vector processor. Note the entirely different performance characteristics of the latter.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<ul class="simple">
+<li><p>If you are not familiar, check this reference on <a class="reference external" href="https://sdsu-comp526.github.io/fall24/slides/module2-1_intro_to_c.html#compiling-a-c-program">How to Compile a C program</a> and <a class="reference external" href="https://sdsu-comp526.github.io/fall24/slides/module6-1_intro_to_fortran.html#how-to-compile-a-fortran-program">How to Compile a Fortran program</a></p></li>
+</ul>
+</div>
+</section>
+</section>
+<section id="the-stream-triad-benchmark">
+<h3>2.2 The STREAM Triad benchmark:<a class="headerlink" href="#the-stream-triad-benchmark" title="Link to this heading">#</a></h3>
+<p>A C snippet:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+<span class="w">    </span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">scalar</span><span class="o">*</span><span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+</pre></div>
+</div>
+<p>Following the notation above, <span class="math notranslate nohighlight">\(n\)</span> is the array size and</p>
+<div class="math notranslate nohighlight">
+\[W = 3 \cdot \texttt{sizeof(double)} \cdot n\]</div>
+<p>is the number of bytes transferred.</p>
+<p>The rate <span class="math notranslate nohighlight">\(R = W/T\)</span> is measured in bytes per second (or MB/s, etc.).</p>
+<section id="dense-matrix-multiplication">
+<h4>Dense matrix multiplication<a class="headerlink" href="#dense-matrix-multiplication" title="Link to this heading">#</a></h4>
+<p>To perform the operation <span class="math notranslate nohighlight">\(C \gets C + A B\)</span> where <span class="math notranslate nohighlight">\(A,B,C\)</span> are <span class="math notranslate nohighlight">\(n\times n\)</span> matrices.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="o">++</span><span class="p">)</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">k</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">k</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="n">k</span><span class="o">++</span><span class="p">)</span>
+<span class="w">            </span><span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="n">n</span><span class="o">+</span><span class="n">j</span><span class="p">]</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="n">n</span><span class="o">+</span><span class="n">k</span><span class="p">]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">b</span><span class="p">[</span><span class="n">k</span><span class="o">*</span><span class="n">n</span><span class="o">+</span><span class="n">j</span><span class="p">];</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Can you identify two expressions for the total amount of work <span class="math notranslate nohighlight">\(W(n)\)</span> and the associated units?</p></li>
+<li><p>Can you think of a context in which one is better than the other and vice-versa?</p></li>
+</ul>
+</section>
+<section id="estimating-time">
+<h4>Estimating time<a class="headerlink" href="#estimating-time" title="Link to this heading">#</a></h4>
+<p>To estimate time, we need to know how fast hardware executes flops and moves bytes.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="k">using</span><span class="w"> </span><span class="n">Pkg</span>
+<span class="n">Pkg</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s">&quot;CSV&quot;</span><span class="p">)</span>
+<span class="k">using</span><span class="w"> </span><span class="n">CSV</span>
+<span class="n">Pkg</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s">&quot;DataFrames&quot;</span><span class="p">)</span>
+<span class="k">using</span><span class="w"> </span><span class="n">DataFrames</span>
+<span class="n">Pkg</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s">&quot;Plots&quot;</span><span class="p">)</span>
+<span class="k">using</span><span class="w"> </span><span class="n">Plots</span>
+<span class="n">default</span><span class="p">(</span><span class="n">linewidth</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="n">legendfontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+
+<span class="n">hardware</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">CSV</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s">&quot;../assets/data/data-intel.csv&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">DataFrame</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold -Color-Bold-Green">   Resolving</span> package versions...
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold -Color-Bold-Green">  No Changes</span> to `~/.julia/environments/v1.10/Project.toml`
+<span class=" -Color -Color-Bold -Color-Bold-Green">    Updating</span> `~/.julia/environments/v1.10/Manifest.toml`
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  [8e850b90] ↓ libblastrampoline_jll v5.11.0+0 ⇒ v5.8.0+1
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold -Color-Bold-Green">Precompiling</span> 
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>project...
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">  ✓ </span>InvertedIndices
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">  ✓ </span>MPIPreferences
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">  ✓ </span>SentinelArrays
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">  ✓ </span>CSV
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">plot</span><span class="p">(</span><span class="n">hardware</span><span class="p">[</span><span class="o">:</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span><span class="w"> </span><span class="n">hardware</span><span class="p">[</span><span class="o">:</span><span class="p">,</span><span class="mi">5</span><span class="p">],</span><span class="w"> </span><span class="n">xlabel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;GFLOPs Double Precision&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">ylabel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Memory GBps&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">primary</span><span class="o">=</span><span class="nb">false</span><span class="p">)</span>
+<span class="n">scatter!</span><span class="p">(</span><span class="n">hardware</span><span class="p">[</span><span class="o">:</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span><span class="w"> </span><span class="n">hardware</span><span class="p">[</span><span class="o">:</span><span class="p">,</span><span class="mi">5</span><span class="p">],</span><span class="w"> </span><span class="n">label</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Mem-GBps&quot;</span><span class="p">,)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Here we have rates <span class="math notranslate nohighlight">\(R_f = 4660 \cdot 10^9\)</span> flops/second and <span class="math notranslate nohighlight">\(R_m = 175 \cdot 10^9\)</span> bytes/second.  Now we need to characterize some algorithms.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">algs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">CSV</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s">&quot;../assets/data/algs.csv&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">DataFrame</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">algs</span><span class="p">[</span><span class="o">!</span><span class="p">,</span><span class="w"> </span><span class="ss">:intensity</span><span class="p">]</span><span class="w"> </span><span class="o">.=</span><span class="w"> </span><span class="n">algs</span><span class="p">[</span><span class="o">:</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span><span class="w">  </span><span class="o">./</span><span class="w"> </span><span class="n">algs</span><span class="p">[</span><span class="o">:</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span>
+<span class="n">algs</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">sort</span><span class="p">(</span><span class="n">algs</span><span class="p">,</span><span class="w"> </span><span class="ss">:intensity</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="k">function</span><span class="w"> </span><span class="n">exec_time</span><span class="p">(</span><span class="n">machine</span><span class="p">,</span><span class="w"> </span><span class="n">alg</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
+<span class="w">    </span><span class="n">bytes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">alg</span><span class="o">.</span><span class="n">bytes</span>
+<span class="w">    </span><span class="n">flops</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">alg</span><span class="o">.</span><span class="n">flops</span>
+<span class="w">    </span><span class="n">T_mem</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">bytes</span><span class="w"> </span><span class="o">./</span><span class="w"> </span><span class="p">(</span><span class="n">machine</span><span class="p">[</span><span class="o">:</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Mem-GBps&quot;</span><span class="p">]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">1e9</span><span class="p">)</span>
+<span class="w">    </span><span class="n">T_flops</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">flops</span><span class="w"> </span><span class="o">./</span><span class="w"> </span><span class="p">(</span><span class="n">machine</span><span class="p">[</span><span class="o">:</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;GFLOPs-DP&quot;</span><span class="p">]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">1e9</span><span class="p">)</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">maximum</span><span class="p">([</span><span class="n">T_mem</span><span class="p">,</span><span class="w"> </span><span class="n">T_flops</span><span class="p">])</span>
+
+<span class="k">end</span>
+
+<span class="n">Xeon_Platinum_9282</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">filter</span><span class="p">(</span><span class="ss">:Name</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="o">==</span><span class="p">(</span><span class="s">&quot;Xeon Platinum 9282&quot;</span><span class="p">),</span><span class="w"> </span><span class="n">hardware</span><span class="p">)</span>
+<span class="n">SpMV</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">filter</span><span class="p">(</span><span class="ss">:Name</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="o">==</span><span class="p">(</span><span class="s">&quot;SpMV&quot;</span><span class="p">),</span><span class="w"> </span><span class="n">algs</span><span class="p">)</span>
+
+<span class="n">exec_time</span><span class="p">(</span><span class="n">Xeon_Platinum_9282</span><span class="p">,</span><span class="w"> </span><span class="n">SpMV</span><span class="p">,</span><span class="w"> </span><span class="mf">1e8</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+</section>
 </section>
 
     <script type="text/x-thebe-config">
@@ -507,16 +747,16 @@ main memory).</p></li>
         },
         codeMirrorConfig: {
             theme: "abcdef",
-            mode: "python"
+            mode: "julia-1.10"
         },
         kernelOptions: {
-            name: "python3",
+            name: "julia-1.10",
             path: "./lectures"
         },
         predefinedOutput: true
     }
     </script>
-    <script>kernelName = 'python3'</script>
+    <script>kernelName = 'julia-1.10'</script>
 
                 </article>
               
@@ -554,6 +794,19 @@ main memory).</p></li>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">1. Measuring Performance</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction-to-performance-modeling">2. Introduction to Performance Modeling</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#terms">Terms</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-vector-triad-benchmark">2.1 The vector triad benchmark</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#example-in-fortran">Example in Fortran:</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-stream-triad-benchmark">2.2 The STREAM Triad benchmark:</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dense-matrix-multiplication">Dense matrix multiplication</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#estimating-time">Estimating time</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
   </nav></div>
 
