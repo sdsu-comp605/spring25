@@ -592,6 +592,8 @@ C = C + A * B
 </div>
 </div>
 </div>
+<p><strong>Note</strong>:</p>
+<p>In the code above (and below) we have used the <code class="docutils literal notranslate"><span class="pre">&#64;inbounds</span></code> macro in Julia. This tells the compiler to avoid <a class="reference external" href="https://docs.julialang.org/en/v1/devdocs/boundscheck/">bounds checking</a> that would normally be applied to ensure program safety when accessing arrays. Use this to improve runtime performance <em>only if</em> you are extremely confident that your code might not try to access/read/write out of bounds data.</p>
 </section>
 <section id="loop-ordering-ipj">
 <h3>2.2 Loop ordering: ipj<a class="headerlink" href="#loop-ordering-ipj" title="Link to this heading">#</a></h3>
@@ -915,34 +917,34 @@ C = C + A * B
      |   seconds   GFLOPS  |   seconds   GFLOPS     diff
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  48 |  7.03e-06    31.46  |
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  48 |  7.05e-06    31.39  |
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  8.34e-05     2.65   7.11e-15
-  96 |  4.38e-05    40.37  |  8.67e-04     2.04   1.42e-14
- 144 |  1.36e-04    43.87  |  3.10e-03     1.93   3.55e-14
- 192 |  3.12e-04    45.38  |  7.77e-03     1.82   3.55e-14
- 240 |  5.83e-04    47.40  |  1.49e-02     1.86   5.68e-14
- 288 |  1.00e-03    47.79  |
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  8.32e-05     2.66   7.11e-15
+  96 |  4.41e-05    40.10  |  9.66e-04     1.83   1.42e-14
+ 144 |  1.37e-04    43.70  |  3.21e-03     1.86   3.55e-14
+ 192 |  3.14e-04    45.12  |  7.70e-03     1.84   3.55e-14
+ 240 |  5.88e-04    47.00  |  1.50e-02     1.85   5.68e-14
+ 288 |  1.01e-03    47.51  |
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  2.65e-02     1.80   1.85e-13
- 336 |  1.58e-03    47.96  |
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  2.73e-02     1.75   1.85e-13
+ 336 |  1.57e-03    48.19  |
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  4.20e-02     1.81   2.13e-13
- 384 |  2.33e-03    48.65  |
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  4.19e-02     1.81   2.13e-13
+ 384 |  2.34e-03    48.38  |
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  8.83e-02     1.28   2.42e-13
- 432 |  3.26e-03    49.46  |
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  9.08e-02     1.25   2.42e-13
+ 432 |  3.27e-03    49.25  |
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  8.91e-02     1.81   2.84e-13
- 480 |  4.46e-03    49.55  |
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  8.93e-02     1.81   2.84e-13
+ 480 |  4.49e-03    49.29  |
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  1.24e-01     1.78   3.41e-13
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  1.25e-01     1.77   3.41e-13
 </pre></div>
 </div>
 </div>
