@@ -21,6 +21,7 @@ Email: vbarra @ sdsu . edu
 
 Office location: announced on the course [Canvas page](https://sdsu.instructure.com/courses/171936)
 
+Material: all the material can be found on the [class website](https://sdsu-comp605.github.io/spring25/index.html).
 
 **Office Hours**: announced on the course [Canvas page](https://sdsu.instructure.com/courses/171936) or by appointment.
 
@@ -30,12 +31,9 @@ Office hours are an important time for asking questions, solving problems, discu
 
 ## Overview
 
-This course will develop the skills necessary to reason about performance of applications and modern architectures, to identify
-opportunities and side-effects of changes, to develop high-performance software, to transfer algorithmic patterns and lessons learned from different domains, and to communicate such analyses with diverse
-stakeholders.
+This course will develop the skills necessary to reason about performance of applications and modern architectures, to identify opportunities and side-effects of changes, to develop high-performance software, to transfer algorithmic patterns and lessons learned from different domains, and to communicate such analyses with diverse stakeholders.
 
-These skills are important for research and development of numerical methods and performance-sensitive science and engineering
-applications, or obtaining allocations via, e.g., NSF's [XSEDE](https://www.xsede.org/), [ACCESS](https://allocations.access-ci.org/resources), and DOE [ASCR facilities](https://science.osti.gov/ascr/Facilities/Accessing-ASCR-Facilities), as well as in jobs affiliated with computing facilities at National Labs, (see for instance this [ANL careers page](https://www.alcf.anl.gov/about/careers)), industry, and academia.
+These skills are important for research and development of numerical methods and performance-sensitive science and engineering applications, or obtaining allocations via, e.g., NSF's [XSEDE](https://www.xsede.org/), [ACCESS](https://allocations.access-ci.org/resources), and DOE [ASCR facilities](https://science.osti.gov/ascr/Facilities/Accessing-ASCR-Facilities), as well as in jobs affiliated with computing facilities at National Labs, (see for instance this [ANL careers page](https://www.alcf.anl.gov/about/careers)), industry, and academia.
 
 We will introduce widely-used parallel programming models such as OpenMP, MPI, and CUDA, as well as ubiquitous parallel libraries, but the purpose of the course is not to teach interfaces, but to develop skills that will be durable and transferrable across different paradigms.
 
@@ -44,7 +42,7 @@ We will introduce widely-used parallel programming models such as OpenMP, MPI, a
 
 We will start by giving an introduction to version control and reproducibility, which are key aspects of modern computational sciences. These will serve as the foundation for the workflow that students will follow for all of their assignments during the course. We will then introduce the Linux filesystem and basic shell commands.
 
-This course does not assume prior experience with parallel programming. It will use Linux command-line tools, and some activities will involve batch computing environments (SLURM). Most exercises and class demos will use the C and Julia programming languages, though you can use any appropriate language for projects. Some of the exercises will involve techniques and methods from numerical computing (e.g., COMP 526). I will do my best to avoid assuming prior knowledge of these topics, and to provide resources for you to learn or refresh your memory as we use them.
+This course does not assume prior experience with parallel programming. It will use Linux command-line tools, and some activities will involve batch computing environments (SLURM). Most exercises and class demos will use the C and Julia programming languages, though you can use any appropriate language for projects. Some of the exercises will involve techniques and methods from numerical computing (e.g., [COMP 526](https://sdsu-comp526.github.io/fall24/index.html)). I will do my best to avoid assuming prior knowledge of these topics, and to provide resources for you to learn or refresh your memory as we use them.
 
 ## Student Learning Outcomes
 
