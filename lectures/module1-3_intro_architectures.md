@@ -31,7 +31,7 @@ The vast majority of modern computers use the same hardware mechanism to encode 
 
 ### A contemporary architecture:
 
-![Core 2](http://static.duartes.org/img/blogPosts/physicalMemoryAccess.png)
+![Core 2](../img/IntelCore2.png "Intel Core 2")
 
 ### My laptop:
 
