@@ -434,7 +434,10 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#loop-ordering-pji">2.4 Loop ordering: pji</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#loop-ordering-jpi">2.5 Loop ordering: jpi</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#loop-ordering-jip">2.6 Loop ordering: jip</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#testing">Testing</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#testing">Testing</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#questions-and-observations">Questions and observations:</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -510,7 +513,7 @@ C = C + A * B
 <p>where <span class="math notranslate nohighlight">\(γ_{ij}\)</span>, <span class="math notranslate nohighlight">\(α_{ip}\)</span>, and <span class="math notranslate nohighlight">\(β_{pj}\)</span> are the elements of the matrices <span class="math notranslate nohighlight">\(C\)</span>, <span class="math notranslate nohighlight">\(A\)</span>, and <span class="math notranslate nohighlight">\(B\)</span>, respectively.</p>
 <section id="notation">
 <h4>Notation<a class="headerlink" href="#notation" title="Link to this heading">#</a></h4>
-<p>See <a class="reference external" href="https://www.cs.utexas.edu/~flame/laff/pfhp/week1-notation.html">text 1.3.1 Notation</a></p>
+<p>See <a class="reference external" href="https://www.cs.utexas.edu/~flame/laff/pfhp/week1-notation.html">text 1.3.1 Notation</a>.</p>
 <ul class="simple">
 <li><p>Capital letters for matrices <span class="math notranslate nohighlight">\(A\)</span>, <span class="math notranslate nohighlight">\(B\)</span>, etc.</p></li>
 <li><p>lower case letters for vectors <span class="math notranslate nohighlight">\(a\)</span>, <span class="math notranslate nohighlight">\(b\)</span>, etc.</p></li>
@@ -521,17 +524,27 @@ C = C + A * B
 <li><p>lower case letters for integer scalars <span class="math notranslate nohighlight">\(n\)</span>, <span class="math notranslate nohighlight">\(m\)</span>, <span class="math notranslate nohighlight">\(k\)</span> (for matrix sizes) and <span class="math notranslate nohighlight">\(i\)</span>, <span class="math notranslate nohighlight">\(j\)</span>, <span class="math notranslate nohighlight">\(p\)</span> for element indices</p></li>
 <li><p>Often useful to think of matrices as collections of column and/or row vectors:</p></li>
 </ul>
+<p>If <span class="math notranslate nohighlight">\(A\)</span> is a <span class="math notranslate nohighlight">\(m \times k\)</span> matrix, then we expose its columns as</p>
+<div class="math notranslate nohighlight">
+\[
+ A = [a_1 | a_2 | \dots | a_k] 
+\]</div>
+<p>so that <span class="math notranslate nohighlight">\(a_j\)</span> equals the column with index <span class="math notranslate nohighlight">\(j\)</span>.</p>
+<p>We can expose its rows as:</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}
- A = [a_1 a_2 \dots a_k] =
+  A =
    \begin{bmatrix}
      \tilde{a}_{1}^{T}\\
      \tilde{a}_{2}^{T}\\
      \ddots\\
-     \tilde{a}_{n}^{T}
+     \tilde{a}_{m}^{T}
    \end{bmatrix}
 \end{split}\]</div>
-<p>(note that we think of all vectors as column vectors).</p>
+<p>so that <span class="math notranslate nohighlight">\(\tilde{a}_{i}\)</span> equals the row at index <span class="math notranslate nohighlight">\(i\)</span>. Here the <span class="math notranslate nohighlight">\(^T\)</span> indicates it is a row (a column vector that has been transposed). The tilde is added for clarity since <span class="math notranslate nohighlight">\(a^T_i\)</span>  would in this setting equal the column indexed with <span class="math notranslate nohighlight">\(i\)</span> that has been transposed, rather than the row indexed with <span class="math notranslate nohighlight">\(i\)</span> or any subset of the vector. When there isn’t a cause for confusion, we will sometimes leave the tilde off.</p>
+<ul class="simple">
+<li><p>Note that we think of all vectors as column vectors by default.</p></li>
+</ul>
 </section>
 </section>
 </section>
@@ -552,7 +565,7 @@ C = C + A * B
 <p>In the example above, we call “ijp” the loop ordering, since the loop index variables appear from outer most loop to inner most loop this way.</p>
 <section id="loop-ordering-ijp">
 <h3>2.1 Loop ordering: ijp<a class="headerlink" href="#loop-ordering-ijp" title="Link to this heading">#</a></h3>
-<p>Matrix times row vector (update rows of <span class="math notranslate nohighlight">\(C\)</span>)</p>
+<p>Row vectors of <span class="math notranslate nohighlight">\(A\)</span> times the matrix <span class="math notranslate nohighlight">\(B\)</span> (update rows of <span class="math notranslate nohighlight">\(C\)</span>):</p>
 <div class="math notranslate nohighlight">
 \[
   \tilde{c}_{i}^T = \tilde{c}_{i}^{T} + \tilde{a}_{i}^T B
@@ -568,7 +581,7 @@ C = C + A * B
 <p>Example in Julia:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="c"># matrix times row vector (update rows of `C`) with inner dot product</span>
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="c"># Row vectors of A times the matrix B (update rows of `C`) with inner dot product</span>
 <span class="k">function</span><span class="w"> </span><span class="n">mygemm_ijp!</span><span class="p">(</span><span class="n">C</span><span class="p">,</span><span class="w"> </span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="n">B</span><span class="p">)</span>
 <span class="w">  </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
 <span class="w">  </span><span class="n">_</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">B</span><span class="p">)</span>
@@ -592,16 +605,16 @@ C = C + A * B
 </div>
 </div>
 <p><strong>Note</strong>:</p>
-<p>In the code above (and below) we have used the <code class="docutils literal notranslate"><span class="pre">&#64;inbounds</span></code> macro in Julia. This tells the compiler to avoid <a class="reference external" href="https://docs.julialang.org/en/v1/devdocs/boundscheck/">bounds checking</a> that would normally be applied to ensure program safety when accessing arrays. Use this to improve runtime performance <em>only if</em> you are extremely confident that your code might not try to access/read/write out of bounds data.</p>
+<p>In the code above (and codes below) we have used the <code class="docutils literal notranslate"><span class="pre">&#64;inbounds</span></code> macro in Julia. This tells the compiler to avoid <a class="reference external" href="https://docs.julialang.org/en/v1/devdocs/boundscheck/">bounds checking</a> that would normally be applied to ensure program safety when accessing arrays. Use this to improve runtime performance <em>only if</em> you are extremely confident that your code might not try to access/read/write out of bounds data.</p>
 </section>
 <section id="loop-ordering-ipj">
 <h3>2.2 Loop ordering: ipj<a class="headerlink" href="#loop-ordering-ipj" title="Link to this heading">#</a></h3>
-<p>Matrix times row vector (update rows of <span class="math notranslate nohighlight">\(C\)</span>)</p>
+<p>Row vectors of <span class="math notranslate nohighlight">\(A\)</span> times the matrix <span class="math notranslate nohighlight">\(B\)</span> (update rows of <span class="math notranslate nohighlight">\(C\)</span>):</p>
 <div class="math notranslate nohighlight">
 \[
   \tilde{c}_{i}^T = \tilde{c}_{i}^{T} + \tilde{a}_{i}^T B
 \]</div>
-<p>with inner <span class="math notranslate nohighlight">\(\tilde{a}_{i}^T B\)</span> computed using <code class="docutils literal notranslate"><span class="pre">axpy</span></code>, scalar times vector plus vector (update <span class="math notranslate nohighlight">\(\tilde{c}_{i}\)</span>):</p>
+<p>but this time with inner product <span class="math notranslate nohighlight">\(\tilde{a}_{i}^T B\)</span> computed using <a class="reference external" href="https://en.wikipedia.org/wiki/Basic_Linear_Algebra_Subprograms"><code class="docutils literal notranslate"><span class="pre">axpy</span></code></a>, scalar times vector plus vector (update rows of C, <span class="math notranslate nohighlight">\(\tilde{c}_{i}^T\)</span>):</p>
 <div class="math notranslate nohighlight">
 \[
    \tilde{a}_{i}^T B = \sum_{p=1}^{k} \alpha_{ip} \tilde{b}_p^T
@@ -609,7 +622,7 @@ C = C + A * B
 <p>Example in Julia:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="c"># matrix times row vector (update rows of `C`) with inner axpy</span>
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="c"># Row vectors of A times the matrix B (update rows of `C`) with inner `axpy`</span>
 <span class="k">function</span><span class="w"> </span><span class="n">mygemm_ipj!</span><span class="p">(</span><span class="n">C</span><span class="p">,</span><span class="w"> </span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="n">B</span><span class="p">)</span>
 <span class="w">    </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
 <span class="w">    </span><span class="n">_</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">B</span><span class="p">)</span>
@@ -655,7 +668,7 @@ C = C + A * B
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="c"># Rank one update (repeatedly update all elements of `C`) with outer product</span>
-<span class="c"># using axpy with rows of `B`</span>
+<span class="c"># using `axpy` with rows of `B`</span>
 <span class="k">function</span><span class="w"> </span><span class="n">mygemm_pij!</span><span class="p">(</span><span class="n">C</span><span class="p">,</span><span class="w"> </span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="n">B</span><span class="p">)</span>
 <span class="w">    </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
 <span class="w">    </span><span class="n">_</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">B</span><span class="p">)</span>
@@ -699,7 +712,7 @@ C = C + A * B
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="c"># Rank one update (repeatedly update all elements of `C`) with outer product</span>
-<span class="c"># using axpy with columns of `A`</span>
+<span class="c"># using `axpy` with columns of `A`</span>
 <span class="k">function</span><span class="w"> </span><span class="n">mygemm_pji!</span><span class="p">(</span><span class="n">C</span><span class="p">,</span><span class="w"> </span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="n">B</span><span class="p">)</span>
 <span class="w">    </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
 <span class="w">    </span><span class="n">_</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">B</span><span class="p">)</span>
@@ -731,7 +744,7 @@ C = C + A * B
 \[
   c_j = c_{j} + A b_j
 \]</div>
-<p>with inner <span class="math notranslate nohighlight">\(A b_j\)</span> computed using <code class="docutils literal notranslate"><span class="pre">axpy</span></code>:</p>
+<p>with inner products <span class="math notranslate nohighlight">\(A b_j\)</span> computed using <code class="docutils literal notranslate"><span class="pre">axpy</span></code>:</p>
 <div class="math notranslate nohighlight">
 \[
   A b_j = \sum_{p=1}^{k} a_{p}\beta_{pj}
@@ -739,7 +752,7 @@ C = C + A * B
 <p>Example in Julia:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="c"># matrix times column vector (update columns of `C`) with inner axpy</span>
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="c"># matrix times column vector (update columns of `C`) with inner `axpy`</span>
 <span class="k">function</span><span class="w"> </span><span class="n">mygemm_jpi!</span><span class="p">(</span><span class="n">C</span><span class="p">,</span><span class="w"> </span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="n">B</span><span class="p">)</span>
 <span class="w">    </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
 <span class="w">    </span><span class="n">_</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">B</span><span class="p">)</span>
@@ -771,7 +784,7 @@ C = C + A * B
 \[
   c_j = c_{j} + A b_j
 \]</div>
-<p>with inner <span class="math notranslate nohighlight">\(A b_j\)</span> computed using dot products</p>
+<p>with inner products <span class="math notranslate nohighlight">\(A b_j\)</span> computed using dot products</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}
   A b_j =
@@ -818,6 +831,7 @@ C = C + A * B
 <span class="k">using</span><span class="w"> </span><span class="n">Random</span>
 <span class="k">using</span><span class="w"> </span><span class="n">LinearAlgebra</span>
 <span class="k">using</span><span class="w"> </span><span class="n">Printf</span>
+<span class="k">using</span><span class="w"> </span><span class="n">Plots</span>
 
 <span class="c"># To ensure repeatability</span>
 <span class="n">Random</span><span class="o">.</span><span class="n">seed!</span><span class="p">(</span><span class="mi">777</span><span class="p">)</span>
@@ -916,41 +930,44 @@ C = C + A * B
      |   seconds   GFLOPS  |   seconds   GFLOPS     diff
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  48 |  8.20e-06    26.98  |
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  48 |  7.17e-06    30.85  |
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  1.20e-04     1.85   7.11e-15
-  96 |  5.13e-05    34.50  |  1.12e-03     1.58   1.42e-14
- 144 |  1.59e-04    37.48  |  3.71e-03     1.61   3.55e-14
- 192 |  3.62e-04    39.08  |  9.10e-03     1.56   3.55e-14
- 240 |  6.85e-04    40.35  |
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  8.34e-05     2.65   7.11e-15
+  96 |  4.39e-05    40.34  |  9.86e-04     1.79   1.42e-14
+ 144 |  1.36e-04    43.88  |  3.03e-03     1.97   3.55e-14
+ 192 |  3.11e-04    45.56  |  7.55e-03     1.88   3.55e-14
+ 240 |  5.86e-04    47.19  |  1.49e-02     1.85   5.68e-14
+ 288 |  9.98e-04    47.85  |
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  1.78e-02     1.55   5.68e-14
- 288 |  1.16e-03    41.11  |
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  2.61e-02     1.83   1.85e-13
+ 336 |  1.56e-03    48.53  |
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  3.17e-02     1.51   1.85e-13
- 336 |  1.82e-03    41.67  |
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  4.18e-02     1.81   2.13e-13
+ 384 |  2.33e-03    48.65  |
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  5.01e-02     1.51   2.13e-13
- 384 |  3.01e-03    37.58  |
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  7.47e-02     1.52   2.42e-13
+ 432 |  3.26e-03    49.43  |
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  1.08e-01     1.04   2.42e-13
- 432 |  3.80e-03    42.45  |
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  8.96e-02     1.80   2.84e-13
+ 480 |  4.47e-03    49.43  |
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  1.07e-01     1.51   2.84e-13
- 480 |  5.18e-03    42.68  |
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  1.49e-01     1.49   3.41e-13
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  1.22e-01     1.81   3.41e-13
 </pre></div>
 </div>
 </div>
 </div>
+<section id="questions-and-observations">
+<h4>Questions and observations:<a class="headerlink" href="#questions-and-observations" title="Link to this heading">#</a></h4>
+<ul class="simple">
+<li><p>Why do some orderings get better performance?</p></li>
+</ul>
+</section>
 </section>
 </section>
 </section>
@@ -1024,7 +1041,10 @@ C = C + A * B
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#loop-ordering-pji">2.4 Loop ordering: pji</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#loop-ordering-jpi">2.5 Loop ordering: jpi</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#loop-ordering-jip">2.6 Loop ordering: jip</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#testing">Testing</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#testing">Testing</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#questions-and-observations">Questions and observations:</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
