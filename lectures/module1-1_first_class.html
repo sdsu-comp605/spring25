@@ -580,10 +580,12 @@ $ git remote add your_username https://yourusername@github.com/sdsu-comp605/spri
 <ul class="simple">
 <li><p>When you start working on a new feature branch, make sure you start from <code class="docutils literal notranslate"><span class="pre">main</span></code> by running: <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">checkout</span> <span class="pre">main</span></code>.</p></li>
 <li><p>When you create a new branch and check it out, as in <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">checkout</span> <span class="pre">-b</span> <span class="pre">&lt;branchname&gt;</span></code>, a common convention is to make <code class="docutils literal notranslate"><span class="pre">branchname</span></code> something along the lines of <code class="docutils literal notranslate"><span class="pre">&lt;yourname&gt;/&lt;short-description&gt;</span></code>.</p></li>
-<li><p>Every time you want to get <a class="reference external" href="https://docs.github.com/en/get-started/using-git/getting-changes-from-a-remote-repository">updates from a remote repository</a>, use <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">fetch</span></code>. If you are working in a very large collaborative environment in which a lot of people are pushing their work every day using different branches, you may want to add the <code class="docutils literal notranslate"><span class="pre">--prune</span></code> option so that you don’t download stale branches (e.g., <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">fetch</span> <span class="pre">--prune</span></code>).</p></li>
-<li><p>To download upstream changes and update the copy of the repo on your local machine use <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">merge</span></code> or <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">pull</span></code> (which combines <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">fetch</span></code> and <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">merge</span></code> in one single command).</p>
+<li><p>Every time you want to get <a class="reference external" href="https://docs.github.com/en/get-started/using-git/getting-changes-from-a-remote-repository">updates from a remote repository</a>, use <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">fetch</span></code> or <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">pull</span></code>.</p></li>
+<li><p>Difference between <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">fetch</span></code> and <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">pull</span></code>: <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">fetch</span></code> updates your remote-tracking branches. This operation is safe to run at any time since it never changes any of your local branches. <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">pull</span></code> brings a local branch up-to-date with its remote version, while also updating your other remote-tracking branches. In the simplest terms, <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">pull</span></code> does a <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">fetch</span></code> followed by a <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">merge</span></code>.</p></li>
+<li><p>If you are working in a very large collaborative environment in which a lot of people are pushing their work every day using different branches, you may want to use <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">fetch</span></code> and add the <code class="docutils literal notranslate"><span class="pre">--prune</span></code> option so that you don’t download stale branches (e.g., <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">fetch</span> <span class="pre">--prune</span></code>), before pulling.</p></li>
+<li><p>To download upstream changes and update the copy of the repo on your local machine use <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">merge</span></code> or <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">pull</span></code> (which, again, combines <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">fetch</span></code> and <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">merge</span></code> in one single command, so it’s more convenient).</p>
 <ul>
-<li><p>Be careful: this might trigger a <code class="docutils literal notranslate"><span class="pre">merge</span></code> warning if you have some unsaved or uncommitted changes locally. Always commit (or <a class="reference external" href="https://git-scm.com/docs/git-stash">stash</a>) your work before attempting merges.</p></li>
+<li><p>Be careful: this might trigger a <code class="docutils literal notranslate"><span class="pre">merge</span></code> warning if you have some unsaved or uncommitted changes locally. Always commit (or <a class="reference external" href="https://git-scm.com/docs/git-stash">stash</a>) your work and have a clean <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">status</span></code> before attempting merges.</p></li>
 </ul>
 </li>
 </ul>
@@ -591,7 +593,7 @@ $ git remote add your_username https://yourusername@github.com/sdsu-comp605/spri
 <section id="commit-and-contribute-your-own-changes">
 <h4>Commit and contribute your own changes<a class="headerlink" href="#commit-and-contribute-your-own-changes" title="Link to this heading">#</a></h4>
 <ul class="simple">
-<li><p>Once you have made any change to any file in the repository (e.g., you might have written some code or documentation, or updated files such as License, Controbuting, etc.) inspect these changes by running <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">status</span></code>.</p></li>
+<li><p>Once you have made any change to any file in the repository (e.g., you might have written some code or documentation, or updated files such as License, Contributing, etc.) inspect these changes by running <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">status</span></code>.</p></li>
 <li><p>Commit all files changed: <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">commit</span> <span class="pre">-a</span></code> or first add selected files via</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">add</span> <span class="pre">&lt;file1&gt;</span> <span class="pre">&lt;file2&gt;</span></code> (or more briefly, <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">add</span> <span class="pre">-u</span></code> to stage all updated files at once) followed by <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">commit</span></code>.</p></li>
@@ -617,7 +619,7 @@ front of the branch name).</p></li>
 </ul>
 <p>Additionally, when debugging or inspecting the code for some potentially problematic changes introduced, some of the following commands can be used:</p>
 <ul class="simple">
-<li><p>Show logs: <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">log</span></code>.</p></li>
+<li><p>Show logs: <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">log</span></code>, or more advanced, <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">reflog</span></code> (the latter includes any rebase and commit reshuffling you might have done).</p></li>
 <li><p>Show logs for file or folder: <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">log</span> <span class="pre">&lt;file&gt;</span></code>.</p></li>
 <li><p>Show changes for each log: <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">log</span> <span class="pre">-p</span></code> (add file or folder name if required).</p></li>
 <li><p>Show diff with current working tree: <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">diff</span> <span class="pre">path/to/file</span></code>.</p></li>
@@ -634,7 +636,7 @@ first, and then <code class="docutils literal notranslate"><span class="pre">git
 <section id="push-changes-to-your-own-repository">
 <h4>Push changes to your own repository<a class="headerlink" href="#push-changes-to-your-own-repository" title="Link to this heading">#</a></h4>
 <p>If you want your changes on your local machine to go onto your online repository, while sitting on the <code class="docutils literal notranslate"><span class="pre">main</span></code> branch, do</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">push</span> <span class="n">your_username</span> <span class="n">main</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">push</span> <span class="n">origin</span> <span class="n">main</span>
 </pre></div>
 </div>
 <p>However, it is <strong>not</strong> a good practice to work off the <code class="docutils literal notranslate"><span class="pre">main</span></code> branch.</p>
@@ -670,8 +672,8 @@ first, and then <code class="docutils literal notranslate"><span class="pre">git
 </li>
 </ul>
 <p>Files are specified according to patterns, e.g.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>*.nc # ignore all files with a .nc extension
-!test.nc # except test.nc
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>*.vscode # ignore all hidden files created by VS Code
+!test.nc # with a preceding bang, this will exclude `test.nc` from the gitignore
 </pre></div>
 </div>
 <p>See <a class="reference external" href="https://git-scm.com/docs/gitignore">Git manual: gitignore</a> for more information</p>
