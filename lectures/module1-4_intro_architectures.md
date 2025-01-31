@@ -1,4 +1,4 @@
-# 3) Introduction to Computer Architectures
+# 4) Introduction to Computer Architectures
 
 Last time:
 
