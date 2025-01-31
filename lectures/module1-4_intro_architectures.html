@@ -1,0 +1,1063 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>4) Introduction to Computer Architectures &#8212; Scientific Computing</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'lectures/module1-4_intro_architectures';</script>
+    <link rel="icon" href="../_static/SDSU-comp605_logo.svg"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="5) Introduction to Vectorization" href="module1-5_intro_vectorization.html" />
+    <link rel="prev" title="3) Community Projects" href="module1-3_community_projects.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/SDSU-comp605_logo.svg" class="logo__image only-light" alt="Scientific Computing - Home"/>
+    <script>document.write(`<img src="../_static/SDSU-comp605_logo.svg" class="logo__image only-dark" alt="Scientific Computing - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../index.html">
+                    Welcome
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../syllabus.html">Syllabus</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../lectures.html">Lectures</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="module1-1_first_class.html">1) First Class: Reproducibility and Git</a></li>
+
+
+<li class="toctree-l2"><a class="reference internal" href="module1-2_linux.html">2) The Linux Filesystem and commands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module1-3_community_projects.html">3) Community Projects</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">4) Introduction to Computer Architectures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module1-5_intro_vectorization.html">5) Introduction to Vectorization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module2-1_measuring_performance.html">6) Measuring Performance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module2-2_cpu_optimization.html">7) CPU Optimization: Matrix-Matrix Multiply</a></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/sdsu-comp605/spring25" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/sdsu-comp605/spring25/issues/new?title=Issue%20on%20page%20%2Flectures/module1-4_intro_architectures.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/lectures/module1-4_intro_architectures.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>4) Introduction to Computer Architectures</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#architectures">1. Architectures</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a-von-neumann-architecture">A von Neumann Architecture:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a-contemporary-architecture">A contemporary architecture:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#my-laptop">My laptop:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a-double-socket-compute-node-with-two-gpus">A double-socket compute node with two GPUs:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#block-diagrams">Block diagrams:</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#ring-bus-xeon-e5-2600-family">Ring bus (Xeon E5-2600 family):</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#mesh-bus-xeon-scalable-family">Mesh bus (Xeon Scalable family):</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#multi-socket-configurations">Multi-socket configurations:</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#multiple-nodes-go-into-racks-or-cabinets">Multiple nodes go into <strong>racks</strong> or <strong>cabinets</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#terminology">Terminology:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#memory">2. Memory</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cache">2.1 Cache</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#how-is-memory-accessed">How is memory accessed?</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#how-we-define-what-limits-performance">How we define what limits performance:</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#how-your-program-accesses-memory">How your program accesses memory:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#let-s-compare-three-code-samples">Let’s compare three code samples</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-happens-when-you-request-a-cache-line">What happens when you request a cache line?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#operating-system-effects">Operating system effects</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#further-resources">Further resources:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#list-of-frequently-found-acronyms-and-abbreviations">List of frequently found acronyms and abbreviations:</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="introduction-to-computer-architectures">
+<h1>4) Introduction to Computer Architectures<a class="headerlink" href="#introduction-to-computer-architectures" title="Link to this heading">#</a></h1>
+<p>Last time:</p>
+<ul class="simple">
+<li><p>Introduction to Linux File System and commands</p></li>
+</ul>
+<p>Today:</p>
+<ol class="arabic simple">
+<li><p>Architectures</p></li>
+<li><p>Memory</p></li>
+</ol>
+<section id="architectures">
+<h2>1. Architectures<a class="headerlink" href="#architectures" title="Link to this heading">#</a></h2>
+<section id="a-von-neumann-architecture">
+<h3>A <a class="reference external" href="https://en.wikipedia.org/wiki/Von_Neumann_architecture">von Neumann Architecture</a>:<a class="headerlink" href="#a-von-neumann-architecture" title="Link to this heading">#</a></h3>
+<p><img alt="von Neumann architecture" src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Von_Neumann_Architecture.svg/2880px-Von_Neumann_Architecture.svg.png" /></p>
+<p>The original document by von Neumann in 1945 describes a design architecture for an electronic digital computer with these components:</p>
+<ul class="simple">
+<li><p>A processing unit with both an arithmetic logic unit and processor registers</p></li>
+<li><p>A control unit that includes an instruction register and a program counter</p></li>
+<li><p>Memory that stores data and instructions</p></li>
+<li><p>External mass storage</p></li>
+<li><p>Input and output mechanisms</p></li>
+</ul>
+<p>The term <strong>von Neumann architecture</strong> has evolved to refer to any <em>stored-program</em> computer in which an instruction fetch and a data operation cannot occur at the same time (since they share a common bus). This is referred to as the <em>von Neumann bottleneck</em>, which often limits the performance of the corresponding system.</p>
+<p>A stored-program computer uses the same underlying mechanism to encode <em>both</em> program instructions and data as opposed to designs which use a mechanism such as discrete plugboard wiring or fixed control circuitry for instruction implementation.</p>
+<p>The vast majority of modern computers use the same hardware mechanism to encode and store both data and program instructions, but have <em>caches</em> between the CPU and memory, and, for the caches closest to the CPU, have separate caches for instructions and data, so that most instruction and data fetches use separate buses (<em>split-cache architecture</em>).</p>
+</section>
+<section id="a-contemporary-architecture">
+<h3>A contemporary architecture:<a class="headerlink" href="#a-contemporary-architecture" title="Link to this heading">#</a></h3>
+<p><img alt="Core 2" src="../_images/IntelCore2.png" /></p>
+</section>
+<section id="my-laptop">
+<h3>My laptop:<a class="headerlink" href="#my-laptop" title="Link to this heading">#</a></h3>
+<p>We can get this kind of information for our machine using <a class="reference external" href="https://www.open-mpi.org/projects/hwloc/">hwloc</a>, which provides a library as well as the command-line tool <code class="docutils literal notranslate"><span class="pre">lstopo</span></code>.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>lstopo<span class="w"> </span>--output-format<span class="w"> </span>svg<span class="w"> </span>&gt;<span class="w"> </span>lstopo-my_laptop_architecture.svg
+</pre></div>
+</div>
+<p><img alt="lstopo my laptop architecture" src="../_images/my_XPS15_architecture.png" /></p>
+</section>
+<section id="a-double-socket-compute-node-with-two-gpus">
+<h3>A double-socket compute node with two GPUs:<a class="headerlink" href="#a-double-socket-compute-node-with-two-gpus" title="Link to this heading">#</a></h3>
+<p>2x Xeon Ivy-Bridge-EP <a class="reference external" href="https://ark.intel.com/content/www/us/en/ark/products/75277/intel-xeon-processor-e5-2680-v2-25m-cache-2-80-ghz.html">E5-2680v2</a> + 2x NVIDIA GPUs (from 2013, with hwloc v1.11).
+GPUs are reported as CUDA devices and X11 display :1.0: (from the <a class="reference external" href="https://www-lb.open-mpi.org/projects/hwloc/lstopo/">hwloc gallery</a>)
+<img alt="" src="https://www-lb.open-mpi.org/projects/hwloc/lstopo/images/2XeonE5v2+2cuda+1display_v1.11.png" /></p>
+</section>
+<section id="block-diagrams">
+<h3>Block diagrams:<a class="headerlink" href="#block-diagrams" title="Link to this heading">#</a></h3>
+<p>A block diagram from a vendor can include additional information about how cores are physically connected.</p>
+<section id="ring-bus-xeon-e5-2600-family">
+<h4>Ring bus (Xeon E5-2600 family):<a class="headerlink" href="#ring-bus-xeon-e5-2600-family" title="Link to this heading">#</a></h4>
+<p><img alt="Intel Xeon E5-2600" src="../_images/Xeon_E5-2600.png" /></p>
+</section>
+<section id="mesh-bus-xeon-scalable-family">
+<h4>Mesh bus (<a class="reference external" href="https://www.intel.com/content/www/us/en/developer/articles/technical/xeon-processor-scalable-family-technical-overview.html">Xeon Scalable family</a>):<a class="headerlink" href="#mesh-bus-xeon-scalable-family" title="Link to this heading">#</a></h4>
+<p><img alt="Intel Xeon Scalable" src="../_images/Xeon_scalable_family.png" /></p>
+</section>
+<section id="multi-socket-configurations">
+<h4>Multi-socket configurations:<a class="headerlink" href="#multi-socket-configurations" title="Link to this heading">#</a></h4>
+<p>A 4-socket ring configuration:</p>
+<p><img alt="4-socket ring" src="../_images/xeon-processor-scalable-family-4-socket-ring-config.png" /></p>
+</section>
+</section>
+<section id="multiple-nodes-go-into-racks-or-cabinets">
+<h3>Multiple nodes go into <strong>racks</strong> or <strong>cabinets</strong><a class="headerlink" href="#multiple-nodes-go-into-racks-or-cabinets" title="Link to this heading">#</a></h3>
+<p><img alt="Blue Gene/P Racks" src="../_images/BlueGenePRacks.png" /></p>
+<p><img alt="OLCF Summit" src="https://www.olcf.ornl.gov/wp-content/uploads/2018/06/summit-1.jpg" /></p>
+<p><img alt="Oak Ridge National Lab Frontier" src="../_images/Frontier.jpg" /></p>
+</section>
+<section id="terminology">
+<h3>Terminology:<a class="headerlink" href="#terminology" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Core</strong> (virtual and physical): has a single program counter (logically sequential processing of instructions)</p></li>
+<li><p><strong>Memory channel</strong>: e.g., DDR4-2400: transfers 64 bits (8 bytes) at a rate of 2400 MHz = 15.36 GB/s</p></li>
+<li><p><strong>Socket</strong> or <strong>CPU</strong>: contains multiple cores in a single piece* of silicon</p></li>
+<li><p><strong>Non-Uniform Memory Access (NUMA)</strong>: different channels may be different distances from a core</p></li>
+<li><p><strong>Compute node</strong>: one or more sockets, plus memory, network card, etc.</p></li>
+</ul>
+</section>
+</section>
+<section id="memory">
+<h2>2. Memory<a class="headerlink" href="#memory" title="Link to this heading">#</a></h2>
+<section id="cache">
+<h3>2.1 Cache<a class="headerlink" href="#cache" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Caches are low-capacity, high-speed memories that are commonly integrated on the CPU die. The need for caches can be easily understood by realizing that data transfer rates to main memory are painfully slow compared to the CPU’s arithmetic performance.</p></li>
+<li><p>While peak performance soars at several GFlops/sec per core, <strong>memory bandwidth</strong>, i.e., the rate at which data can be transferred from memory to the CPU, is still stuck at a couple of GBytes/sec, which is entirely insufficient to feed all arithmetic units and keep them busy continuously.</p></li>
+<li><p>This tells us that Moore’s Law, which for more than thirty years reassured scientists that no matter which technology was implemented to build computer chips, their “complexity” or general “capability” doubled about every 24 months, is not only <em>not</em> valid anymore, but even if it was, it would not be useful in increasing performance on modern complex architectures.</p></li>
+<li><p>To make matters worse, in order to transfer a single data item (usually one or two Douple Precision (DP) words) from memory, an initial waiting time called <strong>latency</strong> passes until data can actually flow. Thus, latency is often defined as the time it takes to “transfer a zero-byte message”.</p></li>
+<li><p>Memory latency is usually of the order of several hundred CPU cycles and is composed of different contributions from memory chips, the chipset and the processor.</p></li>
+<li><p>Advances in memory performance show up at a much slower rate than the rate of improvement in chip complexity. The term <em>DRAM gap</em> has been coined for the increasing “distance” between CPU and memory in terms of latency and bandwidth.</p></li>
+<li><p>Caches can alleviate the effects of the DRAM gap in many cases. Usually there are at least two <em>levels</em> of cache , called <em>L1</em> and <em>L2</em>, respectively.</p></li>
+<li><p>L1 is normally split into two parts, one for instructions (<em>I-cache</em>, <em>L1I</em>) and one for data (<em>L1D</em>).</p></li>
+<li><p>Outer cache levels are normally <em>unified</em>, storing data as well as instructions.</p></li>
+<li><p>In general, the “closer” a cache is to the CPU’s registers, i.e., the higher its bandwidth and the lower its latency, the smaller it must be to keep administration overhead low.</p></li>
+</ul>
+<section id="how-is-memory-accessed">
+<h4>How is memory accessed?<a class="headerlink" href="#how-is-memory-accessed" title="Link to this heading">#</a></h4>
+<ul class="simple">
+<li><p>Whenever the CPU issues a read request (”<em>load</em>”) for transferring a data item to a register, first-level cache logic checks whether this item already resides in cache.</p>
+<ul>
+<li><p>If it does, this is called a <strong>cache hit</strong> and the request can be satisfied immediately, with low latency.</p></li>
+<li><p>In case of a <strong>cache miss</strong>, however, data must be fetched from outer cache levels or, in the worst case, from main memory.</p></li>
+<li><p>If all cache entries are occupied, a hardware-implemented algorithm <em>evicts</em> old items from cache and replaces them with new data.</p></li>
+</ul>
+</li>
+<li><p>The sequence of events for a cache miss on a “<em>write</em>” is generally more involved.</p></li>
+<li><p>Instruction caches are usually of minor importance since scientific codes tend to be largely loop-based; <em>I-cache</em> misses are rare events compared to <em>D-cache</em> misses.</p></li>
+<li><p>Caches can only have a positive effect on performance if the data access pattern of an application shows some <strong>locality of reference</strong>. More specifically, data items that
+have been loaded into a cache are to be used again “soon enough” to not have been evicted in the meantime. This is also called <strong>temporal locality</strong>.</p></li>
+<li><p>Unfortunately, supporting temporal locality is not sufficient. Many applications show <em>streaming</em> patterns where large amounts of data are loaded into the CPU, modified, and written back without the potential of reuse “in time”.</p></li>
+<li><p>In order to reduce the latency penalty for streaming,
+caches feature a peculiar organization into <strong>cache lines</strong>.</p></li>
+<li><p>The advantage of cache lines is that the latency penalty of a cache miss occurs only on the first miss on an item belonging to a line. The line is fetched from memory as a
+whole; neighboring items can then be loaded from cache with much lower latency, increasing the <em>cache hit ratio</em>.</p></li>
+<li><p>So if the application shows some <em>spatial locality</em> (as it often appens when discretizing Partial Differential Equations (PDEs)), i.e., if the probability of successive accesses to neighboring items is high, the latency problem can be significantly reduced.</p></li>
+<li><p>The downside of cache lines is that erratic data access patterns are not supported.</p>
+<ul>
+<li><p>On the contrary, not only does each load incur a miss and subsequent latency penalty, it also leads to the transfer of a whole cache line, polluting the memory bus with data that will probably never be used.</p></li>
+<li><p>The effective bandwidth available to the application will
+thus be low.</p></li>
+</ul>
+</li>
+<li><p>On the whole, however, the advantages of using cache lines prevail, and very few processor manufacturers have provided means of bypassing the mechanism.</p></li>
+</ul>
+</section>
+<section id="how-we-define-what-limits-performance">
+<h4>How we define what limits performance:<a class="headerlink" href="#how-we-define-what-limits-performance" title="Link to this heading">#</a></h4>
+<ul class="simple">
+<li><p>When performance is governed by main memory bandwidth and latency — the code is <strong>memory-bound</strong>.</p></li>
+<li><p>In order for an application to be truly <strong>cache-bound</strong>, i.e., decouple from main memory so that performance is not governed by memory bandwidth or latency any more, the <em>cache hit ratio</em> (sometimes denoted by <em><span class="math notranslate nohighlight">\(\gamma\)</span></em>) must be large enough so the time it takes to process in-cache data becomes larger than the time for reloading it. If and when this happens depends of course on the details of the operations performed.</p></li>
+</ul>
+<blockquote>
+<div><h4 class="rubric" id="recommended-readings">Recommended Readings:</h4>
+<ul class="simple">
+<li><p><a class="reference external" href="http://www.rdrop.com/~paulmck/RCU/RCU.2013.01.22d.PLMW.pdf">McKenney (2013): Laws of Physics</a></p></li>
+<li><p><a class="reference external" href="https://people.eecs.berkeley.edu/~rcs/research/interactive_latency.html">Latency Numbers Every Programmer Should Know (Interactive)</a></p></li>
+<li><p><a class="reference external" href="https://www.anandtech.com/show/14694/amd-rome-epyc-2nd-gen/7">Variation by vendor: Latency in AMD Memory Subsystems</a></p></li>
+</ul>
+</div></blockquote>
+</section>
+</section>
+<section id="how-your-program-accesses-memory">
+<h3>How your program accesses memory:<a class="headerlink" href="#how-your-program-accesses-memory" title="Link to this heading">#</a></h3>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">double</span><span class="w"> </span><span class="n">a</span><span class="p">[</span><span class="mi">1000</span><span class="p">];</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">foo</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="mi">1000</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+<span class="w">        </span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1.234</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">i</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The compiler turns the loop body into instructions, which we can examine using <a class="reference external" href="https://gcc.godbolt.org/z/gbhuZR">Godbolt</a>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pxor</span> <span class="n">xmm0</span><span class="p">,</span> <span class="n">xmm0</span>                  <span class="p">;</span> <span class="n">zero</span> <span class="n">the</span> <span class="n">xmm0</span> <span class="n">register</span>
+<span class="n">cvtsi2sd</span> <span class="n">xmm0</span><span class="p">,</span> <span class="n">eax</span>               <span class="p">;</span> <span class="n">convert</span> <span class="n">the</span> <span class="n">integer</span> <span class="n">i</span> <span class="n">to</span> <span class="n">double</span>
+<span class="n">mulsd</span> <span class="n">xmm0</span><span class="p">,</span> <span class="n">xmm1</span>                 <span class="p">;</span> <span class="n">multiply</span> <span class="n">by</span> <span class="mf">1.234</span> <span class="p">(</span><span class="n">held</span> <span class="ow">in</span> <span class="n">xmm1</span><span class="p">)</span>
+<span class="n">movsd</span> <span class="n">QWORD</span> <span class="n">PTR</span> <span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="o">+</span><span class="n">rax</span><span class="o">*</span><span class="mi">8</span><span class="p">],</span> <span class="n">xmm0</span> <span class="p">;</span> <span class="n">store</span> <span class="n">to</span> <span class="n">memory</span> <span class="n">address</span> <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Only one instruction here accesses memory, and the performance will be affected greatly by where that memory resides (which level of cache, where in DRAM).</p>
+<p>Most architectures today have <strong>64-byte cache lines</strong>: all transfers from main memory (DRAM) to and from cache operate in units of 64 bytes.</p>
+<p><img alt="" src="http://static.duartes.org/img/blogPosts/L1CacheExample.png" /></p>
+</section>
+<section id="let-s-compare-three-code-samples">
+<h3>Let’s compare three code samples<a class="headerlink" href="#let-s-compare-three-code-samples" title="Link to this heading">#</a></h3>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="n">N</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+<span class="w">    </span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+</pre></div>
+</div>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="n">N</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+<span class="w">    </span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">b</span><span class="p">[(</span><span class="n">i</span><span class="o">*</span><span class="mi">8</span><span class="p">)</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="n">N</span><span class="p">];</span>
+</pre></div>
+</div>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="n">N</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+<span class="w">    </span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">b</span><span class="p">[</span><span class="n">random</span><span class="p">()</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="n">N</span><span class="p">];</span>
+</pre></div>
+</div>
+</section>
+<section id="what-happens-when-you-request-a-cache-line">
+<h3>What happens when you request a cache line?<a class="headerlink" href="#what-happens-when-you-request-a-cache-line" title="Link to this heading">#</a></h3>
+<p><img alt="" src="http://static.duartes.org/img/blogPosts/memoryRead.png" /></p>
+</section>
+<section id="operating-system-effects">
+<h3>Operating system effects<a class="headerlink" href="#operating-system-effects" title="Link to this heading">#</a></h3>
+<p>Most systems today use virtual addressing, so every address in your program needs to be translated to a physical address before looking for it (in cache or memory).  Fortunately, there is hardware to assist with this: the Translation Lookaside Buffer (TLB).</p>
+<p><img alt="Virtual memory and the page table" src="https://drawings.jvns.ca/drawings/pagetable.svg" /></p>
+</section>
+<section id="further-resources">
+<h3>Further resources:<a class="headerlink" href="#further-resources" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><a class="reference external" href="https://jvns.ca/blog/2016/12/03/how-much-memory-is-my-process-using-/">Julia Evans (2016): How much memory is my process using?</a></p></li>
+<li><p><a class="reference external" href="https://manybutfinite.com/post/intel-cpu-caches/">Gustavo Duarte (2009): Cache: a place for concealment and safekeeping</a></p></li>
+<li><p><a class="reference external" href="https://manybutfinite.com/post/getting-physical-with-memory/">Gustavo Duarte (2009): Getting Physical With Memory</a></p></li>
+<li><p><a class="reference external" href="https://www.akkadia.org/drepper/cpumemory.pdf">Ulrich Drepper (2007): What Every Programmer Should Know About Memory</a></p></li>
+</ul>
+</section>
+<section id="list-of-frequently-found-acronyms-and-abbreviations">
+<h3>List of frequently found acronyms and abbreviations:<a class="headerlink" href="#list-of-frequently-found-acronyms-and-abbreviations" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Acronym</p></th>
+<th class="head text-center"><p>Meaning</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p>ASCII</p></td>
+<td class="text-center"><p>American standard code for information interchange</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>ASIC</p></td>
+<td class="text-center"><p>Application-specific integrated circuit</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p>BIOS</p></td>
+<td class="text-center"><p>Basic input/output system</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>BLAS</p></td>
+<td class="text-center"><p>Basic linear algebra subroutines</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p>CAF</p></td>
+<td class="text-center"><p>Co-array Fortran</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>ccNUMA</p></td>
+<td class="text-center"><p>Cache-coherent nonuniform memory access</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p>CFD</p></td>
+<td class="text-center"><p>Computational fluid dynamics</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>CISC</p></td>
+<td class="text-center"><p>Complex instruction set computer</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p>CL</p></td>
+<td class="text-center"><p>Cache line</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>CPI</p></td>
+<td class="text-center"><p>Cycles per instruction</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p>CPU</p></td>
+<td class="text-center"><p>Central processing unit</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>CRS</p></td>
+<td class="text-center"><p>Compressed row storage</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p>DDR</p></td>
+<td class="text-center"><p>Double data rate</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>DMA</p></td>
+<td class="text-center"><p>Direct memory access</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p>DP</p></td>
+<td class="text-center"><p>Double precision</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>DRAM</p></td>
+<td class="text-center"><p>Dynamic random access memory</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p>ED</p></td>
+<td class="text-center"><p>Exact diagonalization</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>EPIC</p></td>
+<td class="text-center"><p>Explicitly parallel instruction computing</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p>Flop</p></td>
+<td class="text-center"><p>Floating-point operation</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>FMA</p></td>
+<td class="text-center"><p>Fused multiply-add</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p>FP</p></td>
+<td class="text-center"><p>Floating point</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>FPGA</p></td>
+<td class="text-center"><p>Field-programmable gate array</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p>FS</p></td>
+<td class="text-center"><p>File system</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>FSB</p></td>
+<td class="text-center"><p>Frontside bus</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p>GCC</p></td>
+<td class="text-center"><p>GNU compiler collection</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>GE</p></td>
+<td class="text-center"><p>Gigabit Ethernet</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p>GigE</p></td>
+<td class="text-center"><p>Gigabit Ethernet</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>GNU</p></td>
+<td class="text-center"><p>GNU (is not UNIX)</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p>GPU</p></td>
+<td class="text-center"><p>Graphics processing unit</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>GUI</p></td>
+<td class="text-center"><p>Graphical user interface</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p>HPC</p></td>
+<td class="text-center"><p>High performance computing</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>HPF</p></td>
+<td class="text-center"><p>High performance Fortran</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p>HT</p></td>
+<td class="text-center"><p>HyperTransport</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>IB</p></td>
+<td class="text-center"><p>InfiniBand</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p>ILP</p></td>
+<td class="text-center"><p>Instruction-level parallelism</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>IMB</p></td>
+<td class="text-center"><p>Intel MPI benchmarks</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p>I/O</p></td>
+<td class="text-center"><p>Input/output</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>IP</p></td>
+<td class="text-center"><p>Internet protocol</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p>JDS</p></td>
+<td class="text-center"><p>Jagged diagonals storage</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>L1D</p></td>
+<td class="text-center"><p>Level 1 data cache</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p>L1I</p></td>
+<td class="text-center"><p>Level 1 instruction cache</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>L2</p></td>
+<td class="text-center"><p>Level 2 cache</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p>L3</p></td>
+<td class="text-center"><p>Level 3 cache</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>LD</p></td>
+<td class="text-center"><p>Locality domain</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p>LD</p></td>
+<td class="text-center"><p>Load</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>LIKWID</p></td>
+<td class="text-center"><p><em>Like I knew what I’m doing</em></p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p>LRU</p></td>
+<td class="text-center"><p>Least recently used</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>LUP</p></td>
+<td class="text-center"><p>Lattice site update</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p>MESI</p></td>
+<td class="text-center"><p>Modified/Exclusive/Shared/Invalid</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>MI</p></td>
+<td class="text-center"><p>Memory interface</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p>MIMD</p></td>
+<td class="text-center"><p>Multiple instruction multiple data</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>MIPS</p></td>
+<td class="text-center"><p>Million instructions per second</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p>MMM</p></td>
+<td class="text-center"><p>Matrix–matrix multiplication</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>MPI</p></td>
+<td class="text-center"><p>Message passing interface</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p>MPMD</p></td>
+<td class="text-center"><p>Multiple program multiple data</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>MPP</p></td>
+<td class="text-center"><p>Massively parallel processing</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p>MVM</p></td>
+<td class="text-center"><p>Matrix–vector multiplication</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>NORMA</p></td>
+<td class="text-center"><p>No remote memory access</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p>NRU</p></td>
+<td class="text-center"><p>Not recently used</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>NUMA</p></td>
+<td class="text-center"><p>Nonuniform memory access</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p>OLC</p></td>
+<td class="text-center"><p>Outer-level cache</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>OS</p></td>
+<td class="text-center"><p>Operating system</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p>PAPI</p></td>
+<td class="text-center"><p>Performance application programming interface</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>PCI</p></td>
+<td class="text-center"><p>Peripheral component interconnect</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p>PGAS</p></td>
+<td class="text-center"><p>Partitioned global address space</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>PLPA</p></td>
+<td class="text-center"><p>Portable Linux processor affinity</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p>POSIX</p></td>
+<td class="text-center"><p>Portable operating system interface for Unix</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>PPP</p></td>
+<td class="text-center"><p>Pipeline parallel processing</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p>PVM</p></td>
+<td class="text-center"><p>Parallel virtual machine</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>QDR</p></td>
+<td class="text-center"><p>Quad data rate</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p>QPI</p></td>
+<td class="text-center"><p>QuickPath interconnect</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>RAM</p></td>
+<td class="text-center"><p>Random access memory</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p>RISC</p></td>
+<td class="text-center"><p>Reduced instruction set computer</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>RFO</p></td>
+<td class="text-center"><p>Read for ownership</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p>SDR</p></td>
+<td class="text-center"><p>Single data rate</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>SIMD</p></td>
+<td class="text-center"><p>Single instruction multiple data</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p>SISD</p></td>
+<td class="text-center"><p>Single instruction single data</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>SMP</p></td>
+<td class="text-center"><p>Symmetric multiprocessing</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p>SMT</p></td>
+<td class="text-center"><p>Simultaneous multithreading</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>SP</p></td>
+<td class="text-center"><p>Single precision</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p>SPMD</p></td>
+<td class="text-center"><p>Single program multiple data</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>SSE</p></td>
+<td class="text-center"><p>Streaming SIMD extensions</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p>ST</p></td>
+<td class="text-center"><p>Store</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>STL</p></td>
+<td class="text-center"><p>Standard template library</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p>SYSV</p></td>
+<td class="text-center"><p>Unix System V</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>TBB</p></td>
+<td class="text-center"><p>Threading building blocks</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p>TCP</p></td>
+<td class="text-center"><p>Transmission control protocol</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>TLB</p></td>
+<td class="text-center"><p>Translation lookaside buffer</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p>UMA</p></td>
+<td class="text-center"><p>Uniform memory access</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>UPC</p></td>
+<td class="text-center"><p>Unified parallel C</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "sdsu-comp605/spring25",
+            ref: "main",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./lectures"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="module1-3_community_projects.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">3) Community Projects</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="module1-5_intro_vectorization.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">5) Introduction to Vectorization</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#architectures">1. Architectures</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a-von-neumann-architecture">A von Neumann Architecture:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a-contemporary-architecture">A contemporary architecture:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#my-laptop">My laptop:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a-double-socket-compute-node-with-two-gpus">A double-socket compute node with two GPUs:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#block-diagrams">Block diagrams:</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#ring-bus-xeon-e5-2600-family">Ring bus (Xeon E5-2600 family):</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#mesh-bus-xeon-scalable-family">Mesh bus (Xeon Scalable family):</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#multi-socket-configurations">Multi-socket configurations:</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#multiple-nodes-go-into-racks-or-cabinets">Multiple nodes go into <strong>racks</strong> or <strong>cabinets</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#terminology">Terminology:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#memory">2. Memory</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cache">2.1 Cache</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#how-is-memory-accessed">How is memory accessed?</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#how-we-define-what-limits-performance">How we define what limits performance:</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#how-your-program-accesses-memory">How your program accesses memory:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#let-s-compare-three-code-samples">Let’s compare three code samples</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-happens-when-you-request-a-cache-line">What happens when you request a cache line?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#operating-system-effects">Operating system effects</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#further-resources">Further resources:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#list-of-frequently-found-acronyms-and-abbreviations">List of frequently found acronyms and abbreviations:</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Valeria Barra
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
