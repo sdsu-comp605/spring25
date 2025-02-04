@@ -6,7 +6,7 @@
 
 ## Today
 
-1. Community Projects
+1. [Community Projects](#community-projects)
 
 ## 1. Community projects
 

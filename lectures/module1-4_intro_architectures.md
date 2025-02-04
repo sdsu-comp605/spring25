@@ -6,8 +6,8 @@ Last time:
 
 Today:
 
-1. Architectures
-2. Memory
+1. [Architectures](#architectures)
+2. [Memory](#memory)
 
 ## 1. Architectures
 
