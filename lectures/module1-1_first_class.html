@@ -187,10 +187,11 @@
 
 
 <li class="toctree-l2"><a class="reference internal" href="module1-2_linux.html">2) The Linux Filesystem and commands</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module1-3_intro_architectures.html">3) Introduction to Computer Architectures</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module1-4_intro_vectorization.html">4) Introduction to Vectorization</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module2-1_measuring_performance.html">5) Measuring Performance</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module2-2_cpu_optimization.html">6) CPU Optimization: Matrix-Matrix Multiply</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module1-3_community_projects.html">3) Community Projects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module1-4_intro_architectures.html">4) Introduction to Computer Architectures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module1-5_intro_vectorization.html">5) Introduction to Vectorization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module2-1_measuring_performance.html">6) Measuring Performance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module2-2_cpu_optimization.html">7) CPU Optimization: Matrix-Matrix Multiply</a></li>
 </ul>
 </details></li>
 </ul>
@@ -423,7 +424,7 @@ document.write(`
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#reproducibility-in-computational-sciences">1. Reproducibility in computational sciences</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-is-reproducibile-code">What is reproducibile code?</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-can-we-make-our-code-reproducible">How can we make our code reproducible?</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#keeping-track-with-git">2. Keeping track with <code class="docutils literal notranslate"><span class="pre">git</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#git">2. <code class="docutils literal notranslate"><span class="pre">Git</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction-to-version-control-with-git">Introduction to version control with <code class="docutils literal notranslate"><span class="pre">git</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#github-account">GitHub Account</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#identity">Identity</a></li>
@@ -441,7 +442,7 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#suggested-readings-and-resources">Suggested readings and resources</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#specifying-environments">3. Specifying environments</a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#package-environments-and-managers">3. Package environments and managers</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#julia">3.1 Julia</a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#the-julia-repl">The Julia REPL</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#julia-pkg-jl">Julia Pkg.jl</a></li>
@@ -470,12 +471,12 @@ document.write(`
 <h1>1) First Class: Reproducibility and Git<a class="headerlink" href="#first-class-reproducibility-and-git" title="Link to this heading">#</a></h1>
 <p>Today:</p>
 <ol class="arabic simple">
-<li><p>Reproducibility</p></li>
-<li><p>Git</p></li>
-<li><p>Package environments and managers<br />
+<li><p><a class="reference internal" href="#reproducibility-in-computational-sciences"><span class="xref myst">Reproducibility in computational sciences</span></a></p></li>
+<li><p><a class="reference internal" href="#git"><span class="xref myst">Git</span></a></p></li>
+<li><p><a class="reference internal" href="#package-environments-and-managers"><span class="xref myst">Package environments and managers</span></a><br />
 3.1. Julia<br />
 3.2. Python</p></li>
-<li><p>IDE or editors</p></li>
+<li><p><a class="reference internal" href="#ides-or-editors"><span class="xref myst">IDEs or editors</span></a></p></li>
 </ol>
 </section>
 <section class="tex2jax_ignore mathjax_ignore" id="reproducibility-in-computational-sciences">
@@ -502,8 +503,8 @@ document.write(`
 <h2>How can we make our code reproducible?<a class="headerlink" href="#how-can-we-make-our-code-reproducible" title="Link to this heading">#</a></h2>
 <p>We need to supply both the code, and the “environment” used to run the code, and we need to keep track of it as we run experiments.</p>
 </section>
-<section id="keeping-track-with-git">
-<h2>2. Keeping track with <code class="docutils literal notranslate"><span class="pre">git</span></code><a class="headerlink" href="#keeping-track-with-git" title="Link to this heading">#</a></h2>
+<section id="git">
+<h2>2. <code class="docutils literal notranslate"><span class="pre">Git</span></code><a class="headerlink" href="#git" title="Link to this heading">#</a></h2>
 <section id="introduction-to-version-control-with-git">
 <h3>Introduction to version control with <code class="docutils literal notranslate"><span class="pre">git</span></code><a class="headerlink" href="#introduction-to-version-control-with-git" title="Link to this heading">#</a></h3>
 <p>Version control Software (VCS) is also referred as SCM (Source Code Management) or RCS (Revision Control System) tools. Version control, also known as source control, is the practice of tracking and managing changes to source files. Version control systems are software tools that help teams of contributors manage changes to source code over time. There are several options: <code class="docutils literal notranslate"><span class="pre">git</span></code>, <code class="docutils literal notranslate"><span class="pre">CVS</span></code>, <code class="docutils literal notranslate"><span class="pre">SVN</span></code>, etc.</p>
@@ -708,8 +709,8 @@ first, and then <code class="docutils literal notranslate"><span class="pre">git
 </ul>
 </section>
 </section>
-<section id="specifying-environments">
-<h2>3. Specifying environments<a class="headerlink" href="#specifying-environments" title="Link to this heading">#</a></h2>
+<section id="package-environments-and-managers">
+<h2>3. Package environments and managers<a class="headerlink" href="#package-environments-and-managers" title="Link to this heading">#</a></h2>
 <section id="julia">
 <h3>3.1 Julia<a class="headerlink" href="#julia" title="Link to this heading">#</a></h3>
 <div class="admonition tip">
@@ -924,7 +925,7 @@ first, and then <code class="docutils literal notranslate"><span class="pre">git
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#reproducibility-in-computational-sciences">1. Reproducibility in computational sciences</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-is-reproducibile-code">What is reproducibile code?</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-can-we-make-our-code-reproducible">How can we make our code reproducible?</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#keeping-track-with-git">2. Keeping track with <code class="docutils literal notranslate"><span class="pre">git</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#git">2. <code class="docutils literal notranslate"><span class="pre">Git</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction-to-version-control-with-git">Introduction to version control with <code class="docutils literal notranslate"><span class="pre">git</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#github-account">GitHub Account</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#identity">Identity</a></li>
@@ -942,7 +943,7 @@ first, and then <code class="docutils literal notranslate"><span class="pre">git
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#suggested-readings-and-resources">Suggested readings and resources</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#specifying-environments">3. Specifying environments</a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#package-environments-and-managers">3. Package environments and managers</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#julia">3.1 Julia</a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#the-julia-repl">The Julia REPL</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#julia-pkg-jl">Julia Pkg.jl</a></li>
