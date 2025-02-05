@@ -63,6 +63,7 @@
     <link rel="icon" href="../_static/SDSU-comp605_logo.svg"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="7) CPU Optimization: Matrix-Matrix Multiply" href="module2-2_cpu_optimization.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -125,8 +126,6 @@
       
       
       
-        
-      
       <div class="bd-sidebar-primary bd-sidebar">
         
 
@@ -182,9 +181,9 @@
                 </a>
             </li>
         </ul>
-        <ul class="nav bd-sidenav">
+        <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../syllabus.html">Syllabus</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../lectures.html">Lectures</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../lectures.html">Lectures</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="module1-1_first_class.html">1) First Class: Reproducibility and Git</a></li>
 
 
@@ -194,6 +193,7 @@
 <li class="toctree-l2"><a class="reference internal" href="module1-5_intro_vectorization.html">5) Introduction to Vectorization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="module2-1_measuring_performance.html">6) Measuring Performance</a></li>
 <li class="toctree-l2"><a class="reference internal" href="module2-2_cpu_optimization.html">7) CPU Optimization: Matrix-Matrix Multiply</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">8) Blocked Matrix-Matrix Multiplication</a></li>
 </ul>
 </details></li>
 </ul>
@@ -422,7 +422,10 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#blocked-matrix-matrix-multiply">1. Blocked matrix-matrix multiply</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#blocked-matrix-matrix-multiply">1. Blocked matrix-matrix multiply</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example">Example:</a></li>
+</ul>
+</li>
 </ul>
             </nav>
         </div>
@@ -443,6 +446,7 @@ document.write(`
 <p>Today:</p>
 <ol class="arabic simple">
 <li><p><a class="reference internal" href="#blocked-matrix-matrix-multiply"><span class="xref myst">Blocked matrix-matrix multiply</span></a></p></li>
+<li><p><a class="reference internal" href="#blocking-for-registers"><span class="xref myst">Blocking for registers</span></a></p></li>
 </ol>
 <section id="blocked-matrix-matrix-multiply">
 <h2>1. Blocked matrix-matrix multiply<a class="headerlink" href="#blocked-matrix-matrix-multiply" title="Link to this heading">#</a></h2>
@@ -454,15 +458,44 @@ document.write(`
 <p>The key concept for this unit is blocked matrix-matrix multiply. Namely, we will think of the matrices as partitioned into a set of blocks:</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}
+  A =
+   \begin{bmatrix}
+    \begin{array}{c|c|c|c}
+     A_{11} &amp; A_{12} &amp; \dots  &amp; A_{1K}\\
+     \hline
+     A_{21} &amp; A_{22} &amp; \dots  &amp; A_{2K}\\
+     \hline
+     \vdots &amp; \vdots &amp; \ddots &amp; \vdots\\
+     \hline
+     A_{M1} &amp; A_{M2} &amp; \dots  &amp; A_{MK}
+    \end{array}
+   \end{bmatrix},
+   B =
+   \begin{bmatrix}
+    \begin{array}{c|c|c|c}
+     B_{11} &amp; B_{12} &amp; \dots  &amp; B_{1N}\\
+     \hline
+     B_{21} &amp; B_{22} &amp; \dots  &amp; B_{2N}\\
+     \hline
+     \vdots &amp; \vdots &amp; \ddots &amp; \vdots\\
+     \hline
+     B_{K1} &amp; B_{K2} &amp; \dots  &amp; B_{KN}
+    \end{array}
+   \end{bmatrix},
    C =
    \begin{bmatrix}
-     C_{11} &amp; C_{12} &amp; \dots  &amp; C_{1N}\\
-     C_{21} &amp; C_{22} &amp; \dots  &amp; C_{2N}\\
-     \vdots &amp; \vdots &amp; \ddots &amp; \vdots\\
-     C_{M1} &amp; C_{M2} &amp; \dots  &amp; C_{MN}
+    \begin{array}{c|c|c|c}
+      C_{11} &amp; C_{12} &amp; \dots  &amp; C_{1N}\\
+      \hline
+      C_{21} &amp; C_{22} &amp; \dots  &amp; C_{2N}\\
+      \hline
+      \vdots &amp; \vdots &amp; \ddots &amp; \vdots\\
+      \hline
+      C_{M1} &amp; C_{M2} &amp; \dots  &amp; C_{MN}
+    \end{array}
    \end{bmatrix},
 \end{split}\]</div>
-<p>where each block is of size <span class="math notranslate nohighlight">\(m_{b} \times n_{b}\)</span>. The matrices <span class="math notranslate nohighlight">\(A\)</span> and <span class="math notranslate nohighlight">\(B\)</span> are partitioned in a conformal manner into <span class="math notranslate nohighlight">\(M \times K\)</span> and <span class="math notranslate nohighlight">\(K \times N\)</span> blocks respectively; the block size associated with <span class="math notranslate nohighlight">\(K\)</span> is <span class="math notranslate nohighlight">\(k_{b}\)</span>.</p>
+<p>where each block is of <span class="math notranslate nohighlight">\(C\)</span> is of size <span class="math notranslate nohighlight">\(m_{b} \times n_{b}\)</span>. The matrices <span class="math notranslate nohighlight">\(A\)</span> and <span class="math notranslate nohighlight">\(B\)</span> are partitioned in a conformal manner into <span class="math notranslate nohighlight">\(M \times K\)</span> and <span class="math notranslate nohighlight">\(K \times N\)</span> blocks respectively; the block size associated with <span class="math notranslate nohighlight">\(K\)</span> is <span class="math notranslate nohighlight">\(k_{b}\)</span>.</p>
 <p>With this partitioning of the matrix, the update for block <span class="math notranslate nohighlight">\(IJ\)</span> of <span class="math notranslate nohighlight">\(C\)</span> is then</p>
 <div class="math notranslate nohighlight">
 \[
@@ -474,6 +507,45 @@ C_{IJ} := C_{IJ} + \sum_{P=1}^{K} A_{IP} B_{PJ}
 <li><p>What sizes to pick for <span class="math notranslate nohighlight">\(m_{b}\)</span>, <span class="math notranslate nohighlight">\(n_{b}\)</span>, and <span class="math notranslate nohighlight">\(k_{b}\)</span> in order to most efficiently use the available resources?</p></li>
 <li><p>Which of the previous forms of matrix-matrix multiply should be used for the inner block multiply <span class="math notranslate nohighlight">\(A_{IP} B_{PJ}\)</span>?</p></li>
 </ul>
+<section id="example">
+<h3>Example:<a class="headerlink" href="#example" title="Link to this heading">#</a></h3>
+<p>If we partition the matrix <span class="math notranslate nohighlight">\(C\)</span> into <span class="math notranslate nohighlight">\(3 \times 4\)</span> blocks (that is, <span class="math notranslate nohighlight">\(3\)</span> blocks in the row direction and <span class="math notranslate nohighlight">\(4\)</span> blocks in the column direction):</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+C =
+   \begin{bmatrix}
+    \begin{array}{c|c|c|c}
+      C_{11} &amp; C_{12} &amp; C_{12}  &amp; C_{14}\\
+      \hline
+      C_{21} &amp; C_{22} &amp; C_{23}  &amp; C_{24}\\
+      \hline
+      C_{31} &amp; C_{32} &amp; C_{33}  &amp; C_{34}
+    \end{array}
+   \end{bmatrix},
+\end{split}\]</div>
+<p>Then we <em>have to</em> partition the matrix <span class="math notranslate nohighlight">\(A\)</span> into <span class="math notranslate nohighlight">\(3\)</span> blocks in the row direction and the matrix <span class="math notranslate nohighlight">\(B\)</span> into <span class="math notranslate nohighlight">\(4\)</span> blocks in the column direction:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+A =
+   \begin{bmatrix}
+    \begin{array}{cccc}
+      &amp;  &amp;   &amp; \\
+      \hline
+      &amp;  &amp;   &amp; \\
+      \hline
+      &amp;  &amp;   &amp; 
+    \end{array}
+   \end{bmatrix},
+   B =
+   \begin{bmatrix}
+    \begin{array}{c|c|c|c}
+      &amp;  &amp;  &amp; \\
+      &amp;  &amp;  &amp; \\
+      &amp;  &amp;  &amp; \\
+    \end{array}
+   \end{bmatrix}
+\end{split}\]</div>
+</section>
 </section>
 </section>
 
@@ -507,6 +579,15 @@ C_{IJ} := C_{IJ} + \sum_{P=1}^{K} A_{IP} B_{PJ}
                 <footer class="prev-next-footer d-print-none">
                   
 <div class="prev-next-area">
+    <a class="left-prev"
+       href="module2-2_cpu_optimization.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">7) CPU Optimization: Matrix-Matrix Multiply</p>
+      </div>
+    </a>
 </div>
                 </footer>
               
@@ -523,7 +604,10 @@ C_{IJ} := C_{IJ} + \sum_{P=1}^{K} A_{IP} B_{PJ}
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#blocked-matrix-matrix-multiply">1. Blocked matrix-matrix multiply</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#blocked-matrix-matrix-multiply">1. Blocked matrix-matrix multiply</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example">Example:</a></li>
+</ul>
+</li>
 </ul>
   </nav></div>
 
