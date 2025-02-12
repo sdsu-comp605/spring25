@@ -426,6 +426,17 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example">Example:</a></li>
 </ul>
 </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#blocking-for-registers">2. Blocking for registers</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#optimizing-the-micro-kernel">3. Optimizing the micro kernel</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#simd-jl">4. <code class="docutils literal notranslate"><span class="pre">SIMD.jl</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#generalizing-using-julia-magic">Generalizing using Julia magic</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#compile-time-constants-val">Compile time constants: <code class="docutils literal notranslate"><span class="pre">Val</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#constant-sized-arrays-staticarrays-jl">5. Constant sized arrays: <code class="docutils literal notranslate"><span class="pre">StaticArrays.jl</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#loop-unrolling">6. Loop unrolling</a></li>
 </ul>
             </nav>
         </div>
@@ -447,13 +458,17 @@ document.write(`
 <ol class="arabic simple">
 <li><p><a class="reference internal" href="#blocked-matrix-matrix-multiply"><span class="xref myst">Blocked matrix-matrix multiply</span></a></p></li>
 <li><p><a class="reference internal" href="#blocking-for-registers"><span class="xref myst">Blocking for registers</span></a></p></li>
+<li><p><a class="reference internal" href="#optimizing-the-micro-kernel"><span class="xref myst">Optimizing the micro kernel</span></a></p></li>
+<li><p><a class="reference internal" href="#simd-jl"><span class="xref myst">SIMD.jl</span></a></p></li>
+<li><p><a class="reference internal" href="#constant-sized-arrays-staticarrays-jl"><span class="xref myst">Constant sized arrays: <code class="docutils literal notranslate"><span class="pre">StaticArrays.jl</span></code></span></a></p></li>
+<li><p><a class="reference internal" href="#loop-unrolling"><span class="xref myst">Loop unrolling</span></a></p></li>
 </ol>
 <section id="blocked-matrix-matrix-multiply">
 <h2>1. Blocked matrix-matrix multiply<a class="headerlink" href="#blocked-matrix-matrix-multiply" title="Link to this heading">#</a></h2>
 <p>In this lecture, we are primarily concerned about optimizing the code for small matrix-matrix multiplies – that is problems which fit in the cache; efficient use of the cache for large matrices is another topic.</p>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
-<p>For this lecture, watch the <a class="reference external" href="https://www.cs.utexas.edu/users/flame/laff/pfhp/week2-basic-idea.html">video 2.2.1</a> on the LAFF course to have a basic idea.</p>
+<p>For this section, watch the <a class="reference external" href="https://www.cs.utexas.edu/users/flame/laff/pfhp/week2-basic-idea.html">video 2.2.1</a> on the LAFF course to have a basic idea.</p>
 </div>
 <p>The key concept for this unit is blocked matrix-matrix multiply. Namely, we will think of the matrices as partitioned into a set of blocks:</p>
 <div class="math notranslate nohighlight">
@@ -547,6 +562,576 @@ A =
 \end{split}\]</div>
 </section>
 </section>
+<section id="blocking-for-registers">
+<h2>2. Blocking for registers<a class="headerlink" href="#blocking-for-registers" title="Link to this heading">#</a></h2>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>References on the LAFF course to have a basic idea:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.cs.utexas.edu/users/flame/laff/pfhp/week2-blocking-for-registers.html">2.3 Blocking for Registers</a></p></li>
+<li><p><a class="reference external" href="https://www.cs.utexas.edu/users/flame/laff/pfhp/week2-a-simple-model-of-memory-and-registers.html">2.3.1 A simple model of memory and registers</a></p></li>
+</ul>
+</div>
+<p>Initially we are just going to be concerned about blocking for registers, which
+means that we want to choose block size <span class="math notranslate nohighlight">\(m_b = m_r\)</span> and <span class="math notranslate nohighlight">\( n_b = n_r\)</span> so that <span class="math notranslate nohighlight">\(`C_{IJ}`\)</span> fit in registers; see discussion in <a class="reference external" href="https://www.cs.utexas.edu/users/flame/laff/pfhp/week2-a-simple-model-of-memory-and-registers.html">2.3.1 A simple model of memory and registers</a> to have the memory hierarchy triangle in mind.</p>
+<p>Usually, a typical modern caches hierarchy is composed of:</p>
+<ul class="simple">
+<li><p>registers (small, fast, ~ O(10) of <code class="docutils literal notranslate"><span class="pre">Float64</span></code>)</p></li>
+<li><p>L1 Cache</p></li>
+<li><p>L2 Cache</p></li>
+<li><p>L3 Cache</p></li>
+<li><p>Main memory (big, slow)</p></li>
+<li><p>Disk memory (huge, very slow)</p></li>
+</ul>
+<p>But to extremely simplify things, we can consider just a hierarchy composed of two levels:</p>
+<ul class="simple">
+<li><p>registers (small, fast, ~ O(10) of <code class="docutils literal notranslate"><span class="pre">Float64</span></code>)</p></li>
+<li><p>Main memory (big, slow)</p></li>
+</ul>
+<p>Other assumptions/simplifications:</p>
+<ul class="simple">
+<li><p>Our processor has only one core.</p></li>
+<li><p>Moving data between main memory and registers takes time <span class="math notranslate nohighlight">\(\beta_{R \leftrightarrow M}\)</span> per double. The <span class="math notranslate nohighlight">\(R \leftrightarrow M\)</span> is meant to capture movement between registers (<span class="math notranslate nohighlight">\(R\)</span>) and memory (<span class="math notranslate nohighlight">\(M\)</span>).</p></li>
+<li><p>The registers can hold 64 doubles.</p></li>
+<li><p>Performing a flop with data in registers takes time <span class="math notranslate nohighlight">\(\gamma_R\)</span>.</p></li>
+<li><p>Data movement and computation cannot overlap.</p></li>
+</ul>
+<p>Since we can only have tens of numbers in registers at a time, this means that
+<span class="math notranslate nohighlight">\(m_r\)</span> and <span class="math notranslate nohighlight">\(n_r\)</span> are going to be smaller; typically multiples of <span class="math notranslate nohighlight">\(4\)</span> do to
+vectorization.</p>
+<p>The first, naive implementation we could think of would be translated as (in a pseudo-Julia snippet):</p>
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="k">for</span><span class="w"> </span><span class="n">J</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="o">:</span><span class="n">N</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="n">I</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="o">:</span><span class="n">M</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">P</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="o">:</span><span class="n">K</span>
+<span class="w">      </span><span class="n">Load</span><span class="w"> </span><span class="kt">C_</span><span class="p">{</span><span class="kt">IJ</span><span class="p">},</span><span class="w"> </span><span class="n">Load</span><span class="w"> </span><span class="kt">A_</span><span class="p">{</span><span class="kt">IP</span><span class="p">}</span><span class="w"> </span><span class="n">and</span><span class="w"> </span><span class="kt">B_</span><span class="p">{</span><span class="kt">PJ</span><span class="p">}</span>
+<span class="w">      </span><span class="kt">C_</span><span class="p">{</span><span class="kt">IJ</span><span class="p">}</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="kt">C_</span><span class="p">{</span><span class="kt">IJ</span><span class="p">}</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="kt">A_</span><span class="p">{</span><span class="kt">IP</span><span class="p">}</span><span class="w"> </span><span class="kt">B_</span><span class="p">{</span><span class="kt">PJ</span><span class="p">}</span>
+<span class="w">      </span><span class="n">Store</span><span class="w"> </span><span class="kt">C_</span><span class="p">{</span><span class="kt">IJ</span><span class="p">}</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+<p>This leads to the following cost:</p>
+<div class="math notranslate nohighlight">
+\[
+2 (M m_r) (N n_r) (K k_r) \gamma_R + [2 (M m_r) (N n_r) K + (M m_r) N (K k_r) + M(N n_r) (K k_r)  ] \beta_{R \leftrightarrow M}  = \underbrace{2mnk \gamma_R}_{\textrm{computation}}  + \underbrace{ mnk \left(\frac{2}{k_r} +\frac{1}{n_r} + \frac{1}{m_r}\right)\beta_{R \leftrightarrow M} }_{\textrm{overhead}}
+\]</div>
+<p>where we have used that <span class="math notranslate nohighlight">\(m = M m_r\)</span>, <span class="math notranslate nohighlight">\(n = N n_r\)</span>, and <span class="math notranslate nohighlight">\(k = K k_r\)</span>.</p>
+<p>But if we realize that we do <em>not</em> need to load/store <span class="math notranslate nohighlight">\(C\)</span> every time in the interior loop, we can move the load/store of <span class="math notranslate nohighlight">\(C\)</span> outside of the interior loop. This would optimize things a bit  (in the following pseudo-Julia snippet):</p>
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="k">for</span><span class="w"> </span><span class="n">J</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="o">:</span><span class="n">N</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="n">I</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="o">:</span><span class="n">M</span>
+<span class="w">    </span><span class="n">Load</span><span class="w"> </span><span class="kt">C_</span><span class="p">{</span><span class="kt">IJ</span><span class="p">}</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">P</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="o">:</span><span class="n">K</span>
+<span class="w">      </span><span class="n">Load</span><span class="w"> </span><span class="kt">A_</span><span class="p">{</span><span class="kt">IP</span><span class="p">}</span><span class="w"> </span><span class="n">and</span><span class="w"> </span><span class="kt">B_</span><span class="p">{</span><span class="kt">PJ</span><span class="p">}</span>
+<span class="w">      </span><span class="kt">C_</span><span class="p">{</span><span class="kt">IJ</span><span class="p">}</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="kt">C_</span><span class="p">{</span><span class="kt">IJ</span><span class="p">}</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="kt">A_</span><span class="p">{</span><span class="kt">IP</span><span class="p">}</span><span class="w"> </span><span class="kt">B_</span><span class="p">{</span><span class="kt">PJ</span><span class="p">}</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="n">Store</span><span class="w"> </span><span class="kt">C_</span><span class="p">{</span><span class="kt">IJ</span><span class="p">}</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+<p>This leads to the following cost:</p>
+<div class="math notranslate nohighlight">
+\[
+2mnk \gamma_R
+\]</div>
+<p>for computation and the following only for the loads and stores:</p>
+<div class="math notranslate nohighlight">
+\[
+2 m_r n_r M N + MNK (m_r k_r + k_r n_r) = 2mn + mnk \left(\frac{1}{n_r} + \frac{1}{m_r}\right)
+\]</div>
+<p>where, again, we have used that <span class="math notranslate nohighlight">\(m = M m_r\)</span>, <span class="math notranslate nohighlight">\(n = N n_r\)</span>, and <span class="math notranslate nohighlight">\(k = K k_r\)</span>.</p>
+<p>What about <span class="math notranslate nohighlight">\(k_r\)</span>? Does this need to be small? The answer will be now, because we will perform <span class="math notranslate nohighlight">\(A_{IP}B_{PJ}\)</span> using rank-1 updatess;</p>
+<div class="math notranslate nohighlight">
+\[
+A_{IP} B_{JP} =
+\tilde{a}_{1}^T b_{1} + \tilde{a}_{2}^T b_{2} + \cdots + \tilde{a}_{k}^T b_{k_r}
+= \sum_{p = 1}^{k_r} \tilde{a}_{p}^T b_{p}.
+\]</div>
+<p>Since we only use each vector <span class="math notranslate nohighlight">\(\tilde{a}_{p}^T\)</span> and <span class="math notranslate nohighlight">\(b_{p}\)</span> once in the update of <span class="math notranslate nohighlight">\(C_{IJ}\)</span> we can let <span class="math notranslate nohighlight">\(k_{r} = k\)</span>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Note that if we moved permuted the <code class="docutils literal notranslate"><span class="pre">P</span></code> loop earlier we’d save on loading the
+blocks of <span class="math notranslate nohighlight">\(`A`\)</span> or <span class="math notranslate nohighlight">\(`B`\)</span> but would pay for extra stores of <span class="math notranslate nohighlight">\(`C`\)</span> and it would be
+a losing strategy, because moving data is much more expensive that computing
+with data.</p>
+</div>
+<p>With this the algorithm then becomes:</p>
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="k">for</span><span class="w"> </span><span class="n">J</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="o">:</span><span class="n">N</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="n">I</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="o">:</span><span class="n">M</span>
+<span class="w">    </span><span class="n">Load</span><span class="w"> </span><span class="kt">C_</span><span class="p">{</span><span class="kt">IJ</span><span class="p">}</span>
+<span class="w">    </span><span class="n">Load</span><span class="w"> </span><span class="kt">A_</span><span class="p">{</span><span class="kt">I</span><span class="p">}</span><span class="w"> </span><span class="n">and</span><span class="w"> </span><span class="kt">B_</span><span class="p">{</span><span class="kt">J</span><span class="p">}</span>
+<span class="w">    </span><span class="kt">C_</span><span class="p">{</span><span class="kt">IJ</span><span class="p">}</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="kt">C_</span><span class="p">{</span><span class="kt">IJ</span><span class="p">}</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="kt">A_</span><span class="p">{</span><span class="kt">I</span><span class="p">}</span><span class="w"> </span><span class="kt">B_</span><span class="p">{</span><span class="kt">J</span><span class="p">}</span>
+<span class="w">    </span><span class="n">Store</span><span class="w"> </span><span class="kt">C_</span><span class="p">{</span><span class="kt">IJ</span><span class="p">}</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+<p>We call <span class="math notranslate nohighlight">\(C_{IJ}\)</span> a micro-tile of <span class="math notranslate nohighlight">\(C\)</span>, and <span class="math notranslate nohighlight">\(A_{I}\)</span> and <span class="math notranslate nohighlight">\(B_{J}\)</span> micro-panels of <span class="math notranslate nohighlight">\(A\)</span> and <span class="math notranslate nohighlight">\(B\)</span>, respectively.</p>
+</section>
+<section id="optimizing-the-micro-kernel">
+<h2>3. Optimizing the micro kernel<a class="headerlink" href="#optimizing-the-micro-kernel" title="Link to this heading">#</a></h2>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>References on the LAFF course to have a basic idea:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.cs.utexas.edu/~flame/laff/pfhp/week2-optimizing-the-micro-kernel.html">2.4 Optimizing the Micro-kernel</a></p></li>
+</ul>
+</div>
+<p>Let’s look at a single rank-1 update:</p>
+<div class="math notranslate nohighlight">
+\[
+C_{IJ} = \tilde{a}_{1}^T b_{1} + \tilde{a}_{2}^T b_{2} + \cdots + \tilde{a}_{k}^T b_{k}
+\]</div>
+<p>In code this becomes</p>
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="k">for</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="o">:</span><span class="n">k</span><span class="w">        </span><span class="c"># Loop over vectors</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">j</span><span class="o">:</span><span class="n">mr</span><span class="w">   </span><span class="c"># Select element of vector of `b_p`</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="o">:</span><span class="n">nr</span><span class="w">     </span><span class="c"># Select element of vector of `ãᵀ_p`</span>
+<span class="w">      </span><span class="n">C</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">C</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">p</span><span class="p">]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">B</span><span class="p">[</span><span class="n">p</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">]</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+<p>Let’s imagine that the vector register size <code class="docutils literal notranslate"><span class="pre">nr</span> <span class="pre">=</span> <span class="pre">4</span></code>, then the removing the inner for-loop we have</p>
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="k">for</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="o">:</span><span class="n">k</span><span class="w">        </span><span class="c"># Loop over vectors</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">j</span><span class="o">:</span><span class="n">mr</span><span class="w">   </span><span class="c"># Select element of vector of `b_p`</span>
+<span class="w">     </span><span class="n">C</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">C</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">A</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="n">p</span><span class="p">]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">B</span><span class="p">[</span><span class="n">p</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">]</span><span class="w"> </span><span class="c"># multadd</span>
+<span class="w">     </span><span class="n">C</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">C</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">A</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="n">p</span><span class="p">]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">B</span><span class="p">[</span><span class="n">p</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">]</span><span class="w"> </span><span class="c"># multadd</span>
+<span class="w">     </span><span class="n">C</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">C</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">A</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="n">p</span><span class="p">]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">B</span><span class="p">[</span><span class="n">p</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">]</span><span class="w"> </span><span class="c"># multadd</span>
+<span class="w">     </span><span class="n">C</span><span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">C</span><span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">A</span><span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="n">p</span><span class="p">]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">B</span><span class="p">[</span><span class="n">p</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">]</span><span class="w"> </span><span class="c"># multadd</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Notice that each of the these is performing the same operation (<span class="math notranslate nohighlight">\(\gamma  = \alpha * \beta + \gamma\)</span>) just with different data; note that this is a <strong>fused multiply add (FMA)</strong> type operation.</p></li>
+<li><p>Modern CPUs have vector registers which allow us to store small vectors (length <code class="docutils literal notranslate"><span class="pre">~4</span></code>) and in the same time it takes to apply an operation to a single number we can apply it to all the elements in the vector register.</p></li>
+</ul>
+<p>Thus, we can imagine our code becoming:</p>
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="k">for</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="o">:</span><span class="n">k</span><span class="w">        </span><span class="c"># Loop over vectors</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">j</span><span class="o">:</span><span class="n">mr</span><span class="w">   </span><span class="c"># Select element of vector of `b_p`</span>
+<span class="w">     </span><span class="n">C</span><span class="p">[</span><span class="o">:</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">C</span><span class="p">[</span><span class="o">:</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">A</span><span class="p">[</span><span class="o">:</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="p">]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">B</span><span class="p">[</span><span class="n">p</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">]</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+<p>where all the elements in the column vectors <span class="math notranslate nohighlight">\(C[:, j]\)</span> and <span class="math notranslate nohighlight">\(A[:, p]\)</span> are handled at once (here we assume that <span class="math notranslate nohighlight">\(B[p, j]\)</span> has been put in a vector register with duplicated values for each element). Thus we have sped up our code by a factor of <span class="math notranslate nohighlight">\(4\)</span>! (Here we assume that all the elements in <span class="math notranslate nohighlight">\(A[:, p]\)</span> can be loaded at
+once, which is true if memory is properly aligned.)</p>
+</section>
+<section id="simd-jl">
+<h2>4. <a class="reference external" href="https://github.com/eschnett/SIMD.jl"><code class="docutils literal notranslate"><span class="pre">SIMD.jl</span></code></a><a class="headerlink" href="#simd-jl" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>If we were using C or C++ we would need to use the vector intrinsics for the hardware we were targeting. For example, for Intel vector intrinsics see <a class="reference external" href="https://www.intel.com/content/www/us/en/docs/intrinsics-guide/index.html">Intel Intrinsics Guide</a>.</p></li>
+<li><p>In Julia we can use a more general interface.</p></li>
+</ul>
+<p>In Julia, we only need to use the [<code class="docutils literal notranslate"><span class="pre">SIMD.jl</span></code>] package. To do this you need to add the
+package to your environment, which can be done from the repl with:</p>
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="p">]</span><span class="n">add</span><span class="w"> </span><span class="n">SIMD</span>
+</pre></div>
+</div>
+<p>Basic operation we will need:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">vload</span></code> to load data from memory into a vector register</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">vstore</span></code> to store data from a vector register to memory</p></li>
+</ul>
+<p>If we were using C and C++ we would need to use a special fma call
+(<code class="docutils literal notranslate"><span class="pre">_mm256_fmadd_pd</span></code>), but in Julia this is done behind the scenes for us. When
+<code class="docutils literal notranslate"><span class="pre">muladd</span></code> is called with vector data Julia does the right thing; Julia uses
+“multiple dispatch” to call the right function depending on the argument types.</p>
+<p>So in psuedo-code we now have:</p>
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">c1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">vload</span><span class="w"> </span><span class="n">column</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">C</span>
+<span class="n">c2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">vload</span><span class="w"> </span><span class="n">column</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">C</span>
+<span class="n">c3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">vload</span><span class="w"> </span><span class="n">column</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">C</span>
+<span class="n">c4</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">vload</span><span class="w"> </span><span class="n">column</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">C</span>
+<span class="k">for</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="o">:</span><span class="n">k</span><span class="w">        </span><span class="c"># Loop over vectors</span>
+<span class="w">  </span><span class="n">ap</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">vload</span><span class="w"> </span><span class="n">column</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">A</span>
+
+<span class="w">  </span><span class="n">β</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">load</span><span class="w"> </span><span class="n">B</span><span class="p">[</span><span class="n">p</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">])</span>
+<span class="w">  </span><span class="n">c1</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">β</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">ap</span>
+
+<span class="w">  </span><span class="n">β</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">load</span><span class="w"> </span><span class="n">B</span><span class="p">[</span><span class="n">p</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">])</span>
+<span class="w">  </span><span class="n">c2</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">β</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">ap</span>
+
+<span class="w">  </span><span class="n">β</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">load</span><span class="w"> </span><span class="n">B</span><span class="p">[</span><span class="n">p</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">])</span>
+<span class="w">  </span><span class="n">c3</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">β</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">ap</span>
+
+<span class="w">  </span><span class="n">β</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">load</span><span class="w"> </span><span class="n">B</span><span class="p">[</span><span class="n">p</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">])</span>
+<span class="w">  </span><span class="n">c4</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">β</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">ap</span>
+<span class="k">end</span>
+<span class="n">vstore</span><span class="w"> </span><span class="n">c1</span><span class="w"> </span><span class="n">column</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">C</span>
+<span class="n">vstore</span><span class="w"> </span><span class="n">c2</span><span class="w"> </span><span class="n">column</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">C</span>
+<span class="n">vstore</span><span class="w"> </span><span class="n">c3</span><span class="w"> </span><span class="n">column</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">C</span>
+<span class="n">vstore</span><span class="w"> </span><span class="n">c4</span><span class="w"> </span><span class="n">column</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">C</span>
+</pre></div>
+</div>
+<p>Since we are loaded data from a matrix, we need to pass a reference / pointer to the first element of the data we want to load. In Julia, <code class="docutils literal notranslate"><span class="pre">pointer(C)</span></code> will be a pointer to the first element of <span class="math notranslate nohighlight">\(C\)</span>. To get to the next element we want to load we need to “stride” by the number of elements in a column of <span class="math notranslate nohighlight">\(C\)</span>, call it <code class="docutils literal notranslate"><span class="pre">m</span></code>.</p>
+<p>So our code becomes:</p>
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="c"># data we are storing</span>
+<span class="n">T</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">eltype</span><span class="p">(</span><span class="n">C</span><span class="p">)</span>
+
+<span class="c"># size and type of the vector register</span>
+<span class="n">VecT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">Vec</span><span class="p">{</span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="kt">T</span><span class="p">}</span>
+
+<span class="c"># vector loads of the data</span>
+<span class="n">c1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">vload</span><span class="p">(</span><span class="n">VecT</span><span class="p">,</span><span class="w"> </span><span class="n">pointer</span><span class="p">(</span><span class="n">C</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">0</span><span class="n">m</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">sizeof</span><span class="p">(</span><span class="n">T</span><span class="p">))</span><span class="w"> </span><span class="c"># no stride</span>
+<span class="n">c2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">vload</span><span class="p">(</span><span class="n">VecT</span><span class="p">,</span><span class="w"> </span><span class="n">pointer</span><span class="p">(</span><span class="n">C</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="n">m</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">sizeof</span><span class="p">(</span><span class="n">T</span><span class="p">))</span><span class="w"> </span><span class="c"># stride by m  (skip one column)</span>
+<span class="n">c3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">vload</span><span class="p">(</span><span class="n">VecT</span><span class="p">,</span><span class="w"> </span><span class="n">pointer</span><span class="p">(</span><span class="n">C</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">2</span><span class="n">m</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">sizeof</span><span class="p">(</span><span class="n">T</span><span class="p">))</span><span class="w"> </span><span class="c"># stride by 2m (skip two columns)</span>
+<span class="n">c4</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">vload</span><span class="p">(</span><span class="n">VecT</span><span class="p">,</span><span class="w"> </span><span class="n">pointer</span><span class="p">(</span><span class="n">C</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">3</span><span class="n">m</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">sizeof</span><span class="p">(</span><span class="n">T</span><span class="p">))</span><span class="w"> </span><span class="c"># stride by 3m (skip three columns)</span>
+</pre></div>
+</div>
+<p>In the pointers you are not striding by the number of elements, but the number
+of bytes and <code class="docutils literal notranslate"><span class="pre">sizeof(T)</span></code> returns the number of bytes required to store <code class="docutils literal notranslate"><span class="pre">T</span></code>:</p>
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">julia</span><span class="o">&gt;</span><span class="w"> </span><span class="n">sizeof</span><span class="p">(</span><span class="kt">Float64</span><span class="p">)</span>
+<span class="mi">8</span>
+
+<span class="n">julia</span><span class="o">&gt;</span><span class="w"> </span><span class="n">sizeof</span><span class="p">(</span><span class="kt">Float32</span><span class="p">)</span>
+<span class="mi">4</span>
+</pre></div>
+</div>
+<section id="generalizing-using-julia-magic">
+<h3>Generalizing using Julia magic<a class="headerlink" href="#generalizing-using-julia-magic" title="Link to this heading">#</a></h3>
+<p>Above we assumed that <code class="docutils literal notranslate"><span class="pre">mr</span></code> and <code class="docutils literal notranslate"><span class="pre">nr</span></code> were both <code class="docutils literal notranslate"><span class="pre">4</span></code>, ideally we would like to
+generalize this with loops. We confront too issues with this</p>
+<ul class="simple">
+<li><p>where to put each of the column vectors of <code class="docutils literal notranslate"><span class="pre">C</span></code></p></li>
+<li><p>how can we make the numbers represented by <code class="docutils literal notranslate"><span class="pre">mr</span></code> and <code class="docutils literal notranslate"><span class="pre">nr</span></code> known at compile
+time; the more data we know at compile time the more optimization can occur</p></li>
+</ul>
+<section id="compile-time-constants-val">
+<h4>Compile time constants: <code class="docutils literal notranslate"><span class="pre">Val</span></code><a class="headerlink" href="#compile-time-constants-val" title="Link to this heading">#</a></h4>
+<p>To get constants to be known at compile time we use the <code class="docutils literal notranslate"><span class="pre">Val</span></code> construct in
+Julia.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="k">function</span><span class="w"> </span><span class="n">foo</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
+<span class="w">    </span><span class="n">v</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="o">:</span><span class="n">N</span>
+<span class="w">      </span><span class="n">v</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">i</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">v</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>foo (generic function with 1 method)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="k">function</span><span class="w"> </span><span class="n">bar</span><span class="p">(</span><span class="o">::</span><span class="kt">Val</span><span class="p">{</span><span class="kt">N</span><span class="p">})</span><span class="w"> </span><span class="k">where</span><span class="w"> </span><span class="kt">N</span>
+<span class="w">    </span><span class="n">v</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="o">:</span><span class="n">N</span>
+<span class="w">      </span><span class="n">v</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">i</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">v</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>bar (generic function with 1 method)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="nd">@code_llvm</span><span class="w"> </span><span class="n">foo</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>;  @ /home/valeria/Dropbox/SDSU/Teaching/Comp605/spring25/lectures/jl_notebook_cell_df34fa98e69747e1a8f8a730347b8e2f_X13sZmlsZQ==.jl:1 within `foo`
+define <span class=" -Color -Color-Cyan">i64</span> @julia_foo_1131<span class=" -Color -Color-Yellow">(</span><span class=" -Color -Color-Cyan">i64</span> signext %0<span class=" -Color -Color-Yellow">)</span> #0 <span class=" -Color -Color-Yellow">{</span>
+top:
+;  @ /home/valeria/Dropbox/SDSU/Teaching/Comp605/spring25/lectures/jl_notebook_cell_df34fa98e69747e1a8f8a730347b8e2f_X13sZmlsZQ==.jl:3 within `foo`
+; ┌ @ range.jl:897 within `iterate`
+; │┌ @ range.jl:672 within `isempty`
+; ││┌ @ operators.jl:378 within `&gt;`
+; │││┌ @ int.jl:83 within `&lt;`
+      %1 = <span class=" -Color -Color-Bold">icmp</span> <span class=" -Color -Color-Bold">slt</span> <span class=" -Color -Color-Cyan">i64</span> %0, <span class=" -Color -Color-Yellow">1</span>
+; └└└└
+  <span class=" -Color -Color-Bold">br</span> <span class=" -Color -Color-Cyan">i1</span> %1, <span class=" -Color -Color-Cyan">label</span> %L32, <span class=" -Color -Color-Cyan">label</span> %L17.preheader
+
+L17.preheader:                                    ; preds = %top
+;  @ /home/valeria/Dropbox/SDSU/Teaching/Comp605/spring25/lectures/jl_notebook_cell_df34fa98e69747e1a8f8a730347b8e2f_X13sZmlsZQ==.jl:5 within `foo`
+  %2 = <span class=" -Color -Color-Bold">shl</span> nuw <span class=" -Color -Color-Cyan">i64</span> %0, <span class=" -Color -Color-Yellow">1</span>
+  %3 = <span class=" -Color -Color-Bold">add</span> nsw <span class=" -Color -Color-Cyan">i64</span> %0, <span class=" -Color -Color-Yellow">-1</span>
+  %4 = <span class=" -Color -Color-Bold">zext</span> <span class=" -Color -Color-Cyan">i64</span> %3 to <span class=" -Color -Color-Cyan">i65</span>
+  %5 = <span class=" -Color -Color-Bold">add</span> nsw <span class=" -Color -Color-Cyan">i64</span> %0, <span class=" -Color -Color-Yellow">-2</span>
+  %6 = <span class=" -Color -Color-Bold">zext</span> <span class=" -Color -Color-Cyan">i64</span> %5 to <span class=" -Color -Color-Cyan">i65</span>
+  %7 = <span class=" -Color -Color-Bold">mul</span> <span class=" -Color -Color-Cyan">i65</span> %4, %6
+  %8 = <span class=" -Color -Color-Bold">lshr</span> <span class=" -Color -Color-Cyan">i65</span> %7, <span class=" -Color -Color-Yellow">1</span>
+  %9 = <span class=" -Color -Color-Bold">trunc</span> <span class=" -Color -Color-Cyan">i65</span> %8 to <span class=" -Color -Color-Cyan">i64</span>
+  %10 = <span class=" -Color -Color-Bold">add</span> <span class=" -Color -Color-Cyan">i64</span> %2, %9
+  %11 = <span class=" -Color -Color-Bold">add</span> <span class=" -Color -Color-Cyan">i64</span> %10, <span class=" -Color -Color-Yellow">-1</span>
+;  @ /home/valeria/Dropbox/SDSU/Teaching/Comp605/spring25/lectures/jl_notebook_cell_df34fa98e69747e1a8f8a730347b8e2f_X13sZmlsZQ==.jl:6 within `foo`
+  <span class=" -Color -Color-Bold">br</span> <span class=" -Color -Color-Cyan">label</span> %L32
+
+L32:                                              ; preds = %L17.preheader, %top
+  %value_phi10 = <span class=" -Color -Color-Bold">phi</span> <span class=" -Color -Color-Cyan">i64</span> <span class=" -Color -Color-Yellow">[</span> <span class=" -Color -Color-Yellow">0</span>, %top <span class=" -Color -Color-Yellow">]</span>, <span class=" -Color -Color-Yellow">[</span> %11, %L17.preheader <span class=" -Color -Color-Yellow">]</span>
+  <span class=" -Color -Color-Bold">ret</span> <span class=" -Color -Color-Cyan">i64</span> %value_phi10
+<span class=" -Color -Color-Yellow">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="nd">@code_llvm</span><span class="w"> </span><span class="n">bar</span><span class="p">(</span><span class="kt">Val</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>;  @ /home/valeria/Dropbox/SDSU/Teaching/Comp605/spring25/lectures/jl_notebook_cell_df34fa98e69747e1a8f8a730347b8e2f_X14sZmlsZQ==.jl:1 within `bar`
+define <span class=" -Color -Color-Cyan">i64</span> @julia_bar_1160<span class=" -Color -Color-Yellow">()</span> #0 <span class=" -Color -Color-Yellow">{</span>
+top:
+;  @ /home/valeria/Dropbox/SDSU/Teaching/Comp605/spring25/lectures/jl_notebook_cell_df34fa98e69747e1a8f8a730347b8e2f_X14sZmlsZQ==.jl:6 within `bar`
+  <span class=" -Color -Color-Bold">ret</span> <span class=" -Color -Color-Cyan">i64</span> <span class=" -Color -Color-Yellow">55</span>
+<span class=" -Color -Color-Yellow">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<ul class="simple">
+<li><p>Notice that the code generated for <code class="docutils literal notranslate"><span class="pre">bar(Val(10))</span></code> just returns <code class="docutils literal notranslate"><span class="pre">55</span></code> whereas the code for <code class="docutils literal notranslate"><span class="pre">foo(10)</span></code> is much more complicated.</p></li>
+<li><p>In the call to <code class="docutils literal notranslate"><span class="pre">bar</span></code> the for loop is precomputed since the number <code class="docutils literal notranslate"><span class="pre">10</span></code> is known when the code is compiled.</p></li>
+<li><p>What the <code class="docutils literal notranslate"><span class="pre">Val(10)</span></code> does is it makes the number <code class="docutils literal notranslate"><span class="pre">10</span></code> essentially a type.</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">Val</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Val{10}()
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">typeof</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Val{10}
+</pre></div>
+</div>
+</div>
+</div>
+<ul class="simple">
+<li><p>The critical thing for us is that this number is now known when the code is compiled (as opposed to at runtime).</p></li>
+<li><p>The downside of this is that new version of
+the code must be compiled for each unique input which adds additional overhead to the first time a function is called; <code class="docutils literal notranslate"><span class="pre">bar(Val(10))</span></code> and <code class="docutils literal notranslate"><span class="pre">bar(Val(20))</span></code> result in different compiled code, whereas <code class="docutils literal notranslate"><span class="pre">foo(10)</span></code> and <code class="docutils literal notranslate"><span class="pre">foo(20)</span></code> use the same compiled code.</p></li>
+<li><p>A similar optimization occurs when <code class="docutils literal notranslate"><span class="pre">foo</span></code> is used with a constant value inside a function:</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="k">function</span><span class="w"> </span><span class="n">baz</span><span class="p">()</span>
+<span class="w">    </span><span class="n">foo</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>baz (generic function with 1 method)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="nd">@code_llvm</span><span class="w"> </span><span class="n">baz</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>;  @ /home/valeria/Dropbox/SDSU/Teaching/Comp605/spring25/lectures/jl_notebook_cell_df34fa98e69747e1a8f8a730347b8e2f_X24sZmlsZQ==.jl:1 within `baz`
+define <span class=" -Color -Color-Cyan">i64</span> @julia_baz_1317<span class=" -Color -Color-Yellow">()</span> #0 <span class=" -Color -Color-Yellow">{</span>
+top:
+;  @ /home/valeria/Dropbox/SDSU/Teaching/Comp605/spring25/lectures/jl_notebook_cell_df34fa98e69747e1a8f8a730347b8e2f_X24sZmlsZQ==.jl:2 within `baz`
+; ┌ @ /home/valeria/Dropbox/SDSU/Teaching/Comp605/spring25/lectures/jl_notebook_cell_df34fa98e69747e1a8f8a730347b8e2f_X13sZmlsZQ==.jl:6 within `foo`
+   <span class=" -Color -Color-Bold">ret</span> <span class=" -Color -Color-Cyan">i64</span> <span class=" -Color -Color-Yellow">55</span>
+; └
+<span class=" -Color -Color-Yellow">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>this is known as <em>constant propagation</em> in Julia, where the return of <code class="docutils literal notranslate"><span class="pre">foo(10)</span></code> can be figured out at compile time.</p>
+</section>
+</section>
+</section>
+<section id="constant-sized-arrays-staticarrays-jl">
+<h2>5. Constant sized arrays: <a class="reference external" href="https://github.com/JuliaArrays/StaticArrays.jl"><code class="docutils literal notranslate"><span class="pre">StaticArrays.jl</span></code></a><a class="headerlink" href="#constant-sized-arrays-staticarrays-jl" title="Link to this heading">#</a></h2>
+<p>It is natural define the vector unit as <code class="docutils literal notranslate"><span class="pre">VecT</span> <span class="pre">=</span> <span class="pre">Vec{vl,</span> <span class="pre">T}</span></code> where <code class="docutils literal notranslate"><span class="pre">vl</span></code> is the length of the vector unit. Thus the microcolumns of <span class="math notranslate nohighlight">\(C\)</span> and <span class="math notranslate nohighlight">\(A\)</span> get broken up into <span class="math notranslate nohighlight">\(n_r / v_l\)</span> pieces.</p>
+<p>Now the question becomes what should we use to handle the <code class="docutils literal notranslate"><span class="pre">nr</span></code> vectors of the
+microtile?</p>
+<p>We could do: <code class="docutils literal notranslate"><span class="pre">c</span> <span class="pre">=</span> <span class="pre">Array{VecT}(undef,</span> <span class="pre">mr_vl,</span> <span class="pre">nr)</span></code> which would give us an array of size <code class="docutils literal notranslate"><span class="pre">mv_vl</span> <span class="pre">X</span> <span class="pre">nr</span></code> that can hold vectors. Unfortunately, even though this array is only used in the microkernel, the array <code class="docutils literal notranslate"><span class="pre">c</span></code> will be allocated on
+the heap and not the stack; for our purposes, you can think of the <em>stack</em> as memory that is local to the function and <em>heap</em> as memory that can hold data needed across functions. If small enough, stack data should just live in registers.</p>
+<p>How can we get stack (register) allocated arrays in Julia?</p>
+<p>We need a package called <a class="reference external" href="https://github.com/JuliaArrays/StaticArrays.jl"><code class="docutils literal notranslate"><span class="pre">StaticArrays.jl</span></code></a>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="k">using</span><span class="w"> </span><span class="n">Pkg</span>
+<span class="n">Pkg</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s">&quot;StaticArrays&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold -Color-Bold-Green">    Updating</span> registry at `~/.julia/registries/General.toml`
+<span class=" -Color -Color-Bold -Color-Bold-Green">   Resolving</span> package versions...
+<span class=" -Color -Color-Bold -Color-Bold-Green">   Installed</span> StaticArrays ─ v1.9.12
+<span class=" -Color -Color-Bold -Color-Bold-Green">    Updating</span> `~/.julia/environments/v1.10/Project.toml`
+  [90137ffa] + StaticArrays v1.9.12
+<span class=" -Color -Color-Bold -Color-Bold-Green">    Updating</span> `~/.julia/environments/v1.10/Manifest.toml`
+  [90137ffa] ↑ StaticArrays v1.9.8 ⇒ v1.9.12
+<span class=" -Color -Color-Bold -Color-Bold-Green">Precompiling</span> project...
+<span class=" -Color -Color-Green">  ✓ </span>StaticArrays
+<span class=" -Color -Color-Green">  ✓ </span>ConstructionBase → ConstructionBaseStaticArraysExt
+<span class=" -Color -Color-Green">  ✓ </span>StaticArrays → StaticArraysChainRulesCoreExt
+<span class=" -Color -Color-Green">  ✓ </span>Adapt → AdaptStaticArraysExt
+<span class=" -Color -Color-Green">  ✓ </span>ForwardDiff → ForwardDiffStaticArraysExt
+<span class=" -Color -Color-Green">  ✓ </span>StaticArrays → StaticArraysStatisticsExt
+<span class=" -Color -Color-Green">  ✓ </span>StructArrays → StructArraysStaticArraysExt
+<span class=" -Color -Color-Green">  ✓ </span>Accessors → AccessorsStaticArraysExt
+<span class=" -Color -Color-Green">  ✓ </span>HCubature
+<span class=" -Color -Color-Green">  ✓ </span>FastGaussQuadrature
+<span class=" -Color -Color-Green">  ✓ </span>Interpolations
+<span class=" -Color -Color-Green">  ✓ </span>DomainSets
+<span class=" -Color -Color-Green">  ✓ </span>Interpolations → InterpolationsUnitfulExt
+<span class=" -Color -Color-Green">  ✓ </span>KernelAbstractions
+<span class=" -Color -Color-Green">  ✓ </span>KernelAbstractions → LinearAlgebraExt
+<span class=" -Color -Color-Green">  ✓ </span>StructArrays → StructArraysGPUArraysCoreExt
+<span class=" -Color -Color-Green">  ✓ </span>KernelAbstractions → SparseArraysExt
+<span class=" -Color -Color-Green">  ✓ </span>FastTransforms
+<span class=" -Color -Color-Green">  ✓ </span>GPUArrays
+<span class=" -Color -Color-Green">  ✓ </span>SymbolicUtils
+<span class=" -Color -Color-Green">  ✓ </span>SymbolicLimits
+<span class=" -Color -Color-Green">  ✓ </span>Symbolics
+<span class=" -Color -Color-Green">  ✓ </span>Symbolics → SymbolicsForwardDiffExt
+  23 dependencies successfully precompiled in 48 seconds. 367 already precompiled.
+</pre></div>
+</div>
+</div>
+</div>
+<p>There are two types of arrays in <code class="docutils literal notranslate"><span class="pre">StaticArrays</span></code>:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">SArray</span></code>: Arrays whose size is know at compile time and data does not change; if <code class="docutils literal notranslate"><span class="pre">a</span></code> is an <code class="docutils literal notranslate"><span class="pre">SArray</span></code> you CANNOT do <code class="docutils literal notranslate"><span class="pre">a[1]</span> <span class="pre">=</span> <span class="pre">0</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">MArray</span></code> (mutable arrays): Arrays whose size is know at compile time but that data can change; if <code class="docutils literal notranslate"><span class="pre">a</span></code> is an <code class="docutils literal notranslate"><span class="pre">MArray</span></code> you CAN do <code class="docutils literal notranslate"><span class="pre">a[1]</span> <span class="pre">=</span> <span class="pre">0</span></code>
+Since our data will be changing, we want to store the column vectors as
+<code class="docutils literal notranslate"><span class="pre">MArray</span></code>s. Our algorithm will become:</p></li>
+</ul>
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="w">  </span><span class="c"># Load the columns of the microtile of C</span>
+<span class="w">  </span><span class="n">mr_vl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">div</span><span class="p">(</span><span class="n">mr</span><span class="p">,</span><span class="w"> </span><span class="n">vl</span><span class="p">)</span>
+<span class="w">  </span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">MArray</span><span class="p">{</span><span class="kt">Tuple</span><span class="p">{</span><span class="kt">mr_vl</span><span class="p">,</span><span class="w"> </span><span class="kt">nr</span><span class="p">},</span><span class="w"> </span><span class="kt">VecT</span><span class="p">}(</span><span class="nb">undef</span><span class="p">)</span>
+<span class="w">  </span><span class="nd">@inbounds</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="o">:</span><span class="n">nr</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="o">:</span><span class="n">mr_vl</span>
+<span class="w">      </span><span class="n">offset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">((</span><span class="n">i</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">vl</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">j</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">m</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">sizeof</span><span class="p">(</span><span class="n">T</span><span class="p">)</span>
+<span class="w">      </span><span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">vload</span><span class="p">(</span><span class="n">VecT</span><span class="p">,</span><span class="w"> </span><span class="n">pointer</span><span class="p">(</span><span class="n">C</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">offset</span><span class="p">)</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">  </span><span class="k">end</span>
+</pre></div>
+</div>
+<p>and similarly for <span class="math notranslate nohighlight">\(`a`\)</span> we want:</p>
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="w">  </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">MVector</span><span class="p">{</span><span class="kt">mr_vl</span><span class="p">,</span><span class="w"> </span><span class="kt">VecT</span><span class="p">}(</span><span class="nb">undef</span><span class="p">)</span>
+<span class="w">  </span><span class="nd">@inbounds</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="o">:</span><span class="n">pend</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="o">:</span><span class="n">mr_vl</span>
+<span class="w">      </span><span class="n">offset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">((</span><span class="n">p</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">vl</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">sizeof</span><span class="p">(</span><span class="n">T</span><span class="p">)</span>
+<span class="w">      </span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">vload</span><span class="p">(</span><span class="n">VecT</span><span class="p">,</span><span class="w"> </span><span class="n">pointer</span><span class="p">(</span><span class="n">A</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">offset</span><span class="p">)</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="o">:</span><span class="n">nr</span>
+<span class="w">      </span><span class="n">β</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">B</span><span class="p">[</span><span class="n">p</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">]</span>
+<span class="w">      </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="o">:</span><span class="n">mr_vl</span>
+<span class="w">        </span><span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">muladd</span><span class="p">(</span><span class="n">β</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="w"> </span><span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">])</span>
+<span class="w">      </span><span class="k">end</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">  </span><span class="k">end</span>
+</pre></div>
+</div>
+</section>
+<section id="loop-unrolling">
+<h2>6. Loop unrolling<a class="headerlink" href="#loop-unrolling" title="Link to this heading">#</a></h2>
+<p>Another (and possibly unneeded) optimization is <a class="reference external" href="https://en.wikipedia.org/wiki/Loop_unrolling">loop unrolling</a>. The basic idea of loop unrolling is to change:</p>
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="w">  </span><span class="nd">@inbounds</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="o">:</span><span class="n">nr</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="o">:</span><span class="n">mr_vl</span>
+<span class="w">      </span><span class="n">offset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">((</span><span class="n">i</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">vl</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">j</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">m</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">sizeof</span><span class="p">(</span><span class="n">T</span><span class="p">)</span>
+<span class="w">      </span><span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">vload</span><span class="p">(</span><span class="n">VecT</span><span class="p">,</span><span class="w"> </span><span class="n">pointer</span><span class="p">(</span><span class="n">C</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">offset</span><span class="p">)</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">  </span><span class="k">end</span>
+</pre></div>
+</div>
+<p>to</p>
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="w">  </span><span class="n">c</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">vload</span><span class="p">(</span><span class="n">VecT</span><span class="p">,</span><span class="w"> </span><span class="n">pointer</span><span class="p">(</span><span class="n">C</span><span class="p">))</span>
+<span class="w">  </span><span class="n">c</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">vload</span><span class="p">(</span><span class="n">VecT</span><span class="p">,</span><span class="w"> </span><span class="n">pointer</span><span class="p">(</span><span class="n">C</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">sizeof</span><span class="p">(</span><span class="n">T</span><span class="p">)</span>
+<span class="w">  </span><span class="n">c</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">vload</span><span class="p">(</span><span class="n">VecT</span><span class="p">,</span><span class="w"> </span><span class="n">pointer</span><span class="p">(</span><span class="n">C</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">sizeof</span><span class="p">(</span><span class="n">T</span><span class="p">)</span>
+<span class="w">  </span><span class="n">c</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">vload</span><span class="p">(</span><span class="n">VecT</span><span class="p">,</span><span class="w"> </span><span class="n">pointer</span><span class="p">(</span><span class="n">C</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">sizeof</span><span class="p">(</span><span class="n">T</span><span class="p">)</span>
+<span class="w">  </span><span class="n">c</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">vload</span><span class="p">(</span><span class="n">VecT</span><span class="p">,</span><span class="w"> </span><span class="n">pointer</span><span class="p">(</span><span class="n">C</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">sizeof</span><span class="p">(</span><span class="n">T</span><span class="p">)</span>
+<span class="w">  </span><span class="n">c</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">vload</span><span class="p">(</span><span class="n">VecT</span><span class="p">,</span><span class="w"> </span><span class="n">pointer</span><span class="p">(</span><span class="n">C</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">5</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">sizeof</span><span class="p">(</span><span class="n">T</span><span class="p">)</span>
+<span class="w">  </span><span class="n">c</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">vload</span><span class="p">(</span><span class="n">VecT</span><span class="p">,</span><span class="w"> </span><span class="n">pointer</span><span class="p">(</span><span class="n">C</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">6</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">sizeof</span><span class="p">(</span><span class="n">T</span><span class="p">)</span>
+<span class="w">  </span><span class="n">c</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">vload</span><span class="p">(</span><span class="n">VecT</span><span class="p">,</span><span class="w"> </span><span class="n">pointer</span><span class="p">(</span><span class="n">C</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">7</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">sizeof</span><span class="p">(</span><span class="n">T</span><span class="p">)</span>
+<span class="w">  </span><span class="o">...</span>
+</pre></div>
+</div>
+<p>which achieves two things:</p>
+<ul class="simple">
+<li><p>Instructions needed to control the flow of the loop is removed</p></li>
+<li><p>The compiler has more optimizations at its disposal</p></li>
+</ul>
+<p>The downside of loop unrolling is that the binary size gets larger and register pressure can increase.</p>
+<p>The reason I say that this might be unneeded is that for small loops Julia (LLVM) is likely already unrolling the loops; in some little tests I’ve seen Julia (LLVM) unroll loops of length <code class="docutils literal notranslate"><span class="pre">36</span></code> but I don’t know the details of what
+heuristics are used for this…</p>
+<p>That said, we can force loop unrolling using the <code class="docutils literal notranslate"><span class="pre">&#64;unroll</span></code> macro from <a class="reference external" href="https://github.com/JuliaGPU/KernelAbstractions.jl"><code class="docutils literal notranslate"><span class="pre">KernelAbstractions.jl</span></code></a>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="k">using</span><span class="w"> </span><span class="n">Pkg</span>
+<span class="n">Pkg</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s">&quot;KernelAbstractions&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold -Color-Bold-Green">   Resolving</span> package versions...
+<span class=" -Color -Color-Bold -Color-Bold-Green">   Installed</span> KernelAbstractions ─ v0.9.33
+<span class=" -Color -Color-Bold -Color-Bold-Green">    Updating</span> `~/.julia/environments/v1.10/Project.toml`
+  [63c18a36] + KernelAbstractions v0.9.33
+<span class=" -Color -Color-Bold -Color-Bold-Green">    Updating</span> `~/.julia/environments/v1.10/Manifest.toml`
+  [63c18a36] ↑ KernelAbstractions v0.9.29 ⇒ v0.9.33
+  [d80eeb9a] - UnsafeAtomicsLLVM v0.2.1
+<span class=" -Color -Color-Bold -Color-Bold-Green">Precompiling</span> project...
+<span class=" -Color -Color-Green">  ✓ </span>KernelAbstractions
+<span class=" -Color -Color-Green">  ✓ </span>KernelAbstractions → LinearAlgebraExt
+<span class=" -Color -Color-Green">  ✓ </span>StructArrays → StructArraysGPUArraysCoreExt
+<span class=" -Color -Color-Green">  ✓ </span>KernelAbstractions → SparseArraysExt
+<span class=" -Color -Color-Green">  ✓ </span>GPUArrays
+  5 dependencies successfully precompiled in 6 seconds. 384 already precompiled.
+</pre></div>
+</div>
+</div>
+</div>
+<p>so that our loop code becomes</p>
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="w">  </span><span class="nd">@inbounds</span><span class="w"> </span><span class="nd">@unroll</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="o">:</span><span class="n">nr</span>
+<span class="w">    </span><span class="nd">@unroll</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="o">:</span><span class="n">mr_vl</span>
+<span class="w">      </span><span class="n">offset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">((</span><span class="n">i</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">vl</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">j</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">m</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">sizeof</span><span class="p">(</span><span class="n">T</span><span class="p">)</span>
+<span class="w">      </span><span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">vload</span><span class="p">(</span><span class="n">VecT</span><span class="p">,</span><span class="w"> </span><span class="n">pointer</span><span class="p">(</span><span class="n">C</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">offset</span><span class="p">)</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">  </span><span class="k">end</span>
+</pre></div>
+</div>
+<p>We can also ask for a fixed integer unroll factor:</p>
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="w">  </span><span class="nd">@inbounds</span><span class="w"> </span><span class="nd">@unroll</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="o">:</span><span class="n">pend</span>
+<span class="w">    </span><span class="o">...</span>
+<span class="w">  </span><span class="k">end</span>
+</pre></div>
+</div>
+<p>which will unroll the loop in factors of <code class="docutils literal notranslate"><span class="pre">4</span></code>, then handle the remainder safely; see the <a class="reference external" href="https://llvm.org/docs/TransformMetadata.html#loop-unrolling">LLVM Loop Unrolling</a> for an example.</p>
+</section>
 </section>
 
     <script type="text/x-thebe-config">
@@ -558,16 +1143,16 @@ A =
         },
         codeMirrorConfig: {
             theme: "abcdef",
-            mode: "python"
+            mode: "julia-1.10"
         },
         kernelOptions: {
-            name: "python3",
+            name: "julia-1.10",
             path: "./lectures"
         },
         predefinedOutput: true
     }
     </script>
-    <script>kernelName = 'python3'</script>
+    <script>kernelName = 'julia-1.10'</script>
 
                 </article>
               
@@ -608,6 +1193,17 @@ A =
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example">Example:</a></li>
 </ul>
 </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#blocking-for-registers">2. Blocking for registers</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#optimizing-the-micro-kernel">3. Optimizing the micro kernel</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#simd-jl">4. <code class="docutils literal notranslate"><span class="pre">SIMD.jl</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#generalizing-using-julia-magic">Generalizing using Julia magic</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#compile-time-constants-val">Compile time constants: <code class="docutils literal notranslate"><span class="pre">Val</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#constant-sized-arrays-staticarrays-jl">5. Constant sized arrays: <code class="docutils literal notranslate"><span class="pre">StaticArrays.jl</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#loop-unrolling">6. Loop unrolling</a></li>
 </ul>
   </nav></div>
 
