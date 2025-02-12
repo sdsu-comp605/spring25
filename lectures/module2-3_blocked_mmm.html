@@ -725,7 +725,7 @@ once, which is true if memory is properly aligned.)</p>
 <li><p>If we were using C or C++ we would need to use the vector intrinsics for the hardware we were targeting. For example, for Intel vector intrinsics see <a class="reference external" href="https://www.intel.com/content/www/us/en/docs/intrinsics-guide/index.html">Intel Intrinsics Guide</a>.</p></li>
 <li><p>In Julia we can use a more general interface.</p></li>
 </ul>
-<p>In Julia, we only need to use the [<code class="docutils literal notranslate"><span class="pre">SIMD.jl</span></code>] package. To do this you need to add the
+<p>In Julia, we only need to use the <code class="docutils literal notranslate"><span class="pre">SIMD.jl</span></code> package. To do this you need to add the
 package to your environment, which can be done from the repl with:</p>
 <div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="p">]</span><span class="n">add</span><span class="w"> </span><span class="n">SIMD</span>
 </pre></div>
@@ -845,10 +845,13 @@ Julia.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>;  @ /home/valeria/Dropbox/SDSU/Teaching/Comp605/spring25/lectures/jl_notebook_cell_df34fa98e69747e1a8f8a730347b8e2f_X13sZmlsZQ==.jl:1 within `foo`
-define <span class=" -Color -Color-Cyan">i64</span> @julia_foo_1131<span class=" -Color -Color-Yellow">(</span><span class=" -Color -Color-Cyan">i64</span> signext %0<span class=" -Color -Color-Yellow">)</span> #0 <span class=" -Color -Color-Yellow">{</span>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>;  @ In[1]:1 within `foo`
+define 
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Cyan">i64</span> @julia_foo_752<span class=" -Color -Color-Yellow">(</span><span class=" -Color -Color-Cyan">i64</span> signext %0<span class=" -Color -Color-Yellow">)</span> #0 <span class=" -Color -Color-Yellow">{</span>
 top:
-;  @ /home/valeria/Dropbox/SDSU/Teaching/Comp605/spring25/lectures/jl_notebook_cell_df34fa98e69747e1a8f8a730347b8e2f_X13sZmlsZQ==.jl:3 within `foo`
+;  @ In[1]:3 within `foo`
 ; ┌ @ range.jl:897 within `iterate`
 ; │┌ @ range.jl:672 within `isempty`
 ; ││┌ @ operators.jl:378 within `&gt;`
@@ -858,7 +861,7 @@ top:
   <span class=" -Color -Color-Bold">br</span> <span class=" -Color -Color-Cyan">i1</span> %1, <span class=" -Color -Color-Cyan">label</span> %L32, <span class=" -Color -Color-Cyan">label</span> %L17.preheader
 
 L17.preheader:                                    ; preds = %top
-;  @ /home/valeria/Dropbox/SDSU/Teaching/Comp605/spring25/lectures/jl_notebook_cell_df34fa98e69747e1a8f8a730347b8e2f_X13sZmlsZQ==.jl:5 within `foo`
+;  @ In[1]:5 within `foo`
   %2 = <span class=" -Color -Color-Bold">shl</span> nuw <span class=" -Color -Color-Cyan">i64</span> %0, <span class=" -Color -Color-Yellow">1</span>
   %3 = <span class=" -Color -Color-Bold">add</span> nsw <span class=" -Color -Color-Cyan">i64</span> %0, <span class=" -Color -Color-Yellow">-1</span>
   %4 = <span class=" -Color -Color-Bold">zext</span> <span class=" -Color -Color-Cyan">i64</span> %3 to <span class=" -Color -Color-Cyan">i65</span>
@@ -869,7 +872,7 @@ L17.preheader:                                    ; preds = %top
   %9 = <span class=" -Color -Color-Bold">trunc</span> <span class=" -Color -Color-Cyan">i65</span> %8 to <span class=" -Color -Color-Cyan">i64</span>
   %10 = <span class=" -Color -Color-Bold">add</span> <span class=" -Color -Color-Cyan">i64</span> %2, %9
   %11 = <span class=" -Color -Color-Bold">add</span> <span class=" -Color -Color-Cyan">i64</span> %10, <span class=" -Color -Color-Yellow">-1</span>
-;  @ /home/valeria/Dropbox/SDSU/Teaching/Comp605/spring25/lectures/jl_notebook_cell_df34fa98e69747e1a8f8a730347b8e2f_X13sZmlsZQ==.jl:6 within `foo`
+;  @ In[1]:6 within `foo`
   <span class=" -Color -Color-Bold">br</span> <span class=" -Color -Color-Cyan">label</span> %L32
 
 L32:                                              ; preds = %L17.preheader, %top
@@ -887,10 +890,10 @@ L32:                                              ; preds = %L17.preheader, %top
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>;  @ /home/valeria/Dropbox/SDSU/Teaching/Comp605/spring25/lectures/jl_notebook_cell_df34fa98e69747e1a8f8a730347b8e2f_X14sZmlsZQ==.jl:1 within `bar`
-define <span class=" -Color -Color-Cyan">i64</span> @julia_bar_1160<span class=" -Color -Color-Yellow">()</span> #0 <span class=" -Color -Color-Yellow">{</span>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>;  @ In[2]:1 within `bar`
+define <span class=" -Color -Color-Cyan">i64</span> @julia_bar_777<span class=" -Color -Color-Yellow">()</span> #0 <span class=" -Color -Color-Yellow">{</span>
 top:
-;  @ /home/valeria/Dropbox/SDSU/Teaching/Comp605/spring25/lectures/jl_notebook_cell_df34fa98e69747e1a8f8a730347b8e2f_X14sZmlsZQ==.jl:6 within `bar`
+;  @ In[2]:6 within `bar`
   <span class=" -Color -Color-Bold">ret</span> <span class=" -Color -Color-Cyan">i64</span> <span class=" -Color -Color-Yellow">55</span>
 <span class=" -Color -Color-Yellow">}</span>
 </pre></div>
@@ -953,11 +956,11 @@ the code must be compiled for each unique input which adds additional overhead t
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>;  @ /home/valeria/Dropbox/SDSU/Teaching/Comp605/spring25/lectures/jl_notebook_cell_df34fa98e69747e1a8f8a730347b8e2f_X24sZmlsZQ==.jl:1 within `baz`
-define <span class=" -Color -Color-Cyan">i64</span> @julia_baz_1317<span class=" -Color -Color-Yellow">()</span> #0 <span class=" -Color -Color-Yellow">{</span>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>;  @ In[7]:1 within `baz`
+define <span class=" -Color -Color-Cyan">i64</span> @julia_baz_914<span class=" -Color -Color-Yellow">()</span> #0 <span class=" -Color -Color-Yellow">{</span>
 top:
-;  @ /home/valeria/Dropbox/SDSU/Teaching/Comp605/spring25/lectures/jl_notebook_cell_df34fa98e69747e1a8f8a730347b8e2f_X24sZmlsZQ==.jl:2 within `baz`
-; ┌ @ /home/valeria/Dropbox/SDSU/Teaching/Comp605/spring25/lectures/jl_notebook_cell_df34fa98e69747e1a8f8a730347b8e2f_X13sZmlsZQ==.jl:6 within `foo`
+;  @ In[7]:2 within `baz`
+; ┌ @ In[1]:6 within `foo`
    <span class=" -Color -Color-Bold">ret</span> <span class=" -Color -Color-Cyan">i64</span> <span class=" -Color -Color-Yellow">55</span>
 ; └
 <span class=" -Color -Color-Yellow">}</span>
@@ -986,38 +989,87 @@ the heap and not the stack; for our purposes, you can think of the <em>stack</em
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold -Color-Bold-Green">    Updating</span> registry at `~/.julia/registries/General.toml`
-<span class=" -Color -Color-Bold -Color-Bold-Green">   Resolving</span> package versions...
-<span class=" -Color -Color-Bold -Color-Bold-Green">   Installed</span> StaticArrays ─ v1.9.12
-<span class=" -Color -Color-Bold -Color-Bold-Green">    Updating</span> `~/.julia/environments/v1.10/Project.toml`
-  [90137ffa] + StaticArrays v1.9.12
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold -Color-Bold-Green">   Resolving</span> package versions...
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold -Color-Bold-Green">  No Changes</span> to `~/.julia/environments/v1.10/Project.toml`
 <span class=" -Color -Color-Bold -Color-Bold-Green">    Updating</span> `~/.julia/environments/v1.10/Manifest.toml`
-  [90137ffa] ↑ StaticArrays v1.9.8 ⇒ v1.9.12
-<span class=" -Color -Color-Bold -Color-Bold-Green">Precompiling</span> project...
-<span class=" -Color -Color-Green">  ✓ </span>StaticArrays
-<span class=" -Color -Color-Green">  ✓ </span>ConstructionBase → ConstructionBaseStaticArraysExt
-<span class=" -Color -Color-Green">  ✓ </span>StaticArrays → StaticArraysChainRulesCoreExt
-<span class=" -Color -Color-Green">  ✓ </span>Adapt → AdaptStaticArraysExt
-<span class=" -Color -Color-Green">  ✓ </span>ForwardDiff → ForwardDiffStaticArraysExt
-<span class=" -Color -Color-Green">  ✓ </span>StaticArrays → StaticArraysStatisticsExt
-<span class=" -Color -Color-Green">  ✓ </span>StructArrays → StructArraysStaticArraysExt
-<span class=" -Color -Color-Green">  ✓ </span>Accessors → AccessorsStaticArraysExt
-<span class=" -Color -Color-Green">  ✓ </span>HCubature
-<span class=" -Color -Color-Green">  ✓ </span>FastGaussQuadrature
-<span class=" -Color -Color-Green">  ✓ </span>Interpolations
-<span class=" -Color -Color-Green">  ✓ </span>DomainSets
-<span class=" -Color -Color-Green">  ✓ </span>Interpolations → InterpolationsUnitfulExt
-<span class=" -Color -Color-Green">  ✓ </span>KernelAbstractions
-<span class=" -Color -Color-Green">  ✓ </span>KernelAbstractions → LinearAlgebraExt
-<span class=" -Color -Color-Green">  ✓ </span>StructArrays → StructArraysGPUArraysCoreExt
-<span class=" -Color -Color-Green">  ✓ </span>KernelAbstractions → SparseArraysExt
-<span class=" -Color -Color-Green">  ✓ </span>FastTransforms
-<span class=" -Color -Color-Green">  ✓ </span>GPUArrays
-<span class=" -Color -Color-Green">  ✓ </span>SymbolicUtils
-<span class=" -Color -Color-Green">  ✓ </span>SymbolicLimits
-<span class=" -Color -Color-Green">  ✓ </span>Symbolics
-<span class=" -Color -Color-Green">  ✓ </span>Symbolics → SymbolicsForwardDiffExt
-  23 dependencies successfully precompiled in 48 seconds. 367 already precompiled.
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  [8e850b90] ↓ libblastrampoline_jll v5.11.0+0 ⇒ v5.8.0+1
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold -Color-Bold-Green">Precompiling</span> 
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>project...
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">  ✓ </span>Latexify → DataFramesExt
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">  ✓ </span>StaticArrays
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">  ✓ </span>Adapt → AdaptStaticArraysExt
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">  ✓ </span>ConstructionBase → ConstructionBaseStaticArraysExt
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">  ✓ </span>ForwardDiff → ForwardDiffStaticArraysExt
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">  ✓ </span>StaticArrays → StaticArraysStatisticsExt
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">  ✓ </span>Accessors → AccessorsStaticArraysExt
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">  ✓ </span>StaticArrays → StaticArraysChainRulesCoreExt
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">  ✓ </span>FastGaussQuadrature
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">  ✓ </span>HCubature
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">  ✓ </span>Interpolations
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">  ✓ </span>DomainSets
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">  ✓ </span>KernelAbstractions
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">  ✓ </span>Interpolations → InterpolationsUnitfulExt
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">  ✓ </span>StructArrays → StructArraysGPUArraysCoreExt
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">  ✓ </span>KernelAbstractions → SparseArraysExt
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">  ✓ </span>FastTransforms
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">  ✓ </span>GPUArrays
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">  ✓ </span>SymbolicUtils
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">  ✓ </span>SymbolicLimits
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">  ✓ </span>Symbolics
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">  ✓ </span>Symbolics → SymbolicsForwardDiffExt
+  22 dependencies successfully precompiled in 45 seconds. 367 already precompiled.
 </pre></div>
 </div>
 </div>
@@ -1098,19 +1150,10 @@ heuristics are used for this…</p>
 </div>
 <div class="cell_output docutils container">
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold -Color-Bold-Green">   Resolving</span> package versions...
-<span class=" -Color -Color-Bold -Color-Bold-Green">   Installed</span> KernelAbstractions ─ v0.9.33
-<span class=" -Color -Color-Bold -Color-Bold-Green">    Updating</span> `~/.julia/environments/v1.10/Project.toml`
-  [63c18a36] + KernelAbstractions v0.9.33
-<span class=" -Color -Color-Bold -Color-Bold-Green">    Updating</span> `~/.julia/environments/v1.10/Manifest.toml`
-  [63c18a36] ↑ KernelAbstractions v0.9.29 ⇒ v0.9.33
-  [d80eeb9a] - UnsafeAtomicsLLVM v0.2.1
-<span class=" -Color -Color-Bold -Color-Bold-Green">Precompiling</span> project...
-<span class=" -Color -Color-Green">  ✓ </span>KernelAbstractions
-<span class=" -Color -Color-Green">  ✓ </span>KernelAbstractions → LinearAlgebraExt
-<span class=" -Color -Color-Green">  ✓ </span>StructArrays → StructArraysGPUArraysCoreExt
-<span class=" -Color -Color-Green">  ✓ </span>KernelAbstractions → SparseArraysExt
-<span class=" -Color -Color-Green">  ✓ </span>GPUArrays
-  5 dependencies successfully precompiled in 6 seconds. 384 already precompiled.
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold -Color-Bold-Green">  No Changes</span> to `~/.julia/environments/v1.10/Project.toml`
+<span class=" -Color -Color-Bold -Color-Bold-Green">  No Changes</span> to `~/.julia/environments/v1.10/Manifest.toml`
 </pre></div>
 </div>
 </div>
