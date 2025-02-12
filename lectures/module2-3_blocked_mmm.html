@@ -735,10 +735,12 @@ package to your environment, which can be done from the repl with:</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">vload</span></code> to load data from memory into a vector register</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">vstore</span></code> to store data from a vector register to memory</p></li>
 </ul>
-<p>If we were using C and C++ we would need to use a special fma call
-(<code class="docutils literal notranslate"><span class="pre">_mm256_fmadd_pd</span></code>), but in Julia this is done behind the scenes for us. When
-<code class="docutils literal notranslate"><span class="pre">muladd</span></code> is called with vector data Julia does the right thing; Julia uses
-“multiple dispatch” to call the right function depending on the argument types.</p>
+<p>If we were using C and C++ we would need to use a special <em>fma</em> call (<code class="docutils literal notranslate"><span class="pre">_mm256_fmadd_pd</span></code>), but in Julia this is done behind the scenes for us. When <code class="docutils literal notranslate"><span class="pre">muladd</span></code> is called with vector data Julia does the <em>right thing</em>; remember that Julia one of the most powerful features of Julia is <strong>dynamic <a class="reference external" href="https://en.wikipedia.org/wiki/Multiple_dispatch">(multiple) dispatch</a></strong>, that means:</p>
+<ul class="simple">
+<li><p>Functions can have multiple definitions as long each definition restricts the type of the parameters differently. It is the type of the parameters that define which “definition” (or “method” in Julia terminology) will be called.</p></li>
+<li><p>This is the way Julia mimics <a class="reference external" href="https://en.wikipedia.org/wiki/Polymorphism_(computer_science)">polymorphism</a> that some compiled languages (e.g., C++) have.</p></li>
+</ul>
+<p>This means that the Julia compiler dispatches to call the right <a class="reference external" href="https://docs.julialang.org/en/v1/base/math/#Base.muladd"><code class="docutils literal notranslate"><span class="pre">muladd</span></code></a> function below depending on the argument types.</p>
 <p>So in psuedo-code we now have:</p>
 <div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">c1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">vload</span><span class="w"> </span><span class="n">column</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">C</span>
 <span class="n">c2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">vload</span><span class="w"> </span><span class="n">column</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">C</span>
@@ -993,83 +995,7 @@ the heap and not the stack; for our purposes, you can think of the <em>stack</em
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold -Color-Bold-Green">  No Changes</span> to `~/.julia/environments/v1.10/Project.toml`
-<span class=" -Color -Color-Bold -Color-Bold-Green">    Updating</span> `~/.julia/environments/v1.10/Manifest.toml`
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  [8e850b90] ↓ libblastrampoline_jll v5.11.0+0 ⇒ v5.8.0+1
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold -Color-Bold-Green">Precompiling</span> 
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>project...
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">  ✓ </span>Latexify → DataFramesExt
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">  ✓ </span>StaticArrays
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">  ✓ </span>Adapt → AdaptStaticArraysExt
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">  ✓ </span>ConstructionBase → ConstructionBaseStaticArraysExt
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">  ✓ </span>ForwardDiff → ForwardDiffStaticArraysExt
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">  ✓ </span>StaticArrays → StaticArraysStatisticsExt
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">  ✓ </span>Accessors → AccessorsStaticArraysExt
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">  ✓ </span>StaticArrays → StaticArraysChainRulesCoreExt
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">  ✓ </span>FastGaussQuadrature
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">  ✓ </span>HCubature
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">  ✓ </span>Interpolations
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">  ✓ </span>DomainSets
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">  ✓ </span>KernelAbstractions
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">  ✓ </span>Interpolations → InterpolationsUnitfulExt
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">  ✓ </span>StructArrays → StructArraysGPUArraysCoreExt
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">  ✓ </span>KernelAbstractions → SparseArraysExt
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">  ✓ </span>FastTransforms
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">  ✓ </span>GPUArrays
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">  ✓ </span>SymbolicUtils
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">  ✓ </span>SymbolicLimits
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">  ✓ </span>Symbolics
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">  ✓ </span>Symbolics → SymbolicsForwardDiffExt
-  22 dependencies successfully precompiled in 45 seconds. 367 already precompiled.
+<span class=" -Color -Color-Bold -Color-Bold-Green">  No Changes</span> to `~/.julia/environments/v1.10/Manifest.toml`
 </pre></div>
 </div>
 </div>
