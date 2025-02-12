@@ -510,7 +510,7 @@ document.write(`
     \end{array}
    \end{bmatrix},
 \end{split}\]</div>
-<p>where each block is of <span class="math notranslate nohighlight">\(C\)</span> is of size <span class="math notranslate nohighlight">\(m_{b} \times n_{b}\)</span>. The matrices <span class="math notranslate nohighlight">\(A\)</span> and <span class="math notranslate nohighlight">\(B\)</span> are partitioned in a conformal manner into <span class="math notranslate nohighlight">\(M \times K\)</span> and <span class="math notranslate nohighlight">\(K \times N\)</span> blocks respectively; the block size associated with <span class="math notranslate nohighlight">\(K\)</span> is <span class="math notranslate nohighlight">\(k_{b}\)</span>.</p>
+<p>where each block of <span class="math notranslate nohighlight">\(C\)</span> is of size <span class="math notranslate nohighlight">\(m_{b} \times n_{b}\)</span>. The matrices <span class="math notranslate nohighlight">\(A\)</span> and <span class="math notranslate nohighlight">\(B\)</span> are partitioned in a <em>conformal</em> manner into <span class="math notranslate nohighlight">\(M \times K\)</span> and <span class="math notranslate nohighlight">\(K \times N\)</span> blocks respectively; the block size associated with <span class="math notranslate nohighlight">\(K\)</span> is <span class="math notranslate nohighlight">\(k_{b}\)</span>.</p>
 <p>With this partitioning of the matrix, the update for block <span class="math notranslate nohighlight">\(IJ\)</span> of <span class="math notranslate nohighlight">\(C\)</span> is then</p>
 <div class="math notranslate nohighlight">
 \[
@@ -635,7 +635,7 @@ vectorization.</p>
 \[
 2mnk \gamma_R
 \]</div>
-<p>for computation and the following only for the loads and stores:</p>
+<p>for computation, and the following only for the loads and stores:</p>
 <div class="math notranslate nohighlight">
 \[
 2 m_r n_r M N + MNK (m_r k_r + k_r n_r) = 2mn + mnk \left(\frac{1}{n_r} + \frac{1}{m_r}\right)
@@ -651,7 +651,7 @@ A_{IP} B_{JP} =
 <p>Since we only use each vector <span class="math notranslate nohighlight">\(\tilde{a}_{p}^T\)</span> and <span class="math notranslate nohighlight">\(b_{p}\)</span> once in the update of <span class="math notranslate nohighlight">\(C_{IJ}\)</span> we can let <span class="math notranslate nohighlight">\(k_{r} = k\)</span>.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Note that if we moved permuted the <code class="docutils literal notranslate"><span class="pre">P</span></code> loop earlier we’d save on loading the
+<p>Note that if we moved/permuted the <code class="docutils literal notranslate"><span class="pre">P</span></code> loop earlier we’d save on loading the
 blocks of <span class="math notranslate nohighlight">\(`A`\)</span> or <span class="math notranslate nohighlight">\(`B`\)</span> but would pay for extra stores of <span class="math notranslate nohighlight">\(`C`\)</span> and it would be
 a losing strategy, because moving data is much more expensive that computing
 with data.</p>
@@ -667,7 +667,7 @@ with data.</p>
 <span class="k">end</span>
 </pre></div>
 </div>
-<p>We call <span class="math notranslate nohighlight">\(C_{IJ}\)</span> a micro-tile of <span class="math notranslate nohighlight">\(C\)</span>, and <span class="math notranslate nohighlight">\(A_{I}\)</span> and <span class="math notranslate nohighlight">\(B_{J}\)</span> micro-panels of <span class="math notranslate nohighlight">\(A\)</span> and <span class="math notranslate nohighlight">\(B\)</span>, respectively.</p>
+<p>We call <span class="math notranslate nohighlight">\(C_{IJ}\)</span> a <em>micro-tile</em> of <span class="math notranslate nohighlight">\(C\)</span>, and <span class="math notranslate nohighlight">\(A_{I}\)</span> and <span class="math notranslate nohighlight">\(B_{J}\)</span> <em>micro-panels</em> of <span class="math notranslate nohighlight">\(A\)</span> and <span class="math notranslate nohighlight">\(B\)</span>, respectively.</p>
 </section>
 <section id="optimizing-the-micro-kernel">
 <h2>3. Optimizing the micro kernel<a class="headerlink" href="#optimizing-the-micro-kernel" title="Link to this heading">#</a></h2>
