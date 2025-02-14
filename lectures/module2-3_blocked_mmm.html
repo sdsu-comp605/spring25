@@ -427,7 +427,10 @@ document.write(`
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#blocking-for-registers">2. Blocking for registers</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#optimizing-the-micro-kernel">3. Optimizing the micro kernel</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#optimizing-the-micro-kernel">3. Optimizing the micro kernel</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#similar-vectorization-optimization-strategies-in-other-languages">Similar vectorization optimization strategies in other languages</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#simd-jl">4. <code class="docutils literal notranslate"><span class="pre">SIMD.jl</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#generalizing-using-julia-magic">Generalizing using Julia magic</a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#compile-time-constants-val">Compile time constants: <code class="docutils literal notranslate"><span class="pre">Val</span></code></a></li>
@@ -437,6 +440,7 @@ document.write(`
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#constant-sized-arrays-staticarrays-jl">5. Constant sized arrays: <code class="docutils literal notranslate"><span class="pre">StaticArrays.jl</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#loop-unrolling">6. Loop unrolling</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#examples-in-julia">7. Examples in Julia</a></li>
 </ul>
             </nav>
         </div>
@@ -462,6 +466,7 @@ document.write(`
 <li><p><a class="reference internal" href="#simd-jl"><span class="xref myst">SIMD.jl</span></a></p></li>
 <li><p><a class="reference internal" href="#constant-sized-arrays-staticarrays-jl"><span class="xref myst">Constant sized arrays: <code class="docutils literal notranslate"><span class="pre">StaticArrays.jl</span></code></span></a></p></li>
 <li><p><a class="reference internal" href="#loop-unrolling"><span class="xref myst">Loop unrolling</span></a></p></li>
+<li><p><a class="reference internal" href="#examples-in-julia"><span class="xref myst">Examples in Julia</span></a></p></li>
 </ol>
 <section id="blocked-matrix-matrix-multiply">
 <h2>1. Blocked matrix-matrix multiply<a class="headerlink" href="#blocked-matrix-matrix-multiply" title="Link to this heading">#</a></h2>
@@ -714,7 +719,11 @@ C_{IJ} = \tilde{a}_{1}^T b_{1} + \tilde{a}_{2}^T b_{2} + \cdots + \tilde{a}_{k}^
 </pre></div>
 </div>
 <p>where all the elements in the column vectors <span class="math notranslate nohighlight">\(C[:, j]\)</span> and <span class="math notranslate nohighlight">\(A[:, p]\)</span> are handled at once (here we assume that <span class="math notranslate nohighlight">\(B[p, j]\)</span> has been put in a vector register that gets reused for each <span class="math notranslate nohighlight">\(j\)</span>). Thus we have sped up our code by a factor of <span class="math notranslate nohighlight">\(4\)</span>! (Also, here we have assumed that all the elements in <span class="math notranslate nohighlight">\(A[:, p]\)</span> can be loaded at once, which is true if memory is properly aligned.)</p>
-<p>Let’s look at how different this would look in a C code, with explicitly declared, vendor-specific (Intel’s <a class="reference external" href="https://en.wikipedia.org/wiki/Advanced_Vector_Extensions">AVX2 vector instructions set</a> in this case) FMA directives:</p>
+<section id="similar-vectorization-optimization-strategies-in-other-languages">
+<h3>Similar vectorization optimization strategies in other languages<a class="headerlink" href="#similar-vectorization-optimization-strategies-in-other-languages" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Let’s look at how different this would look in a C code, with explicitly declared, vendor-specific (Intel’s <a class="reference external" href="https://en.wikipedia.org/wiki/Advanced_Vector_Extensions">AVX2 vector instructions set</a> in this case) FMA directives:</p></li>
+</ul>
 <div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="w">  </span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;immintrin.h&gt;</span><span class="c1"> /* to use intrinsic functions */</span>
 
 <span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">Gemm_MRxNRKernel</span><span class="p">(</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">k</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">ldA</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">B</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">ldB</span><span class="p">,</span><span class="w"> </span>
@@ -730,22 +739,16 @@ C_{IJ} = \tilde{a}_{1}^T b_{1} + \tilde{a}_{2}^T b_{2} + \cdots + \tilde{a}_{k}^
 <span class="w">      </span><span class="cm">/* Declare vector register for load/broadcasting beta( p,j ) */</span>
 <span class="w">      </span><span class="n">__m256d</span><span class="w"> </span><span class="n">beta_p_j</span><span class="p">;</span><span class="w"> </span>
 <span class="w">      </span>
-<span class="w">      </span><span class="cm">/* Declare a vector register to hold the current column of A and load </span>
-<span class="cm">        it with the four elements of that column. */</span>
+<span class="w">      </span><span class="cm">/* Declare a vector register to hold the current column of A and load it with the four elements of that column. */</span>
 <span class="w">      </span><span class="n">__m256d</span><span class="w"> </span><span class="n">alpha_0123_p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_mm256_loadu_pd</span><span class="p">(</span><span class="w"> </span><span class="o">&amp;</span><span class="n">alpha</span><span class="p">(</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="n">p</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="p">);</span><span class="w"> </span>
 
 <span class="w">      </span><span class="cm">/* Load/broadcast beta( p,0 ). */</span>
 <span class="w">      </span><span class="n">beta_p_j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_mm256_broadcast_sd</span><span class="p">(</span><span class="w"> </span><span class="o">&amp;</span><span class="n">beta</span><span class="p">(</span><span class="w"> </span><span class="n">p</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">);</span><span class="w"> </span>
 <span class="w">      </span>
-<span class="w">      </span><span class="cm">/* update the first column of C with the current column of A times </span>
-<span class="cm">        beta ( p,0 ) */</span>
+<span class="w">      </span><span class="cm">/* update the first column of C with the current column of A times beta ( p,0 ) */</span>
 <span class="w">      </span><span class="n">gamma_0123_0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_mm256_fmadd_pd</span><span class="p">(</span><span class="w"> </span><span class="n">alpha_0123_p</span><span class="p">,</span><span class="w"> </span><span class="n">beta_p_j</span><span class="p">,</span><span class="w"> </span><span class="n">gamma_0123_0</span><span class="w"> </span><span class="p">);</span><span class="w"> </span>
 <span class="w">      </span>
-<span class="w">      </span><span class="cm">/* REPEAT for second, third, and fourth columns of C.  Notice that the </span>
-<span class="cm">        current column of A needs not be reloaded. */</span>
-
-<span class="w">    </span>
-<span class="w">      </span>
+<span class="w">      </span><span class="cm">/* REPEAT for second, third, and fourth columns of C.  Notice that the current column of A needs not be reloaded. */</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">    </span>
 <span class="w">    </span><span class="cm">/* Store the updated results */</span>
@@ -756,6 +759,15 @@ C_{IJ} = \tilde{a}_{1}^T b_{1} + \tilde{a}_{2}^T b_{2} + \cdots + \tilde{a}_{k}^
 <span class="w">  </span><span class="p">}</span>
 </pre></div>
 </div>
+<ul class="simple">
+<li><p>In addition to the above vectorization optimization strategy in C, which involves FMA directives, another popular way to tell the compiler to use single-instruction multiple-data (SIMD) operations is throught the:</p>
+<ul>
+<li><p><a class="reference external" href="https://www.ibm.com/docs/zh/xl-c-and-cpp-linux/16.1.0?topic=pdop-pragma-omp-simd"><code class="docutils literal notranslate"><span class="pre">#pragma</span> <span class="pre">omp</span> <span class="pre">simd</span></code></a> directive, which uses the <a class="reference external" href="https://en.wikipedia.org/wiki/OpenMP"><code class="docutils literal notranslate"><span class="pre">OpenMP</span> <span class="pre">(Open</span> <span class="pre">Multi-Processing)</span></code></a> API that supports multi-platform shared-memory multiprocessing programming in C, C++, and Fortran</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-fopenmp-simd</span></code> C/C++ compiler optimization flag option</p></li>
+</ul>
+</li>
+</ul>
+</section>
 </section>
 <section id="simd-jl">
 <h2>4. <a class="reference external" href="https://github.com/eschnett/SIMD.jl"><code class="docutils literal notranslate"><span class="pre">SIMD.jl</span></code></a><a class="headerlink" href="#simd-jl" title="Link to this heading">#</a></h2>
@@ -1030,7 +1042,20 @@ top:
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold -Color-Bold-Green">  No Changes</span> to `~/.julia/environments/v1.10/Project.toml`
-<span class=" -Color -Color-Bold -Color-Bold-Green">  No Changes</span> to `~/.julia/environments/v1.10/Manifest.toml`
+<span class=" -Color -Color-Bold -Color-Bold-Green">    Updating</span> `~/.julia/environments/v1.10/Manifest.toml`
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  [8e850b90] ↓ libblastrampoline_jll v5.11.0+0 ⇒ v5.8.0+1
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold -Color-Bold-Green">Precompiling</span> 
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>project...
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">  ✓ </span>SIMD
+  1 dependency successfully precompiled in 8 seconds. 389 already precompiled.
 </pre></div>
 </div>
 </div>
@@ -1113,9 +1138,7 @@ top:
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold -Color-Bold-Green">  No Changes</span> to `~/.julia/environments/v1.10/Project.toml`
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold -Color-Bold-Green">  No Changes</span> to `~/.julia/environments/v1.10/Manifest.toml`
+<span class=" -Color -Color-Bold -Color-Bold-Green">  No Changes</span> to `~/.julia/environments/v1.10/Manifest.toml`
 </pre></div>
 </div>
 </div>
@@ -1136,6 +1159,10 @@ top:
 </pre></div>
 </div>
 <p>which will unroll the loop in factors of <code class="docutils literal notranslate"><span class="pre">4</span></code>, then handle the remainder safely; see the <a class="reference external" href="https://llvm.org/docs/TransformMetadata.html#loop-unrolling">LLVM Loop Unrolling</a> for an example.</p>
+</section>
+<section id="examples-in-julia">
+<h2>7. Examples in Julia<a class="headerlink" href="#examples-in-julia" title="Link to this heading">#</a></h2>
+<p>You can find examples of a <span class="math notranslate nohighlight">\(4 \times 4\)</span> micro-kernel implementation in Julia in the <a class="reference external" href="https://github.com/sdsu-comp605/spring25/tree/main/julia_codes/module2-3"><code class="docutils literal notranslate"><span class="pre">julia_codes/module2-3/</span></code></a> directory in the class repository.</p>
 </section>
 </section>
 
@@ -1199,7 +1226,10 @@ top:
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#blocking-for-registers">2. Blocking for registers</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#optimizing-the-micro-kernel">3. Optimizing the micro kernel</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#optimizing-the-micro-kernel">3. Optimizing the micro kernel</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#similar-vectorization-optimization-strategies-in-other-languages">Similar vectorization optimization strategies in other languages</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#simd-jl">4. <code class="docutils literal notranslate"><span class="pre">SIMD.jl</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#generalizing-using-julia-magic">Generalizing using Julia magic</a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#compile-time-constants-val">Compile time constants: <code class="docutils literal notranslate"><span class="pre">Val</span></code></a></li>
@@ -1209,6 +1239,7 @@ top:
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#constant-sized-arrays-staticarrays-jl">5. Constant sized arrays: <code class="docutils literal notranslate"><span class="pre">StaticArrays.jl</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#loop-unrolling">6. Loop unrolling</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#examples-in-julia">7. Examples in Julia</a></li>
 </ul>
   </nav></div>
 
