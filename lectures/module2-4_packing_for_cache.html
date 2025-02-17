@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>9) Paching for cache &#8212; Scientific Computing</title>
+    <title>9) Packing for cache &#8212; Scientific Computing</title>
   
   
   
@@ -194,7 +194,7 @@
 <li class="toctree-l2"><a class="reference internal" href="module2-1_measuring_performance.html">6) Measuring Performance</a></li>
 <li class="toctree-l2"><a class="reference internal" href="module2-2_cpu_optimization.html">7) CPU Optimization: Matrix-Matrix Multiply</a></li>
 <li class="toctree-l2"><a class="reference internal" href="module2-3_blocked_mmm.html">8) Blocked Matrix-Matrix Multiplication</a></li>
-<li class="toctree-l2 current active"><a class="current reference internal" href="#">9) Paching for cache</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">9) Packing for cache</a></li>
 </ul>
 </details></li>
 </ul>
@@ -413,7 +413,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>9) Paching for cache</h1>
+    <h1>9) Packing for cache</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -439,8 +439,8 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="paching-for-cache">
-<h1>9) Paching for cache<a class="headerlink" href="#paching-for-cache" title="Link to this heading">#</a></h1>
+  <section class="tex2jax_ignore mathjax_ignore" id="packing-for-cache">
+<h1>9) Packing for cache<a class="headerlink" href="#packing-for-cache" title="Link to this heading">#</a></h1>
 <p>Last time:</p>
 <ul class="simple">
 <li><p>Blocked matrix-matrix multiply</p></li>
@@ -482,7 +482,6 @@ document.write(`
 <li><p>L3 Cache: ~8 MiB</p></li>
 <li><p>Main Memory (RAM): ~16GiB</p></li>
 </ul>
-<p><img alt="Levels of Cache with sizes" src="../_images/MemoryHierarchySizes.png" /></p>
 <ul class="simple">
 <li><p>Memory gets smaller and faster as we get closer to the registers (where we can actually compute from). This means that in order to get the most out of our floating point operations we want the data we need to access to be as close to the registers as possible.</p></li>
 <li><p>What data is in the cache, depends on the <a class="reference external" href="https://en.wikipedia.org/wiki/Cache_replacement_policies">cache replacement policy</a> and algorithmically we just want to access the data in a way that encourages the data in the higher caches levels to be used more often.</p></li>
