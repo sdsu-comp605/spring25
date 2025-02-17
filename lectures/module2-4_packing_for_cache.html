@@ -1,0 +1,718 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>9) Paching for cache &#8212; Scientific Computing</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'lectures/module2-4_packing_for_cache';</script>
+    <link rel="icon" href="../_static/SDSU-comp605_logo.svg"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="8) Blocked Matrix-Matrix Multiplication" href="module2-3_blocked_mmm.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/SDSU-comp605_logo.svg" class="logo__image only-light" alt="Scientific Computing - Home"/>
+    <script>document.write(`<img src="../_static/SDSU-comp605_logo.svg" class="logo__image only-dark" alt="Scientific Computing - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../index.html">
+                    Welcome
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../syllabus.html">Syllabus</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../lectures.html">Lectures</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="module1-1_first_class.html">1) First Class: Reproducibility and Git</a></li>
+
+
+<li class="toctree-l2"><a class="reference internal" href="module1-2_linux.html">2) The Linux Filesystem and commands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module1-3_community_projects.html">3) Community Projects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module1-4_intro_architectures.html">4) Introduction to Computer Architectures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module1-5_intro_vectorization.html">5) Introduction to Vectorization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module2-1_measuring_performance.html">6) Measuring Performance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module2-2_cpu_optimization.html">7) CPU Optimization: Matrix-Matrix Multiply</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module2-3_blocked_mmm.html">8) Blocked Matrix-Matrix Multiplication</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">9) Paching for cache</a></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li>
+<button onclick="initThebeSBT()"
+  class="btn btn-sm btn-launch-thebe dropdown-item"
+  title="Launch Thebe"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-play"></i>
+  </span>
+<span class="btn__text-container">Live Code</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/sdsu-comp605/spring25" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/sdsu-comp605/spring25/issues/new?title=Issue%20on%20page%20%2Flectures/module2-4_packing_for_cache.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/lectures/module2-4_packing_for_cache.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>9) Paching for cache</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#different-levels-of-cache">1. Different levels of cache</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#microkernel-and-l1-l2-caches">2. Microkernel and L1 / L2 caches</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#poll-9-1-size-n-of-largest-square-n-times-n-matrices-a-b-and-c-to-fit-in-l2-512-kb-cache">Poll 9.1: Size <span class="math notranslate nohighlight">\(n\)</span> of largest square (<span class="math notranslate nohighlight">\(n \times n\)</span>) matrices <span class="math notranslate nohighlight">\(A\)</span>, <span class="math notranslate nohighlight">\(B\)</span>, and <span class="math notranslate nohighlight">\(C\)</span> to fit in L2 (512 KB) cache:</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="paching-for-cache">
+<h1>9) Paching for cache<a class="headerlink" href="#paching-for-cache" title="Link to this heading">#</a></h1>
+<p>Last time:</p>
+<ul class="simple">
+<li><p>Blocked matrix-matrix multiply</p></li>
+<li><p>Blocking for registers</p></li>
+<li><p>Optimizing the micro kernel</p></li>
+<li><p>SIMD.jl</p></li>
+<li><p>StaticArrays.jl</p></li>
+<li><p>KernelAbstractions.jl</p></li>
+</ul>
+<p>Today:</p>
+<ol class="arabic simple">
+<li><p><a class="reference internal" href="#different-levels-of-cache"><span class="xref myst">Different levels of cache</span></a></p></li>
+<li><p><a class="reference internal" href="#microkernel-and-l1-l2-caches"><span class="xref myst">Microkernel and L1 / L2 caches</span></a></p></li>
+<li><p><a class="reference internal" href="#l3-cache"><span class="xref myst">L3 cache</span></a></p></li>
+<li><p><a class="reference internal" href="#packing"><span class="xref myst">Packing</span></a></p></li>
+</ol>
+<p>In this lecture we are primarily concerned about optimizing the code cache utilization. The big ideas are using a block-block decomposition to target the various levels of cache and repacking the data for more optimal data access in the microkernel.</p>
+<p>The most important parts of this are the five loops pictures here:</p>
+<section id="different-levels-of-cache">
+<h2>1. Different levels of cache<a class="headerlink" href="#different-levels-of-cache" title="Link to this heading">#</a></h2>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>For this section, watch the <a class="reference external" href="https://www.cs.utexas.edu/~flame/laff/pfhp/week3-launch.html">video 3.1.1</a> on the LAFF course to have a basic idea.</p>
+</div>
+<p>As we’ve mentioned previously, there is a hierarchy of memory on modern computers.</p>
+<p>Why were these different levels of memory born? The incovenient truth is that floating point computations can be performed very fast while bringing data in from <em>main memory</em> is relatively slow. How slow?</p>
+<ul class="simple">
+<li><p>On a typical architecture it takes at least two orders of magnitude more time to bring a floating point number in from <em>main memory</em> than it takes to compute with it.</p></li>
+</ul>
+<p>The physical distance between the CPU and main memory creates a <strong>latency</strong> for retrieving the data. This could then be offset by retrieving a lot of data simultaneously, increasing bandwidth. Unfortunately there are inherent bandwidth limitations: there are only so many pins that can connect the central processing unit (CPU) with main memory.</p>
+<p><img alt="Levels of Cache" src="../_images/MemoryHierarchy.png" /></p>
+<p>To overcome this limitation, a modern processor has a <em>hierarchy of memories</em>. We have already encountered the two extremes: registers and main memory. In between, there are smaller but faster cache memories. These cache memories are <strong>on-chip</strong> and hence do not carry the same latency as does main memory and also can achieve greater bandwidth.</p>
+<p>How big?</p>
+<p>We have:</p>
+<ul class="simple">
+<li><p>Registers: ~64 <code class="docutils literal notranslate"><span class="pre">Float64</span></code> (16 vector registers, each of which can store 4 <code class="docutils literal notranslate"><span class="pre">Float64</span></code>, i.e., double precision floating point values)</p></li>
+<li><p>L1 Cache: ~32 KiB</p></li>
+<li><p>L2 Cache: ~512 KiB</p></li>
+<li><p>L3 Cache: ~8 MiB</p></li>
+<li><p>Main Memory (RAM): ~16GiB</p></li>
+</ul>
+<p><img alt="Levels of Cache with sizes" src="../_images/MemoryHierarchySizes.png" /></p>
+<ul class="simple">
+<li><p>Memory gets smaller and faster as we get closer to the registers (where we can actually compute from). This means that in order to get the most out of our floating point operations we want the data we need to access to be as close to the registers as possible.</p></li>
+<li><p>What data is in the cache, depends on the <a class="reference external" href="https://en.wikipedia.org/wiki/Cache_replacement_policies">cache replacement policy</a> and algorithmically we just want to access the data in a way that encourages the data in the higher caches levels to be used more often.</p></li>
+<li><p>How big of a matrix fits in these different layers of cache?</p></li>
+</ul>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Layer</p></th>
+<th class="head text-center"><p>Size</p></th>
+<th class="head text-center"><p>Largest <span class="math notranslate nohighlight">\(n \times n\)</span> matrix</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p>Registers</p></td>
+<td class="text-center"><p>~16 <span class="math notranslate nohighlight">\(\times\)</span> 4 <code class="docutils literal notranslate"><span class="pre">Float64</span></code></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(n = \sqrt{64} = 8 \Rightarrow 8 \times 8\)</span> matrix</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>L1 Cache</p></td>
+<td class="text-center"><p>~32 KiB</p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(n = \sqrt{32 \times 1024/8} = 64 \Rightarrow 64 \times 64\)</span> matrix , 4096 <code class="docutils literal notranslate"><span class="pre">Float64</span></code> ~ 4 cycles</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p>L2 Cache</p></td>
+<td class="text-center"><p>~512 KiB</p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\( n = \sqrt{512 \times 1024/8} = 256 \Rightarrow 256 \times 256\)</span> matrix, <span class="math notranslate nohighlight">\(65 526\)</span> <code class="docutils literal notranslate"><span class="pre">Float64</span></code> ~ 12 cycles</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>L3 Cache</p></td>
+<td class="text-center"><p>~8 MiB</p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\( \sqrt{ 8 \times 1024 \times 1024/8} = 1024 \Rightarrow 1024 \times 1024\)</span> matrix, <span class="math notranslate nohighlight">\( 1 048 576\)</span> <code class="docutils literal notranslate"><span class="pre">Float64</span></code>  ~40 cycles</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p>Main Memory</p></td>
+<td class="text-center"><p>~16GiB</p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\( \sqrt{ 16 \times 1024 \times 1024 \times  1024/8} = 46341 \Rightarrow 46341 \times 46341\)</span> matrix, 2e9 <code class="docutils literal notranslate"><span class="pre">Float64</span></code> ~100 cycles</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<ul class="simple">
+<li><p>The basic strategy will be to block the matrices into blocks of size <span class="math notranslate nohighlight">\(m_c \times n_c\)</span> for <span class="math notranslate nohighlight">\(C\)</span>, <span class="math notranslate nohighlight">\(m_c \times k_c\)</span> for <span class="math notranslate nohighlight">\(A\)</span>, and <span class="math notranslate nohighlight">\(k_c \times n_c\)</span> for <span class="math notranslate nohighlight">\(B\)</span> then use the optimized microkernel to compute a single block matrix-matrix multiply.</p></li>
+</ul>
+</section>
+<section id="microkernel-and-l1-l2-caches">
+<h2>2. Microkernel and L1 / L2 caches<a class="headerlink" href="#microkernel-and-l1-l2-caches" title="Link to this heading">#</a></h2>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>For this section,see the <a class="reference external" href="https://www.cs.utexas.edu/users/flame/laff/pfhp/week3-leveraging-the-caches.html">text 3.2</a> on the LAFF course to have a basic idea.</p>
+</div>
+<p>Remember that we have:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+  A =
+   \begin{bmatrix}
+    \begin{array}{c|c|c|c}
+     A_{11} &amp; A_{12} &amp; \dots  &amp; A_{1K}\\
+     \hline
+     A_{21} &amp; A_{22} &amp; \dots  &amp; A_{2K}\\
+     \hline
+     \vdots &amp; \vdots &amp; \ddots &amp; \vdots\\
+     \hline
+     A_{M1} &amp; A_{M2} &amp; \dots  &amp; A_{MK}
+    \end{array}
+   \end{bmatrix},
+   B =
+   \begin{bmatrix}
+    \begin{array}{c|c|c|c}
+     B_{11} &amp; B_{12} &amp; \dots  &amp; B_{1N}\\
+     \hline
+     B_{21} &amp; B_{22} &amp; \dots  &amp; B_{2N}\\
+     \hline
+     \vdots &amp; \vdots &amp; \ddots &amp; \vdots\\
+     \hline
+     B_{K1} &amp; B_{K2} &amp; \dots  &amp; B_{KN}
+    \end{array}
+   \end{bmatrix},
+   C =
+   \begin{bmatrix}
+    \begin{array}{c|c|c|c}
+      C_{11} &amp; C_{12} &amp; \dots  &amp; C_{1N}\\
+      \hline
+      C_{21} &amp; C_{22} &amp; \dots  &amp; C_{2N}\\
+      \hline
+      \vdots &amp; \vdots &amp; \ddots &amp; \vdots\\
+      \hline
+      C_{M1} &amp; C_{M2} &amp; \dots  &amp; C_{MN}
+    \end{array}
+   \end{bmatrix},
+\end{split}\]</div>
+<p>where each block of <span class="math notranslate nohighlight">\(C\)</span> is of size <span class="math notranslate nohighlight">\(m_{b} \times n_{b}\)</span>. The matrices <span class="math notranslate nohighlight">\(A\)</span> and <span class="math notranslate nohighlight">\(B\)</span> are partitioned in a <em>conformal</em> manner into <span class="math notranslate nohighlight">\(M \times K\)</span> and <span class="math notranslate nohighlight">\(K \times N\)</span> blocks respectively; the block size associated with <span class="math notranslate nohighlight">\(K\)</span> is <span class="math notranslate nohighlight">\(k_{b}\)</span>.</p>
+<p>With this partitioning of the matrix, the update for block <span class="math notranslate nohighlight">\(ij\)</span> of <span class="math notranslate nohighlight">\(C\)</span> is then</p>
+<div class="math notranslate nohighlight">
+\[
+C_{ij} := C_{ij} + \sum_{p=1}^{K} A_{ip} B_{pj}
+\]</div>
+<p>In the microkernel of last lecture, we had the outer loop ordering:</p>
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="k">for</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="o">:</span><span class="n">N</span>
+<span class="w">  </span><span class="c"># micropanel B_j: size kc X nr</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="o">:</span><span class="n">M</span>
+<span class="w">    </span><span class="c"># microtile C_ij: size mr X nr</span>
+<span class="w">    </span><span class="c"># micropanel A_i: size mr X kc</span>
+
+<span class="w">    </span><span class="c"># call: microkernel: C_ij += A_i * B_j (with any loop ordering)</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+<p>If we chose <span class="math notranslate nohighlight">\(m_b\)</span>, <span class="math notranslate nohighlight">\(n_b\)</span>, and <span class="math notranslate nohighlight">\(k_b\)</span> such that <span class="math notranslate nohighlight">\(A_{ip}\)</span>, <span class="math notranslate nohighlight">\(B_{pj}\)</span> and <span class="math notranslate nohighlight">\(C_{ij}\)</span> all fit in the cache, then we meet our conditions for best performance. We could compute <span class="math notranslate nohighlight">\(C_{ij} = C_{ij} + A_{ip}  B_{pj}\)</span>, by “bringing these blocks into cache” and computing with them before writing out the result.</p>
+<p>The difference here is that while one can <em>explicitly load registers</em>, the movement of data into caches is merely encouraged by careful ordering of the computation, since replacement of data in cache is handled by the hardware, which has some cache replacement policy that will evict the least recently used data.</p>
+<p>During last lecture we argued that the <span class="math notranslate nohighlight">\(m_r \times n_r\)</span> microtile of <span class="math notranslate nohighlight">\(C\)</span> should fit in registers, thus <span class="math notranslate nohighlight">\(m_r = 12\)</span> and <span class="math notranslate nohighlight">\(n_r = 4\)</span> were reasonable choices since <span class="math notranslate nohighlight">\(m_r \times n_r = 48\)</span>. (We still need some registers for a vector of <span class="math notranslate nohighlight">\(A\)</span> and <span class="math notranslate nohighlight">\(B\)</span> and since we only need one vector register for an element of <span class="math notranslate nohighlight">\(B\)</span>, due to the outer product structure (for which we can reuse it), it makes sense that we put more elements in <span class="math notranslate nohighlight">\(m_r\)</span> so that <span class="math notranslate nohighlight">\(m_r \times n_r + m_r + 4 = 64\)</span>; the <span class="math notranslate nohighlight">\(4\)</span> here is the vector register being used for an element of <span class="math notranslate nohighlight">\(`B`\)</span>.</p>
+<section id="poll-9-1-size-n-of-largest-square-n-times-n-matrices-a-b-and-c-to-fit-in-l2-512-kb-cache">
+<h3><a class="reference external" href="https://www.polleverywhere.com/multiple_choice_polls/47Dtkp5pdPTImhrrPm6Sc">Poll 9.1</a>: Size <span class="math notranslate nohighlight">\(n\)</span> of largest square (<span class="math notranslate nohighlight">\(n \times n\)</span>) matrices <span class="math notranslate nohighlight">\(A\)</span>, <span class="math notranslate nohighlight">\(B\)</span>, and <span class="math notranslate nohighlight">\(C\)</span> to fit in L2 (512 KB) cache:<a class="headerlink" href="#poll-9-1-size-n-of-largest-square-n-times-n-matrices-a-b-and-c-to-fit-in-l2-512-kb-cache" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>a) 104</p></li>
+<li><p>b) 442</p></li>
+<li><p>c) 686</p></li>
+</ul>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "sdsu-comp605/spring25",
+            ref: "main",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./lectures"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="module2-3_blocked_mmm.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">8) Blocked Matrix-Matrix Multiplication</p>
+      </div>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#different-levels-of-cache">1. Different levels of cache</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#microkernel-and-l1-l2-caches">2. Microkernel and L1 / L2 caches</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#poll-9-1-size-n-of-largest-square-n-times-n-matrices-a-b-and-c-to-fit-in-l2-512-kb-cache">Poll 9.1: Size <span class="math notranslate nohighlight">\(n\)</span> of largest square (<span class="math notranslate nohighlight">\(n \times n\)</span>) matrices <span class="math notranslate nohighlight">\(A\)</span>, <span class="math notranslate nohighlight">\(B\)</span>, and <span class="math notranslate nohighlight">\(C\)</span> to fit in L2 (512 KB) cache:</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Valeria Barra
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
