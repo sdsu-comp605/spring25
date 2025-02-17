@@ -588,13 +588,41 @@ C_{ij} := C_{ij} + \sum_{p=1}^{K} A_{ip} B_{pj}
 </div>
 <p>If we chose <span class="math notranslate nohighlight">\(m_b\)</span>, <span class="math notranslate nohighlight">\(n_b\)</span>, and <span class="math notranslate nohighlight">\(k_b\)</span> such that <span class="math notranslate nohighlight">\(A_{ip}\)</span>, <span class="math notranslate nohighlight">\(B_{pj}\)</span> and <span class="math notranslate nohighlight">\(C_{ij}\)</span> all fit in the cache, then we meet our conditions for best performance. We could compute <span class="math notranslate nohighlight">\(C_{ij} = C_{ij} + A_{ip}  B_{pj}\)</span>, by “bringing these blocks into cache” and computing with them before writing out the result.</p>
 <p>The difference here is that while one can <em>explicitly load registers</em>, the movement of data into caches is merely encouraged by careful ordering of the computation, since replacement of data in cache is handled by the hardware, which has some cache replacement policy that will evict the least recently used data.</p>
-<p>During last lecture we argued that the <span class="math notranslate nohighlight">\(m_r \times n_r\)</span> microtile of <span class="math notranslate nohighlight">\(C\)</span> should fit in registers, thus <span class="math notranslate nohighlight">\(m_r = 12\)</span> and <span class="math notranslate nohighlight">\(n_r = 4\)</span> were reasonable choices since <span class="math notranslate nohighlight">\(m_r \times n_r = 48\)</span>. (We still need some registers for a vector of <span class="math notranslate nohighlight">\(A\)</span> and <span class="math notranslate nohighlight">\(B\)</span> and since we only need one vector register for an element of <span class="math notranslate nohighlight">\(B\)</span>, due to the outer product structure (for which we can reuse it), it makes sense that we put more elements in <span class="math notranslate nohighlight">\(m_r\)</span> so that <span class="math notranslate nohighlight">\(m_r \times n_r + m_r + 4 = 64\)</span>; the <span class="math notranslate nohighlight">\(4\)</span> here is the vector register being used for an element of <span class="math notranslate nohighlight">\(`B`\)</span>.</p>
+<p>During last lecture we argued that the <span class="math notranslate nohighlight">\(m_r \times n_r\)</span> microtile of <span class="math notranslate nohighlight">\(C\)</span> should fit in registers, thus <span class="math notranslate nohighlight">\(m_r = 12\)</span> and <span class="math notranslate nohighlight">\(n_r = 4\)</span> were reasonable choices since <span class="math notranslate nohighlight">\(m_r \times n_r = 48\)</span>. (We still need some registers for a vector of <span class="math notranslate nohighlight">\(A\)</span> and <span class="math notranslate nohighlight">\(B\)</span> and since we only need one vector register for an element of <span class="math notranslate nohighlight">\(B\)</span>, due to the outer product structure (for which we can reuse it), it makes sense that we put more elements in <span class="math notranslate nohighlight">\(m_r\)</span> so that <span class="math notranslate nohighlight">\(m_r \times n_r + m_r + 4 = 64\)</span>; (the <span class="math notranslate nohighlight">\(4\)</span> here is the vector register being used for an element of <span class="math notranslate nohighlight">\(`B`\)</span>).</p>
 <section id="poll-9-1-size-n-of-largest-square-n-times-n-matrices-a-b-and-c-to-fit-in-l2-512-kb-cache">
 <h3><a class="reference external" href="https://www.polleverywhere.com/multiple_choice_polls/47Dtkp5pdPTImhrrPm6Sc">Poll 9.1</a>: Size <span class="math notranslate nohighlight">\(n\)</span> of largest square (<span class="math notranslate nohighlight">\(n \times n\)</span>) matrices <span class="math notranslate nohighlight">\(A\)</span>, <span class="math notranslate nohighlight">\(B\)</span>, and <span class="math notranslate nohighlight">\(C\)</span> to fit in L2 (512 KB) cache:<a class="headerlink" href="#poll-9-1-size-n-of-largest-square-n-times-n-matrices-a-b-and-c-to-fit-in-l2-512-kb-cache" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>a) 104</p></li>
 <li><p>b) 442</p></li>
 <li><p>c) 686</p></li>
+</ul>
+<p>Now the question is what happens in with the L1 and L2 cache with this loop ordering.</p>
+<p><span class="math notranslate nohighlight">\(A\)</span> and <span class="math notranslate nohighlight">\(B\)</span> are broken into micropanels:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+A = 
+   \begin{bmatrix}
+     A_{1}\\
+     \vdots\\
+     A_{M}\\
+   \end{bmatrix}
+\quad
+B = 
+   \begin{bmatrix}
+     B_{1} &amp; \dots &amp; B_{N}
+   \end{bmatrix}
+\end{split}\]</div>
+<ul class="simple">
+<li><p>The inner loop of <span class="math notranslate nohighlight">\(I\)</span> means that the <span class="math notranslate nohighlight">\(k_c \times n_r\)</span> micropanel <span class="math notranslate nohighlight">\(B_J\)</span> is fixed for all the micropanels of <span class="math notranslate nohighlight">\(A\)</span>. This suggests that we want <span class="math notranslate nohighlight">\(k_c \times n_r\)</span> to fit in the L1 cache so that we got lots of reuse <span class="math notranslate nohighlight">\(B_J\)</span> before having to bring a new micropanel into the L1 cache.</p></li>
+<li><p>Similarly, since we get to use all of the micropanels of <span class="math notranslate nohighlight">\(A\)</span> when <span class="math notranslate nohighlight">\(J\)</span> is
+indexed, this suggests we want <span class="math notranslate nohighlight">\(m_c \times k_c\)</span> to fit in the L2 cache.</p></li>
+</ul>
+<p>So to summarize so far:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(n_r\)</span> and <span class="math notranslate nohighlight">\(m_r\)</span> chosen to fit the microtile of <span class="math notranslate nohighlight">\(C\)</span> in the registers.</p></li>
+<li><p><span class="math notranslate nohighlight">\(k_c\)</span> chosen to fit the micropanel of <span class="math notranslate nohighlight">\(B\)</span> in the L1 cache (micropanel of
+size <span class="math notranslate nohighlight">\(k_c \times n_r\)</span>).</p></li>
+<li><p><span class="math notranslate nohighlight">\(m_c\)</span> chosen to fit the block of <span class="math notranslate nohighlight">\(A\)</span> in the L2 cache (block of size <span class="math notranslate nohighlight">\(m_c \times k_c\)</span>).</p></li>
 </ul>
 </section>
 </section>

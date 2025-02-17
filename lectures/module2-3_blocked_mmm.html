@@ -63,6 +63,7 @@
     <link rel="icon" href="../_static/SDSU-comp605_logo.svg"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="9) Packing for cache" href="module2-4_packing_for_cache.html" />
     <link rel="prev" title="7) CPU Optimization: Matrix-Matrix Multiply" href="module2-2_cpu_optimization.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -194,6 +195,7 @@
 <li class="toctree-l2"><a class="reference internal" href="module2-1_measuring_performance.html">6) Measuring Performance</a></li>
 <li class="toctree-l2"><a class="reference internal" href="module2-2_cpu_optimization.html">7) CPU Optimization: Matrix-Matrix Multiply</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">8) Blocked Matrix-Matrix Multiplication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module2-4_packing_for_cache.html">9) Packing for cache</a></li>
 </ul>
 </details></li>
 </ul>
@@ -441,6 +443,7 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#constant-sized-arrays-staticarrays-jl">5. Constant sized arrays: <code class="docutils literal notranslate"><span class="pre">StaticArrays.jl</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#loop-unrolling">6. Loop unrolling</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#examples-in-julia">7. Examples in Julia</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">8. Summary</a></li>
 </ul>
             </nav>
         </div>
@@ -467,6 +470,7 @@ document.write(`
 <li><p><a class="reference internal" href="#constant-sized-arrays-staticarrays-jl"><span class="xref myst">Constant sized arrays: <code class="docutils literal notranslate"><span class="pre">StaticArrays.jl</span></code></span></a></p></li>
 <li><p><a class="reference internal" href="#loop-unrolling"><span class="xref myst">Loop unrolling</span></a></p></li>
 <li><p><a class="reference internal" href="#examples-in-julia"><span class="xref myst">Examples in Julia</span></a></p></li>
+<li><p><a class="reference internal" href="#summary"><span class="xref myst">Summary</span></a></p></li>
 </ol>
 <section id="blocked-matrix-matrix-multiply">
 <h2>1. Blocked matrix-matrix multiply<a class="headerlink" href="#blocked-matrix-matrix-multiply" title="Link to this heading">#</a></h2>
@@ -1042,20 +1046,7 @@ top:
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold -Color-Bold-Green">  No Changes</span> to `~/.julia/environments/v1.10/Project.toml`
-<span class=" -Color -Color-Bold -Color-Bold-Green">    Updating</span> `~/.julia/environments/v1.10/Manifest.toml`
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  [8e850b90] ↓ libblastrampoline_jll v5.11.0+0 ⇒ v5.8.0+1
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold -Color-Bold-Green">Precompiling</span> 
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>project...
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">  ✓ </span>SIMD
-  1 dependency successfully precompiled in 8 seconds. 389 already precompiled.
+<span class=" -Color -Color-Bold -Color-Bold-Green">  No Changes</span> to `~/.julia/environments/v1.10/Manifest.toml`
 </pre></div>
 </div>
 </div>
@@ -1164,6 +1155,34 @@ top:
 <h2>7. Examples in Julia<a class="headerlink" href="#examples-in-julia" title="Link to this heading">#</a></h2>
 <p>You can find examples of a <span class="math notranslate nohighlight">\(4 \times 4\)</span> micro-kernel implementation in Julia in the <a class="reference external" href="https://github.com/sdsu-comp605/spring25/tree/main/julia_codes/module2-3"><code class="docutils literal notranslate"><span class="pre">julia_codes/module2-3/</span></code></a> directory in the class repository.</p>
 </section>
+<section id="summary">
+<h2>8. Summary<a class="headerlink" href="#summary" title="Link to this heading">#</a></h2>
+<p>In Section <a class="reference internal" href="#blocking-for-registers"><span class="xref myst">2. Blocking for registers</span></a> we found the following cost:</p>
+<div class="math notranslate nohighlight">
+\[
+2mnk \gamma_R
+\]</div>
+<p>for computation, and the following only for the loads and stores:</p>
+<div class="math notranslate nohighlight">
+\[
+2 m_r n_r M N + MNK (m_r k_r + k_r n_r) = 2mn + mnk \left(\frac{1}{n_r} + \frac{1}{m_r}\right). 
+\]</div>
+<p>The ratio between flops and memory operations between the registers and memory is then</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{2mnk}{2mn + mnk \left(\frac{1}{n_r} + \frac{1}{m_r}\right)} 
+\]</div>
+<p>We can see that if <span class="math notranslate nohighlight">\(k\)</span> is large, then <span class="math notranslate nohighlight">\(2mn\)</span> (the cost of loading and storing the <span class="math notranslate nohighlight">\(m_r \times n_r\)</span> submatrices of <span class="math notranslate nohighlight">\(C\)</span>) can be ignored in the denominator, yielding, approximately,</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{2mnk}{2mn + mnk \left(\frac{1}{n_r} + \frac{1}{m_r}\right)} = \frac{2}{\frac{1}{n_r} + \frac{1}{m_r}} = \frac{2}{\frac{m_r}{m_r n_r} + \frac{n_r}{m_r n_r}} = \frac{2 m_r n_r}{{n_r} + {m_r}}
+\]</div>
+<ul class="simple">
+<li><p>This is the ratio of floating point operations to memory operations that we want to be high.</p></li>
+<li><p>If <span class="math notranslate nohighlight">\(m_r = n_r = 4\)</span>, then this ratio is 4.</p></li>
+<li><p>Which means that, for every memory operation (read) of an element of <span class="math notranslate nohighlight">\(A\)</span> or <span class="math notranslate nohighlight">\(B\)</span>, approximately <span class="math notranslate nohighlight">\(4\)</span> floating point operations are performed with data that resides in registers.</p></li>
+</ul>
+</section>
 </section>
 
     <script type="text/x-thebe-config">
@@ -1205,6 +1224,15 @@ top:
         <p class="prev-next-title">7) CPU Optimization: Matrix-Matrix Multiply</p>
       </div>
     </a>
+    <a class="right-next"
+       href="module2-4_packing_for_cache.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">9) Packing for cache</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
 </div>
                 </footer>
               
@@ -1240,6 +1268,7 @@ top:
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#constant-sized-arrays-staticarrays-jl">5. Constant sized arrays: <code class="docutils literal notranslate"><span class="pre">StaticArrays.jl</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#loop-unrolling">6. Loop unrolling</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#examples-in-julia">7. Examples in Julia</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">8. Summary</a></li>
 </ul>
   </nav></div>
 
