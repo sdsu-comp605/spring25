@@ -15,3 +15,4 @@ chapters:
   - file: lectures/module2-1_measuring_performance.ipynb
   - file: lectures/module2-2_cpu_optimization.ipynb
   - file: lectures/module2-3_blocked_mmm.ipynb
+  - file: lectures/module2-4_packing_for_cache.ipynb
