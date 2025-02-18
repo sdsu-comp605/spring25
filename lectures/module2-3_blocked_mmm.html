@@ -1038,19 +1038,25 @@ top:
 </li>
 </ul>
 <blockquote>
-<div><p>Recommended Reading:</p>
-</div></blockquote>
-<blockquote>
-<div><p><a class="reference external" href="https://viralinstruction.com/posts/optimise/">How to optimise Julia code: A practical guide</a></p>
+<div><p>Recommended Reading:
+<a class="reference external" href="https://viralinstruction.com/posts/optimise/">How to optimise Julia code: A practical guide</a></p>
 </div></blockquote>
 </section>
 </section>
 </section>
 <section id="constant-sized-arrays-staticarrays-jl">
 <h2>5. Constant sized arrays: <a class="reference external" href="https://github.com/JuliaArrays/StaticArrays.jl"><code class="docutils literal notranslate"><span class="pre">StaticArrays.jl</span></code></a><a class="headerlink" href="#constant-sized-arrays-staticarrays-jl" title="Link to this heading">#</a></h2>
-<p>It is natural define the vector unit as <code class="docutils literal notranslate"><span class="pre">VecT</span> <span class="pre">=</span> <span class="pre">Vec{vl,</span> <span class="pre">T}</span></code> where <code class="docutils literal notranslate"><span class="pre">vl</span></code> is the length of the vector unit. Thus the microcolumns of <span class="math notranslate nohighlight">\(C\)</span> and <span class="math notranslate nohighlight">\(A\)</span> get broken up into <span class="math notranslate nohighlight">\(n_r / v_l\)</span> pieces.</p>
+<p>It is natural define the vector unit as</p>
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">VecT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">Vector</span><span class="p">{</span><span class="kt">T</span><span class="p">}(</span><span class="nb">undef</span><span class="p">,</span><span class="n">vl</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>where <code class="docutils literal notranslate"><span class="pre">vl</span></code> is the length of the vector unit with unspecified entries (<code class="docutils literal notranslate"><span class="pre">undef</span></code>). Thus the microcolumns of <span class="math notranslate nohighlight">\(C\)</span> and <span class="math notranslate nohighlight">\(A\)</span> get broken up into <span class="math notranslate nohighlight">\(n_r / v_l\)</span> pieces.</p>
 <p>Now the question becomes, what should we use to handle the <code class="docutils literal notranslate"><span class="pre">nr</span></code> vectors of the microtile?</p>
-<p>We could do: <code class="docutils literal notranslate"><span class="pre">c</span> <span class="pre">=</span> <span class="pre">Array{VecT}(undef,</span> <span class="pre">mr_vl,</span> <span class="pre">nr)</span></code> which would give us an array of size <code class="docutils literal notranslate"><span class="pre">mv_vl</span> <span class="pre">X</span> <span class="pre">nr</span></code> that can hold vectors. Unfortunately, even though this array is only used in the microkernel, the array <code class="docutils literal notranslate"><span class="pre">c</span></code> will be allocated on the <em>heap</em> and not the <em>stack</em>; for our purposes, you can think of the <em>stack</em> as memory that is local to the function and <em>heap</em> as memory that can hold data needed across functions. If small enough, stack data should just live in registers.</p>
+<p>We could do:</p>
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">Array</span><span class="p">{</span><span class="kt">VecT</span><span class="p">}(</span><span class="nb">undef</span><span class="p">,</span><span class="w"> </span><span class="n">mr_vl</span><span class="p">,</span><span class="w"> </span><span class="n">nr</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>which would give us an array of size <code class="docutils literal notranslate"><span class="pre">mv_vl</span> <span class="pre">*</span> <span class="pre">nr</span></code> that can hold vectors with unspecified entries (<code class="docutils literal notranslate"><span class="pre">undef</span></code>). Unfortunately, even though this array is only used in the microkernel, the array <code class="docutils literal notranslate"><span class="pre">c</span></code> will be allocated on the <em>heap</em> and not the <em>stack</em>; for our purposes, you can think of the <em>stack</em> as memory that is local to the function and <em>heap</em> as memory that can hold data needed across functions. If small enough, stack data should just live in registers.</p>
 <p>How can we get stack (register) allocated arrays in Julia?</p>
 <p>We need a package called <a class="reference external" href="https://github.com/JuliaArrays/StaticArrays.jl"><code class="docutils literal notranslate"><span class="pre">StaticArrays.jl</span></code></a>:</p>
 <div class="cell docutils container">
