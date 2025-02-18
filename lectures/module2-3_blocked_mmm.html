@@ -1024,6 +1024,25 @@ top:
 </div>
 </div>
 <p>this is known as <em>constant propagation</em> in Julia, where the return of <code class="docutils literal notranslate"><span class="pre">foo(10)</span></code> can be figured out at compile time.</p>
+<ul class="simple">
+<li><p>In the cells above, we have used the <code class="docutils literal notranslate"><span class="pre">&#64;code_llvm</span></code> macro, which shows the LLVM (Julia compiler) code generated.</p></li>
+<li><p>There are different levels of “lowering” the code from the high-level Julia (human readable) syntax, to the machine/assembly level.</p></li>
+<li><p>Refer to the documentation for each of them:</p>
+<ul>
+<li><p><a class="reference external" href="https://docs.julialang.org/en/v1/stdlib/InteractiveUtils/#InteractiveUtils.&#64;code_lowered"><code class="docutils literal notranslate"><span class="pre">&#64;code_lowered</span></code></a></p></li>
+<li><p><a class="reference external" href="https://docs.julialang.org/en/v1/stdlib/InteractiveUtils/#InteractiveUtils.&#64;code_typed"><code class="docutils literal notranslate"><span class="pre">&#64;code_typed</span></code></a></p></li>
+<li><p><a class="reference external" href="https://docs.julialang.org/en/v1/stdlib/InteractiveUtils/#InteractiveUtils.&#64;code_warntype"><code class="docutils literal notranslate"><span class="pre">&#64;code_warntype</span></code></a></p></li>
+<li><p><a class="reference external" href="https://docs.julialang.org/en/v1/stdlib/InteractiveUtils/#InteractiveUtils.&#64;code_llvm"><code class="docutils literal notranslate"><span class="pre">&#64;code_llvm</span></code></a></p></li>
+<li><p><a class="reference external" href="https://docs.julialang.org/en/v1/stdlib/InteractiveUtils/#InteractiveUtils.&#64;code_native"><code class="docutils literal notranslate"><span class="pre">&#64;code_native</span></code></a></p></li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<div><p>Recommended Reading:</p>
+</div></blockquote>
+<blockquote>
+<div><p><a class="reference external" href="https://viralinstruction.com/posts/optimise/">How to optimise Julia code: A practical guide</a></p>
+</div></blockquote>
 </section>
 </section>
 </section>
