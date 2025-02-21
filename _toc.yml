@@ -17,3 +17,4 @@ chapters:
   - file: lectures/module2-3_blocked_mmm.ipynb
   - file: lectures/module2-4_packing_for_cache.ipynb
   - file: lectures/module2-5_intro_multithreading.ipynb
+  - file: lectures/module3-1_intro_parallel_scaling.ipynb
