@@ -433,6 +433,13 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#julia-vscode-extension">3. Julia VSCode extension</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#multithreading-the-matrix-matrix-multiply">4. Multithreading the matrix-matrix multiply</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#loop-1-mygemm-i-packed">Loop 1: <code class="docutils literal notranslate"><span class="pre">mygemm_I_packed</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#loop-2-mygemm-ji-packed">Loop 2: <code class="docutils literal notranslate"><span class="pre">mygemm_JI_packed</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#loop-3-mygemm-i-ji-packed">Loop 3: <code class="docutils literal notranslate"><span class="pre">mygemm_I_JI_packed</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#loop-4-mygemm-pi-ji-packed">Loop 4: <code class="docutils literal notranslate"><span class="pre">mygemm_PI_JI_packed</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#loop-5-mygemm-jpi-ji-packed">Loop 5: <code class="docutils literal notranslate"><span class="pre">mygemm_JPI_JI_packed</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#examples-in-julia">Examples in Julia</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -601,6 +608,41 @@ document.write(`
 <p>We need to be careful about avoiding <a class="reference external" href="https://en.wikipedia.org/wiki/Race_condition">race conditions</a>, which may happen if multiple threads will try to update the same micropanel.</p>
 <section id="loop-1-mygemm-i-packed">
 <h3>Loop 1: <code class="docutils literal notranslate"><span class="pre">mygemm_I_packed</span></code><a class="headerlink" href="#loop-1-mygemm-i-packed" title="Link to this heading">#</a></h3>
+<p>Poor performance:</p>
+<ul class="simple">
+<li><p>Seeing cost of launching threads</p></li>
+<li><p>Poor cache reuse (limited amortizing of data movement)</p></li>
+</ul>
+</section>
+<section id="loop-2-mygemm-ji-packed">
+<h3>Loop 2: <code class="docutils literal notranslate"><span class="pre">mygemm_JI_packed</span></code><a class="headerlink" href="#loop-2-mygemm-ji-packed" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Better performance</p></li>
+</ul>
+</section>
+<section id="loop-3-mygemm-i-ji-packed">
+<h3>Loop 3: <code class="docutils literal notranslate"><span class="pre">mygemm_I_JI_packed</span></code><a class="headerlink" href="#loop-3-mygemm-i-ji-packed" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Need to be careful, since this needs multiple copies of <code class="docutils literal notranslate"><span class="pre">A_pack</span></code> (one for each thread)</p></li>
+<li><p>Could do a little better by smoothing out <code class="docutils literal notranslate"><span class="pre">mc</span></code> so that</p></li>
+</ul>
+</section>
+<section id="loop-4-mygemm-pi-ji-packed">
+<h3>Loop 4: <code class="docutils literal notranslate"><span class="pre">mygemm_PI_JI_packed</span></code><a class="headerlink" href="#loop-4-mygemm-pi-ji-packed" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Not good, due to race condition with micropanel update</p></li>
+</ul>
+</section>
+<section id="loop-5-mygemm-jpi-ji-packed">
+<h3>Loop 5: <code class="docutils literal notranslate"><span class="pre">mygemm_JPI_JI_packed</span></code><a class="headerlink" href="#loop-5-mygemm-jpi-ji-packed" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Need to be careful, since this needs multiple copies of <code class="docutils literal notranslate"><span class="pre">A_pack</span></code> and <code class="docutils literal notranslate"><span class="pre">B_pack</span></code> (one for each thread)</p></li>
+<li><p>Since <code class="docutils literal notranslate"><span class="pre">nc</span></code> is sized for the L3 cache, we need to reduce it so that all the thread data fit in the L3 cache.</p></li>
+</ul>
+<section id="examples-in-julia">
+<h4>Examples in Julia<a class="headerlink" href="#examples-in-julia" title="Link to this heading">#</a></h4>
+<p>You can find examples of multi-threaded, packed implementations in Julia in the <a class="reference external" href="https://github.com/sdsu-comp605/spring25/tree/main/julia_codes/module2-5"><code class="docutils literal notranslate"><span class="pre">julia_codes/module2-5/</span></code></a> directory in the class repository.</p>
+</section>
 </section>
 </section>
 </section>
@@ -669,6 +711,13 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#julia-vscode-extension">3. Julia VSCode extension</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#multithreading-the-matrix-matrix-multiply">4. Multithreading the matrix-matrix multiply</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#loop-1-mygemm-i-packed">Loop 1: <code class="docutils literal notranslate"><span class="pre">mygemm_I_packed</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#loop-2-mygemm-ji-packed">Loop 2: <code class="docutils literal notranslate"><span class="pre">mygemm_JI_packed</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#loop-3-mygemm-i-ji-packed">Loop 3: <code class="docutils literal notranslate"><span class="pre">mygemm_I_JI_packed</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#loop-4-mygemm-pi-ji-packed">Loop 4: <code class="docutils literal notranslate"><span class="pre">mygemm_PI_JI_packed</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#loop-5-mygemm-jpi-ji-packed">Loop 5: <code class="docutils literal notranslate"><span class="pre">mygemm_JPI_JI_packed</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#examples-in-julia">Examples in Julia</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
