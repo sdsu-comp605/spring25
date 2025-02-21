@@ -47,8 +47,8 @@ function mygemm_packed_MT5!(C, A, B, sizes::Sizes)
   sizes = Sizes{mc, nc, kc, mr, nr, vl}()
 
   # Check the matrix sizes
-  @assert size(A) == (n, k)
-  @assert size(B, 2) == m
+  @assert size(A) == (m, k)
+  @assert size(B, 2) == n
 
   # We assume that the matrices are even divisible by `nr` and `mr`
   @assert mod(m, mr) == 0
