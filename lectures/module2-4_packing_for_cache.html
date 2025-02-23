@@ -197,6 +197,7 @@
 <li class="toctree-l2"><a class="reference internal" href="module2-3_blocked_mmm.html">8) Blocked Matrix-Matrix Multiplication</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">9) Packing for cache</a></li>
 <li class="toctree-l2"><a class="reference internal" href="module2-5_intro_multithreading.html">10) Introduction to Multithreading</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module3-1_intro_parallel_scaling.html">11) Introduction to Parallel Scaling</a></li>
 </ul>
 </details></li>
 </ul>
@@ -600,9 +601,9 @@ C_{ij} := C_{ij} + \sum_{p=1}^{K} A_{ip} B_{pj}
 <section id="poll-9-1-size-n-of-largest-square-n-times-n-matrices-a-b-and-c-to-fit-in-l2-512-kb-cache">
 <h3><a class="reference external" href="https://www.polleverywhere.com/multiple_choice_polls/47Dtkp5pdPTImhrrPm6Sc">Poll 9.1</a>: Size <span class="math notranslate nohighlight">\(n\)</span> of largest square (<span class="math notranslate nohighlight">\(n \times n\)</span>) matrices <span class="math notranslate nohighlight">\(A\)</span>, <span class="math notranslate nohighlight">\(B\)</span>, and <span class="math notranslate nohighlight">\(C\)</span> to fit in L2 (512 KB) cache:<a class="headerlink" href="#poll-9-1-size-n-of-largest-square-n-times-n-matrices-a-b-and-c-to-fit-in-l2-512-kb-cache" title="Link to this heading">#</a></h3>
 <ul class="simple">
-<li><p>a) 104</p></li>
-<li><p>b) 442</p></li>
-<li><p>c) 686</p></li>
+<li><p>a) 64</p></li>
+<li><p>b) 147</p></li>
+<li><p>c) 442</p></li>
 </ul>
 <p>Now the question is what happens in with the L1 and L2 cache with this loop ordering.</p>
 <p><span class="math notranslate nohighlight">\(A\)</span> and <span class="math notranslate nohighlight">\(B\)</span> are broken into micropanels:</p>
