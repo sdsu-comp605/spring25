@@ -634,7 +634,7 @@ I<span class="w"> </span>am<span class="w"> </span>thread<span class="w"> </span
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>gcc<span class="w"> </span>-O2<span class="w"> </span>-Wall<span class="w"> </span>-c<span class="w"> </span>triad-foo.c<span class="w"> </span>-o<span class="w"> </span>triad-foo
 </pre></div>
 </div>
-<p>The powers of <code class="docutils literal notranslate"><span class="pre">-Wrestrict</span></code> are limited, however, and (as of <code class="docutils literal notranslate"><span class="pre">13.3.0</span></code> at the time of writing) do not even catch</p>
+<p>The powers of <code class="docutils literal notranslate"><span class="pre">-Wrestrict</span></code> are limited, however, and (as of <code class="docutils literal notranslate"><span class="pre">gcc</span> <span class="pre">13.3.0</span></code> at the time of writing) do not even catch</p>
 <div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">foo</span><span class="p">(</span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="n">triad</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">);</span>
 <span class="p">}</span>
