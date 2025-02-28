@@ -428,6 +428,17 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#openmp-resources">OpenMP Resources:</a></li>
 </ul>
 </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pragma-omp-parallel">1.1. <code class="docutils literal notranslate"><span class="pre">#pragma</span> <span class="pre">omp</span> <span class="pre">parallel</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parallelizing-triad">Parallelizing <code class="docutils literal notranslate"><span class="pre">triad</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#vectorization">Vectorization</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pointer-aliasing">Pointer aliasing</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#warnings">Warnings</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#check-the-assembly">Check the assembly</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pragma-omp-simd">1.2 <code class="docutils literal notranslate"><span class="pre">#pragma</span> <span class="pre">omp</span> <span class="pre">simd</span></code></a></li>
+</ul>
+</li>
 </ul>
             </nav>
         </div>
@@ -449,7 +460,9 @@ document.write(`
 </ul>
 <p>Today:</p>
 <ol class="arabic simple">
-<li><p><a class="reference internal" href="#openmp-basics"><span class="xref myst">OpenMP Basics</span></a></p></li>
+<li><p><a class="reference internal" href="#openmp-basics"><span class="xref myst">OpenMP Basics</span></a><br />
+1.1 <code class="docutils literal notranslate"><span class="pre">#pragma</span> <span class="pre">omp</span> <span class="pre">parallel</span></code>
+1.2 <code class="docutils literal notranslate"><span class="pre">#pragma</span> <span class="pre">omp</span> <span class="pre">simd</span></code></p></li>
 </ol>
 <section id="openmp-basics">
 <h2>1. OpenMP Basics<a class="headerlink" href="#openmp-basics" title="Link to this heading">#</a></h2>
@@ -474,6 +487,185 @@ document.write(`
 <li><p><a class="reference external" href="https://hpc-tutorials.llnl.gov/openmp/">LLNL tutorial</a></p></li>
 <li><p><a class="reference external" href="https://extremecomputingtraining.anl.gov/">ATPESC</a> Training <a class="reference external" href="https://www.youtube.com/watch?v=T0csnAirv-U&amp;amp;list=PLGj2a3KTwhRa6Ux64xg5L5ga6Jg8QykoQ&amp;amp;index=2">video</a></p></li>
 </ul>
+</section>
+</section>
+<section id="pragma-omp-parallel">
+<h2>1.1. <code class="docutils literal notranslate"><span class="pre">#pragma</span> <span class="pre">omp</span> <span class="pre">parallel</span></code><a class="headerlink" href="#pragma-omp-parallel" title="Link to this heading">#</a></h2>
+<p>The OpenMP standard is <strong>big</strong>, but most applications only use a few constructs/directives:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;omp.h&gt;</span>
+<span class="linenos"> 2</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdio.h&gt;</span>
+<span class="linenos"> 3</span>
+<span class="linenos"> 4</span><span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos"> 5</span><span class="w">  </span><span class="cp">#pragma omp parallel</span>
+<span class="linenos"> 6</span><span class="w">  </span><span class="p">{</span>
+<span class="linenos"> 7</span><span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">num_threads</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">omp_get_num_threads</span><span class="p">();</span>
+<span class="linenos"> 8</span><span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">my_thread_num</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">omp_get_thread_num</span><span class="p">();</span>
+<span class="linenos"> 9</span><span class="w">    </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;I am thread %d of %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">my_thread_num</span><span class="p">,</span><span class="w"> </span><span class="n">num_threads</span><span class="p">);</span>
+<span class="linenos">10</span><span class="w">  </span><span class="p">}</span>
+<span class="linenos">11</span><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="linenos">12</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>To compile this C program using the GNU compiler <code class="docutils literal notranslate"><span class="pre">gcc</span></code> you need to tell the compiler to enable OpenMP capabilities, by passing the <code class="docutils literal notranslate"><span class="pre">-fopenmp</span></code> flag. You can also optionally pass the <code class="docutils literal notranslate"><span class="pre">-Wall</span></code> falg to show all warnings (unused variables, etc.) - this is good to find potential bugs in your code.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>gcc<span class="w"> </span>-fopenmp<span class="w"> </span>-Wall<span class="w"> </span>omp-hello.c<span class="w"> </span>-o<span class="w"> </span>omp-hello
+</pre></div>
+</div>
+<p>To execute the generated binary executable file, called <code class="docutils literal notranslate"><span class="pre">omp-hello</span></code> in this case, you need to</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./omp-hello
+</pre></div>
+</div>
+<p>The output on my own laptop looks like this:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>I<span class="w"> </span>am<span class="w"> </span>thread<span class="w"> </span><span class="m">4</span><span class="w"> </span>of<span class="w"> </span><span class="m">12</span>
+I<span class="w"> </span>am<span class="w"> </span>thread<span class="w"> </span><span class="m">11</span><span class="w"> </span>of<span class="w"> </span><span class="m">12</span>
+I<span class="w"> </span>am<span class="w"> </span>thread<span class="w"> </span><span class="m">8</span><span class="w"> </span>of<span class="w"> </span><span class="m">12</span>
+I<span class="w"> </span>am<span class="w"> </span>thread<span class="w"> </span><span class="m">2</span><span class="w"> </span>of<span class="w"> </span><span class="m">12</span>
+I<span class="w"> </span>am<span class="w"> </span>thread<span class="w"> </span><span class="m">1</span><span class="w"> </span>of<span class="w"> </span><span class="m">12</span>
+I<span class="w"> </span>am<span class="w"> </span>thread<span class="w"> </span><span class="m">5</span><span class="w"> </span>of<span class="w"> </span><span class="m">12</span>
+I<span class="w"> </span>am<span class="w"> </span>thread<span class="w"> </span><span class="m">10</span><span class="w"> </span>of<span class="w"> </span><span class="m">12</span>
+I<span class="w"> </span>am<span class="w"> </span>thread<span class="w"> </span><span class="m">9</span><span class="w"> </span>of<span class="w"> </span><span class="m">12</span>
+I<span class="w"> </span>am<span class="w"> </span>thread<span class="w"> </span><span class="m">6</span><span class="w"> </span>of<span class="w"> </span><span class="m">12</span>
+I<span class="w"> </span>am<span class="w"> </span>thread<span class="w"> </span><span class="m">3</span><span class="w"> </span>of<span class="w"> </span><span class="m">12</span>
+I<span class="w"> </span>am<span class="w"> </span>thread<span class="w"> </span><span class="m">7</span><span class="w"> </span>of<span class="w"> </span><span class="m">12</span>
+I<span class="w"> </span>am<span class="w"> </span>thread<span class="w"> </span><span class="m">0</span><span class="w"> </span>of<span class="w"> </span><span class="m">12</span>
+</pre></div>
+</div>
+<p>Let’s specify the number of threads to use. Let’s say we want to use 8 threads:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">OMP_NUM_THREADS</span><span class="o">=</span><span class="m">8</span><span class="w"> </span>./omp-hello
+</pre></div>
+</div>
+<p>Notice that we did not have to recompile the program. This is a <em>runtime</em> environment variable. The output now looks like:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>I<span class="w"> </span>am<span class="w"> </span>thread<span class="w"> </span><span class="m">4</span><span class="w"> </span>of<span class="w"> </span><span class="m">8</span>
+I<span class="w"> </span>am<span class="w"> </span>thread<span class="w"> </span><span class="m">7</span><span class="w"> </span>of<span class="w"> </span><span class="m">8</span>
+I<span class="w"> </span>am<span class="w"> </span>thread<span class="w"> </span><span class="m">1</span><span class="w"> </span>of<span class="w"> </span><span class="m">8</span>
+I<span class="w"> </span>am<span class="w"> </span>thread<span class="w"> </span><span class="m">3</span><span class="w"> </span>of<span class="w"> </span><span class="m">8</span>
+I<span class="w"> </span>am<span class="w"> </span>thread<span class="w"> </span><span class="m">0</span><span class="w"> </span>of<span class="w"> </span><span class="m">8</span>
+I<span class="w"> </span>am<span class="w"> </span>thread<span class="w"> </span><span class="m">2</span><span class="w"> </span>of<span class="w"> </span><span class="m">8</span>
+I<span class="w"> </span>am<span class="w"> </span>thread<span class="w"> </span><span class="m">5</span><span class="w"> </span>of<span class="w"> </span><span class="m">8</span>
+I<span class="w"> </span>am<span class="w"> </span>thread<span class="w"> </span><span class="m">6</span><span class="w"> </span>of<span class="w"> </span><span class="m">8</span>
+</pre></div>
+</div>
+<section id="parallelizing-triad">
+<h3>Parallelizing <code class="docutils literal notranslate"><span class="pre">triad</span></code><a class="headerlink" href="#parallelizing-triad" title="Link to this heading">#</a></h3>
+<p>What does the code below do?</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">triad</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">scalar</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">c</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span>
+<span class="cp">#pragma omp parallel</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="n">N</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+<span class="w">            </span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">scalar</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>And instead what does the code below do?</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">triad</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">scalar</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">c</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+
+<span class="cp">#pragma omp parallel</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">omp_get_thread_num</span><span class="p">();</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">num_threads</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">omp_get_num_threads</span><span class="p">();</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="n">id</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="n">N</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">+=</span><span class="n">num_threads</span><span class="p">)</span>
+<span class="w">            </span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">scalar</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Let’s execute both of them. You can find these codes in <a class="reference external" href="https://github.com/sdsu-comp605/spring25/tree/main/c_codes/module3-1/openmp_basics/triad_omp.c">c_codes/module3-1/openmp_basics/triad_omp.c</a>.</p>
+<section id="vectorization">
+<h4>Vectorization<a class="headerlink" href="#vectorization" title="Link to this heading">#</a></h4>
+<p>OpenMP-4.0 added the <code class="docutils literal notranslate"><span class="pre">omp</span> <span class="pre">simd</span></code> construct, which is a portable way to request that the compiler vectorize code. An example of a reason why a compiler might fail to vectorize code is <strong>pointer aliasing</strong>, which we investigate below.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="kt">void</span><span class="w"> </span><span class="nf">triad</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">scalar</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">c</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">2</span><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="n">N</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+<span class="linenos">3</span><span class="w">        </span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">scalar</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+<span class="linenos">4</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>We can compile this code with the following flags:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">gcc</span><span class="w"> </span><span class="o">-</span><span class="n">O2</span><span class="w"> </span><span class="o">-</span><span class="n">ftree</span><span class="o">-</span><span class="n">vectorize</span><span class="w"> </span><span class="o">-</span><span class="n">fopt</span><span class="o">-</span><span class="n">info</span><span class="o">-</span><span class="n">all</span><span class="w"> </span><span class="o">-</span><span class="n">c</span><span class="w"> </span><span class="n">triad</span><span class="p">.</span><span class="n">c</span><span class="w"> </span><span class="o">-</span><span class="n">o</span><span class="w"> </span><span class="n">triad</span>
+</pre></div>
+</div>
+<p>Where we have used the <code class="docutils literal notranslate"><span class="pre">-O2</span></code> optimization flag, together with the <code class="docutils literal notranslate"><span class="pre">-ftree-vectorize</span></code> vectorization flag and the <code class="docutils literal notranslate"><span class="pre">-fopt-info-all</span></code> logging info flag.</p>
+<p>For a list of all <a class="reference external" href="https://gcc.gnu.org/onlinedocs/gcc/Optimize-Options.html">optimization flags</a> see this reference.</p>
+<ul class="simple">
+<li><p>gcc autovectorization starts at <code class="docutils literal notranslate"><span class="pre">-O3</span></code> or if you use <code class="docutils literal notranslate"><span class="pre">-ftree-vectorize</span></code></p></li>
+<li><p>options such as <a class="reference external" href="https://gcc.gnu.org/onlinedocs/gcc/Developer-Options.html#index-fopt-info"><code class="docutils literal notranslate"><span class="pre">-fopt-info</span></code></a> give useful diagnostics, but are compiler-dependent and sometimes referring to assembly is useful</p></li>
+<li><p>you can also use <code class="docutils literal notranslate"><span class="pre">man</span> <span class="pre">gcc</span></code> for the manual page of <code class="docutils literal notranslate"><span class="pre">gcc</span></code> and search with <code class="docutils literal notranslate"><span class="pre">/</span></code></p></li>
+</ul>
+</section>
+<section id="pointer-aliasing">
+<h4><a class="reference external" href="https://en.wikipedia.org/wiki/Aliasing_(computing)#Aliased_pointers">Pointer aliasing</a><a class="headerlink" href="#pointer-aliasing" title="Link to this heading">#</a></h4>
+<p>Is this valid code? What is <code class="docutils literal notranslate"><span class="pre">x</span></code> after this call?</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">double</span><span class="w"> </span><span class="n">x</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">};</span>
+<span class="n">triad</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="mf">10.</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Aliasing can occur in any language that can refer to one location in memory with more than one name (for example, with pointers). This is a common problem with functions that accept pointer arguments.</p>
+<p>C allows memory to overlap arbitrarily. You can inform the compiler of this using the <a class="reference external" href="https://en.wikipedia.org/wiki/Restrict"><code class="docutils literal notranslate"><span class="pre">restrict</span></code></a> qualifier (C99/C11; <code class="docutils literal notranslate"><span class="pre">__restrict</span></code> or <code class="docutils literal notranslate"><span class="pre">__restrict__</span></code> work with most C++ and <a class="reference external" href="https://developer.nvidia.com/blog/cuda-pro-tip-optimize-pointer-aliasing/"><code class="docutils literal notranslate"><span class="pre">CUDA</span></code> compilers</a>).</p>
+<p>With the <code class="docutils literal notranslate"><span class="pre">restrict</span></code> qualifier, a programmer hints to the compiler that for the lifetime of the pointer, no other pointer will be used to access the object to which it points. This allows the compiler to make optimizations (for example, vectorization) that would not otherwise have been possible. With the <code class="docutils literal notranslate"><span class="pre">restrict</span></code> qualifier, the compiler is allowed to assume that the qialified pointers point to different locations and updating the memory location referenced by one pointer will not affect the memory locations referenced by the other pointers. The programmer, <em>not</em> the compiler, is responsible for ensuring that the pointers do not point to identical locations. The compiler can e.g. rearrange the code, first loading all memory locations, then performing the operations before committing the results back to memory.</p>
+<p>Example:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="kt">void</span><span class="w"> </span><span class="nf">triad</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="kr">restrict</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="kr">restrict</span><span class="w"> </span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">scalar</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="kr">restrict</span><span class="w"> </span><span class="n">c</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">2</span><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="n">N</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+<span class="linenos">3</span><span class="w">        </span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">scalar</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+<span class="linenos">4</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>We can compile this code with:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>gcc<span class="w"> </span>-O2<span class="w"> </span>-march<span class="o">=</span>native<span class="w"> </span>-ftree-vectorize<span class="w"> </span>-fopt-info-all<span class="w"> </span>-c<span class="w"> </span>triad-restrict.c<span class="w"> </span>-o<span class="w"> </span>triad-restrict
+</pre></div>
+</div>
+<p>Notice that we’ve added the <a class="reference external" href="https://gcc.gnu.org/onlinedocs/gcc/x86-Options.html"><code class="docutils literal notranslate"><span class="pre">-march=native</span></code></a> compilation flag that generates instructions specific for the machine the code is being compiled on.</p>
+<p>Notice how there is no more <code class="docutils literal notranslate"><span class="pre">loop</span> <span class="pre">versioned</span> <span class="pre">for</span> <span class="pre">vectorization</span> <span class="pre">because</span> <span class="pre">of</span> <span class="pre">possible</span> <span class="pre">aliasing</span></code>.</p>
+<p>The complexity of checking for aliasing can grow combinatorially in the number of arrays being processed, leading to many loop variants and/or preventing vectorization.</p>
+</section>
+<section id="warnings">
+<h4>Warnings<a class="headerlink" href="#warnings" title="Link to this heading">#</a></h4>
+<p>The <code class="docutils literal notranslate"><span class="pre">-Wrestrict</span></code> flag (included in <code class="docutils literal notranslate"><span class="pre">-Wall</span></code>) can catch some programming errors. Let’s see the following:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="kt">void</span><span class="w"> </span><span class="nf">triad</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="kr">restrict</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="kr">restrict</span><span class="w"> </span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">scalar</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="kr">restrict</span><span class="w"> </span><span class="n">c</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">2</span><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="n">N</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+<span class="linenos">3</span><span class="w">        </span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">scalar</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+<span class="linenos">4</span><span class="p">}</span>
+<span class="linenos">5</span>
+<span class="linenos">6</span><span class="kt">void</span><span class="w"> </span><span class="nf">foo</span><span class="p">(</span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">7</span><span class="w">    </span><span class="n">triad</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">);</span>
+<span class="linenos">8</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>Let’s compile it with:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>gcc<span class="w"> </span>-O2<span class="w"> </span>-Wall<span class="w"> </span>-c<span class="w"> </span>triad-foo.c<span class="w"> </span>-o<span class="w"> </span>triad-foo
+</pre></div>
+</div>
+<p>The powers of <code class="docutils literal notranslate"><span class="pre">-Wrestrict</span></code> are limited, however, and (as of <code class="docutils literal notranslate"><span class="pre">13.3.0</span></code> at the time of writing) do not even catch</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">foo</span><span class="p">(</span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">triad</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="check-the-assembly">
+<h4>Check the assembly<a class="headerlink" href="#check-the-assembly" title="Link to this heading">#</a></h4>
+<p>To make sure that your code is vectorized properly or not affected by aliasing, you can check the assembly code with <code class="docutils literal notranslate"><span class="pre">objdump</span></code>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>objdump<span class="w"> </span>-d<span class="w"> </span>--prefix-addresses<span class="w"> </span>-M<span class="w"> </span>intel<span class="w"> </span>triad-restrict
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Is the assembly qualitatively different without <code class="docutils literal notranslate"><span class="pre">restrict</span></code> (in which case the compiler “versions” the loop)? Check it yourself by inspecting the output of <code class="docutils literal notranslate"><span class="pre">objdump</span></code> with <code class="docutils literal notranslate"><span class="pre">triad</span></code>.</p></li>
+</ul>
+</section>
+</section>
+<section id="pragma-omp-simd">
+<h3>1.2 <code class="docutils literal notranslate"><span class="pre">#pragma</span> <span class="pre">omp</span> <span class="pre">simd</span></code><a class="headerlink" href="#pragma-omp-simd" title="Link to this heading">#</a></h3>
+<p>An alternative (or supplement) to <code class="docutils literal notranslate"><span class="pre">restrict</span></code> is <code class="docutils literal notranslate"><span class="pre">#pragma</span> <span class="pre">omp</span> <span class="pre">simd</span></code>.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="kt">void</span><span class="w"> </span><span class="nf">triad</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">scalar</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">c</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">2</span><span class="cp">#pragma omp simd</span>
+<span class="linenos">3</span><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="n">N</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+<span class="linenos">4</span><span class="w">        </span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">scalar</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+<span class="linenos">5</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>We can compile this with:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>gcc<span class="w"> </span>-O2<span class="w"> </span>-march<span class="o">=</span>native<span class="w"> </span>-ftree-vectorize<span class="w"> </span>-fopenmp<span class="w"> </span>-fopt-info-all<span class="w"> </span>-c<span class="w"> </span>triad-omp-simd.c<span class="w"> </span>-o<span class="w"> </span>triad-omp-simd
+</pre></div>
+</div>
 </section>
 </section>
 </section>
@@ -535,6 +727,17 @@ document.write(`
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#openmp-basics">1. OpenMP Basics</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#openmp-resources">OpenMP Resources:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pragma-omp-parallel">1.1. <code class="docutils literal notranslate"><span class="pre">#pragma</span> <span class="pre">omp</span> <span class="pre">parallel</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parallelizing-triad">Parallelizing <code class="docutils literal notranslate"><span class="pre">triad</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#vectorization">Vectorization</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pointer-aliasing">Pointer aliasing</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#warnings">Warnings</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#check-the-assembly">Check the assembly</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pragma-omp-simd">1.2 <code class="docutils literal notranslate"><span class="pre">#pragma</span> <span class="pre">omp</span> <span class="pre">simd</span></code></a></li>
 </ul>
 </li>
 </ul>
