@@ -19,3 +19,4 @@ chapters:
   - file: lectures/module2-5_intro_multithreading.ipynb
   - file: lectures/module3-1_intro_parallel_scaling.ipynb
   - file: lectures/module3-2_intro_to_openmp.ipynb
+  - file: lectures/module3-3_openmp_tasks.ipynb
