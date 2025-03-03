@@ -1,0 +1,1025 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>13) More on OpenMP and OpenMP Tasks &#8212; Scientific Computing</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'lectures/module3-3_openmp_tasks';</script>
+    <link rel="icon" href="../_static/SDSU-comp605_logo.svg"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="12) Introduction to OpenMP" href="module3-2_intro_to_openmp.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/SDSU-comp605_logo.svg" class="logo__image only-light" alt="Scientific Computing - Home"/>
+    <script>document.write(`<img src="../_static/SDSU-comp605_logo.svg" class="logo__image only-dark" alt="Scientific Computing - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../index.html">
+                    Welcome
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../syllabus.html">Syllabus</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../lectures.html">Lectures</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="module1-1_first_class.html">1) First Class: Reproducibility and Git</a></li>
+
+
+<li class="toctree-l2"><a class="reference internal" href="module1-2_linux.html">2) The Linux Filesystem and commands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module1-3_community_projects.html">3) Community Projects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module1-4_intro_architectures.html">4) Introduction to Computer Architectures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module1-5_intro_vectorization.html">5) Introduction to Vectorization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module2-1_measuring_performance.html">6) Measuring Performance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module2-2_cpu_optimization.html">7) CPU Optimization: Matrix-Matrix Multiply</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module2-3_blocked_mmm.html">8) Blocked Matrix-Matrix Multiplication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module2-4_packing_for_cache.html">9) Packing for cache</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module2-5_intro_multithreading.html">10) Introduction to Multithreading</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module3-1_intro_parallel_scaling.html">11) Introduction to Parallel Scaling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module3-2_intro_to_openmp.html">12) Introduction to OpenMP</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">13) More on OpenMP and OpenMP Tasks</a></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li>
+<button onclick="initThebeSBT()"
+  class="btn btn-sm btn-launch-thebe dropdown-item"
+  title="Launch Thebe"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-play"></i>
+  </span>
+<span class="btn__text-container">Live Code</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/sdsu-comp605/spring25" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/sdsu-comp605/spring25/issues/new?title=Issue%20on%20page%20%2Flectures/module3-3_openmp_tasks.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/lectures/module3-3_openmp_tasks.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>13) More on OpenMP and OpenMP Tasks</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#more-on-openmp">1. More on OpenMP</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#anatomy-of-a-parallel-region">Anatomy of a parallel region</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#memory-semantics">2. Memory semantics</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#programming-styles">Programming styles</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#updating-shared-variables">Updating shared variables</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-quick-demo-on-perf">3. A quick demo on <code class="docutils literal notranslate"><span class="pre">perf</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#openmp-tasks">4. OpenMP Tasks</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-pragma-omp-task">Using <code class="docutils literal notranslate"><span class="pre">#pragma</span> <span class="pre">omp</span> <span class="pre">task</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-openmp-loop-scheduler">The OpenMP loop scheduler</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#to-fork-join-or-to-task">To fork/join or to task?</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="more-on-openmp-and-openmp-tasks">
+<h1>13) More on OpenMP and OpenMP Tasks<a class="headerlink" href="#more-on-openmp-and-openmp-tasks" title="Link to this heading">#</a></h1>
+<p>Last time:</p>
+<ul class="simple">
+<li><p>OpenMP Basics</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">#pragma</span> <span class="pre">omp</span> <span class="pre">parallel</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">#pragma</span> <span class="pre">omp</span> <span class="pre">simd</span></code></p></li>
+</ul>
+<p>Today:</p>
+<ol class="arabic simple">
+<li><p><a class="reference internal" href="#more-on-openmp"><span class="xref myst">More on OpenMP</span></a></p></li>
+<li><p><a class="reference internal" href="#memory-semantics"><span class="xref myst">Memory semantics</span></a></p></li>
+<li><p><a class="reference internal" href="#a-quick-demo-on-perf"><span class="xref myst">A quick demo on <code class="docutils literal notranslate"><span class="pre">perf</span></code></span></a></p></li>
+<li><p><a class="reference internal" href="#openmp-tasks"><span class="xref myst">OpenMP Tasks</span></a></p></li>
+</ol>
+<section id="more-on-openmp">
+<h2>1. More on OpenMP<a class="headerlink" href="#more-on-openmp" title="Link to this heading">#</a></h2>
+<p>What does the compiler do when we add the <code class="docutils literal notranslate"><span class="pre">#pragma</span> <span class="pre">openmp</span> <span class="pre">parallel</span></code> directive?</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">static</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="nf">dot_opt3</span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="n">sum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">  </span><span class="n">omp_set_num_threads</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+<span class="w">  </span><span class="cp">#pragma omp parallel</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">    </span><span class="cp">#pragma omp for reduction(+:sum)</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+<span class="w">      </span><span class="n">sum</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">sum</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span><span class="w"> </span>gcc<span class="w"> </span>-Os<span class="w"> </span>-march<span class="o">=</span>native<span class="w"> </span>-fopenmp<span class="w"> </span>../c_codes/module3-3/dot.c<span class="w"> </span>-o<span class="w"> </span>dot
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span><span class="w"> </span>objdump<span class="w"> </span>-d<span class="w"> </span>--prefix-addresses<span class="w"> </span>-M<span class="w"> </span>intel<span class="w"> </span>dot<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>dot_opt3
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0000000000001379 &lt;main+0x1b9&gt; call   0000000000001849 &lt;dot_opt3&gt;
+0000000000001849 &lt;dot_opt3&gt; push   r12
+000000000000184b &lt;dot_opt3+0x2&gt; mov    r12,rdx
+000000000000184e &lt;dot_opt3+0x5&gt; push   rbp
+000000000000184f &lt;dot_opt3+0x6&gt; mov    rbp,rsi
+0000000000001852 &lt;dot_opt3+0x9&gt; push   rbx
+0000000000001853 &lt;dot_opt3+0xa&gt; mov    rbx,rdi
+0000000000001856 &lt;dot_opt3+0xd&gt; mov    edi,0x4
+000000000000185b &lt;dot_opt3+0x12&gt; sub    rsp,0x30
+000000000000185f &lt;dot_opt3+0x16&gt; mov    rax,QWORD PTR fs:0x28
+0000000000001868 &lt;dot_opt3+0x1f&gt; mov    QWORD PTR [rsp+0x28],rax
+000000000000186d &lt;dot_opt3+0x24&gt; xor    eax,eax
+000000000000186f &lt;dot_opt3+0x26&gt; call   0000000000001140 &lt;omp_set_num_threads@plt&gt;
+0000000000001874 &lt;dot_opt3+0x2b&gt; lea    rsi,[rsp+0x8]
+0000000000001879 &lt;dot_opt3+0x30&gt; xor    ecx,ecx
+000000000000187b &lt;dot_opt3+0x32&gt; xor    edx,edx
+000000000000187d &lt;dot_opt3+0x34&gt; lea    rdi,[rip+0xc4]        # 0000000000001948 &lt;dot_opt3._omp_fn.0&gt;
+0000000000001884 &lt;dot_opt3+0x3b&gt; mov    QWORD PTR [rsp+0x18],r12
+0000000000001889 &lt;dot_opt3+0x40&gt; mov    QWORD PTR [rsp+0x10],rbp
+000000000000188e &lt;dot_opt3+0x45&gt; mov    QWORD PTR [rsp+0x8],rbx
+0000000000001893 &lt;dot_opt3+0x4a&gt; mov    QWORD PTR [rsp+0x20],0x0
+000000000000189c &lt;dot_opt3+0x53&gt; call   00000000000011b0 &lt;GOMP_parallel@plt&gt;
+00000000000018a1 &lt;dot_opt3+0x58&gt; vmovsd xmm0,QWORD PTR [rsp+0x20]
+00000000000018a7 &lt;dot_opt3+0x5e&gt; mov    rax,QWORD PTR [rsp+0x28]
+00000000000018ac &lt;dot_opt3+0x63&gt; sub    rax,QWORD PTR fs:0x28
+00000000000018b5 &lt;dot_opt3+0x6c&gt; je     00000000000018bc &lt;dot_opt3+0x73&gt;
+00000000000018b7 &lt;dot_opt3+0x6e&gt; call   0000000000001150 &lt;__stack_chk_fail@plt&gt;
+00000000000018bc &lt;dot_opt3+0x73&gt; add    rsp,0x30
+00000000000018c0 &lt;dot_opt3+0x77&gt; pop    rbx
+00000000000018c1 &lt;dot_opt3+0x78&gt; pop    rbp
+00000000000018c2 &lt;dot_opt3+0x79&gt; pop    r12
+00000000000018c4 &lt;dot_opt3+0x7b&gt; ret
+0000000000001948 &lt;dot_opt3._omp_fn.0&gt; endbr64
+000000000000194c &lt;dot_opt3._omp_fn.0+0x4&gt; push   r14
+000000000000194e &lt;dot_opt3._omp_fn.0+0x6&gt; mov    r14,QWORD PTR [rdi+0x8]
+0000000000001952 &lt;dot_opt3._omp_fn.0+0xa&gt; push   r13
+0000000000001954 &lt;dot_opt3._omp_fn.0+0xc&gt; mov    r13,QWORD PTR [rdi+0x10]
+0000000000001958 &lt;dot_opt3._omp_fn.0+0x10&gt; push   r12
+000000000000195a &lt;dot_opt3._omp_fn.0+0x12&gt; push   rbp
+000000000000195b &lt;dot_opt3._omp_fn.0+0x13&gt; mov    rbp,rdi
+000000000000195e &lt;dot_opt3._omp_fn.0+0x16&gt; push   rbx
+000000000000195f &lt;dot_opt3._omp_fn.0+0x17&gt; mov    rbx,QWORD PTR [rdi]
+0000000000001962 &lt;dot_opt3._omp_fn.0+0x1a&gt; test   rbx,rbx
+0000000000001965 &lt;dot_opt3._omp_fn.0+0x1d&gt; jne    0000000000001996 &lt;dot_opt3._omp_fn.0+0x4e&gt;
+0000000000001967 &lt;dot_opt3._omp_fn.0+0x1f&gt; vxorpd xmm0,xmm0,xmm0
+000000000000196b &lt;dot_opt3._omp_fn.0+0x23&gt; mov    rdx,QWORD PTR [rbp+0x18]
+000000000000196f &lt;dot_opt3._omp_fn.0+0x27&gt; lea    rcx,[rbp+0x18]
+0000000000001973 &lt;dot_opt3._omp_fn.0+0x2b&gt; vmovq  xmm2,rdx
+0000000000001978 &lt;dot_opt3._omp_fn.0+0x30&gt; mov    rax,rdx
+000000000000197b &lt;dot_opt3._omp_fn.0+0x33&gt; vaddsd xmm1,xmm0,xmm2
+000000000000197f &lt;dot_opt3._omp_fn.0+0x37&gt; vmovq  rsi,xmm1
+0000000000001984 &lt;dot_opt3._omp_fn.0+0x3c&gt; lock cmpxchg QWORD PTR [rcx],rsi
+0000000000001989 &lt;dot_opt3._omp_fn.0+0x41&gt; mov    rsi,rdx
+000000000000198c &lt;dot_opt3._omp_fn.0+0x44&gt; mov    rdx,rax
+000000000000198f &lt;dot_opt3._omp_fn.0+0x47&gt; cmp    rsi,rax
+0000000000001992 &lt;dot_opt3._omp_fn.0+0x4a&gt; je     00000000000019e7 &lt;dot_opt3._omp_fn.0+0x9f&gt;
+0000000000001994 &lt;dot_opt3._omp_fn.0+0x4c&gt; jmp    0000000000001973 &lt;dot_opt3._omp_fn.0+0x2b&gt;
+0000000000001996 &lt;dot_opt3._omp_fn.0+0x4e&gt; call   0000000000001170 &lt;omp_get_num_threads@plt&gt;
+000000000000199b &lt;dot_opt3._omp_fn.0+0x53&gt; mov    r12d,eax
+000000000000199e &lt;dot_opt3._omp_fn.0+0x56&gt; call   0000000000001130 &lt;omp_get_thread_num@plt&gt;
+00000000000019a3 &lt;dot_opt3._omp_fn.0+0x5b&gt; movsxd rsi,r12d
+00000000000019a6 &lt;dot_opt3._omp_fn.0+0x5e&gt; xor    edx,edx
+00000000000019a8 &lt;dot_opt3._omp_fn.0+0x60&gt; movsxd rcx,eax
+00000000000019ab &lt;dot_opt3._omp_fn.0+0x63&gt; mov    rax,rbx
+00000000000019ae &lt;dot_opt3._omp_fn.0+0x66&gt; div    rsi
+00000000000019b1 &lt;dot_opt3._omp_fn.0+0x69&gt; cmp    rcx,rdx
+00000000000019b4 &lt;dot_opt3._omp_fn.0+0x6c&gt; jb     00000000000019e0 &lt;dot_opt3._omp_fn.0+0x98&gt;
+00000000000019b6 &lt;dot_opt3._omp_fn.0+0x6e&gt; imul   rcx,rax
+00000000000019ba &lt;dot_opt3._omp_fn.0+0x72&gt; vxorpd xmm0,xmm0,xmm0
+00000000000019be &lt;dot_opt3._omp_fn.0+0x76&gt; add    rdx,rcx
+00000000000019c1 &lt;dot_opt3._omp_fn.0+0x79&gt; add    rax,rdx
+00000000000019c4 &lt;dot_opt3._omp_fn.0+0x7c&gt; cmp    rdx,rax
+00000000000019c7 &lt;dot_opt3._omp_fn.0+0x7f&gt; jae    000000000000196b &lt;dot_opt3._omp_fn.0+0x23&gt;
+00000000000019c9 &lt;dot_opt3._omp_fn.0+0x81&gt; vmovsd xmm3,QWORD PTR [r14+rdx*8]
+00000000000019cf &lt;dot_opt3._omp_fn.0+0x87&gt; vfmadd231sd xmm0,xmm3,QWORD PTR [r13+rdx*8+0x0]
+00000000000019d6 &lt;dot_opt3._omp_fn.0+0x8e&gt; inc    rdx
+00000000000019d9 &lt;dot_opt3._omp_fn.0+0x91&gt; cmp    rax,rdx
+00000000000019dc &lt;dot_opt3._omp_fn.0+0x94&gt; jne    00000000000019c9 &lt;dot_opt3._omp_fn.0+0x81&gt;
+00000000000019de &lt;dot_opt3._omp_fn.0+0x96&gt; jmp    000000000000196b &lt;dot_opt3._omp_fn.0+0x23&gt;
+00000000000019e0 &lt;dot_opt3._omp_fn.0+0x98&gt; inc    rax
+00000000000019e3 &lt;dot_opt3._omp_fn.0+0x9b&gt; xor    edx,edx
+00000000000019e5 &lt;dot_opt3._omp_fn.0+0x9d&gt; jmp    00000000000019b6 &lt;dot_opt3._omp_fn.0+0x6e&gt;
+00000000000019e7 &lt;dot_opt3._omp_fn.0+0x9f&gt; pop    rbx
+00000000000019e8 &lt;dot_opt3._omp_fn.0+0xa0&gt; pop    rbp
+00000000000019e9 &lt;dot_opt3._omp_fn.0+0xa1&gt; pop    r12
+00000000000019eb &lt;dot_opt3._omp_fn.0+0xa3&gt; pop    r13
+00000000000019ed &lt;dot_opt3._omp_fn.0+0xa5&gt; pop    r14
+00000000000019ef &lt;dot_opt3._omp_fn.0+0xa7&gt; ret
+</pre></div>
+</div>
+</div>
+</div>
+<section id="anatomy-of-a-parallel-region">
+<h3>Anatomy of a parallel region<a class="headerlink" href="#anatomy-of-a-parallel-region" title="Link to this heading">#</a></h3>
+<p><img alt="&quot;Anatomy of a parallel region&quot;" src="../_images/anatomy_parallel_region.png" /></p>
+<p>Where GOMP stands for <a class="reference external" href="https://gcc.gnu.org/projects/gomp/">GNU Offloading and Multi-Processing Project (GOMP)</a> and is an implementation of OpenMP and OpenACC for GNU compilers.</p>
+</section>
+</section>
+<section id="memory-semantics">
+<h2>2. Memory semantics<a class="headerlink" href="#memory-semantics" title="Link to this heading">#</a></h2>
+<p>For each variable accessed within the parallel region, we can specify the following data-sharing policies:</p>
+<ul class="simple">
+<li><p><strong>private</strong>: <code class="docutils literal notranslate"><span class="pre">private</span></code> is the clause that contains the variables that each thread in the OpenMP parallel region will have a copy of. These copies are not initialised upon entering the parallel region.</p></li>
+<li><p><strong>firstprivate</strong>: Like private, but by contrast, <code class="docutils literal notranslate"><span class="pre">firstprivate</span></code> variables are initialised with the value of the original variable upon entering the parallel region.</p></li>
+<li><p><strong>lastprivate</strong>: <code class="docutils literal notranslate"><span class="pre">lastprivate</span></code> is a clause that can be used in a parallelised loop or sections. The <code class="docutils literal notranslate"><span class="pre">lastprivate</span></code> clause shares some of the semantics of the private clause. That is, each thread will have an uninitialised copy of the variables passed as <code class="docutils literal notranslate"><span class="pre">lastprivate</span></code>. However, unlike a private variable, at the end of the parallelised loop or sections, a <code class="docutils literal notranslate"><span class="pre">lastprivate</span></code> variable will take the value of the copy hosted at the thread that executed the last iteration (in the case of a parallelised loop) or section. The “last” iteration or section is the one that would be executed last if they were executed sequentially.</p></li>
+<li><p><strong>shared</strong>: <code class="docutils literal notranslate"><span class="pre">shared</span></code> is the clause that contains the variables shared across the threads belonging to the OpenMP parallel region concerned. Such variables are therefore accessed concurrently, arising potential data-races.</p></li>
+</ul>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">a</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="o">=</span><span class="mi">2</span><span class="p">;</span>
+
+<span class="cp">#pragma omp parallel private(a) firstprivate(b) shared(c)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">omp_get_thread_num</span><span class="p">();</span>
+<span class="w">    </span><span class="n">a</span><span class="o">++</span><span class="p">;</span>
+<span class="w">    </span><span class="n">b</span><span class="o">++</span><span class="p">;</span>
+<span class="w">    </span><span class="n">c</span><span class="o">++</span><span class="p">;</span>
+<span class="w">    </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;[%d] %d %d %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="n">printf</span><span class="p">(</span><span class="s">&quot;END: %d %d %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span><span class="w"> </span>gcc<span class="w"> </span>-fopenmp<span class="w"> </span>-Wall<span class="w"> </span>../c_codes/module3-3/omp-mem.c<span class="w"> </span>-o<span class="w"> </span>omp-mem
+</pre></div>
+</div>
+</div>
+</div>
+<section id="programming-styles">
+<h3>Programming styles<a class="headerlink" href="#programming-styles" title="Link to this heading">#</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">private</span></code> semantics is actually unnecessary and error-prone. We can just declare those variables at inner-most scope.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">b</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="o">=</span><span class="mi">2</span><span class="p">;</span>
+
+<span class="cp">#pragma omp parallel firstprivate(b) shared(c)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">omp_get_thread_num</span><span class="p">();</span>
+<span class="w">    </span><span class="n">a</span><span class="o">++</span><span class="p">;</span>
+<span class="w">    </span><span class="n">b</span><span class="o">++</span><span class="p">;</span>
+<span class="w">    </span><span class="n">c</span><span class="o">++</span><span class="p">;</span>
+<span class="w">    </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;[%d] %d %d %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="n">printf</span><span class="p">(</span><span class="s">&quot;END: %d %d %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="p">);</span><span class="w"> </span><span class="c1">// Error: a not in scope here</span>
+</pre></div>
+</div>
+</section>
+<section id="updating-shared-variables">
+<h3>Updating shared variables<a class="headerlink" href="#updating-shared-variables" title="Link to this heading">#</a></h3>
+<p>We see that the shared variable <code class="docutils literal notranslate"><span class="pre">c</span></code> has lots of opportunities for conflict.</p>
+<p><img alt="Updating a shared variable" src="../_images/sequence_diagram.png" /></p>
+<p>If we run the above many times, we may sometimes find that multiple processes have the same value of <code class="docutils literal notranslate"><span class="pre">c</span></code>, each thread can observe different increments from others, and the total number of increments may vary.</p>
+<p>We can define ordering semantics using:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.openmp.org/spec-html/5.0/openmpsu95.html#x126-4840002.17.7"><strong><code class="docutils literal notranslate"><span class="pre">atomic</span></code></strong></a>: The <code class="docutils literal notranslate"><span class="pre">atomic</span></code> construct ensures that a specific storage location is accessed atomically, rather than exposing it to the possibility of multiple, simultaneous reading and writing threads that may result in indeterminate values.</p></li>
+<li><p><a class="reference external" href="https://www.openmp.org/spec-html/5.0/openmpsu89.html#x120-4470002.17.1"><strong><code class="docutils literal notranslate"><span class="pre">critical</span></code></strong></a>: The <code class="docutils literal notranslate"><span class="pre">critical</span></code> construct restricts execution of the associated structured block to a single thread at a time.</p></li>
+<li><p><a class="reference external" href="https://www.openmp.org/spec-html/5.0/openmpsu90.html#x121-4550002.17.2"><strong><code class="docutils literal notranslate"><span class="pre">barrier</span></code></strong></a>: The <code class="docutils literal notranslate"><span class="pre">barrier</span></code> construct specifies an explicit barrier at the point at which the construct appears. The <code class="docutils literal notranslate"><span class="pre">barrier</span></code> construct is a stand-alone directive.</p></li>
+</ul>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">b</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="o">=</span><span class="mi">2</span><span class="p">;</span>
+<span class="w">  </span>
+<span class="cp">#pragma omp parallel firstprivate(b) shared(c)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">omp_get_thread_num</span><span class="p">();</span>
+<span class="w">    </span><span class="n">b</span><span class="o">++</span><span class="p">;</span>
+<span class="w">    </span><span class="cp">#pragma omp critical</span>
+<span class="w">    </span><span class="n">c</span><span class="o">++</span><span class="p">;</span>
+<span class="w">    </span><span class="cp">#pragma omp barrier</span>
+<span class="w">    </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;[%d] %d %d %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="n">printf</span><span class="p">(</span><span class="s">&quot;END: _ %d %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="a-quick-demo-on-perf">
+<h2>3. A quick demo on <code class="docutils literal notranslate"><span class="pre">perf</span></code><a class="headerlink" href="#a-quick-demo-on-perf" title="Link to this heading">#</a></h2>
+<p>Linux <a class="reference external" href="https://perfwiki.github.io/main/"><code class="docutils literal notranslate"><span class="pre">perf</span></code></a> is a kernel interrupt-based profiling tool. It uses performance counters and interrupts to diagnose all sorts of bottlenecks.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span><span class="w"> </span>perf<span class="w"> </span>stat<span class="w"> </span>../c_codes/module3-3/dot<span class="w"> </span>-n<span class="w"> </span><span class="m">10000</span><span class="w"> </span>&gt;<span class="w"> </span>/dev/null
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> Performance counter stats for &#39;../c_codes/module3-3/dot -n 10000&#39;:
+
+             40.86 msec task-clock                       #    2.909 CPUs utilized             
+                 0      context-switches                 #    0.000 /sec                      
+                 0      cpu-migrations                   #    0.000 /sec                      
+               122      page-faults                      #    2.986 K/sec                     
+        36,629,815      cycles                           #    0.896 GHz                       
+        11,647,086      instructions                     #    0.32  insn per cycle            
+         1,040,692      branches                         #   25.470 M/sec                     
+            15,906      branch-misses                    #    1.53% of all branches           
+
+       0.014048436 seconds time elapsed
+
+       0.037252000 seconds user
+       0.003921000 seconds sys
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span><span class="w"> </span>perf<span class="w"> </span>record<span class="w"> </span>-g<span class="w"> </span>../c_codes/module3-3/dot<span class="w"> </span>-n<span class="w"> </span><span class="m">10000</span><span class="w"> </span>-r<span class="w"> </span><span class="m">1000</span><span class="w"> </span>&gt;<span class="w"> </span>/dev/null
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING: Kernel address maps (/proc/{kallsyms,modules}) are restricted,
+check /proc/sys/kernel/kptr_restrict and /proc/sys/kernel/perf_event_paranoid.
+
+Samples in kernel functions may not be resolved if a suitable vmlinux
+file is not found in the buildid cache or in the vmlinux path.
+
+Samples in kernel modules won&#39;t be resolved at all.
+
+If some relocation was applied (e.g. kexec) symbols may be misresolved
+even with a suitable vmlinux or kallsyms file.
+
+Couldn&#39;t record kernel reference relocation symbol
+Symbol resolution may be skewed if relocation was used (e.g. kexec).
+Check /proc/kallsyms permission or run as root.
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.393 MB perf.data (4283 samples) ]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span><span class="w"> </span>perf<span class="w"> </span>report<span class="w"> </span>-M<span class="w"> </span>intel
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class="err"></span>7?47h<span class=" -Color -Color-White -Color-White-BGBlack">                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  ┌Processing events... [5K/402K]────────────────────────────────────────────────┐│</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">                                                                             │└──────────────────────────────────────────────────────────────────────────────┘                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  10K/402K]</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">5</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">20</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">5</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">31</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">6</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">41</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">6</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">51</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">6</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">617</span><span class=" -Color -Color-Black -Color-Black-BGYellow">  </span><span class=" -Color -Color-White -Color-White-BGBlack">72</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">7</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">82</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">7</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">92</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">8</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">103K/402K]</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">8</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">13</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">823</span><span class=" -Color -Color-Black -Color-Black-BGYellow">  </span><span class=" -Color -Color-White -Color-White-BGBlack">9</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">34</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">9</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">44</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">9</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">54</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">9</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">6570</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">5</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">80</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">5</span><span class=" -Color -Color-Black -Color-Black-BGYellow">  </span><span class=" -Color -Color-White -Color-White-BGBlack">90</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">6</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">201</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">6</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">11</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">621</span><span class=" -Color -Color-Black -Color-Black-BGYellow">  </span><span class=" -Color -Color-White -Color-White-BGBlack">632</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">7</span><span class=" -Color -Color-Black -Color-Black-BGYellow">  </span><span class=" -Color -Color-White -Color-White-BGBlack">427</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">52</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">7</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">63</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">8</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">73</span><span class=" -Color -Color-Black -Color-Black-BGYellow">  </span><span class=" -Color -Color-White -Color-White-BGBlack">8</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">83</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">8</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">94</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">9</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">304</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">9</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">149</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">24</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">30</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">5</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">40</span><span class=" -Color -Color-Black -Color-Black-BGYellow">  </span><span class=" -Color -Color-White -Color-White-BGBlack">5</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">50</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">5</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">61</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">671</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">6</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">81</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">6</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">    92</span><span class=" -Color -Color-Black -Color-Black-BGYellow">  </span><span class=" -Color -Color-White -Color-White-BGBlack">  7</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack"> 402</span>
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>time ordered events...                                                                              <span class=" -Color -Color-Black -Color-Black-BGYellow">                                                             </span>
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>             <span class=" -Color -Color-White -Color-White-BGBlack">    </span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">   </span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">  </span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">                                                                                                                                                                                                                                                 ┌─Warning:─────────────────────────────────────────────────────────┐│Kernel address maps (/proc/{kallsyms,modules}) were restricted.   ││││Check /proc/sys/kernel/kptr_restrict before running &#39;perf record&#39;.││││As no suitable kallsyms nor vmlinux was found, kernel samples││can&#39;t be resolved.││││Samples in kernel modules can&#39;t be resolved as well.││││││││Press any key...│└──────────────────────────────────────────────────────────────────┘</span>
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>                                                                                     
+                                                                               
+?47l<span class="err"></span>8
+</pre></div>
+</div>
+</div>
+</div>
+<p>Note how GOMP overhead dominates the cost in this experiment. We need more work (longer arrays, etc.) to justify the overhead of distributing and collecting the parallel work.</p>
+<p>We can drill down into particular functions (especially those that we’ve written, which we have hopefully compiled with <code class="docutils literal notranslate"><span class="pre">-g</span></code> to include debugging information).</p>
+<p><img alt="Perf report annotated" src="../_images/perf-report-ann.png" /></p>
+<p>From this, we see specific instructions, and their corresponding lines of code, that are most frequently being processed when the kernel interrupts to check. In this experiment, we see <code class="docutils literal notranslate"><span class="pre">*sd</span></code> “scalar double” instructions, indicating lack of vectorization.</p>
+<p>In contrast, the following annotation shows use of <code class="docutils literal notranslate"><span class="pre">*pd</span></code> “packed double” instructions, indicating that the “hot” loop has been vectorized.</p>
+<p><img alt="Perf vectorized report annotated" src="../_images/perf-report-ann-vec.png" /></p>
+<p>The reason for vectorization can sometimes be determined by <code class="docutils literal notranslate"><span class="pre">-fopt-info</span></code> <code class="docutils literal notranslate"><span class="pre">-fopt-info-missed</span></code>, and can be encouraged by techniques like manually splitting accumulators, preventing aliasing by using <code class="docutils literal notranslate"><span class="pre">restrict</span></code>, directives like <code class="docutils literal notranslate"><span class="pre">#pragma</span> <span class="pre">omp</span> <span class="pre">simd</span></code>, and global compiler flags like <code class="docutils literal notranslate"><span class="pre">-ffast-math</span></code> (although, very dangerous to use).</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>For more on <code class="docutils literal notranslate"><span class="pre">perf</span></code>, see <a class="reference external" href="http://www.brendangregg.com/linuxperf.html">Brendan Gregg’s Linux Performance site</a>.</p>
+</div>
+</section>
+<section id="openmp-tasks">
+<h2>4. OpenMP Tasks<a class="headerlink" href="#openmp-tasks" title="Link to this heading">#</a></h2>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>See this resource for <a class="reference external" href="https://fdesprez.github.io/teaching/par-comput/lectures/slides/L4-OpenMP-pt2-2p.pdf">OpenMP Task Parallelism</a>.</p>
+</div>
+<section id="using-pragma-omp-task">
+<h3>Using <code class="docutils literal notranslate"><span class="pre">#pragma</span> <span class="pre">omp</span> <span class="pre">task</span></code><a class="headerlink" href="#using-pragma-omp-task" title="Link to this heading">#</a></h3>
+<p>Up to now, we’ve been expressing parallelism for iterating over an array.</p>
+<ul class="simple">
+<li><p>The application programmer specifies regions of code to be executed in a task
+with the <code class="docutils literal notranslate"><span class="pre">#pragma</span> <span class="pre">omp</span> <span class="pre">task</span></code> construct</p></li>
+<li><p>All tasks can be executed <em>independently</em></p></li>
+<li><p>When any thread encounters a task construct, a task is generated</p></li>
+<li><p>Tasks are executed <strong>asynchronously</strong> by any thread of the parallel region</p></li>
+<li><p>Completion of the tasks can be guaranteed using the <code class="docutils literal notranslate"><span class="pre">taskwait</span></code> synchronization construct</p></li>
+</ul>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdio.h&gt;</span>
+<span class="linenos"> 2</span><span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos"> 3</span><span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="linenos"> 4</span><span class="w">  </span><span class="cp">#pragma omp parallel</span>
+<span class="linenos"> 5</span><span class="w">  </span><span class="cp">#pragma omp single</span>
+<span class="linenos"> 6</span><span class="w">  </span><span class="p">{</span>
+<span class="linenos"> 7</span><span class="w">    </span><span class="cp">#pragma omp task shared(x) depend(out: x)</span>
+<span class="linenos"> 8</span><span class="w">    </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
+<span class="linenos"> 9</span><span class="w">    </span><span class="cp">#pragma omp task shared(x) depend(in: x)</span>
+<span class="linenos">10</span><span class="w">    </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;x + 1 = %d. &quot;</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span>
+<span class="linenos">11</span><span class="w">    </span><span class="cp">#pragma omp task shared(x) depend(in: x)</span>
+<span class="linenos">12</span><span class="w">    </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;x + 2 = %d. &quot;</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="o">+</span><span class="mi">2</span><span class="p">);</span>
+<span class="linenos">13</span><span class="w">  </span><span class="p">}</span>
+<span class="linenos">14</span><span class="w">  </span><span class="n">puts</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">);</span>
+<span class="linenos">15</span><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="linenos">16</span><span class="p">}</span>
+</pre></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span><span class="w"> </span>gcc<span class="w"> </span>-fopenmp<span class="w"> </span>../c_codes/module3-3/task_dep.4.c<span class="w"> </span>-o<span class="w"> </span>task_dep.4
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span><span class="w"> </span><span class="k">for</span><span class="w"> </span>i<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="o">{</span><span class="m">1</span>..10<span class="o">}</span><span class="p">;</span><span class="w"> </span><span class="k">do</span><span class="w"> </span>../c_codes/module3-3/task_dep.4<span class="p">;</span><span class="w"> </span><span class="k">done</span>
+</pre></div>
+</div>
+</div>
+</div>
+<ul class="simple">
+<li><p>The <a class="reference external" href="https://www.openmp.org/spec-html/5.0/openmpsu38.html"><strong><code class="docutils literal notranslate"><span class="pre">single</span></code></strong></a> construct specifies that the associated structured block is executed by only one of the threads in the team (not necessarily the master thread), in the context of its implicit task. The other threads in the team, which do not execute the block, wait at an implicit barrier at the end of the <code class="docutils literal notranslate"><span class="pre">single</span></code> construct unless a <code class="docutils literal notranslate"><span class="pre">nowait</span></code> clause is specified.</p></li>
+<li><p>The <a class="reference external" href="https://www.openmp.org/spec-html/5.0/openmpsu99.html#x130-5160002.17.11"><strong><code class="docutils literal notranslate"><span class="pre">depend</span></code></strong></a> clause allows you to provide information on the way a task
+will access data</p>
+<ul>
+<li><p>It is followed by an access mode that can be <code class="docutils literal notranslate"><span class="pre">in</span></code>, <code class="docutils literal notranslate"><span class="pre">out</span></code> or <code class="docutils literal notranslate"><span class="pre">inout</span></code>. Examples:</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">depend(in:</span> <span class="pre">x,</span> <span class="pre">y,</span> <span class="pre">z)</span></code>: the task will <strong>read</strong> variables <code class="docutils literal notranslate"><span class="pre">x</span></code>, <code class="docutils literal notranslate"><span class="pre">y</span></code> and <code class="docutils literal notranslate"><span class="pre">z</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">depend(out:</span> <span class="pre">res)</span></code>: the task will <strong>write</strong> variable <code class="docutils literal notranslate"><span class="pre">res</span></code>; Any previous value of <code class="docutils literal notranslate"><span class="pre">res</span></code> will be ignored and overwritten</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">depend(inout:</span> <span class="pre">k,</span> <span class="pre">buffer[0:n])</span></code>: the task will both <strong>read and write</strong> the variables <code class="docutils literal notranslate"><span class="pre">k</span></code> and <code class="docutils literal notranslate"><span class="pre">buffer</span></code>; the content of <code class="docutils literal notranslate"><span class="pre">n</span></code> elements of <code class="docutils literal notranslate"><span class="pre">buffer</span></code> starting from index 0 will be used in the read-and-write</p></li>
+</ul>
+</li>
+<li><p>The OpenMP runtime system dynamically decides whether a task is ready for execution or not considering its dependencies (there is no need for further user intervention here).</p></li>
+</ul>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdio.h&gt;</span>
+<span class="linenos"> 2</span><span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos"> 3</span><span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="linenos"> 4</span><span class="w">  </span><span class="cp">#pragma omp parallel</span>
+<span class="linenos"> 5</span><span class="w">  </span><span class="cp">#pragma omp single</span>
+<span class="linenos"> 6</span><span class="w">  </span><span class="p">{</span>
+<span class="linenos"> 7</span><span class="w">    </span><span class="cp">#pragma omp task shared(x) depend(out: x)</span>
+<span class="linenos"> 8</span><span class="w">    </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
+<span class="linenos"> 9</span><span class="w">    </span><span class="cp">#pragma omp task shared(x) depend(inout: x)</span>
+<span class="linenos">10</span><span class="w">    </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;x + 1 = %d. &quot;</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span>
+<span class="linenos">11</span><span class="w">    </span><span class="cp">#pragma omp task shared(x) depend(in: x)</span>
+<span class="linenos">12</span><span class="w">    </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;x + 2 = %d. &quot;</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="o">+</span><span class="mi">2</span><span class="p">);</span>
+<span class="linenos">13</span><span class="w">  </span><span class="p">}</span>
+<span class="linenos">14</span><span class="w">  </span><span class="n">puts</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">);</span>
+<span class="linenos">15</span><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="linenos">16</span><span class="p">}</span>
+</pre></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span><span class="w"> </span>gcc<span class="w"> </span>-fopenmp<span class="w"> </span>../c_codes/module3-3/task_dep.4inout.c<span class="w"> </span>-o<span class="w"> </span>task_dep.4inout
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span><span class="w"> </span><span class="k">for</span><span class="w"> </span>i<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="o">{</span><span class="m">1</span>..10<span class="o">}</span><span class="p">;</span><span class="w"> </span><span class="k">do</span><span class="w"> </span>../c_codes/module3-3/task_dep.4inout<span class="p">;</span><span class="w"> </span><span class="k">done</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>In general, creating tasks (even with only one thread) creates an expensive overhead.</p>
+</section>
+<section id="the-openmp-loop-scheduler">
+<h3>The OpenMP loop scheduler<a class="headerlink" href="#the-openmp-loop-scheduler" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>When we put together the <code class="docutils literal notranslate"><span class="pre">#pragma</span> <span class="pre">omp</span> <span class="pre">parallel</span></code> (which spawns a group of threads) and <code class="docutils literal notranslate"><span class="pre">#pragma</span> <span class="pre">omp</span> <span class="pre">for</span></code> (which divides loop iterations between the spawned threads) constructs, as in <code class="docutils literal notranslate"><span class="pre">#pragma</span> <span class="pre">omp</span> <span class="pre">parallel</span> <span class="pre">for</span></code> we do both things at once.</p>
+<ul>
+<li><p>To this, you can optionally add <code class="docutils literal notranslate"><span class="pre">schedule(static,n)</span></code>, where <code class="docutils literal notranslate"><span class="pre">n</span></code> is the chunk size that you want the tasks to be divided into for the threads. (Note: adding <code class="docutils literal notranslate"><span class="pre">schedule(static,1)</span></code> as in <code class="docutils literal notranslate"><span class="pre">#pragma</span> <span class="pre">omp</span> <span class="pre">parallel</span> <span class="pre">for</span> <span class="pre">schedule(static,1)</span></code> is equivalent to just <code class="docutils literal notranslate"><span class="pre">#pragma</span> <span class="pre">omp</span> <span class="pre">parallel</span> <span class="pre">for</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">schedule(dynamic,n)</span></code> still tells OpenMP to split task into iter_size/chunk_size chunks, but distribute trunks to threads dynamically without any specific order.</p></li>
+<li><p>Check other options in this <a class="reference external" href="https://610yilingliu.github.io/2020/07/15/ScheduleinOpenMP/">resource</a>.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="to-fork-join-or-to-task">
+<h3>To fork/join or to task?<a class="headerlink" href="#to-fork-join-or-to-task" title="Link to this heading">#</a></h3>
+<p>One of the main issues in High-Performance Computing (HPC) systems is the underutilization of resources. Parallel applications partition and distribute compute and data across processors in the system that work together to solve a given problem. In this operation, processors synchronize and communicate which may lead to some of them spending time idle, waiting for other processors to complete their part. Idle processors mean wasted time and power. This can happen for serial sections of the code, load imbalance, or if you are waiting for synchronization.</p>
+<p>These issues are common in bulk synchronous parallel applications, especially those that statically assign work to processors.</p>
+<p>Many codes rely on <strong>bulk synchronous parallelization</strong> constructs to distribute and synchronize work across multiple threads in a system. In this model, multiple threads operate in parallel on different parts of a problem, and perform a global synchronization when the parallel work is completed.</p>
+<p>Fork-join is a similar model where a single thread, sometimes called a master thread, is the application entry point. This forks into multiple threads that concurrently work on different parts of a problem, and then synchronize to join into a single thread when the work in the parallel section is complete (similar to the  worksharing-parallel constructs in OpenMP that distribute the iterations in a loop across multiple threads).</p>
+<p><img alt="Bulk synchronous parallelization" src="../_images/bulk-fork-join.png" /></p>
+<p><strong>Load imbalance</strong> appears when different threads receive an uneven amount of work to do, or perform the work at different speeds, leading to different amounts of compute time. In this scenario, the faster threads need to wait for lagging threads on global synchronizations, therefore being in an idle state and wasting resources during that time. In the fork-join model, serial sections in between parallel regions become an increasing bottleneck, as parallel regions are shortened with increasing numbers of threads.</p>
+<p>A task is a piece of compute that operates on a piece of data and that may be executed concurrently with other tasks. This parallel programming abstraction is intuitive and allows to specify data-flow dependencies between tasks instead of costly global synchronizations. This mitigates idle time created as a result of load imbalance, given that threads pick up work as they complete, and there is also less time spent on serial sections due to the reduced number of global synchronizations.</p>
+<p><img alt="Tasking" src="../_images/tasking.png" /></p>
+<p>For tasking to be efficient, it relies on <strong>overdecomposition</strong>, i.e., creating more work units than there are processing units. For many numerical algorithms, there is some overhead to overdecomposition. For example, in array processing of an array size $n, a halo/fringe/ghost/overlap region might need to be computed as part of each work patch, leading to time models along the lines of</p>
+<div class="math notranslate nohighlight">
+\[
+t_{\textrm{tile}} = t_{\textrm{latency}} + \frac{(n+2)^3}{R}
+\]</div>
+<p>where $R is the processing rate.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Recommended reading: <a class="reference external" href="https://community.arm.com/arm-research/b/articles/posts/tasking-lives-up-to-its-promises">Tasking Lives Up to its Promises</a></p>
+</div>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "sdsu-comp605/spring25",
+            ref: "main",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./lectures"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="module3-2_intro_to_openmp.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">12) Introduction to OpenMP</p>
+      </div>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#more-on-openmp">1. More on OpenMP</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#anatomy-of-a-parallel-region">Anatomy of a parallel region</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#memory-semantics">2. Memory semantics</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#programming-styles">Programming styles</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#updating-shared-variables">Updating shared variables</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-quick-demo-on-perf">3. A quick demo on <code class="docutils literal notranslate"><span class="pre">perf</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#openmp-tasks">4. OpenMP Tasks</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-pragma-omp-task">Using <code class="docutils literal notranslate"><span class="pre">#pragma</span> <span class="pre">omp</span> <span class="pre">task</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-openmp-loop-scheduler">The OpenMP loop scheduler</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#to-fork-join-or-to-task">To fork/join or to task?</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Valeria Barra
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
