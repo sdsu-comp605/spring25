@@ -63,6 +63,7 @@
     <link rel="icon" href="../_static/SDSU-comp605_logo.svg"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="14) Case Study 1: libCEED" href="module4-1_case_study_1_libceed.html" />
     <link rel="prev" title="12) Introduction to OpenMP" href="module3-2_intro_to_openmp.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -199,6 +200,8 @@
 <li class="toctree-l2"><a class="reference internal" href="module3-1_intro_parallel_scaling.html">11) Introduction to Parallel Scaling</a></li>
 <li class="toctree-l2"><a class="reference internal" href="module3-2_intro_to_openmp.html">12) Introduction to OpenMP</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">13) More on OpenMP and OpenMP Tasks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module4-1_case_study_1_libceed.html">14) Case Study 1: libCEED</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module4-2_case_study_2_climacore.html">15) Case Study 2: ClimaCore</a></li>
 </ul>
 </details></li>
 </ul>
@@ -682,21 +685,21 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> Performance counter stats for &#39;../c_codes/module3-3/dot -n 10000&#39;:
-
-             40.86 msec task-clock                       #    2.909 CPUs utilized             
-                 0      context-switches                 #    0.000 /sec                      
-                 0      cpu-migrations                   #    0.000 /sec                      
-               122      page-faults                      #    2.986 K/sec                     
-        36,629,815      cycles                           #    0.896 GHz                       
-        11,647,086      instructions                     #    0.32  insn per cycle            
-         1,040,692      branches                         #   25.470 M/sec                     
-            15,906      branch-misses                    #    1.53% of all branches           
-
-       0.014048436 seconds time elapsed
-
-       0.037252000 seconds user
-       0.003921000 seconds sys
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Error:
+Access to performance monitoring and observability operations is limited.
+Consider adjusting /proc/sys/kernel/perf_event_paranoid setting to open
+access to performance monitoring and observability operations for processes
+without CAP_PERFMON, CAP_SYS_PTRACE or CAP_SYS_ADMIN Linux capability.
+More information can be found at &#39;Perf events and tool security&#39; document:
+https://www.kernel.org/doc/html/latest/admin-guide/perf-security.html
+perf_event_paranoid setting is 4:
+  -1: Allow use of (almost) all events by all users
+      Ignore mlock limit after perf_event_mlock_kb without CAP_IPC_LOCK
+&gt;= 0: Disallow raw and ftrace function tracepoint access
+&gt;= 1: Disallow CPU event access
+&gt;= 2: Disallow kernel profiling
+To make the adjusted perf_event_paranoid setting permanent preserve it
+in /etc/sysctl.conf (e.g. kernel.perf_event_paranoid = &lt;setting&gt;)
 </pre></div>
 </div>
 </div>
@@ -708,24 +711,21 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING: Kernel address maps (/proc/{kallsyms,modules}) are restricted,
-check /proc/sys/kernel/kptr_restrict and /proc/sys/kernel/perf_event_paranoid.
-
-Samples in kernel functions may not be resolved if a suitable vmlinux
-file is not found in the buildid cache or in the vmlinux path.
-
-Samples in kernel modules won&#39;t be resolved at all.
-
-If some relocation was applied (e.g. kexec) symbols may be misresolved
-even with a suitable vmlinux or kallsyms file.
-
-Couldn&#39;t record kernel reference relocation symbol
-Symbol resolution may be skewed if relocation was used (e.g. kexec).
-Check /proc/kallsyms permission or run as root.
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 0.393 MB perf.data (4283 samples) ]
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Error:
+Access to performance monitoring and observability operations is limited.
+Consider adjusting /proc/sys/kernel/perf_event_paranoid setting to open
+access to performance monitoring and observability operations for processes
+without CAP_PERFMON, CAP_SYS_PTRACE or CAP_SYS_ADMIN Linux capability.
+More information can be found at &#39;Perf events and tool security&#39; document:
+https://www.kernel.org/doc/html/latest/admin-guide/perf-security.html
+perf_event_paranoid setting is 4:
+  -1: Allow use of (almost) all events by all users
+      Ignore mlock limit after perf_event_mlock_kb without CAP_IPC_LOCK
+&gt;= 0: Disallow raw and ftrace function tracepoint access
+&gt;= 1: Disallow CPU event access
+&gt;= 2: Disallow kernel profiling
+To make the adjusted perf_event_paranoid setting permanent preserve it
+in /etc/sysctl.conf (e.g. kernel.perf_event_paranoid = &lt;setting&gt;)
 </pre></div>
 </div>
 </div>
@@ -737,18 +737,7 @@ Check /proc/kallsyms permission or run as root.
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class="err"></span>7?47h<span class=" -Color -Color-White -Color-White-BGBlack">                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  ┌Processing events... [5K/402K]────────────────────────────────────────────────┐│</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">                                                                             │└──────────────────────────────────────────────────────────────────────────────┘                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  10K/402K]</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">5</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">20</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">5</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">31</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">6</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">41</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">6</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">51</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">6</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">617</span><span class=" -Color -Color-Black -Color-Black-BGYellow">  </span><span class=" -Color -Color-White -Color-White-BGBlack">72</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">7</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">82</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">7</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">92</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">8</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">103K/402K]</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">8</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">13</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">823</span><span class=" -Color -Color-Black -Color-Black-BGYellow">  </span><span class=" -Color -Color-White -Color-White-BGBlack">9</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">34</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">9</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">44</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">9</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">54</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">9</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">6570</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">5</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">80</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">5</span><span class=" -Color -Color-Black -Color-Black-BGYellow">  </span><span class=" -Color -Color-White -Color-White-BGBlack">90</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">6</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">201</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">6</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">11</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">621</span><span class=" -Color -Color-Black -Color-Black-BGYellow">  </span><span class=" -Color -Color-White -Color-White-BGBlack">632</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">7</span><span class=" -Color -Color-Black -Color-Black-BGYellow">  </span><span class=" -Color -Color-White -Color-White-BGBlack">427</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">52</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">7</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">63</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">8</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">73</span><span class=" -Color -Color-Black -Color-Black-BGYellow">  </span><span class=" -Color -Color-White -Color-White-BGBlack">8</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">83</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">8</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">94</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">9</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">304</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">9</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">149</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">24</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">30</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">5</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">40</span><span class=" -Color -Color-Black -Color-Black-BGYellow">  </span><span class=" -Color -Color-White -Color-White-BGBlack">5</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">50</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">5</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">61</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">671</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">6</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">81</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">6</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">    92</span><span class=" -Color -Color-Black -Color-Black-BGYellow">  </span><span class=" -Color -Color-White -Color-White-BGBlack">  7</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack"> 402</span>
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>time ordered events...                                                                              <span class=" -Color -Color-Black -Color-Black-BGYellow">                                                             </span>
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>             <span class=" -Color -Color-White -Color-White-BGBlack">    </span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">   </span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">  </span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">                                                                                                                                                                                                                                                 ┌─Warning:─────────────────────────────────────────────────────────┐│Kernel address maps (/proc/{kallsyms,modules}) were restricted.   ││││Check /proc/sys/kernel/kptr_restrict before running &#39;perf record&#39;.││││As no suitable kallsyms nor vmlinux was found, kernel samples││can&#39;t be resolved.││││Samples in kernel modules can&#39;t be resolved as well.││││││││Press any key...│└──────────────────────────────────────────────────────────────────┘</span>
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>                                                                                     
-                                                                               
-?47l<span class="err"></span>8
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>zero-sized data (perf.data), nothing to do!
 </pre></div>
 </div>
 </div>
@@ -813,6 +802,20 @@ with the <code class="docutils literal notranslate"><span class="pre">#pragma</s
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/bin/bash: line 1: ../c_codes/module3-3/task_dep.4: No such file or directory
+/bin/bash: line 1: ../c_codes/module3-3/task_dep.4: No such file or directory
+/bin/bash: line 1: ../c_codes/module3-3/task_dep.4: No such file or directory
+/bin/bash: line 1: ../c_codes/module3-3/task_dep.4: No such file or directory
+/bin/bash: line 1: ../c_codes/module3-3/task_dep.4: No such file or directory
+/bin/bash: line 1: ../c_codes/module3-3/task_dep.4: No such file or directory
+/bin/bash: line 1: ../c_codes/module3-3/task_dep.4: No such file or directory
+/bin/bash: line 1: ../c_codes/module3-3/task_dep.4: No such file or directory
+/bin/bash: line 1: ../c_codes/module3-3/task_dep.4: No such file or directory
+/bin/bash: line 1: ../c_codes/module3-3/task_dep.4: No such file or directory
+</pre></div>
+</div>
+</div>
 </div>
 <ul class="simple">
 <li><p>The <a class="reference external" href="https://www.openmp.org/spec-html/5.0/openmpsu38.html"><strong><code class="docutils literal notranslate"><span class="pre">single</span></code></strong></a> construct specifies that the associated structured block is executed by only one of the threads in the team (not necessarily the master thread), in the context of its implicit task. The other threads in the team, which do not execute the block, wait at an implicit barrier at the end of the <code class="docutils literal notranslate"><span class="pre">single</span></code> construct unless a <code class="docutils literal notranslate"><span class="pre">nowait</span></code> clause is specified.</p></li>
@@ -855,6 +858,20 @@ will access data</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span><span class="w"> </span><span class="k">for</span><span class="w"> </span>i<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="o">{</span><span class="m">1</span>..10<span class="o">}</span><span class="p">;</span><span class="w"> </span><span class="k">do</span><span class="w"> </span>../c_codes/module3-3/task_dep.4inout<span class="p">;</span><span class="w"> </span><span class="k">done</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/bin/bash: line 1: ../c_codes/module3-3/task_dep.4inout: No such file or directory
+/bin/bash: line 1: ../c_codes/module3-3/task_dep.4inout: No such file or directory
+/bin/bash: line 1: ../c_codes/module3-3/task_dep.4inout: No such file or directory
+/bin/bash: line 1: ../c_codes/module3-3/task_dep.4inout: No such file or directory
+/bin/bash: line 1: ../c_codes/module3-3/task_dep.4inout: No such file or directory
+/bin/bash: line 1: ../c_codes/module3-3/task_dep.4inout: No such file or directory
+/bin/bash: line 1: ../c_codes/module3-3/task_dep.4inout: No such file or directory
+/bin/bash: line 1: ../c_codes/module3-3/task_dep.4inout: No such file or directory
+/bin/bash: line 1: ../c_codes/module3-3/task_dep.4inout: No such file or directory
+/bin/bash: line 1: ../c_codes/module3-3/task_dep.4inout: No such file or directory
 </pre></div>
 </div>
 </div>
@@ -935,6 +952,15 @@ t_{\textrm{tile}} = t_{\textrm{latency}} + \frac{(n+2)^3}{R}
         <p class="prev-next-subtitle">previous</p>
         <p class="prev-next-title">12) Introduction to OpenMP</p>
       </div>
+    </a>
+    <a class="right-next"
+       href="module4-1_case_study_1_libceed.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">14) Case Study 1: libCEED</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
     </a>
 </div>
                 </footer>
