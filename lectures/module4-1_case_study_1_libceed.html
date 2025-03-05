@@ -475,7 +475,7 @@ document.write(`
 <li><p>A finite element space is a function space in which each function is approximated with a finite-dimensional polynomial interpolation in each element. A Spectral Element Method (SEM) is a high-order (“exponential/spectral”) FEM, in which the nodes are non-equispaced.</p></li>
 <li><p>Most FEM/SEM packages use polynomials as <em>basis functions</em> to approximate a given function (e.g., solution state). There are different ways of defininig basis functions: <em>nodal</em> basis functions and <em>modal</em> basis functions. Most FEM/SEM packages use <em>nodal</em> basis functions (e.g. by using Lagrange interpolation), which are defined via the values of the polynomials at particular nodal points in each element (termed Finite Element <em>nodes</em>).</p></li>
 </ul>
-<p>For an overview of function approximation via interpolation and quadrature, please refer to the relevant <a class="reference external" href="https://sdsu-comp526.github.io/fall24/index.html">Comp526</a> lectures. Recall how Gauss-Legendre quadrature is defined:</p>
+<p>For an overview of function approximation via interpolation and quadrature, please refer to the relevant Comp526 <a class="reference external" href="https://sdsu-comp526.github.io/fall24/slides/module7-1_interpolation.html">Interpolation</a> and <a class="reference external" href="https://sdsu-comp526.github.io/fall24/slides/module8-2_quadrature.html">Quadrature</a> lectures. Recall how Gauss-Legendre quadrature is defined:</p>
 <p>We approximate the integral of a function <span class="math notranslate nohighlight">\(f(x)\)</span> by a weighted sum of function values:</p>
 <div class="math notranslate nohighlight">
 \[
@@ -487,7 +487,7 @@ document.write(`
 w_i = \int_{-1}^{1}L_i(x) dx \quad i=1, \dots, n
 \]</div>
 <p>the Lagrange interpolating polynomial with <span class="math notranslate nohighlight">\(n\)</span> interpolating nodes, and the quadrature nodes <span class="math notranslate nohighlight">\(x_i\)</span> are the roots of the <span class="math notranslate nohighlight">\(n\)</span>-th Legendre polynomial on <span class="math notranslate nohighlight">\([-1,1]\)</span>.</p>
-<p>In SEM formulations, Gauss-Lobatto nodes are preferred because they include nodes at the endpoints <span class="math notranslate nohighlight">\(-1\)</span> and <span class="math notranslate nohighlight">\(1\)</span>, hence ensuring continuity of the basis functions across element boundaries. This gives rise to Legendre-Gauss-Lobatto (LGL or GLL) quadrature.</p>
+<p>In CG SEM formulations, Gauss-Lobatto nodes are preferred because they include nodes at the endpoints <span class="math notranslate nohighlight">\(-1\)</span> and <span class="math notranslate nohighlight">\(1\)</span>, hence ensuring continuity of the basis functions across element boundaries. This gives rise to Legendre-Gauss-Lobatto (LGL or GLL) quadrature.</p>
 <ul class="simple">
 <li><p>Even though the basis functions can interpolate globally, it’s better to limit each function to interpolate locally within each element, so to avoid a dense matrix system of equations when adding up the element contributions on the
 global domain <span class="math notranslate nohighlight">\(\Omega\)</span>.</p></li>
@@ -504,8 +504,8 @@ global domain <span class="math notranslate nohighlight">\(\Omega\)</span>.</p><
 \[
    \int_\Omega \nabla v \cdot \nabla u \, dV - \int_{\partial \Omega} v \nabla u \cdot \hat{\mathbf n}\, dS = \int_\Omega  v f \, dV .
 \]</div>
-<p>Often, we choose to represent a field (say, the velocity field) such that <span class="math notranslate nohighlight">\(\nabla u \cdot \hat{\mathbf n} = 0\)</span> for which all boundary integrals would cancel each other at neighboring elements and boundary of the domain, so that we’re only left with the volumetric parts of the equation above.</p>
-<p>Most SEM packages use the _Legendre-Gauss-Lobatto (LGL) quadrature nodes that we have seen earlier in the course amd take advantage of <strong>tensor-product</strong> basis functions on quadrilateral or hexaedral elements.</p>
+<p>Often, we choose to represent a field (say, the velocity field) such that <span class="math notranslate nohighlight">\(\nabla u \cdot \hat{\mathbf n} = 0\)</span> for which all boundary integrals would cancel each other at neighboring elements and boundary of the domain, so that we’re only left with the volumetric parts of the equation above. This holds in Continuous Galerkin (CG) formulations, whereas boundary integrals do not vanish - and need to be solved for, using Riemann solvers - in Discontinuous Galerkin (DG formulations.</p>
+<p>Most SEM packages use the Legendre-Gauss-Lobatto (LGL) quadrature nodes that we have seen earlier in the course amd take advantage of <strong>tensor-product</strong> basis functions on quadrilateral or hexaedral elements.</p>
 </section>
 <section id="matrix-free-methods">
 <h2>2. Matrix-free methods<a class="headerlink" href="#matrix-free-methods" title="Link to this heading">#</a></h2>

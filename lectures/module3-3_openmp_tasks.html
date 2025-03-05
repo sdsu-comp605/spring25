@@ -884,7 +884,7 @@ will access data</p>
 <li><p>When we put together the <code class="docutils literal notranslate"><span class="pre">#pragma</span> <span class="pre">omp</span> <span class="pre">parallel</span></code> (which spawns a group of threads) and <code class="docutils literal notranslate"><span class="pre">#pragma</span> <span class="pre">omp</span> <span class="pre">for</span></code> (which divides loop iterations between the spawned threads) constructs, as in <code class="docutils literal notranslate"><span class="pre">#pragma</span> <span class="pre">omp</span> <span class="pre">parallel</span> <span class="pre">for</span></code> we do both things at once.</p>
 <ul>
 <li><p>To this, you can optionally add <code class="docutils literal notranslate"><span class="pre">schedule(static,n)</span></code>, where <code class="docutils literal notranslate"><span class="pre">n</span></code> is the chunk size that you want the tasks to be divided into for the threads. (Note: adding <code class="docutils literal notranslate"><span class="pre">schedule(static,1)</span></code> as in <code class="docutils literal notranslate"><span class="pre">#pragma</span> <span class="pre">omp</span> <span class="pre">parallel</span> <span class="pre">for</span> <span class="pre">schedule(static,1)</span></code> is equivalent to just <code class="docutils literal notranslate"><span class="pre">#pragma</span> <span class="pre">omp</span> <span class="pre">parallel</span> <span class="pre">for</span></code>)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">schedule(dynamic,n)</span></code> still tells OpenMP to split task into iter_size/chunk_size chunks, but distribute trunks to threads dynamically without any specific order.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">schedule(dynamic,n)</span></code> still tells OpenMP to split task into size chunks, but distribute them to threads dynamically without any specific order.</p></li>
 <li><p>Check other options in this <a class="reference external" href="https://610yilingliu.github.io/2020/07/15/ScheduleinOpenMP/">resource</a>.</p></li>
 </ul>
 </li>
@@ -900,12 +900,12 @@ will access data</p>
 <p><strong>Load imbalance</strong> appears when different threads receive an uneven amount of work to do, or perform the work at different speeds, leading to different amounts of compute time. In this scenario, the faster threads need to wait for lagging threads on global synchronizations, therefore being in an idle state and wasting resources during that time. In the fork-join model, serial sections in between parallel regions become an increasing bottleneck, as parallel regions are shortened with increasing numbers of threads.</p>
 <p>A task is a piece of compute that operates on a piece of data and that may be executed concurrently with other tasks. This parallel programming abstraction is intuitive and allows to specify data-flow dependencies between tasks instead of costly global synchronizations. This mitigates idle time created as a result of load imbalance, given that threads pick up work as they complete, and there is also less time spent on serial sections due to the reduced number of global synchronizations.</p>
 <p><img alt="Tasking" src="../_images/tasking.png" /></p>
-<p>For tasking to be efficient, it relies on <strong>overdecomposition</strong>, i.e., creating more work units than there are processing units. For many numerical algorithms, there is some overhead to overdecomposition. For example, in array processing of an array size $n, a halo/fringe/ghost/overlap region might need to be computed as part of each work patch, leading to time models along the lines of</p>
+<p>For tasking to be efficient, it relies on <strong>overdecomposition</strong>, i.e., creating more work units than there are processing units. For many numerical algorithms, there is some overhead to overdecomposition. For example, in array processing of an array size <span class="math notranslate nohighlight">\(n\)</span>, a halo/fringe/ghost/overlap region might need to be computed as part of each work patch, leading to time models along the lines of</p>
 <div class="math notranslate nohighlight">
 \[
 t_{\textrm{tile}} = t_{\textrm{latency}} + \frac{(n+2)^3}{R}
 \]</div>
-<p>where $R is the processing rate.</p>
+<p>where <span class="math notranslate nohighlight">\(R\)</span> is the processing rate.</p>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
 <p>Recommended reading: <a class="reference external" href="https://community.arm.com/arm-research/b/articles/posts/tasking-lives-up-to-its-promises">Tasking Lives Up to its Promises</a></p>
