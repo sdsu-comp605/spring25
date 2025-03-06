@@ -404,7 +404,9 @@ document.write(`
   </button>
 `);
 </script>
-
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
 </div></div>
       
     </div>
@@ -420,6 +422,27 @@ document.write(`
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#esm">1. ESM</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-dynamical-core-dycore">2. A dynamical core (dycore)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#climacore-jl">3. ClimaCore.jl</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#spatial-discretization">3.1 Spatial Discretization</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#climacore-jl-api">3.2 ClimaCore.jl API</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#climacore-jls-composable-operators-and-julia-broadcasting">3.3 ClimaCore.jl’s composable <code class="docutils literal notranslate"><span class="pre">Operators</span></code> and Julia broadcasting</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#example-shallow-water-equations">Example: Shallow-water equations</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#example-transport-advection-of-tracers">Example: Transport (advection) of tracers</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#example-barotropic-instability">Example: barotropic instability</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#some-performance-plots">3.4 Some performance plots</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -431,6 +454,131 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="case-study-2-climacore">
 <h1>15) Case Study 2: <a class="reference external" href="https://github.com/CliMA/ClimaCore.jl">ClimaCore</a><a class="headerlink" href="#case-study-2-climacore" title="Link to this heading">#</a></h1>
+<p>Last time:</p>
+<ul class="simple">
+<li><p>libCEED</p></li>
+</ul>
+<p>Today:</p>
+<ol class="arabic simple">
+<li><p>ESM</p></li>
+<li><p>A dynamical core (dycore)</p></li>
+<li><p>ClimaCore.jl<br />
+3.1 Spatial Discretization<br />
+3.2 ClimaCore.jl API
+3.3 ClimaCore.jl’s composable <code class="docutils literal notranslate"><span class="pre">Operators</span></code> and Julia broadcasting
+3.4 Some perfomance plots</p></li>
+</ol>
+<section id="esm">
+<h2>1. ESM<a class="headerlink" href="#esm" title="Link to this heading">#</a></h2>
+<p>An <strong>Eart System Moel (ESM)</strong> simulates how the Earth’s atmosphere, oceans, land, ice, and biosphere interact. ESMs are used to understand and predict how the Earth’s climate will change.</p>
+<p>To understand Earth system models, it helps to first understand <strong>global climate models</strong>. Climate is the <em>long-term</em> pattern of weather variables. It includes temperature, rain and snowfall, humidity, sunlight, and wind and how they occur over many years. Climate models explain how these variables can change using mathematical analysis based on the physics of how energy, gases, and fluids move, combined with measurements taken from experiments, laboratories, and other observations in the real world.</p>
+<p>Climate models include:</p>
+<ul class="simple">
+<li><p>The atmosphere including clouds, aerosols, and gases, the land surface and how it is covered by vegetation, snow and ice, lakes and rivers, and soil, sea ice and the oceans.</p></li>
+<li><p>How all these components store and move the heat and carbon that warm the Earth’s atmosphere.</p></li>
+<li><p>Global climate models treat the Earth as a giant grid. The size of each cell in the grid is determined by the power of the computer running the model.</p></li>
+</ul>
+<p>The goal of Earth system models is to understand how the Earth functions as a system of interdependent parts. These parts include the physical, chemical, and biological processes and interact with one another.</p>
+<blockquote>
+<div><p>Recommended Reading:
+<a class="reference external" href="https://www.energy.gov/science/doe-explainsearth-system-and-climate-models">Department of Energy (DOE) explains Earth system and climate models</a>.</p>
+</div></blockquote>
+</section>
+<section id="a-dynamical-core-dycore">
+<h2>2. A dynamical core (dycore)<a class="headerlink" href="#a-dynamical-core-dycore" title="Link to this heading">#</a></h2>
+<p>The mathematical and numerical modeling needed to solve the governing equations of the physics that drives global climate models is what constitutes a so-called <strong>dynamical core (dycore)</strong>. This may include:</p>
+<ul class="simple">
+<li><p>Meshing: discrete representation of the geometry</p></li>
+<li><p>Numerical methods for spatial and temporal discretizations of the PDEs</p></li>
+<li><p>How differential operators or different discretizations are composed to describe te full system</p></li>
+<li><p>Definition and implementation of different boundary conditions</p></li>
+</ul>
+<p><img alt="A cubed sphere" src="../_images/CubedSphere.png" /></p>
+</section>
+<section id="climacore-jl">
+<h2>3. <a class="reference external" href="https://github.com/CliMA/ClimaCore.jl">ClimaCore.jl</a><a class="headerlink" href="#climacore-jl" title="Link to this heading">#</a></h2>
+<p>The dynamical core (<em>dycore</em>) of the <a class="reference external" href="https://clima.caltech.edu/">Climate Modeling Alliance (CliMA)</a> atmosphere model is designed for efficient simulation of a wide range of atmospheric flows across scales. From high-resolution regional scales defined in terms of Large Eddy Simulations (LES) to global circulation models (GCM).</p>
+<p>The main goal of the CliMA project is to build an ESM that automatically learns from diverse data sources to produce accurate climate predictions with quantified uncertainties.</p>
+<p>CliMA’s new Earth System Model (ESM) is entirely written in the Julia programming language.</p>
+<p><img alt="Learning model in an ESM" src="../_images/Learning.png" /></p>
+<p>The CliMA model targets both CPU and GPU architectures, using a common codebase. ClimaCore.jl constitutes the dynamical core (<em>dycore</em>) of the atmosphere and land models, providing discretization tools to solve the governing equations of the ESM component models.</p>
+<p><img alt="The schematic of an ESM" src="../_images/ESMSchematic.png" /></p>
+<p>ClimaCore.jl’s high-level application programming interface (API) facilitates modularity and composition of differential operators and the definition of flexible discretizations: Spectral Element Method (SEM) in the horizontal direction, coupled with staggered finite differences (FD) in the vertical direction. This approach leverages the high-order accuracy and scalability of the SEM, while maintaining the computational efficiency and stability of finite differences on a staggered grid. The model’s coordinate-independent equation set allows for simulations in a variety of geometries and planetary configurations.</p>
+<p>ClimaCore.jl also presents low-level APIs that support different data layouts, specialized implementations, and flexible models for threading, to better face high-performance optimization, data storage, and scalability challenges on modern HPC architectures.</p>
+<section id="spatial-discretization">
+<h3>3.1 Spatial Discretization<a class="headerlink" href="#spatial-discretization" title="Link to this heading">#</a></h3>
+<p>Geometry:</p>
+<ul class="simple">
+<li><p>Supports different geometries (Cartesian &amp; spherical).</p></li>
+<li><p>Supports covariant vector representation for curvilinear, non-orthogonal systems and Cartesian vectors for Euclidean spaces.</p></li>
+</ul>
+<p><img alt="Vector representations in different bases" src="../_images/Bases.png" /></p>
+<p>Space Discretizations:</p>
+<ul class="simple">
+<li><p>Horizontal: Support both Continuous Galerkin (CG) and Discontinuous Galerkin (DG).</p></li>
+<li><p>Vertical: staggered Finite Differences (FD).</p></li>
+</ul>
+<p><img alt="Discretization Sketch" src="../_images/DiscretizationSketch.jpg" /></p>
+</section>
+<section id="climacore-jl-api">
+<h3>3.2 ClimaCore.jl API<a class="headerlink" href="#climacore-jl-api" title="Link to this heading">#</a></h3>
+<p>API objects:</p>
+<ul class="simple">
+<li><p>Domain, Mesh, Topology, Space, Field.</p></li>
+</ul>
+<p><img alt="ClimaCore.jl API objects" src="../_images/APIobjects.png" /></p>
+<p><code class="docutils literal notranslate"><span class="pre">Field</span></code> abstraction:</p>
+<ul class="simple">
+<li><p>Scalar, Vector or Struct-valued.</p></li>
+<li><p>Stores values, geometry, and mesh info.</p></li>
+<li><p>Flexible memory layouts.</p></li>
+<li><p>Useful overloads: <code class="docutils literal notranslate"><span class="pre">sum</span></code> (integral of a given field across the domain), <code class="docutils literal notranslate"><span class="pre">norm</span></code>, <code class="docutils literal notranslate"><span class="pre">mean</span></code>.</p></li>
+<li><p>Compatible with DifferentialEquations.jl and ad-hoc time integrators.</p></li>
+</ul>
+<p><img alt="&quot;ClimaCore.jl space discretization code snippet&quot;" src="../_images/Space-discretization-snippet.png" /></p>
+<p>Once you define a (scalar/vector) field on a space, you can easily use <a class="reference external" href="https://en.wikipedia.org/wiki/Reduction_operator">reduction operators</a>, using the same syntax, whether you run on a single process, single-threaded mode or parallel:</p>
+<p><img alt="ClimaCore.jl sum code snippet" src="../_images/sum-ones-space-snippet.png" /></p>
+</section>
+<section id="climacore-jls-composable-operators-and-julia-broadcasting">
+<h3>3.3 ClimaCore.jl’s composable <code class="docutils literal notranslate"><span class="pre">Operators</span></code> and Julia broadcasting<a class="headerlink" href="#climacore-jls-composable-operators-and-julia-broadcasting" title="Link to this heading">#</a></h3>
+<p>Julia broadcasting:</p>
+<ul class="simple">
+<li><p>it applies a vectorized function point-wise to an array. Scalar values are “<em>broadcast</em>” over arrays;</p>
+<ul>
+<li><p>It can do fusion of multiple operations automatically.</p></li>
+</ul>
+</li>
+<li><p>User-extensible API: can be specialized for custom functions or argument types (e.g., <code class="docutils literal notranslate"><span class="pre">CuArray</span></code> compiles and applies a custom CUDA kernel if you are running on an NVIDIA GPU).</p></li>
+</ul>
+<p><img alt="Julia broadcasting code snippet" src="../_images/Julia-broadcasting-snippet.png" /></p>
+<p><code class="docutils literal notranslate"><span class="pre">Operators</span></code> (<code class="docutils literal notranslate"><span class="pre">grad</span></code> for gradient, <code class="docutils literal notranslate"><span class="pre">div</span></code> for divergence, <code class="docutils literal notranslate"><span class="pre">interpolate</span></code> for interpolation, etc.) are “pseudo-functions”:</p>
+<ul class="simple">
+<li><p>they act like functions when broadcasted over a <code class="docutils literal notranslate"><span class="pre">Field</span></code>, but can’t be called on a single value;</p></li>
+<li><p>can be composed and fused with function calls</p></li>
+<li><p><em>Matrix-free</em> representation, i.e., no assembly of the operator matrix, but the user only specifies the <em>action</em> of operator.</p></li>
+</ul>
+<p>Composition of multiple operators is very easy and user-fiendly. Example: a Diffusion (Laplacian) operator in weak form looks like this in ClimaCore.jl’s API:</p>
+<p><img alt="Weak form diffusion operator in ClimaCore.jl" src="../_images/weak-form-diffusion-operator-snippet.png" /></p>
+<section id="example-shallow-water-equations">
+<h4>Example: Shallow-water equations<a class="headerlink" href="#example-shallow-water-equations" title="Link to this heading">#</a></h4>
+<p><img alt="Shallow-water equations in ClimaCore.jl" src="../_images/ClimaCore_SWE.png" /></p>
+<p>The shallow-water equations provide a test case for atmospheric flow simulations. One of the typical examples/test cases is the flow past a mountain:</p>
+<p><img alt="Mountain shallow-water test case in ClimaCore.jl" src="../_images/mountain_height_day10_with_bg.gif" /></p>
+</section>
+<section id="example-transport-advection-of-tracers">
+<h4>Example: Transport (advection) of tracers<a class="headerlink" href="#example-transport-advection-of-tracers" title="Link to this heading">#</a></h4>
+<p><img alt="Transport of tracers equation in ClimaCore.jl" src="../_images/ClimaCore_transport_equation.png" /></p>
+</section>
+<section id="example-barotropic-instability">
+<h4>Example: barotropic instability<a class="headerlink" href="#example-barotropic-instability" title="Link to this heading">#</a></h4>
+<p>A more complicated example/test case for a global circulation model (GCM) is the barotropic instability. The GIF below shows a 10-day simulation:</p>
+<p><img alt="Barotropic instability test case in ClimaCore.jl" src="../_images/barotropic_instability_vorticity_day10_with_bg_short.gif" /></p>
+</section>
+</section>
+<section id="some-performance-plots">
+<h3>3.4 Some performance plots<a class="headerlink" href="#some-performance-plots" title="Link to this heading">#</a></h3>
+</section>
+</section>
 </section>
 
     <script type="text/x-thebe-config">
@@ -478,6 +626,34 @@ document.write(`
             </div>
             
             
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#esm">1. ESM</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-dynamical-core-dycore">2. A dynamical core (dycore)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#climacore-jl">3. ClimaCore.jl</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#spatial-discretization">3.1 Spatial Discretization</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#climacore-jl-api">3.2 ClimaCore.jl API</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#climacore-jls-composable-operators-and-julia-broadcasting">3.3 ClimaCore.jl’s composable <code class="docutils literal notranslate"><span class="pre">Operators</span></code> and Julia broadcasting</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#example-shallow-water-equations">Example: Shallow-water equations</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#example-transport-advection-of-tracers">Example: Transport (advection) of tracers</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#example-barotropic-instability">Example: barotropic instability</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#some-performance-plots">3.4 Some performance plots</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
           </div>
