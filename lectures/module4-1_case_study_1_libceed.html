@@ -569,7 +569,7 @@ global domain <span class="math notranslate nohighlight">\(\Omega\)</span>.</p><
 <p>To measure performance, a set of benchmark (bake-off) problems have been defined:</p>
 <p><img alt="CEED Benchmark Problems" src="../_images/CEEDBPs.PNG" /></p>
 <ul class="simple">
-<li><p>In what follows, we will present some performance plots for BP3 (i.e., a Poisson’s problem in <span class="math notranslate nohighlight">\(3\)</span>D). The numbers (i.e., peak performance) attained are now outdated. But we will focus on the big picture of the performance behaviors observed.</p></li>
+<li><p>In what follows, we will present some performance plots for BP3 (i.e., a Poisson’s problem in <span class="math notranslate nohighlight">\(3\)</span>D). The absolute numbers (i.e., peak performance) attained are now outdated. But we will focus on the big picture of the performance behaviors observed.</p></li>
 <li><p>In libCEED’s terminology, “<em>serial</em>” means that the physical operator has been applied to one element at a time, not serially/sequentially. All the results presented here use parallel computations on multi-processor systems with the Message Passing Interface (MPI) and different levels of optimizations/backends that can be selected at runtime (i.e., without having to recompile your code).</p>
 <ul>
 <li><p>The <code class="docutils literal notranslate"><span class="pre">/cpu/self/*/serial</span></code> backends process one element at a time and are intended for meshes with a smaller number of high order elements. The <code class="docutils literal notranslate"><span class="pre">/cpu/self/*/blocked</span></code> backends process blocked batches of eight interlaced elements and are intended for meshes with higher numbers of elements.</p></li>
@@ -634,7 +634,8 @@ global domain <span class="math notranslate nohighlight">\(\Omega\)</span>.</p><
 <div><p><strong>Recommended Readings</strong>:</p>
 <ul class="simple">
 <li><p>For more details on the Python interface, check this <a class="reference external" href="https://proceedings.scipy.org/articles/Majora-342d178e-00c">SciPy 2020 paper</a>.</p></li>
-<li><p>For everything else, including detailed descriptions of examples, see <a class="reference external" href="https://libceed.org/en/latest/">libCEED’s documentation</a>.</p></li>
+<li><p>For everything else, including detailed descriptions of examples, see <a class="reference external" href="https://libceed.org/en/latest/">libCEED’s documentation</a>.
+You can find more info on how to run <a class="reference external" href="https://github.com/CEED/libCEED/#Examples">examples</a>/<a class="reference external" href="https://github.com/CEED/libCEED/#Benchmarks">benchmarks</a>, including postprocessing/plotting scripts in libCEED’s README page and <a class="reference external" href="https://libceed.org/en/latest/">documentation</a>.</p></li>
 </ul>
 </div></blockquote>
 </section>
