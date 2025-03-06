@@ -504,7 +504,7 @@ global domain <span class="math notranslate nohighlight">\(\Omega\)</span>.</p><
 \[
    \int_\Omega \nabla v \cdot \nabla u \, dV - \int_{\partial \Omega} v \nabla u \cdot \hat{\mathbf n}\, dS = \int_\Omega  v f \, dV .
 \]</div>
-<p>Often, we choose to represent a field (say, the velocity field) such that <span class="math notranslate nohighlight">\(\nabla u \cdot \hat{\mathbf n} = 0\)</span> for which all boundary integrals would cancel each other at neighboring elements and boundary of the domain, so that we’re only left with the volumetric parts of the equation above. This holds in Continuous Galerkin (CG) formulations, whereas boundary integrals do not vanish - and need to be solved for, using Riemann solvers - in Discontinuous Galerkin (DG formulations.</p>
+<p>Often, we choose to represent a field (say, the velocity field) such that <span class="math notranslate nohighlight">\(\nabla u \cdot \hat{\mathbf n} = 0\)</span> for which all boundary integrals would cancel each other at neighboring elements and boundary of the domain, so that we’re only left with the volumetric parts of the equation above. This holds in Continuous Galerkin (CG) formulations, whereas boundary integrals do not vanish - and need to be solved for, using Riemann solvers - in Discontinuous Galerkin (DG) formulations.</p>
 <p>Most SEM packages use the Legendre-Gauss-Lobatto (LGL) quadrature nodes that we have seen earlier in the course amd take advantage of <strong>tensor-product</strong> basis functions on quadrilateral or hexaedral elements.</p>
 </section>
 <section id="matrix-free-methods">
