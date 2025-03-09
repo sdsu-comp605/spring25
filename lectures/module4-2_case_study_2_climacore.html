@@ -57,6 +57,8 @@
     <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'lectures/module4-2_case_study_2_climacore';</script>
     <link rel="icon" href="../_static/SDSU-comp605_logo.svg"/>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -577,6 +579,12 @@ document.write(`
 </section>
 <section id="some-performance-plots">
 <h3>3.4 Some performance plots<a class="headerlink" href="#some-performance-plots" title="Link to this heading">#</a></h3>
+<p>To examine strong scaling in climate models, it is customary to increase the number of processors for several fixed resolutions, <span class="math notranslate nohighlight">\(\delta x\)</span>, and determine the time-to-solution in <strong>symulated years per day (SYPD)</strong>.</p>
+<p>In the following plots, several resolution results are presented, from the coarsest resolution, <span class="math notranslate nohighlight">\(103\)</span> km (<span class="math notranslate nohighlight">\(N_e = 30 \times 30\)</span> horizontal elements on each cubed sphere panel), to the finest, <span class="math notranslate nohighlight">\(13\)</span> km (<span class="math notranslate nohighlight">\(N_e = 240 \times 240\)</span> horizontal elements on each cubed sphere panel), for the moist baroclinic wave test as a benchmark.</p>
+<p>The GPUs (left) are NVIDIA A100 GPUs, and the CPU (right) nodes consist of 32-core Intel Icelake 8352Y processors, with 16 MPI ranks per CPU node.</p>
+<p><img alt="CliMA dycore strong scaling plots" src="../_images/CliMA_dycore_strong_scaling.png" /></p>
+<p>For weak scaling studies, the problem resolution (and therefore problem size) varies with the resources in the system. Here we plot <strong>time per model timestep</strong> versus number of GPUs (left) and CPU nodes (right) for different horizontal resolutions.</p>
+<p><img alt="CliMA dycore weak scaling plots" src="../_images/CliMA_dycore_weak_scaling.png" /></p>
 </section>
 </section>
 </section>
