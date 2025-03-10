@@ -575,6 +575,19 @@ document.write(`
 <h4>Example: barotropic instability<a class="headerlink" href="#example-barotropic-instability" title="Link to this heading">#</a></h4>
 <p>A more complicated example/test case for a global circulation model (GCM) is the barotropic instability. The GIF below shows a 10-day simulation:</p>
 <p><img alt="Barotropic instability test case in ClimaCore.jl" src="../_images/barotropic_instability_vorticity_day10_with_bg_short.gif" /></p>
+<blockquote>
+<div><p>Other Examples:</p>
+<ul class="simple">
+<li><p>Other examples can be found at <a class="reference external" href="https://github.com/CliMA/ClimaCore.jl/tree/main/examples">ClimaCore.jl/examples</a> divided by domain geometries:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">column/</span></code>: 1D examples in the vertical direction only. These require interpolating quantities on the staggered grid (from face values to center values and viceversa)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">plane/</span></code>: 2D examples on a rectangular grid</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sphere/</span></code>: 2D examples on a spherical grid</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">hybrid/</span></code>: collects 3D examples with a hybrid mesh, i.e., with spectral element discretization in the horizontal direction and staggered finite difference in the vertical direction, in both Cartesian (2D <code class="docutils literal notranslate"><span class="pre">plane/</span></code> and 3D <code class="docutils literal notranslate"><span class="pre">box/</span></code>) and spherical grids (<code class="docutils literal notranslate"><span class="pre">sphere/</span></code>)</p></li>
+</ul>
+</li>
+</ul>
+</div></blockquote>
 </section>
 </section>
 <section id="some-performance-plots">
