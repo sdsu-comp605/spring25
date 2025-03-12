@@ -22,3 +22,4 @@ chapters:
   - file: lectures/module3-3_openmp_tasks.ipynb
   - file: lectures/module4-1_case_study_1_libceed.ipynb
   - file: lectures/module4-2_case_study_2_climacore.ipynb
+  - file: lectures/hw2_notebook.ipynb
