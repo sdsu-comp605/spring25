@@ -23,3 +23,4 @@ chapters:
   - file: lectures/module4-1_case_study_1_libceed.ipynb
   - file: lectures/module4-2_case_study_2_climacore.ipynb
   - file: lectures/hw2_notebook.ipynb
+  - file: lectures/module5-1_reductions_and_scans.ipynb
