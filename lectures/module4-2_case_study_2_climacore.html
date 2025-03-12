@@ -63,6 +63,7 @@
     <link rel="icon" href="../_static/SDSU-comp605_logo.svg"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="16) HW2 solution" href="hw2_notebook.html" />
     <link rel="prev" title="14) Case Study 1: libCEED" href="module4-1_case_study_1_libceed.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -201,6 +202,7 @@
 <li class="toctree-l2"><a class="reference internal" href="module3-3_openmp_tasks.html">13) More on OpenMP and OpenMP Tasks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="module4-1_case_study_1_libceed.html">14) Case Study 1: libCEED</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">15) Case Study 2: ClimaCore</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hw2_notebook.html">16) HW2 solution</a></li>
 </ul>
 </details></li>
 </ul>
@@ -435,6 +437,7 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#spatial-discretization">3.1 Spatial Discretization</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#climacore-jl-api">3.2 ClimaCore.jl API</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#climacore-jls-composable-operators-and-julia-broadcasting">3.3 ClimaCore.jl’s composable <code class="docutils literal notranslate"><span class="pre">Operators</span></code> and Julia broadcasting</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#example-1d-advection">Example: 1D advection</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#example-shallow-water-equations">Example: Shallow-water equations</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#example-transport-advection-of-tracers">Example: Transport (advection) of tracers</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#example-barotropic-instability">Example: barotropic instability</a></li>
@@ -561,6 +564,31 @@ document.write(`
 </ul>
 <p>Composition of multiple operators is very easy and user-fiendly. Example: a Diffusion (Laplacian) operator in weak form looks like this in ClimaCore.jl’s API:</p>
 <p><img alt="Weak form diffusion operator in ClimaCore.jl" src="../_images/weak-form-diffusion-operator-snippet.png" /></p>
+<section id="example-1d-advection">
+<h4>Example: 1D advection<a class="headerlink" href="#example-1d-advection" title="Link to this heading">#</a></h4>
+<p>Advection equation example in 1D, with constant advective velocity <span class="math notranslate nohighlight">\(w\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[
+\partial_t y + w \partial_z y  = 0 \; .
+\]</div>
+<p>The solution translates to the right at constant speed <span class="math notranslate nohighlight">\(w\)</span>, so at time <span class="math notranslate nohighlight">\(t\)</span>, the solution is <span class="math notranslate nohighlight">\(y(z - w * t)\)</span>.</p>
+<p>There are many different ways one can define the advection operator. In Finite Difference (FD) formulations, a very common scheme to use is the <a class="reference external" href="https://en.wikipedia.org/wiki/Upwind_scheme">upwind scheme</a>, for which derivatives are estimated using a set of data points biased to be more “upwind” of the query point, with respect to the direction of the flow.</p>
+<p>We will illustrate here:</p>
+<ul class="simple">
+<li><p>First order upwinding</p></li>
+<li><p>Third order upwinding</p></li>
+<li><p>A linear average of the two</p></li>
+<li><p>Flux-corrected transport (FCT)</p></li>
+</ul>
+<p><img alt="First order upwinding" src="../_images/pulse_first_order_upwinding.png" /></p>
+<p>We can see that first-order upwinding is a bit dissipative and very dispersive (the pulse wave has laterally shifted).</p>
+<p><img alt="Third order upwinding" src="../_images/pulse_third_order_upwinding.png" /></p>
+<p>We can see that third-order upwinding is less dissipative and less dispersive, but it exhibits over/under-shoots.</p>
+<p><img alt="Average of first and third order upwinding" src="../_images/pulse_average_upwinding.png" /></p>
+<p>We can see that the linear average of first-order and third-order upwinding is just what you would expect, i.e., a combination of the two.</p>
+<p><img alt="Flux-corrected Transport (FCT)" src="../_images/pulse_zalesak_fct.png" /></p>
+<p>The solution above uses the <a class="reference external" href="https://link.springer.com/chapter/10.1007/3-540-27206-2_2">Flux-Corrected Transport (FCT)</a> from Zalesak, which has no over/under-shoots and very limited dispersion.</p>
+</section>
 <section id="example-shallow-water-equations">
 <h4>Example: Shallow-water equations<a class="headerlink" href="#example-shallow-water-equations" title="Link to this heading">#</a></h4>
 <p><img alt="Shallow-water equations in ClimaCore.jl" src="../_images/ClimaCore_SWE.png" /></p>
@@ -576,7 +604,7 @@ document.write(`
 <p>A more complicated example/test case for a global circulation model (GCM) is the barotropic instability. The GIF below shows a 10-day simulation:</p>
 <p><img alt="Barotropic instability test case in ClimaCore.jl" src="../_images/barotropic_instability_vorticity_day10_with_bg_short.gif" /></p>
 <blockquote>
-<div><p>Other Examples:</p>
+<div><p>Other Examples and Recommended Reading:</p>
 <ul class="simple">
 <li><p>Other examples can be found at <a class="reference external" href="https://github.com/CliMA/ClimaCore.jl/tree/main/examples">ClimaCore.jl/examples</a> divided by domain geometries:</p>
 <ul>
@@ -586,6 +614,7 @@ document.write(`
 <li><p><code class="docutils literal notranslate"><span class="pre">hybrid/</span></code>: collects 3D examples with a hybrid mesh, i.e., with spectral element discretization in the horizontal direction and staggered finite difference in the vertical direction, in both Cartesian (2D <code class="docutils literal notranslate"><span class="pre">plane/</span></code> and 3D <code class="docutils literal notranslate"><span class="pre">box/</span></code>) and spherical grids (<code class="docutils literal notranslate"><span class="pre">sphere/</span></code>)</p></li>
 </ul>
 </li>
+<li><p>For more information and details please read <a class="reference external" href="https://clima.github.io/ClimaCore.jl/dev/">ClimaCore.jl’s documentation</a></p></li>
 </ul>
 </div></blockquote>
 </section>
@@ -641,6 +670,15 @@ document.write(`
         <p class="prev-next-title">14) Case Study 1: libCEED</p>
       </div>
     </a>
+    <a class="right-next"
+       href="hw2_notebook.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">16) HW2 solution</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
 </div>
                 </footer>
               
@@ -663,6 +701,7 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#spatial-discretization">3.1 Spatial Discretization</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#climacore-jl-api">3.2 ClimaCore.jl API</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#climacore-jls-composable-operators-and-julia-broadcasting">3.3 ClimaCore.jl’s composable <code class="docutils literal notranslate"><span class="pre">Operators</span></code> and Julia broadcasting</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#example-1d-advection">Example: 1D advection</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#example-shallow-water-equations">Example: Shallow-water equations</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#example-transport-advection-of-tracers">Example: Transport (advection) of tracers</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#example-barotropic-instability">Example: barotropic instability</a></li>

@@ -1,0 +1,215 @@
+Traceback (most recent call last):
+  File "/home/valeria/.local/share/pipx/venvs/jupyter-book/lib/python3.12/site-packages/jupyter_cache/executors/utils.py", line 58, in single_nb_execution
+    executenb(
+  File "/home/valeria/.local/share/pipx/venvs/jupyter-book/lib/python3.12/site-packages/nbclient/client.py", line 1314, in execute
+    return NotebookClient(nb=nb, resources=resources, km=km, **kwargs).execute()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/valeria/.local/share/pipx/venvs/jupyter-book/lib/python3.12/site-packages/jupyter_core/utils/__init__.py", line 165, in wrapped
+    return loop.run_until_complete(inner)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/asyncio/base_events.py", line 687, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/home/valeria/.local/share/pipx/venvs/jupyter-book/lib/python3.12/site-packages/nbclient/client.py", line 709, in async_execute
+    await self.async_execute_cell(
+  File "/home/valeria/.local/share/pipx/venvs/jupyter-book/lib/python3.12/site-packages/nbclient/client.py", line 1062, in async_execute_cell
+    await self._check_raise_for_error(cell, cell_index, exec_reply)
+  File "/home/valeria/.local/share/pipx/venvs/jupyter-book/lib/python3.12/site-packages/nbclient/client.py", line 918, in _check_raise_for_error
+    raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
+nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
+------------------
+## Testing
+# What modules / packages do we depend on
+using Random
+using LinearAlgebra
+using Printf
+using Plots
+default(linewidth=4) # Plots embelishments
+
+# To ensure repeatability
+Random.seed!(777)
+
+# Don't let BLAS use lots of threads (since we are not multi-threaded yet!)
+BLAS.set_num_threads(1)
+
+include("mygemm.jl")
+
+# C := α * A * B + β * C
+refgemm!(C, A, B) = mul!(C, A, B', one(eltype(C)), one(eltype(C)))
+
+# matrix times row vector (update rows of `C`) with inner dot product
+# mygemm! = mygemm_ijp!
+
+# matrix times row vector (update rows of `C`) with inner axpy
+# mygemm! = mygemm_ipj!
+
+# Rank one update (repeatedly update all elements of `C`) with outer product
+# using axpy with rows of `B`
+# mygemm! = mygemm_pij!
+
+# Rank one update (repeatedly update all elements of `C`) with outer product
+# using axpy with columns of `A`
+mygemm! = mygemm_pji!
+
+# matrix times column vector (update columns of `C`) with inner axpy
+# mygemm! = mygemm_jpi!
+
+# matrix times column vector (update columns of `C`) with inner dot product
+# mygemm! = mygemm_jip!
+
+num_reps = 3
+
+# What precision numbers to use
+FloatType1 = Float32
+FloatType2 = Float64
+
+@printf("size |      reference      |           %s\n", mygemm!)
+@printf("     |   seconds   GFLOPS  |   seconds   GFLOPS     diff\n")
+
+N = 48:48:480
+best_perf = zeros(length(N))
+# Size of square matrix to consider
+for nmk in N
+  i = Int(nmk / 48)
+  n = m = k = nmk
+  @printf("%4d |", nmk)
+
+  gflops = 2 * m * n * k * 1e-09
+
+  # Create some random initial data
+  A = rand(FloatType1, m, k)
+  B = rand(FloatType1, n, k)
+  C = rand(FloatType1, m, n)
+
+  # Make a copy of C for resetting data later
+  C_old = copy(C)
+
+  # "truth"
+  C_ref = A * B' + C
+
+  # Compute the reference timings
+  best_time = typemax(FloatType1)
+  for iter = 1:num_reps
+    # Reset C to the original data
+    C .= C_old;
+    run_time = @elapsed refgemm!(C, A, B);
+    best_time = min(run_time, best_time)
+  end
+  # Make sure that we have the right answer!
+  @assert C ≈ C_ref
+  best_perf[i] = gflops / best_time
+
+  # Print the reference implementation timing
+  @printf("  %4.2e %8.2f  |", best_time, best_perf[i])
+
+  # Compute the timing for mygemm! implementation
+  best_time = typemax(FloatType1)
+  for iter = 1:num_reps
+    # Reset C to the original data
+    C .= C_old;
+    run_time = @elapsed mygemm!(C, A, B);
+    best_time = min(run_time, best_time)
+  end
+  best_perf[i] = gflops / best_time
+
+  # Compute the error (difference between our implementation and the reference)
+  diff = norm(C - C_ref, Inf)
+
+  # Print mygemm! implementations
+  @printf("  %4.2e %8.2f   %.2e", best_time, best_perf[i], diff)
+
+  @printf("\n")
+end
+
+plot!(N, best_perf, xlabel = "m = n = k", ylabel = "GFLOPs/S", label = "$mygemm! $FloatType1", title = "Float32 Vs Float64")
+
+
+## FloatType2
+
+@printf("size |      reference      |           %s\n", mygemm!)
+@printf("     |   seconds   GFLOPS  |   seconds   GFLOPS     diff\n")
+
+N = 48:48:480
+best_perf = zeros(length(N))
+# Size of square matrix to consider
+for nmk in N
+  i = Int(nmk / 48)
+  n = m = k = nmk
+  @printf("%4d |", nmk)
+
+  gflops = 2 * m * n * k * 1e-09
+
+  # Create some random initial data
+  A = rand(FloatType2, m, k)
+  B = rand(FloatType2, n, k)
+  C = rand(FloatType2, m, n)
+
+  # Make a copy of C for resetting data later
+  C_old = copy(C)
+
+  # "truth"
+  C_ref = A * B' + C
+
+  # Compute the reference timings
+  best_time = typemax(FloatType2)
+  for iter = 1:num_reps
+    # Reset C to the original data
+    C .= C_old;
+    run_time = @elapsed refgemm!(C, A, B);
+    best_time = min(run_time, best_time)
+  end
+  # Make sure that we have the right answer!
+  @assert C ≈ C_ref
+  best_perf[i] = gflops / best_time
+
+  # Print the reference implementation timing
+  @printf("  %4.2e %8.2f  |", best_time, best_perf[i])
+
+  # Compute the timing for mygemm! implementation
+  best_time = typemax(FloatType2)
+  for iter = 1:num_reps
+    # Reset C to the original data
+    C .= C_old;
+    run_time = @elapsed mygemm!(C, A, B);
+    best_time = min(run_time, best_time)
+  end
+  best_perf[i] = gflops / best_time
+
+  # Compute the error (difference between our implementation and the reference)
+  diff = norm(C - C_ref, Inf)
+
+  # Print mygemm! implementations
+  @printf("  %4.2e %8.2f   %.2e", best_time, best_perf[i], diff)
+
+  @printf("\n")
+end
+
+plot!(N, best_perf, xlabel = "m = n = k", ylabel = "GFLOPs/S", label = "$mygemm! $FloatType2", title = "Float32 Vs Float64")
+
+------------------
+
+
+SystemError: opening file "/home/valeria/Dropbox/SDSU/Teaching/Comp605/spring25/lectures/mygemm.jl": No such file or directory
+
+Stacktrace:
+  [1] systemerror(p::String, errno::Int32; extrainfo::Nothing)
+    @ Base ./error.jl:176
+  [2] systemerror
+    @ ./error.jl:175 [inlined]
+  [3] open(fname::String; lock::Bool, read::Nothing, write::Nothing, create::Nothing, truncate::Nothing, append::Nothing)
+    @ Base ./iostream.jl:293
+  [4] open
+    @ ./iostream.jl:275 [inlined]
+  [5] open(f::Base.var"#433#434"{String}, args::String; kwargs::@Kwargs{})
+    @ Base ./io.jl:394
+  [6] open
+    @ ./io.jl:393 [inlined]
+  [7] read
+    @ ./io.jl:486 [inlined]
+  [8] _include(mapexpr::Function, mod::Module, _path::String)
+    @ Base ./loading.jl:2132
+  [9] include(fname::String)
+    @ Base.MainInclude ./client.jl:489
+ [10] top-level scope
+    @ In[2]:15
+

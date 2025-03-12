@@ -1,0 +1,1026 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>16) HW2 solution &#8212; Scientific Computing</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'lectures/hw2_notebook';</script>
+    <link rel="icon" href="../_static/SDSU-comp605_logo.svg"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="15) Case Study 2: ClimaCore" href="module4-2_case_study_2_climacore.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/SDSU-comp605_logo.svg" class="logo__image only-light" alt="Scientific Computing - Home"/>
+    <script>document.write(`<img src="../_static/SDSU-comp605_logo.svg" class="logo__image only-dark" alt="Scientific Computing - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../index.html">
+                    Welcome
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../syllabus.html">Syllabus</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../lectures.html">Lectures</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="module1-1_first_class.html">1) First Class: Reproducibility and Git</a></li>
+
+
+<li class="toctree-l2"><a class="reference internal" href="module1-2_linux.html">2) The Linux Filesystem and commands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module1-3_community_projects.html">3) Community Projects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module1-4_intro_architectures.html">4) Introduction to Computer Architectures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module1-5_intro_vectorization.html">5) Introduction to Vectorization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module2-1_measuring_performance.html">6) Measuring Performance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module2-2_cpu_optimization.html">7) CPU Optimization: Matrix-Matrix Multiply</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module2-3_blocked_mmm.html">8) Blocked Matrix-Matrix Multiplication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module2-4_packing_for_cache.html">9) Packing for cache</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module2-5_intro_multithreading.html">10) Introduction to Multithreading</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module3-1_intro_parallel_scaling.html">11) Introduction to Parallel Scaling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module3-2_intro_to_openmp.html">12) Introduction to OpenMP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module3-3_openmp_tasks.html">13) More on OpenMP and OpenMP Tasks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module4-1_case_study_1_libceed.html">14) Case Study 1: libCEED</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module4-2_case_study_2_climacore.html">15) Case Study 2: ClimaCore</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">16) HW2 solution</a></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li>
+<button onclick="initThebeSBT()"
+  class="btn btn-sm btn-launch-thebe dropdown-item"
+  title="Launch Thebe"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-play"></i>
+  </span>
+<span class="btn__text-container">Live Code</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/sdsu-comp605/spring25" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/sdsu-comp605/spring25/issues/new?title=Issue%20on%20page%20%2Flectures/hw2_notebook.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/lectures/hw2_notebook.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>16) HW2 solution</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="hw2-solution">
+<h1>16) HW2 solution<a class="headerlink" href="#hw2-solution" title="Link to this heading">#</a></h1>
+<p>We want to solve the matrix multiplication problem</p>
+<div class="math notranslate nohighlight">
+\[
+  C := C + A B^{T}. \qquad \qquad \qquad \qquad \hbox{(1)}
+\]</div>
+<p>Here <span class="math notranslate nohighlight">\(A\)</span>, <span class="math notranslate nohighlight">\(B\)</span>, and <span class="math notranslate nohighlight">\(C\)</span> have sizes <span class="math notranslate nohighlight">\(m \times k\)</span>, <span class="math notranslate nohighlight">\(n \times k\)</span>, and <span class="math notranslate nohighlight">\(m \times n\)</span>, respectively. Using the same <a class="reference external" href="https://sdsu-comp605.github.io/spring25/lectures/module2-2_cpu_optimization.html#notation">notation</a> that we’ve seen in class, where capital letters are typically for matrices, and lower case Greek letters for floating point scalars: <span class="math notranslate nohighlight">\(\alpha\)</span> (for entries of the matrix <span class="math notranslate nohighlight">\(A\)</span>), <span class="math notranslate nohighlight">\(\beta\)</span> (for entries of the matrix <span class="math notranslate nohighlight">\(B\)</span>), and <span class="math notranslate nohighlight">\(\gamma\)</span> (for entries of the matrix <span class="math notranslate nohighlight">\(C\)</span>).</p>
+<p>Recognizing that the <span class="math notranslate nohighlight">\(pj\)</span> element of <span class="math notranslate nohighlight">\(B^{T}\)</span> is the <span class="math notranslate nohighlight">\(jp\)</span> element of <span class="math notranslate nohighlight">\(B\)</span>, it follows that the <span class="math notranslate nohighlight">\(ij\)</span> element of <span class="math notranslate nohighlight">\(C\)</span> can be computed as</p>
+<div class="math notranslate nohighlight">
+\[
+  \gamma_{ij} := \gamma_{ij} + \sum_{p = 1}^{k} \alpha_{ip} \beta_{jp}.
+\]</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="c"># matrix times row vector (update rows of `C`) with inner dot product</span>
+<span class="k">function</span><span class="w"> </span><span class="n">mygemm_ijp!</span><span class="p">(</span><span class="n">C</span><span class="p">,</span><span class="w"> </span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="n">B</span><span class="p">)</span>
+<span class="w">  </span><span class="n">m</span><span class="p">,</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+<span class="w">  </span><span class="n">_</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">B</span><span class="p">)</span>
+<span class="w">  </span><span class="nd">@assert</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">B</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">k</span>
+<span class="w">  </span><span class="nd">@assert</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">C</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="p">(</span><span class="n">m</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
+
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="o">:</span><span class="n">m</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="o">:</span><span class="n">n</span>
+<span class="w">      </span><span class="k">for</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="o">:</span><span class="n">k</span>
+<span class="w">        </span><span class="nd">@inbounds</span><span class="w"> </span><span class="n">C</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">]</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="p">]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">B</span><span class="p">[</span><span class="n">j</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="p">]</span>
+<span class="w">      </span><span class="k">end</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="k">end</span>
+
+<span class="c"># matrix times row vector (update rows of `C`) with inner axpy</span>
+<span class="k">function</span><span class="w"> </span><span class="n">mygemm_ipj!</span><span class="p">(</span><span class="n">C</span><span class="p">,</span><span class="w"> </span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="n">B</span><span class="p">)</span>
+<span class="w">  </span><span class="n">m</span><span class="p">,</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+<span class="w">  </span><span class="n">_</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">B</span><span class="p">)</span>
+<span class="w">  </span><span class="nd">@assert</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">B</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">k</span>
+<span class="w">  </span><span class="nd">@assert</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">C</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="p">(</span><span class="n">m</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
+
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="o">:</span><span class="n">m</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="o">:</span><span class="n">k</span>
+<span class="w">      </span><span class="k">for</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="o">:</span><span class="n">n</span>
+<span class="w">        </span><span class="nd">@inbounds</span><span class="w"> </span><span class="n">C</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">]</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="p">]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">B</span><span class="p">[</span><span class="n">j</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="p">]</span>
+<span class="w">      </span><span class="k">end</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="k">end</span>
+
+<span class="c"># Rank one update (repeatedly update all elements of `C`) with outer product</span>
+<span class="c"># using axpy with rows of `B`</span>
+<span class="k">function</span><span class="w"> </span><span class="n">mygemm_pij!</span><span class="p">(</span><span class="n">C</span><span class="p">,</span><span class="w"> </span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="n">B</span><span class="p">)</span>
+<span class="w">  </span><span class="n">m</span><span class="p">,</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+<span class="w">  </span><span class="n">_</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">B</span><span class="p">)</span>
+<span class="w">  </span><span class="nd">@assert</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">B</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">k</span>
+<span class="w">  </span><span class="nd">@assert</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">C</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="p">(</span><span class="n">m</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
+
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="o">:</span><span class="n">k</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="o">:</span><span class="n">m</span>
+<span class="w">      </span><span class="k">for</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="o">:</span><span class="n">n</span>
+<span class="w">        </span><span class="nd">@inbounds</span><span class="w"> </span><span class="n">C</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">]</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="p">]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">B</span><span class="p">[</span><span class="n">j</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="p">]</span>
+<span class="w">      </span><span class="k">end</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="k">end</span>
+
+<span class="c"># Rank one update (repeatedly update all elements of `C`) with outer product</span>
+<span class="c"># using axpy with columns of `A`</span>
+<span class="k">function</span><span class="w"> </span><span class="n">mygemm_pji!</span><span class="p">(</span><span class="n">C</span><span class="p">,</span><span class="w"> </span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="n">B</span><span class="p">)</span>
+<span class="w">  </span><span class="n">m</span><span class="p">,</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+<span class="w">  </span><span class="n">_</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">B</span><span class="p">)</span>
+<span class="w">  </span><span class="nd">@assert</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">B</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">k</span>
+<span class="w">  </span><span class="nd">@assert</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">C</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="p">(</span><span class="n">m</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
+
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="o">:</span><span class="n">k</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="o">:</span><span class="n">n</span>
+<span class="w">      </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="o">:</span><span class="n">m</span>
+<span class="w">        </span><span class="nd">@inbounds</span><span class="w"> </span><span class="n">C</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">]</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="p">]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">B</span><span class="p">[</span><span class="n">j</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="p">]</span>
+<span class="w">      </span><span class="k">end</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="k">end</span>
+
+<span class="c"># matrix times column vector (update columns of `C`) with inner axpy</span>
+<span class="k">function</span><span class="w"> </span><span class="n">mygemm_jpi!</span><span class="p">(</span><span class="n">C</span><span class="p">,</span><span class="w"> </span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="n">B</span><span class="p">)</span>
+<span class="w">  </span><span class="n">m</span><span class="p">,</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+<span class="w">  </span><span class="n">_</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">B</span><span class="p">)</span>
+<span class="w">  </span><span class="nd">@assert</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">B</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">k</span>
+<span class="w">  </span><span class="nd">@assert</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">C</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="p">(</span><span class="n">m</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
+
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="o">:</span><span class="n">n</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="o">:</span><span class="n">k</span>
+<span class="w">      </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="o">:</span><span class="n">m</span>
+<span class="w">        </span><span class="nd">@inbounds</span><span class="w"> </span><span class="n">C</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">]</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="p">]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">B</span><span class="p">[</span><span class="n">j</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="p">]</span>
+<span class="w">      </span><span class="k">end</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="k">end</span>
+
+<span class="c"># matrix times column vector (update columns of `C`) with inner dot product</span>
+<span class="k">function</span><span class="w"> </span><span class="n">mygemm_jip!</span><span class="p">(</span><span class="n">C</span><span class="p">,</span><span class="w"> </span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="n">B</span><span class="p">)</span>
+<span class="w">  </span><span class="n">m</span><span class="p">,</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+<span class="w">  </span><span class="n">_</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">B</span><span class="p">)</span>
+<span class="w">  </span><span class="nd">@assert</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">B</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">k</span>
+<span class="w">  </span><span class="nd">@assert</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">C</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="p">(</span><span class="n">m</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
+
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="o">:</span><span class="n">n</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="o">:</span><span class="n">m</span>
+<span class="w">      </span><span class="k">for</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="o">:</span><span class="n">k</span>
+<span class="w">        </span><span class="nd">@inbounds</span><span class="w"> </span><span class="n">C</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">]</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="p">]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">B</span><span class="p">[</span><span class="n">j</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="p">]</span>
+<span class="w">      </span><span class="k">end</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>mygemm_jip! (generic function with 1 method)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="c">## Testing</span>
+<span class="c"># What modules / packages do we depend on</span>
+<span class="k">using</span><span class="w"> </span><span class="n">Random</span>
+<span class="k">using</span><span class="w"> </span><span class="n">LinearAlgebra</span>
+<span class="k">using</span><span class="w"> </span><span class="n">Printf</span>
+<span class="k">using</span><span class="w"> </span><span class="n">Plots</span>
+<span class="n">default</span><span class="p">(</span><span class="n">linewidth</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span><span class="w"> </span><span class="c"># Plots embelishments</span>
+
+<span class="c"># To ensure repeatability</span>
+<span class="n">Random</span><span class="o">.</span><span class="n">seed!</span><span class="p">(</span><span class="mi">777</span><span class="p">)</span>
+
+<span class="c"># Don&#39;t let BLAS use lots of threads (since we are not multi-threaded yet!)</span>
+<span class="n">BLAS</span><span class="o">.</span><span class="n">set_num_threads</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">include</span><span class="p">(</span><span class="s">&quot;../julia_codes/hw2_sol/mygemm.jl&quot;</span><span class="p">)</span>
+
+<span class="c"># C := α * A * B + β * C</span>
+<span class="n">refgemm!</span><span class="p">(</span><span class="n">C</span><span class="p">,</span><span class="w"> </span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="n">B</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mul!</span><span class="p">(</span><span class="n">C</span><span class="p">,</span><span class="w"> </span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="n">B</span><span class="o">&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">one</span><span class="p">(</span><span class="n">eltype</span><span class="p">(</span><span class="n">C</span><span class="p">)),</span><span class="w"> </span><span class="n">one</span><span class="p">(</span><span class="n">eltype</span><span class="p">(</span><span class="n">C</span><span class="p">)))</span>
+
+<span class="c"># matrix times row vector (update rows of `C`) with inner dot product</span>
+<span class="c"># mygemm! = mygemm_ijp!</span>
+
+<span class="c"># matrix times row vector (update rows of `C`) with inner axpy</span>
+<span class="c"># mygemm! = mygemm_ipj!</span>
+
+<span class="c"># Rank one update (repeatedly update all elements of `C`) with outer product</span>
+<span class="c"># using axpy with rows of `B`</span>
+<span class="c"># mygemm! = mygemm_pij!</span>
+
+<span class="c"># Rank one update (repeatedly update all elements of `C`) with outer product</span>
+<span class="c"># using axpy with columns of `A`</span>
+<span class="n">mygemm!</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mygemm_pji!</span>
+
+<span class="c"># matrix times column vector (update columns of `C`) with inner axpy</span>
+<span class="c"># mygemm! = mygemm_jpi!</span>
+
+<span class="c"># matrix times column vector (update columns of `C`) with inner dot product</span>
+<span class="c"># mygemm! = mygemm_jip!</span>
+
+<span class="n">num_reps</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span>
+
+<span class="c"># What precision numbers to use</span>
+<span class="n">FloatType1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">Float32</span>
+<span class="n">FloatType2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">Float64</span>
+
+<span class="nd">@printf</span><span class="p">(</span><span class="s">&quot;size |      reference      |           </span><span class="si">%s</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">mygemm!</span><span class="p">)</span>
+<span class="nd">@printf</span><span class="p">(</span><span class="s">&quot;     |   seconds   GFLOPS  |   seconds   GFLOPS     diff</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
+
+<span class="n">N</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">48</span><span class="o">:</span><span class="mi">48</span><span class="o">:</span><span class="mi">480</span>
+<span class="n">best_perf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">zeros</span><span class="p">(</span><span class="n">length</span><span class="p">(</span><span class="n">N</span><span class="p">))</span>
+<span class="c"># Size of square matrix to consider</span>
+<span class="k">for</span><span class="w"> </span><span class="n">nmk</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">N</span>
+<span class="w">  </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">Int</span><span class="p">(</span><span class="n">nmk</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">48</span><span class="p">)</span>
+<span class="w">  </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nmk</span>
+<span class="w">  </span><span class="nd">@printf</span><span class="p">(</span><span class="s">&quot;</span><span class="si">%4d</span><span class="s"> |&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">nmk</span><span class="p">)</span>
+
+<span class="w">  </span><span class="n">gflops</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">1e-09</span>
+
+<span class="w">  </span><span class="c"># Create some random initial data</span>
+<span class="w">  </span><span class="n">A</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rand</span><span class="p">(</span><span class="n">FloatType1</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="p">,</span><span class="w"> </span><span class="n">k</span><span class="p">)</span>
+<span class="w">  </span><span class="n">B</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rand</span><span class="p">(</span><span class="n">FloatType1</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="n">k</span><span class="p">)</span>
+<span class="w">  </span><span class="n">C</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rand</span><span class="p">(</span><span class="n">FloatType1</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
+
+<span class="w">  </span><span class="c"># Make a copy of C for resetting data later</span>
+<span class="w">  </span><span class="n">C_old</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">copy</span><span class="p">(</span><span class="n">C</span><span class="p">)</span>
+
+<span class="w">  </span><span class="c"># &quot;truth&quot;</span>
+<span class="w">  </span><span class="n">C_ref</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">B</span><span class="o">&#39;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">C</span>
+
+<span class="w">  </span><span class="c"># Compute the reference timings</span>
+<span class="w">  </span><span class="n">best_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">typemax</span><span class="p">(</span><span class="n">FloatType1</span><span class="p">)</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="n">iter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="o">:</span><span class="n">num_reps</span>
+<span class="w">    </span><span class="c"># Reset C to the original data</span>
+<span class="w">    </span><span class="n">C</span><span class="w"> </span><span class="o">.=</span><span class="w"> </span><span class="n">C_old</span><span class="p">;</span>
+<span class="w">    </span><span class="n">run_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nd">@elapsed</span><span class="w"> </span><span class="n">refgemm!</span><span class="p">(</span><span class="n">C</span><span class="p">,</span><span class="w"> </span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="n">B</span><span class="p">);</span>
+<span class="w">    </span><span class="n">best_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">min</span><span class="p">(</span><span class="n">run_time</span><span class="p">,</span><span class="w"> </span><span class="n">best_time</span><span class="p">)</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="w">  </span><span class="c"># Make sure that we have the right answer!</span>
+<span class="w">  </span><span class="nd">@assert</span><span class="w"> </span><span class="n">C</span><span class="w"> </span><span class="o">≈</span><span class="w"> </span><span class="n">C_ref</span>
+<span class="w">  </span><span class="n">best_perf</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">gflops</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">best_time</span>
+
+<span class="w">  </span><span class="c"># Print the reference implementation timing</span>
+<span class="w">  </span><span class="nd">@printf</span><span class="p">(</span><span class="s">&quot;  </span><span class="si">%4.2e</span><span class="s"> </span><span class="si">%8.2f</span><span class="s">  |&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">best_time</span><span class="p">,</span><span class="w"> </span><span class="n">best_perf</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+<span class="w">  </span><span class="c"># Compute the timing for mygemm! implementation</span>
+<span class="w">  </span><span class="n">best_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">typemax</span><span class="p">(</span><span class="n">FloatType1</span><span class="p">)</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="n">iter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="o">:</span><span class="n">num_reps</span>
+<span class="w">    </span><span class="c"># Reset C to the original data</span>
+<span class="w">    </span><span class="n">C</span><span class="w"> </span><span class="o">.=</span><span class="w"> </span><span class="n">C_old</span><span class="p">;</span>
+<span class="w">    </span><span class="n">run_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nd">@elapsed</span><span class="w"> </span><span class="n">mygemm!</span><span class="p">(</span><span class="n">C</span><span class="p">,</span><span class="w"> </span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="n">B</span><span class="p">);</span>
+<span class="w">    </span><span class="n">best_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">min</span><span class="p">(</span><span class="n">run_time</span><span class="p">,</span><span class="w"> </span><span class="n">best_time</span><span class="p">)</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="w">  </span><span class="n">best_perf</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">gflops</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">best_time</span>
+
+<span class="w">  </span><span class="c"># Compute the error (difference between our implementation and the reference)</span>
+<span class="w">  </span><span class="n">diff</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">norm</span><span class="p">(</span><span class="n">C</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">C_ref</span><span class="p">,</span><span class="w"> </span><span class="nb">Inf</span><span class="p">)</span>
+
+<span class="w">  </span><span class="c"># Print mygemm! implementations</span>
+<span class="w">  </span><span class="nd">@printf</span><span class="p">(</span><span class="s">&quot;  </span><span class="si">%4.2e</span><span class="s"> </span><span class="si">%8.2f</span><span class="s">   </span><span class="si">%.2e</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">best_time</span><span class="p">,</span><span class="w"> </span><span class="n">best_perf</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="w"> </span><span class="n">diff</span><span class="p">)</span>
+
+<span class="w">  </span><span class="nd">@printf</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="k">end</span>
+
+<span class="n">plot!</span><span class="p">(</span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="n">best_perf</span><span class="p">,</span><span class="w"> </span><span class="n">xlabel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;m = n = k&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">ylabel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;GFLOPs/S&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">label</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;</span><span class="si">$mygemm!</span><span class="s"> </span><span class="si">$FloatType1</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">title</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Float32 Vs Float64&quot;</span><span class="p">)</span>
+
+
+<span class="c">## FloatType2</span>
+
+<span class="nd">@printf</span><span class="p">(</span><span class="s">&quot;size |      reference      |           </span><span class="si">%s</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">mygemm!</span><span class="p">)</span>
+<span class="nd">@printf</span><span class="p">(</span><span class="s">&quot;     |   seconds   GFLOPS  |   seconds   GFLOPS     diff</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
+
+<span class="n">N</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">48</span><span class="o">:</span><span class="mi">48</span><span class="o">:</span><span class="mi">480</span>
+<span class="n">best_perf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">zeros</span><span class="p">(</span><span class="n">length</span><span class="p">(</span><span class="n">N</span><span class="p">))</span>
+<span class="c"># Size of square matrix to consider</span>
+<span class="k">for</span><span class="w"> </span><span class="n">nmk</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">N</span>
+<span class="w">  </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">Int</span><span class="p">(</span><span class="n">nmk</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">48</span><span class="p">)</span>
+<span class="w">  </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nmk</span>
+<span class="w">  </span><span class="nd">@printf</span><span class="p">(</span><span class="s">&quot;</span><span class="si">%4d</span><span class="s"> |&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">nmk</span><span class="p">)</span>
+
+<span class="w">  </span><span class="n">gflops</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">1e-09</span>
+
+<span class="w">  </span><span class="c"># Create some random initial data</span>
+<span class="w">  </span><span class="n">A</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rand</span><span class="p">(</span><span class="n">FloatType2</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="p">,</span><span class="w"> </span><span class="n">k</span><span class="p">)</span>
+<span class="w">  </span><span class="n">B</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rand</span><span class="p">(</span><span class="n">FloatType2</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="n">k</span><span class="p">)</span>
+<span class="w">  </span><span class="n">C</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rand</span><span class="p">(</span><span class="n">FloatType2</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
+
+<span class="w">  </span><span class="c"># Make a copy of C for resetting data later</span>
+<span class="w">  </span><span class="n">C_old</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">copy</span><span class="p">(</span><span class="n">C</span><span class="p">)</span>
+
+<span class="w">  </span><span class="c"># &quot;truth&quot;</span>
+<span class="w">  </span><span class="n">C_ref</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">B</span><span class="o">&#39;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">C</span>
+
+<span class="w">  </span><span class="c"># Compute the reference timings</span>
+<span class="w">  </span><span class="n">best_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">typemax</span><span class="p">(</span><span class="n">FloatType2</span><span class="p">)</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="n">iter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="o">:</span><span class="n">num_reps</span>
+<span class="w">    </span><span class="c"># Reset C to the original data</span>
+<span class="w">    </span><span class="n">C</span><span class="w"> </span><span class="o">.=</span><span class="w"> </span><span class="n">C_old</span><span class="p">;</span>
+<span class="w">    </span><span class="n">run_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nd">@elapsed</span><span class="w"> </span><span class="n">refgemm!</span><span class="p">(</span><span class="n">C</span><span class="p">,</span><span class="w"> </span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="n">B</span><span class="p">);</span>
+<span class="w">    </span><span class="n">best_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">min</span><span class="p">(</span><span class="n">run_time</span><span class="p">,</span><span class="w"> </span><span class="n">best_time</span><span class="p">)</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="w">  </span><span class="c"># Make sure that we have the right answer!</span>
+<span class="w">  </span><span class="nd">@assert</span><span class="w"> </span><span class="n">C</span><span class="w"> </span><span class="o">≈</span><span class="w"> </span><span class="n">C_ref</span>
+<span class="w">  </span><span class="n">best_perf</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">gflops</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">best_time</span>
+
+<span class="w">  </span><span class="c"># Print the reference implementation timing</span>
+<span class="w">  </span><span class="nd">@printf</span><span class="p">(</span><span class="s">&quot;  </span><span class="si">%4.2e</span><span class="s"> </span><span class="si">%8.2f</span><span class="s">  |&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">best_time</span><span class="p">,</span><span class="w"> </span><span class="n">best_perf</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+<span class="w">  </span><span class="c"># Compute the timing for mygemm! implementation</span>
+<span class="w">  </span><span class="n">best_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">typemax</span><span class="p">(</span><span class="n">FloatType2</span><span class="p">)</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="n">iter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="o">:</span><span class="n">num_reps</span>
+<span class="w">    </span><span class="c"># Reset C to the original data</span>
+<span class="w">    </span><span class="n">C</span><span class="w"> </span><span class="o">.=</span><span class="w"> </span><span class="n">C_old</span><span class="p">;</span>
+<span class="w">    </span><span class="n">run_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nd">@elapsed</span><span class="w"> </span><span class="n">mygemm!</span><span class="p">(</span><span class="n">C</span><span class="p">,</span><span class="w"> </span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="n">B</span><span class="p">);</span>
+<span class="w">    </span><span class="n">best_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">min</span><span class="p">(</span><span class="n">run_time</span><span class="p">,</span><span class="w"> </span><span class="n">best_time</span><span class="p">)</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="w">  </span><span class="n">best_perf</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">gflops</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">best_time</span>
+
+<span class="w">  </span><span class="c"># Compute the error (difference between our implementation and the reference)</span>
+<span class="w">  </span><span class="n">diff</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">norm</span><span class="p">(</span><span class="n">C</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">C_ref</span><span class="p">,</span><span class="w"> </span><span class="nb">Inf</span><span class="p">)</span>
+
+<span class="w">  </span><span class="c"># Print mygemm! implementations</span>
+<span class="w">  </span><span class="nd">@printf</span><span class="p">(</span><span class="s">&quot;  </span><span class="si">%4.2e</span><span class="s"> </span><span class="si">%8.2f</span><span class="s">   </span><span class="si">%.2e</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">best_time</span><span class="p">,</span><span class="w"> </span><span class="n">best_perf</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="w"> </span><span class="n">diff</span><span class="p">)</span>
+
+<span class="w">  </span><span class="nd">@printf</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="k">end</span>
+
+<span class="n">plot!</span><span class="p">(</span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="n">best_perf</span><span class="p">,</span><span class="w"> </span><span class="n">xlabel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;m = n = k&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">ylabel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;GFLOPs/S&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">label</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;</span><span class="si">$mygemm!</span><span class="s"> </span><span class="si">$FloatType2</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">title</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Float32 Vs Float64&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>size |      reference      |           mygemm_pji!
+     |   seconds   GFLOPS  |   seconds   GFLOPS     diff
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  48 |  5.02e-06    44.05  |
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  1.78e-05    12.41   4.77e-06
+  96 |  2.68e-05    66.06  |  8.58e-05    20.63   1.72e-05
+ 144 |  7.73e-05    77.23  |  2.64e-04    22.63   2.67e-05
+ 192 |  1.74e-04    81.51  |  5.62e-04    25.21   3.81e-05
+ 240 |  3.23e-04    85.53  |  1.26e-03    21.98   5.34e-05
+ 288 |  5.42e-04    88.07  |  2.31e-03    20.72   8.39e-05
+ 336 |  8.55e-04    88.70  |  4.35e-03    17.43   1.14e-04
+ 384 |  1.22e-03    92.62  |  6.16e-03    18.39   1.45e-04
+ 432 |  1.72e-03    93.88  |
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  8.77e-03    18.39   1.68e-04
+ 480 |  2.33e-03    94.93  |  1.19e-02    18.55   1.83e-04
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>size |      reference      |           mygemm_pji!
+     |   seconds   GFLOPS  |   seconds   GFLOPS     diff
+  48 |  7.92e-06    27.93  |
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  2.08e-05    10.65   5.33e-15
+  96 |  4.78e-05    37.05  |  1.35e-04    13.13   1.42e-14
+ 144 |  1.45e-04    41.22  |  4.25e-04    14.06   2.84e-14
+ 192 |  3.79e-04    37.30  |
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  1.34e-03    10.59   2.84e-14
+ 240 |  6.84e-04    40.44  |  3.11e-03     8.89   4.26e-14
+ 288 |  1.06e-03    44.90  |  5.26e-03     9.08   1.85e-13
+ 336 |  1.61e-03    47.02  |  8.16e-03     9.30   2.13e-13
+ 384 |  2.39e-03    47.40  |
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  1.22e-02     9.27   2.56e-13
+ 432 |  3.34e-03    48.25  |  1.73e-02     9.31   3.41e-13
+ 480 |  4.56e-03    48.48  |
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  2.38e-02     9.30   3.41e-13
+</pre></div>
+</div>
+<div class="output text_html"><?xml version="1.0" encoding="utf-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="600" height="400" viewBox="0 0 2400 1600">
+<defs>
+  <clipPath id="clip650">
+    <rect x="0" y="0" width="2400" height="1600"/>
+  </clipPath>
+</defs>
+<path clip-path="url(#clip650)" d="M0 1600 L2400 1600 L2400 0 L0 0  Z" fill="#ffffff" fill-rule="evenodd" fill-opacity="1"/>
+<defs>
+  <clipPath id="clip651">
+    <rect x="480" y="0" width="1681" height="1600"/>
+  </clipPath>
+</defs>
+<path clip-path="url(#clip650)" d="M203.964 1423.18 L2352.76 1423.18 L2352.76 123.472 L203.964 123.472  Z" fill="#ffffff" fill-rule="evenodd" fill-opacity="1"/>
+<defs>
+  <clipPath id="clip652">
+    <rect x="203" y="123" width="2150" height="1301"/>
+  </clipPath>
+</defs>
+<polyline clip-path="url(#clip652)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:2; stroke-opacity:0.1; fill:none" points="508.789,1423.18 508.789,123.472 "/>
+<polyline clip-path="url(#clip652)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:2; stroke-opacity:0.1; fill:none" points="978.039,1423.18 978.039,123.472 "/>
+<polyline clip-path="url(#clip652)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:2; stroke-opacity:0.1; fill:none" points="1447.29,1423.18 1447.29,123.472 "/>
+<polyline clip-path="url(#clip652)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:2; stroke-opacity:0.1; fill:none" points="1916.54,1423.18 1916.54,123.472 "/>
+<polyline clip-path="url(#clip652)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:2; stroke-opacity:0.1; fill:none" points="203.964,1302.85 2352.76,1302.85 "/>
+<polyline clip-path="url(#clip652)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:2; stroke-opacity:0.1; fill:none" points="203.964,927.19 2352.76,927.19 "/>
+<polyline clip-path="url(#clip652)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:2; stroke-opacity:0.1; fill:none" points="203.964,551.53 2352.76,551.53 "/>
+<polyline clip-path="url(#clip652)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:2; stroke-opacity:0.1; fill:none" points="203.964,175.87 2352.76,175.87 "/>
+<polyline clip-path="url(#clip650)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:4; stroke-opacity:1; fill:none" points="203.964,1423.18 2352.76,1423.18 "/>
+<polyline clip-path="url(#clip650)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:4; stroke-opacity:1; fill:none" points="508.789,1423.18 508.789,1404.28 "/>
+<polyline clip-path="url(#clip650)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:4; stroke-opacity:1; fill:none" points="978.039,1423.18 978.039,1404.28 "/>
+<polyline clip-path="url(#clip650)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:4; stroke-opacity:1; fill:none" points="1447.29,1423.18 1447.29,1404.28 "/>
+<polyline clip-path="url(#clip650)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:4; stroke-opacity:1; fill:none" points="1916.54,1423.18 1916.54,1404.28 "/>
+<path clip-path="url(#clip650)" d="M468.395 1481.64 L476.034 1481.64 L476.034 1455.28 L467.724 1456.95 L467.724 1452.69 L475.988 1451.02 L480.664 1451.02 L480.664 1481.64 L488.303 1481.64 L488.303 1485.58 L468.395 1485.58 L468.395 1481.64 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1" /><path clip-path="url(#clip650)" d="M507.747 1454.1 Q504.136 1454.1 502.307 1457.66 Q500.502 1461.2 500.502 1468.33 Q500.502 1475.44 502.307 1479.01 Q504.136 1482.55 507.747 1482.55 Q511.381 1482.55 513.187 1479.01 Q515.016 1475.44 515.016 1468.33 Q515.016 1461.2 513.187 1457.66 Q511.381 1454.1 507.747 1454.1 M507.747 1450.39 Q513.557 1450.39 516.613 1455 Q519.691 1459.58 519.691 1468.33 Q519.691 1477.06 516.613 1481.67 Q513.557 1486.25 507.747 1486.25 Q501.937 1486.25 498.858 1481.67 Q495.803 1477.06 495.803 1468.33 Q495.803 1459.58 498.858 1455 Q501.937 1450.39 507.747 1450.39 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1" /><path clip-path="url(#clip650)" d="M537.909 1454.1 Q534.298 1454.1 532.469 1457.66 Q530.664 1461.2 530.664 1468.33 Q530.664 1475.44 532.469 1479.01 Q534.298 1482.55 537.909 1482.55 Q541.543 1482.55 543.349 1479.01 Q545.177 1475.44 545.177 1468.33 Q545.177 1461.2 543.349 1457.66 Q541.543 1454.1 537.909 1454.1 M537.909 1450.39 Q543.719 1450.39 546.775 1455 Q549.853 1459.58 549.853 1468.33 Q549.853 1477.06 546.775 1481.67 Q543.719 1486.25 537.909 1486.25 Q532.099 1486.25 529.02 1481.67 Q525.965 1477.06 525.965 1468.33 Q525.965 1459.58 529.02 1455 Q532.099 1450.39 537.909 1450.39 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1" /><path clip-path="url(#clip650)" d="M941.732 1481.64 L958.051 1481.64 L958.051 1485.58 L936.107 1485.58 L936.107 1481.64 Q938.769 1478.89 943.352 1474.26 Q947.959 1469.61 949.139 1468.27 Q951.384 1465.74 952.264 1464.01 Q953.167 1462.25 953.167 1460.56 Q953.167 1457.8 951.222 1456.07 Q949.301 1454.33 946.199 1454.33 Q944 1454.33 941.546 1455.09 Q939.116 1455.86 936.338 1457.41 L936.338 1452.69 Q939.162 1451.55 941.616 1450.97 Q944.07 1450.39 946.107 1450.39 Q951.477 1450.39 954.671 1453.08 Q957.866 1455.77 957.866 1460.26 Q957.866 1462.39 957.056 1464.31 Q956.269 1466.2 954.162 1468.8 Q953.583 1469.47 950.482 1472.69 Q947.38 1475.88 941.732 1481.64 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1" /><path clip-path="url(#clip650)" d="M977.866 1454.1 Q974.255 1454.1 972.426 1457.66 Q970.62 1461.2 970.62 1468.33 Q970.62 1475.44 972.426 1479.01 Q974.255 1482.55 977.866 1482.55 Q981.5 1482.55 983.306 1479.01 Q985.134 1475.44 985.134 1468.33 Q985.134 1461.2 983.306 1457.66 Q981.5 1454.1 977.866 1454.1 M977.866 1450.39 Q983.676 1450.39 986.731 1455 Q989.81 1459.58 989.81 1468.33 Q989.81 1477.06 986.731 1481.67 Q983.676 1486.25 977.866 1486.25 Q972.056 1486.25 968.977 1481.67 Q965.921 1477.06 965.921 1468.33 Q965.921 1459.58 968.977 1455 Q972.056 1450.39 977.866 1450.39 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1" /><path clip-path="url(#clip650)" d="M1008.03 1454.1 Q1004.42 1454.1 1002.59 1457.66 Q1000.78 1461.2 1000.78 1468.33 Q1000.78 1475.44 1002.59 1479.01 Q1004.42 1482.55 1008.03 1482.55 Q1011.66 1482.55 1013.47 1479.01 Q1015.3 1475.44 1015.3 1468.33 Q1015.3 1461.2 1013.47 1457.66 Q1011.66 1454.1 1008.03 1454.1 M1008.03 1450.39 Q1013.84 1450.39 1016.89 1455 Q1019.97 1459.58 1019.97 1468.33 Q1019.97 1477.06 1016.89 1481.67 Q1013.84 1486.25 1008.03 1486.25 Q1002.22 1486.25 999.139 1481.67 Q996.083 1477.06 996.083 1468.33 Q996.083 1459.58 999.139 1455 Q1002.22 1450.39 1008.03 1450.39 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1" /><path clip-path="url(#clip650)" d="M1421.05 1466.95 Q1424.41 1467.66 1426.28 1469.93 Q1428.18 1472.2 1428.18 1475.53 Q1428.18 1480.65 1424.66 1483.45 Q1421.14 1486.25 1414.66 1486.25 Q1412.49 1486.25 1410.17 1485.81 Q1407.88 1485.39 1405.43 1484.54 L1405.43 1480.02 Q1407.37 1481.16 1409.69 1481.74 Q1412 1482.32 1414.52 1482.32 Q1418.92 1482.32 1421.21 1480.58 Q1423.53 1478.84 1423.53 1475.53 Q1423.53 1472.48 1421.38 1470.77 Q1419.25 1469.03 1415.43 1469.03 L1411.4 1469.03 L1411.4 1465.19 L1415.61 1465.19 Q1419.06 1465.19 1420.89 1463.82 Q1422.72 1462.43 1422.72 1459.84 Q1422.72 1457.18 1420.82 1455.77 Q1418.95 1454.33 1415.43 1454.33 Q1413.51 1454.33 1411.31 1454.75 Q1409.11 1455.16 1406.47 1456.04 L1406.47 1451.88 Q1409.13 1451.14 1411.45 1450.77 Q1413.78 1450.39 1415.84 1450.39 Q1421.17 1450.39 1424.27 1452.83 Q1427.37 1455.23 1427.37 1459.35 Q1427.37 1462.22 1425.73 1464.21 Q1424.08 1466.18 1421.05 1466.95 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1" /><path clip-path="url(#clip650)" d="M1447.05 1454.1 Q1443.44 1454.1 1441.61 1457.66 Q1439.8 1461.2 1439.8 1468.33 Q1439.8 1475.44 1441.61 1479.01 Q1443.44 1482.55 1447.05 1482.55 Q1450.68 1482.55 1452.49 1479.01 Q1454.32 1475.44 1454.32 1468.33 Q1454.32 1461.2 1452.49 1457.66 Q1450.68 1454.1 1447.05 1454.1 M1447.05 1450.39 Q1452.86 1450.39 1455.91 1455 Q1458.99 1459.58 1458.99 1468.33 Q1458.99 1477.06 1455.91 1481.67 Q1452.86 1486.25 1447.05 1486.25 Q1441.24 1486.25 1438.16 1481.67 Q1435.1 1477.06 1435.1 1468.33 Q1435.1 1459.58 1438.16 1455 Q1441.24 1450.39 1447.05 1450.39 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1" /><path clip-path="url(#clip650)" d="M1477.21 1454.1 Q1473.6 1454.1 1471.77 1457.66 Q1469.96 1461.2 1469.96 1468.33 Q1469.96 1475.44 1471.77 1479.01 Q1473.6 1482.55 1477.21 1482.55 Q1480.84 1482.55 1482.65 1479.01 Q1484.48 1475.44 1484.48 1468.33 Q1484.48 1461.2 1482.65 1457.66 Q1480.84 1454.1 1477.21 1454.1 M1477.21 1450.39 Q1483.02 1450.39 1486.07 1455 Q1489.15 1459.58 1489.15 1468.33 Q1489.15 1477.06 1486.07 1481.67 Q1483.02 1486.25 1477.21 1486.25 Q1471.4 1486.25 1468.32 1481.67 Q1465.26 1477.06 1465.26 1468.33 Q1465.26 1459.58 1468.32 1455 Q1471.4 1450.39 1477.21 1450.39 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1" /><path clip-path="url(#clip650)" d="M1889.63 1455.09 L1877.83 1473.54 L1889.63 1473.54 L1889.63 1455.09 M1888.4 1451.02 L1894.28 1451.02 L1894.28 1473.54 L1899.21 1473.54 L1899.21 1477.43 L1894.28 1477.43 L1894.28 1485.58 L1889.63 1485.58 L1889.63 1477.43 L1874.03 1477.43 L1874.03 1472.92 L1888.4 1451.02 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1" /><path clip-path="url(#clip650)" d="M1916.95 1454.1 Q1913.33 1454.1 1911.51 1457.66 Q1909.7 1461.2 1909.7 1468.33 Q1909.7 1475.44 1911.51 1479.01 Q1913.33 1482.55 1916.95 1482.55 Q1920.58 1482.55 1922.39 1479.01 Q1924.21 1475.44 1924.21 1468.33 Q1924.21 1461.2 1922.39 1457.66 Q1920.58 1454.1 1916.95 1454.1 M1916.95 1450.39 Q1922.76 1450.39 1925.81 1455 Q1928.89 1459.58 1928.89 1468.33 Q1928.89 1477.06 1925.81 1481.67 Q1922.76 1486.25 1916.95 1486.25 Q1911.14 1486.25 1908.06 1481.67 Q1905 1477.06 1905 1468.33 Q1905 1459.58 1908.06 1455 Q1911.14 1450.39 1916.95 1450.39 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1" /><path clip-path="url(#clip650)" d="M1947.11 1454.1 Q1943.5 1454.1 1941.67 1457.66 Q1939.86 1461.2 1939.86 1468.33 Q1939.86 1475.44 1941.67 1479.01 Q1943.5 1482.55 1947.11 1482.55 Q1950.74 1482.55 1952.55 1479.01 Q1954.38 1475.44 1954.38 1468.33 Q1954.38 1461.2 1952.55 1457.66 Q1950.74 1454.1 1947.11 1454.1 M1947.11 1450.39 Q1952.92 1450.39 1955.97 1455 Q1959.05 1459.58 1959.05 1468.33 Q1959.05 1477.06 1955.97 1481.67 Q1952.92 1486.25 1947.11 1486.25 Q1941.3 1486.25 1938.22 1481.67 Q1935.16 1477.06 1935.16 1468.33 Q1935.16 1459.58 1938.22 1455 Q1941.3 1450.39 1947.11 1450.39 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1" /><path clip-path="url(#clip650)" d="M1142.05 1539.24 Q1144.25 1535.29 1147.31 1533.41 Q1150.36 1531.54 1154.5 1531.54 Q1160.07 1531.54 1163.09 1535.45 Q1166.12 1539.33 1166.12 1546.53 L1166.12 1568.04 L1160.23 1568.04 L1160.23 1546.72 Q1160.23 1541.59 1158.41 1539.11 Q1156.6 1536.63 1152.88 1536.63 Q1148.32 1536.63 1145.68 1539.65 Q1143.04 1542.68 1143.04 1547.9 L1143.04 1568.04 L1137.15 1568.04 L1137.15 1546.72 Q1137.15 1541.56 1135.34 1539.11 Q1133.52 1536.63 1129.74 1536.63 Q1125.25 1536.63 1122.61 1539.68 Q1119.97 1542.71 1119.97 1547.9 L1119.97 1568.04 L1114.08 1568.04 L1114.08 1532.4 L1119.97 1532.4 L1119.97 1537.93 Q1121.97 1534.66 1124.77 1533.1 Q1127.57 1531.54 1131.42 1531.54 Q1135.31 1531.54 1138.01 1533.51 Q1140.75 1535.48 1142.05 1539.24 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1" /><path clip-path="url(#clip650)" d="M1199.28 1538.44 L1240.09 1538.44 L1240.09 1543.79 L1199.28 1543.79 L1199.28 1538.44 M1199.28 1551.43 L1240.09 1551.43 L1240.09 1556.84 L1199.28 1556.84 L1199.28 1551.43 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1" /><path clip-path="url(#clip650)" d="M1303.49 1546.53 L1303.49 1568.04 L1297.63 1568.04 L1297.63 1546.72 Q1297.63 1541.66 1295.66 1539.14 Q1293.69 1536.63 1289.74 1536.63 Q1285 1536.63 1282.26 1539.65 Q1279.52 1542.68 1279.52 1547.9 L1279.52 1568.04 L1273.63 1568.04 L1273.63 1532.4 L1279.52 1532.4 L1279.52 1537.93 Q1281.62 1534.72 1284.45 1533.13 Q1287.32 1531.54 1291.04 1531.54 Q1297.19 1531.54 1300.34 1535.36 Q1303.49 1539.14 1303.49 1546.53 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1" /><path clip-path="url(#clip650)" d="M1336.65 1538.44 L1377.46 1538.44 L1377.46 1543.79 L1336.65 1543.79 L1336.65 1538.44 M1336.65 1551.43 L1377.46 1551.43 L1377.46 1556.84 L1336.65 1556.84 L1336.65 1551.43 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1" /><path clip-path="url(#clip650)" d="M1411.01 1518.52 L1416.89 1518.52 L1416.89 1547.77 L1434.37 1532.4 L1441.85 1532.4 L1422.94 1549.07 L1442.64 1568.04 L1435 1568.04 L1416.89 1550.63 L1416.89 1568.04 L1411.01 1568.04 L1411.01 1518.52 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1" /><polyline clip-path="url(#clip650)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:4; stroke-opacity:1; fill:none" points="203.964,1423.18 203.964,123.472 "/>
+<polyline clip-path="url(#clip650)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:4; stroke-opacity:1; fill:none" points="203.964,1302.85 222.861,1302.85 "/>
+<polyline clip-path="url(#clip650)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:4; stroke-opacity:1; fill:none" points="203.964,927.19 222.861,927.19 "/>
+<polyline clip-path="url(#clip650)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:4; stroke-opacity:1; fill:none" points="203.964,551.53 222.861,551.53 "/>
+<polyline clip-path="url(#clip650)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:4; stroke-opacity:1; fill:none" points="203.964,175.87 222.861,175.87 "/>
+<path clip-path="url(#clip650)" d="M116.668 1316.19 L124.306 1316.19 L124.306 1289.83 L115.996 1291.5 L115.996 1287.24 L124.26 1285.57 L128.936 1285.57 L128.936 1316.19 L136.575 1316.19 L136.575 1320.13 L116.668 1320.13 L116.668 1316.19 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1" /><path clip-path="url(#clip650)" d="M156.019 1288.65 Q152.408 1288.65 150.579 1292.21 Q148.774 1295.75 148.774 1302.88 Q148.774 1309.99 150.579 1313.56 Q152.408 1317.1 156.019 1317.1 Q159.653 1317.1 161.459 1313.56 Q163.288 1309.99 163.288 1302.88 Q163.288 1295.75 161.459 1292.21 Q159.653 1288.65 156.019 1288.65 M156.019 1284.94 Q161.829 1284.94 164.885 1289.55 Q167.964 1294.13 167.964 1302.88 Q167.964 1311.61 164.885 1316.22 Q161.829 1320.8 156.019 1320.8 Q150.209 1320.8 147.13 1316.22 Q144.075 1311.61 144.075 1302.88 Q144.075 1294.13 147.13 1289.55 Q150.209 1284.94 156.019 1284.94 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1" /><path clip-path="url(#clip650)" d="M117.663 940.534 L125.302 940.534 L125.302 914.169 L116.992 915.835 L116.992 911.576 L125.255 909.91 L129.931 909.91 L129.931 940.534 L137.57 940.534 L137.57 944.47 L117.663 944.47 L117.663 940.534 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1" /><path clip-path="url(#clip650)" d="M147.061 909.91 L165.417 909.91 L165.417 913.845 L151.343 913.845 L151.343 922.317 Q152.362 921.97 153.38 921.808 Q154.399 921.622 155.417 921.622 Q161.204 921.622 164.584 924.794 Q167.964 927.965 167.964 933.382 Q167.964 938.96 164.491 942.062 Q161.019 945.141 154.7 945.141 Q152.524 945.141 150.255 944.77 Q148.01 944.4 145.603 943.659 L145.603 938.96 Q147.686 940.095 149.908 940.65 Q152.13 941.206 154.607 941.206 Q158.612 941.206 160.95 939.099 Q163.288 936.993 163.288 933.382 Q163.288 929.771 160.95 927.664 Q158.612 925.558 154.607 925.558 Q152.732 925.558 150.857 925.974 Q149.005 926.391 147.061 927.271 L147.061 909.91 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1" /><path clip-path="url(#clip650)" d="M119.885 564.875 L136.204 564.875 L136.204 568.81 L114.26 568.81 L114.26 564.875 Q116.922 562.12 121.505 557.49 Q126.112 552.838 127.292 551.495 Q129.538 548.972 130.417 547.236 Q131.32 545.476 131.32 543.787 Q131.32 541.032 129.376 539.296 Q127.455 537.56 124.353 537.56 Q122.154 537.56 119.7 538.324 Q117.269 539.088 114.492 540.639 L114.492 535.916 Q117.316 534.782 119.769 534.203 Q122.223 533.625 124.26 533.625 Q129.63 533.625 132.825 536.31 Q136.019 538.995 136.019 543.486 Q136.019 545.615 135.209 547.537 Q134.422 549.435 132.316 552.027 Q131.737 552.699 128.635 555.916 Q125.533 559.111 119.885 564.875 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1" /><path clip-path="url(#clip650)" d="M156.019 537.328 Q152.408 537.328 150.579 540.893 Q148.774 544.435 148.774 551.564 Q148.774 558.671 150.579 562.236 Q152.408 565.777 156.019 565.777 Q159.653 565.777 161.459 562.236 Q163.288 558.671 163.288 551.564 Q163.288 544.435 161.459 540.893 Q159.653 537.328 156.019 537.328 M156.019 533.625 Q161.829 533.625 164.885 538.231 Q167.964 542.814 167.964 551.564 Q167.964 560.291 164.885 564.898 Q161.829 569.481 156.019 569.481 Q150.209 569.481 147.13 564.898 Q144.075 560.291 144.075 551.564 Q144.075 542.814 147.13 538.231 Q150.209 533.625 156.019 533.625 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1" /><path clip-path="url(#clip650)" d="M120.88 189.215 L137.2 189.215 L137.2 193.15 L115.256 193.15 L115.256 189.215 Q117.918 186.46 122.501 181.83 Q127.107 177.178 128.288 175.835 Q130.533 173.312 131.413 171.576 Q132.316 169.817 132.316 168.127 Q132.316 165.372 130.371 163.636 Q128.45 161.9 125.348 161.9 Q123.149 161.9 120.695 162.664 Q118.265 163.428 115.487 164.979 L115.487 160.256 Q118.311 159.122 120.765 158.544 Q123.218 157.965 125.255 157.965 Q130.626 157.965 133.82 160.65 Q137.015 163.335 137.015 167.826 Q137.015 169.956 136.204 171.877 Q135.417 173.775 133.311 176.368 Q132.732 177.039 129.63 180.256 Q126.529 183.451 120.88 189.215 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1" /><path clip-path="url(#clip650)" d="M147.061 158.59 L165.417 158.59 L165.417 162.525 L151.343 162.525 L151.343 170.997 Q152.362 170.65 153.38 170.488 Q154.399 170.303 155.417 170.303 Q161.204 170.303 164.584 173.474 Q167.964 176.645 167.964 182.062 Q167.964 187.641 164.491 190.742 Q161.019 193.821 154.7 193.821 Q152.524 193.821 150.255 193.451 Q148.01 193.08 145.603 192.34 L145.603 187.641 Q147.686 188.775 149.908 189.33 Q152.13 189.886 154.607 189.886 Q158.612 189.886 160.95 187.779 Q163.288 185.673 163.288 182.062 Q163.288 178.451 160.95 176.344 Q158.612 174.238 154.607 174.238 Q152.732 174.238 150.857 174.655 Q149.005 175.071 147.061 175.951 L147.061 158.59 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1" /><path clip-path="url(#clip650)" d="M57.2247 888.927 L44.4614 888.927 L44.4614 899.431 L39.1779 899.431 L39.1779 882.562 L59.58 882.562 Q62.2218 886.285 63.5904 890.773 Q64.9272 895.261 64.9272 900.354 Q64.9272 911.494 58.4342 917.796 Q51.9093 924.066 40.2919 924.066 Q28.6427 924.066 22.1496 917.796 Q15.6248 911.494 15.6248 900.354 Q15.6248 895.707 16.7706 891.537 Q17.9164 887.336 20.1444 883.803 L26.9876 883.803 Q23.9639 887.368 22.4361 891.378 Q20.9083 895.388 20.9083 899.813 Q20.9083 908.534 25.7781 912.926 Q30.6479 917.286 40.2919 917.286 Q49.9041 917.286 54.7739 912.926 Q59.6436 908.534 59.6436 899.813 Q59.6436 896.407 59.0707 893.733 Q58.466 891.06 57.2247 888.927 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1" /><path clip-path="url(#clip650)" d="M16.4842 870.817 L16.4842 843.508 L21.895 843.508 L21.895 864.387 L35.8996 864.387 L35.8996 845.545 L41.3104 845.545 L41.3104 864.387 L64.0042 864.387 L64.0042 870.817 L16.4842 870.817 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1" /><path clip-path="url(#clip650)" d="M16.4842 833.323 L16.4842 826.893 L58.5933 826.893 L58.5933 803.754 L64.0042 803.754 L64.0042 833.323 L16.4842 833.323 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1" /><path clip-path="url(#clip650)" d="M20.8447 780.042 Q20.8447 787.044 26.0645 791.182 Q31.2844 795.288 40.2919 795.288 Q49.2675 795.288 54.4874 791.182 Q59.7073 787.044 59.7073 780.042 Q59.7073 773.04 54.4874 768.965 Q49.2675 764.86 40.2919 764.86 Q31.2844 764.86 26.0645 768.965 Q20.8447 773.04 20.8447 780.042 M15.6248 780.042 Q15.6248 770.048 22.3406 764.064 Q29.0246 758.08 40.2919 758.08 Q51.5274 758.08 58.2432 764.064 Q64.9272 770.048 64.9272 780.042 Q64.9272 790.068 58.2432 796.083 Q51.5592 802.067 40.2919 802.067 Q29.0246 802.067 22.3406 796.083 Q15.6248 790.068 15.6248 780.042 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1" /><path clip-path="url(#clip650)" d="M21.7677 741.593 L39.6235 741.593 L39.6235 733.508 Q39.6235 729.021 37.3 726.57 Q34.9765 724.119 30.6797 724.119 Q26.4147 724.119 24.0912 726.57 Q21.7677 729.021 21.7677 733.508 L21.7677 741.593 M16.4842 748.022 L16.4842 733.508 Q16.4842 725.52 20.1126 721.445 Q23.7092 717.34 30.6797 717.34 Q37.7138 717.34 41.3104 721.445 Q44.907 725.52 44.907 733.508 L44.907 741.593 L64.0042 741.593 L64.0042 748.022 L16.4842 748.022 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1" /><path clip-path="url(#clip650)" d="M29.4065 687.389 L34.9447 687.389 Q33.6716 689.872 33.035 692.545 Q32.3984 695.219 32.3984 698.083 Q32.3984 702.444 33.7352 704.64 Q35.072 706.804 37.7456 706.804 Q39.7826 706.804 40.9603 705.245 Q42.1061 703.685 43.1565 698.975 L43.6021 696.969 Q44.9389 690.731 47.3897 688.121 Q49.8086 685.479 54.1691 685.479 Q59.1344 685.479 62.0308 689.426 Q64.9272 693.341 64.9272 700.216 Q64.9272 703.08 64.3543 706.2 Q63.8132 709.287 62.6992 712.724 L56.6518 712.724 Q58.3387 709.478 59.198 706.327 Q60.0256 703.176 60.0256 700.089 Q60.0256 695.951 58.6251 693.723 Q57.1929 691.495 54.6147 691.495 Q52.2276 691.495 50.9545 693.118 Q49.6813 694.71 48.5037 700.152 L48.0262 702.189 Q46.8804 707.632 44.5251 710.051 Q42.138 712.47 38.0002 712.47 Q32.9713 712.47 30.2341 708.905 Q27.4968 705.34 27.4968 698.784 Q27.4968 695.537 27.9743 692.672 Q28.4517 689.808 29.4065 687.389 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1" /><path clip-path="url(#clip650)" d="M16.4842 665.746 L16.4842 660.335 L70.0516 676.886 L70.0516 682.296 L16.4842 665.746 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1" /><path clip-path="url(#clip650)" d="M18.0438 625.451 L24.314 625.451 Q22.5634 629.111 21.704 632.357 Q20.8447 635.604 20.8447 638.628 Q20.8447 643.879 22.8817 646.744 Q24.9187 649.577 28.6745 649.577 Q31.8255 649.577 33.4488 647.699 Q35.0402 645.789 36.0269 640.506 L36.8226 636.622 Q38.1912 629.429 41.6605 626.024 Q45.098 622.586 50.8908 622.586 Q57.7976 622.586 61.3624 627.233 Q64.9272 631.848 64.9272 640.792 Q64.9272 644.166 64.1633 647.985 Q63.3994 651.773 61.9035 655.847 L55.2831 655.847 Q57.4793 651.932 58.5933 648.176 Q59.7073 644.42 59.7073 640.792 Q59.7073 635.286 57.543 632.294 Q55.3786 629.302 51.3682 629.302 Q47.8671 629.302 45.8937 631.466 Q43.9204 633.599 42.9337 638.5 L42.1698 642.415 Q40.7375 649.608 37.682 652.823 Q34.6264 656.038 29.1837 656.038 Q22.8817 656.038 19.2532 651.614 Q15.6248 647.158 15.6248 639.36 Q15.6248 636.018 16.2295 632.548 Q16.8343 629.079 18.0438 625.451 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1" /><path clip-path="url(#clip650)" d="M897.939 12.096 L932.696 12.096 L932.696 18.9825 L906.122 18.9825 L906.122 36.8065 L930.104 36.8065 L930.104 43.6931 L906.122 43.6931 L906.122 72.576 L897.939 72.576 L897.939 12.096 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1" /><path clip-path="url(#clip650)" d="M945.335 9.54393 L952.789 9.54393 L952.789 72.576 L945.335 72.576 L945.335 9.54393 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1" /><path clip-path="url(#clip650)" d="M985.965 32.4315 Q979.97 32.4315 976.486 37.1306 Q973.003 41.7891 973.003 49.9314 Q973.003 58.0738 976.446 62.7728 Q979.93 67.4314 985.965 67.4314 Q991.92 67.4314 995.404 62.7323 Q998.888 58.0333 998.888 49.9314 Q998.888 41.8701 995.404 37.1711 Q991.92 32.4315 985.965 32.4315 M985.965 26.1121 Q995.688 26.1121 1001.24 32.4315 Q1006.79 38.7509 1006.79 49.9314 Q1006.79 61.0714 1001.24 67.4314 Q995.688 73.7508 985.965 73.7508 Q976.203 73.7508 970.653 67.4314 Q965.144 61.0714 965.144 49.9314 Q965.144 38.7509 970.653 32.4315 Q976.203 26.1121 985.965 26.1121 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1" /><path clip-path="url(#clip650)" d="M1039.76 49.7694 Q1030.73 49.7694 1027.24 51.8354 Q1023.76 53.9013 1023.76 58.8839 Q1023.76 62.8538 1026.35 65.2034 Q1028.99 67.5124 1033.48 67.5124 Q1039.68 67.5124 1043.41 63.1374 Q1047.17 58.7219 1047.17 51.4303 L1047.17 49.7694 L1039.76 49.7694 M1054.63 46.6907 L1054.63 72.576 L1047.17 72.576 L1047.17 65.6895 Q1044.62 69.8214 1040.81 71.8063 Q1037.01 73.7508 1031.5 73.7508 Q1024.53 73.7508 1020.4 69.8619 Q1016.31 65.9325 1016.31 59.3701 Q1016.31 51.7138 1021.41 47.825 Q1026.56 43.9361 1036.72 43.9361 L1047.17 43.9361 L1047.17 43.2069 Q1047.17 38.0623 1043.77 35.2672 Q1040.41 32.4315 1034.29 32.4315 Q1030.4 32.4315 1026.72 33.3632 Q1023.03 34.295 1019.63 36.1584 L1019.63 29.2718 Q1023.72 27.692 1027.57 26.9223 Q1031.42 26.1121 1035.06 26.1121 Q1044.91 26.1121 1049.77 31.2163 Q1054.63 36.3204 1054.63 46.6907 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1" /><path clip-path="url(#clip650)" d="M1077.35 14.324 L1077.35 27.2059 L1092.71 27.2059 L1092.71 32.9987 L1077.35 32.9987 L1077.35 57.6282 Q1077.35 63.1779 1078.85 64.7578 Q1080.39 66.3376 1085.05 66.3376 L1092.71 66.3376 L1092.71 72.576 L1085.05 72.576 Q1076.42 72.576 1073.14 69.3758 Q1069.86 66.1351 1069.86 57.6282 L1069.86 32.9987 L1064.39 32.9987 L1064.39 27.2059 L1069.86 27.2059 L1069.86 14.324 L1077.35 14.324 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1" /><path clip-path="url(#clip650)" d="M1128.35 39.9662 Q1134.23 41.222 1137.51 45.1919 Q1140.83 49.1618 1140.83 54.9951 Q1140.83 63.9476 1134.67 68.8492 Q1128.52 73.7508 1117.17 73.7508 Q1113.37 73.7508 1109.32 72.9811 Q1105.31 72.2519 1101.01 70.7531 L1101.01 62.8538 Q1104.41 64.8388 1108.46 65.8515 Q1112.52 66.8642 1116.93 66.8642 Q1124.63 66.8642 1128.64 63.826 Q1132.69 60.7879 1132.69 54.9951 Q1132.69 49.6479 1128.92 46.6502 Q1125.2 43.612 1118.51 43.612 L1111.46 43.612 L1111.46 36.8875 L1118.84 36.8875 Q1124.87 36.8875 1128.07 34.4975 Q1131.27 32.067 1131.27 27.5299 Q1131.27 22.8714 1127.95 20.4004 Q1124.67 17.8888 1118.51 17.8888 Q1115.15 17.8888 1111.3 18.618 Q1107.45 19.3471 1102.83 20.8865 L1102.83 13.5948 Q1107.49 12.2985 1111.54 11.6504 Q1115.63 11.0023 1119.24 11.0023 Q1128.56 11.0023 1133.99 15.2557 Q1139.41 19.4686 1139.41 26.6793 Q1139.41 31.7024 1136.54 35.1862 Q1133.66 38.6294 1128.35 39.9662 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1" /><path clip-path="url(#clip650)" d="M1163.4 65.6895 L1191.95 65.6895 L1191.95 72.576 L1153.55 72.576 L1153.55 65.6895 Q1158.21 60.8689 1166.23 52.7671 Q1174.29 44.6248 1176.36 42.2752 Q1180.29 37.8598 1181.83 34.8216 Q1183.41 31.7429 1183.41 28.7857 Q1183.41 23.9651 1180 20.927 Q1176.64 17.8888 1171.21 17.8888 Q1167.36 17.8888 1163.07 19.2256 Q1158.82 20.5624 1153.96 23.2765 L1153.96 15.0127 Q1158.9 13.0277 1163.19 12.015 Q1167.49 11.0023 1171.05 11.0023 Q1180.45 11.0023 1186.04 15.7013 Q1191.63 20.4004 1191.63 28.2591 Q1191.63 31.9859 1190.21 35.3482 Q1188.83 38.6699 1185.15 43.2069 Q1184.14 44.3817 1178.71 50.0125 Q1173.28 55.6027 1163.4 65.6895 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1" /><path clip-path="url(#clip650)" d="M1250.37 72.576 L1227.28 12.096 L1235.83 12.096 L1254.99 63.0159 L1274.19 12.096 L1282.69 12.096 L1259.64 72.576 L1250.37 72.576 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1" /><path clip-path="url(#clip650)" d="M1320.12 28.5427 L1320.12 35.5912 Q1316.96 33.9709 1313.56 33.1607 Q1310.16 32.3505 1306.51 32.3505 Q1300.96 32.3505 1298.17 34.0519 Q1295.41 35.7533 1295.41 39.156 Q1295.41 41.7486 1297.4 43.2475 Q1299.38 44.7058 1305.38 46.0426 L1307.93 46.6097 Q1315.87 48.3111 1319.19 51.4303 Q1322.56 54.509 1322.56 60.0587 Q1322.56 66.3781 1317.53 70.0644 Q1312.55 73.7508 1303.8 73.7508 Q1300.15 73.7508 1296.18 73.0216 Q1292.25 72.3329 1287.88 70.9151 L1287.88 63.2184 Q1292.01 65.3654 1296.02 66.4591 Q1300.03 67.5124 1303.96 67.5124 Q1309.23 67.5124 1312.06 65.73 Q1314.9 63.9071 1314.9 60.6258 Q1314.9 57.5877 1312.83 55.9673 Q1310.81 54.3469 1303.88 52.8481 L1301.29 52.2405 Q1294.36 50.7821 1291.28 47.7845 Q1288.2 44.7463 1288.2 39.4801 Q1288.2 33.0797 1292.74 29.5959 Q1297.28 26.1121 1305.62 26.1121 Q1309.75 26.1121 1313.4 26.7198 Q1317.05 27.3274 1320.12 28.5427 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1" /><path clip-path="url(#clip650)" d="M1361.12 12.096 L1395.88 12.096 L1395.88 18.9825 L1369.3 18.9825 L1369.3 36.8065 L1393.28 36.8065 L1393.28 43.6931 L1369.3 43.6931 L1369.3 72.576 L1361.12 72.576 L1361.12 12.096 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1" /><path clip-path="url(#clip650)" d="M1408.52 9.54393 L1415.97 9.54393 L1415.97 72.576 L1408.52 72.576 L1408.52 9.54393 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1" /><path clip-path="url(#clip650)" d="M1449.15 32.4315 Q1443.15 32.4315 1439.67 37.1306 Q1436.18 41.7891 1436.18 49.9314 Q1436.18 58.0738 1439.63 62.7728 Q1443.11 67.4314 1449.15 67.4314 Q1455.1 67.4314 1458.58 62.7323 Q1462.07 58.0333 1462.07 49.9314 Q1462.07 41.8701 1458.58 37.1711 Q1455.1 32.4315 1449.15 32.4315 M1449.15 26.1121 Q1458.87 26.1121 1464.42 32.4315 Q1469.97 38.7509 1469.97 49.9314 Q1469.97 61.0714 1464.42 67.4314 Q1458.87 73.7508 1449.15 73.7508 Q1439.38 73.7508 1433.83 67.4314 Q1428.32 61.0714 1428.32 49.9314 Q1428.32 38.7509 1433.83 32.4315 Q1439.38 26.1121 1449.15 26.1121 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1" /><path clip-path="url(#clip650)" d="M1502.94 49.7694 Q1493.91 49.7694 1490.42 51.8354 Q1486.94 53.9013 1486.94 58.8839 Q1486.94 62.8538 1489.53 65.2034 Q1492.17 67.5124 1496.66 67.5124 Q1502.86 67.5124 1506.59 63.1374 Q1510.36 58.7219 1510.36 51.4303 L1510.36 49.7694 L1502.94 49.7694 M1517.81 46.6907 L1517.81 72.576 L1510.36 72.576 L1510.36 65.6895 Q1507.8 69.8214 1504 71.8063 Q1500.19 73.7508 1494.68 73.7508 Q1487.71 73.7508 1483.58 69.8619 Q1479.49 65.9325 1479.49 59.3701 Q1479.49 51.7138 1484.59 47.825 Q1489.74 43.9361 1499.9 43.9361 L1510.36 43.9361 L1510.36 43.2069 Q1510.36 38.0623 1506.95 35.2672 Q1503.59 32.4315 1497.47 32.4315 Q1493.58 32.4315 1489.9 33.3632 Q1486.21 34.295 1482.81 36.1584 L1482.81 29.2718 Q1486.9 27.692 1490.75 26.9223 Q1494.6 26.1121 1498.24 26.1121 Q1508.09 26.1121 1512.95 31.2163 Q1517.81 36.3204 1517.81 46.6907 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1" /><path clip-path="url(#clip650)" d="M1540.53 14.324 L1540.53 27.2059 L1555.89 27.2059 L1555.89 32.9987 L1540.53 32.9987 L1540.53 57.6282 Q1540.53 63.1779 1542.03 64.7578 Q1543.57 66.3376 1548.23 66.3376 L1555.89 66.3376 L1555.89 72.576 L1548.23 72.576 Q1539.6 72.576 1536.32 69.3758 Q1533.04 66.1351 1533.04 57.6282 L1533.04 32.9987 L1527.57 32.9987 L1527.57 27.2059 L1533.04 27.2059 L1533.04 14.324 L1540.53 14.324 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1" /><path clip-path="url(#clip650)" d="M1585.26 39.075 Q1579.75 39.075 1576.51 42.8424 Q1573.31 46.6097 1573.31 53.1722 Q1573.31 59.6941 1576.51 63.502 Q1579.75 67.2693 1585.26 67.2693 Q1590.77 67.2693 1593.97 63.502 Q1597.21 59.6941 1597.21 53.1722 Q1597.21 46.6097 1593.97 42.8424 Q1590.77 39.075 1585.26 39.075 M1601.5 13.4328 L1601.5 20.8865 Q1598.42 19.4281 1595.26 18.6585 Q1592.14 17.8888 1589.06 17.8888 Q1580.96 17.8888 1576.67 23.3575 Q1572.41 28.8262 1571.81 39.8852 Q1574.2 36.3609 1577.8 34.4975 Q1581.41 32.5936 1585.74 32.5936 Q1594.86 32.5936 1600.12 38.1433 Q1605.43 43.6525 1605.43 53.1722 Q1605.43 62.4892 1599.92 68.12 Q1594.41 73.7508 1585.26 73.7508 Q1574.76 73.7508 1569.21 65.73 Q1563.66 57.6687 1563.66 42.3968 Q1563.66 28.0566 1570.47 19.5497 Q1577.28 11.0023 1588.74 11.0023 Q1591.82 11.0023 1594.94 11.6099 Q1598.1 12.2175 1601.5 13.4328 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1" /><path clip-path="url(#clip650)" d="M1642.01 19.2256 L1621.35 51.5113 L1642.01 51.5113 L1642.01 19.2256 M1639.86 12.096 L1650.15 12.096 L1650.15 51.5113 L1658.78 51.5113 L1658.78 58.3168 L1650.15 58.3168 L1650.15 72.576 L1642.01 72.576 L1642.01 58.3168 L1614.71 58.3168 L1614.71 50.4176 L1639.86 12.096 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1" /><polyline clip-path="url(#clip652)" style="stroke:#009af9; stroke-linecap:round; stroke-linejoin:round; stroke-width:16; stroke-opacity:1; fill:none" points="264.778,1121.73 490.019,504.038 715.259,354.145 940.499,160.256 1165.74,402.511 1390.98,497.192 1616.22,744.684 1841.46,672.198 2066.7,672.376 2291.94,660.764 "/>
+<polyline clip-path="url(#clip652)" style="stroke:#e26f46; stroke-linecap:round; stroke-linejoin:round; stroke-width:16; stroke-opacity:1; fill:none" points="264.778,1253.8 490.019,1067.84 715.259,998.14 940.499,1258.73 1165.74,1386.4 1390.98,1371.99 1616.22,1355.77 1841.46,1357.39 2066.7,1354.72 2291.94,1355.61 "/>
+<path clip-path="url(#clip650)" d="M1555.74 322.316 L2281.13 322.316 L2281.13 166.796 L1555.74 166.796  Z" fill="#ffffff" fill-rule="evenodd" fill-opacity="1"/>
+<polyline clip-path="url(#clip650)" style="stroke:#000000; stroke-linecap:round; stroke-linejoin:round; stroke-width:4; stroke-opacity:1; fill:none" points="1555.74,322.316 2281.13,322.316 2281.13,166.796 1555.74,166.796 1555.74,322.316 "/>
+<polyline clip-path="url(#clip650)" style="stroke:#009af9; stroke-linecap:round; stroke-linejoin:round; stroke-width:16; stroke-opacity:1; fill:none" points="1579.62,218.636 1722.87,218.636 "/>
+<path clip-path="url(#clip650)" d="M1767.09 214.967 Q1768.69 212.096 1770.91 210.731 Q1773.14 209.365 1776.15 209.365 Q1780.2 209.365 1782.4 212.212 Q1784.59 215.036 1784.59 220.268 L1784.59 235.916 L1780.31 235.916 L1780.31 220.407 Q1780.31 216.68 1778.99 214.874 Q1777.67 213.069 1774.96 213.069 Q1771.65 213.069 1769.73 215.268 Q1767.81 217.467 1767.81 221.263 L1767.81 235.916 L1763.53 235.916 L1763.53 220.407 Q1763.53 216.657 1762.21 214.874 Q1760.89 213.069 1758.14 213.069 Q1754.87 213.069 1752.95 215.291 Q1751.03 217.49 1751.03 221.263 L1751.03 235.916 L1746.75 235.916 L1746.75 209.99 L1751.03 209.99 L1751.03 214.018 Q1752.49 211.633 1754.53 210.499 Q1756.56 209.365 1759.36 209.365 Q1762.19 209.365 1764.15 210.8 Q1766.15 212.235 1767.09 214.967 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1" /><path clip-path="url(#clip650)" d="M1803.88 238.323 Q1802.07 242.953 1800.36 244.365 Q1798.65 245.777 1795.78 245.777 L1792.37 245.777 L1792.37 242.212 L1794.87 242.212 Q1796.63 242.212 1797.6 241.379 Q1798.58 240.545 1799.76 237.443 L1800.52 235.499 L1790.03 209.99 L1794.55 209.99 L1802.65 230.268 L1810.75 209.99 L1815.27 209.99 L1803.88 238.323 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1" /><path clip-path="url(#clip650)" d="M1838.21 222.652 Q1838.21 218.022 1836.28 215.476 Q1834.39 212.93 1830.94 212.93 Q1827.51 212.93 1825.59 215.476 Q1823.69 218.022 1823.69 222.652 Q1823.69 227.258 1825.59 229.805 Q1827.51 232.351 1830.94 232.351 Q1834.39 232.351 1836.28 229.805 Q1838.21 227.258 1838.21 222.652 M1842.46 232.698 Q1842.46 239.318 1839.52 242.536 Q1836.58 245.777 1830.52 245.777 Q1828.27 245.777 1826.28 245.43 Q1824.29 245.105 1822.42 244.411 L1822.42 240.268 Q1824.29 241.286 1826.12 241.772 Q1827.95 242.258 1829.85 242.258 Q1834.04 242.258 1836.12 240.059 Q1838.21 237.883 1838.21 233.462 L1838.21 231.356 Q1836.89 233.647 1834.83 234.781 Q1832.77 235.916 1829.9 235.916 Q1825.13 235.916 1822.21 232.281 Q1819.29 228.647 1819.29 222.652 Q1819.29 216.633 1822.21 212.999 Q1825.13 209.365 1829.9 209.365 Q1832.77 209.365 1834.83 210.499 Q1836.89 211.633 1838.21 213.925 L1838.21 209.99 L1842.46 209.99 L1842.46 232.698 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1" /><path clip-path="url(#clip650)" d="M1873.41 221.888 L1873.41 223.971 L1853.83 223.971 Q1854.11 228.369 1856.47 230.684 Q1858.85 232.976 1863.09 232.976 Q1865.54 232.976 1867.83 232.374 Q1870.15 231.772 1872.42 230.569 L1872.42 234.596 Q1870.13 235.568 1867.72 236.078 Q1865.31 236.587 1862.83 236.587 Q1856.63 236.587 1853 232.976 Q1849.39 229.365 1849.39 223.207 Q1849.39 216.842 1852.81 213.115 Q1856.26 209.365 1862.09 209.365 Q1867.33 209.365 1870.36 212.745 Q1873.41 216.101 1873.41 221.888 M1869.15 220.638 Q1869.11 217.143 1867.19 215.059 Q1865.29 212.976 1862.14 212.976 Q1858.58 212.976 1856.42 214.99 Q1854.29 217.004 1853.97 220.661 L1869.15 220.638 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1" /><path clip-path="url(#clip650)" d="M1900.59 214.967 Q1902.19 212.096 1904.41 210.731 Q1906.63 209.365 1909.64 209.365 Q1913.69 209.365 1915.89 212.212 Q1918.09 215.036 1918.09 220.268 L1918.09 235.916 L1913.81 235.916 L1913.81 220.407 Q1913.81 216.68 1912.49 214.874 Q1911.17 213.069 1908.46 213.069 Q1905.15 213.069 1903.23 215.268 Q1901.31 217.467 1901.31 221.263 L1901.31 235.916 L1897.02 235.916 L1897.02 220.407 Q1897.02 216.657 1895.71 214.874 Q1894.39 213.069 1891.63 213.069 Q1888.37 213.069 1886.45 215.291 Q1884.52 217.49 1884.52 221.263 L1884.52 235.916 L1880.24 235.916 L1880.24 209.99 L1884.52 209.99 L1884.52 214.018 Q1885.98 211.633 1888.02 210.499 Q1890.06 209.365 1892.86 209.365 Q1895.68 209.365 1897.65 210.8 Q1899.64 212.235 1900.59 214.967 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1" /><path clip-path="url(#clip650)" d="M1946.77 214.967 Q1948.37 212.096 1950.59 210.731 Q1952.81 209.365 1955.82 209.365 Q1959.87 209.365 1962.07 212.212 Q1964.27 215.036 1964.27 220.268 L1964.27 235.916 L1959.99 235.916 L1959.99 220.407 Q1959.99 216.68 1958.67 214.874 Q1957.35 213.069 1954.64 213.069 Q1951.33 213.069 1949.41 215.268 Q1947.49 217.467 1947.49 221.263 L1947.49 235.916 L1943.2 235.916 L1943.2 220.407 Q1943.2 216.657 1941.89 214.874 Q1940.57 213.069 1937.81 213.069 Q1934.55 213.069 1932.63 215.291 Q1930.7 217.49 1930.7 221.263 L1930.7 235.916 L1926.42 235.916 L1926.42 209.99 L1930.7 209.99 L1930.7 214.018 Q1932.16 211.633 1934.2 210.499 Q1936.24 209.365 1939.04 209.365 Q1941.86 209.365 1943.83 210.8 Q1945.82 212.235 1946.77 214.967 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1" /><path clip-path="url(#clip650)" d="M1992.46 243.786 L1992.46 247.096 L1967.83 247.096 L1967.83 243.786 L1992.46 243.786 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1" /><path clip-path="url(#clip650)" d="M2000.59 232.027 L2000.59 245.777 L1996.31 245.777 L1996.31 209.99 L2000.59 209.99 L2000.59 213.925 Q2001.93 211.61 2003.97 210.499 Q2006.03 209.365 2008.88 209.365 Q2013.6 209.365 2016.54 213.115 Q2019.5 216.865 2019.5 222.976 Q2019.5 229.087 2016.54 232.837 Q2013.6 236.587 2008.88 236.587 Q2006.03 236.587 2003.97 235.476 Q2001.93 234.342 2000.59 232.027 M2015.08 222.976 Q2015.08 218.277 2013.13 215.615 Q2011.21 212.93 2007.83 212.93 Q2004.45 212.93 2002.51 215.615 Q2000.59 218.277 2000.59 222.976 Q2000.59 227.675 2002.51 230.36 Q2004.45 233.022 2007.83 233.022 Q2011.21 233.022 2013.13 230.36 Q2015.08 227.675 2015.08 222.976 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1" /><path clip-path="url(#clip650)" d="M2026.56 209.99 L2030.82 209.99 L2030.82 236.379 Q2030.82 241.332 2028.92 243.555 Q2027.05 245.777 2022.86 245.777 L2021.24 245.777 L2021.24 242.166 L2022.37 242.166 Q2024.8 242.166 2025.68 241.031 Q2026.56 239.92 2026.56 236.379 L2026.56 209.99 M2026.56 199.897 L2030.82 199.897 L2030.82 205.291 L2026.56 205.291 L2026.56 199.897 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1" /><path clip-path="url(#clip650)" d="M2039.73 209.99 L2043.99 209.99 L2043.99 235.916 L2039.73 235.916 L2039.73 209.99 M2039.73 199.897 L2043.99 199.897 L2043.99 205.291 L2039.73 205.291 L2039.73 199.897 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1" /><path clip-path="url(#clip650)" d="M2055.59 230.036 L2060.29 230.036 L2060.29 235.916 L2055.59 235.916 L2055.59 230.036 M2055.59 201.356 L2060.29 201.356 L2060.29 216.518 L2059.82 224.782 L2056.07 224.782 L2055.59 216.518 L2055.59 201.356 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1" /><path clip-path="url(#clip650)" d="M2087.16 201.356 L2107.02 201.356 L2107.02 205.291 L2091.84 205.291 L2091.84 215.476 L2105.54 215.476 L2105.54 219.411 L2091.84 219.411 L2091.84 235.916 L2087.16 235.916 L2087.16 201.356 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1" /><path clip-path="url(#clip650)" d="M2114.25 199.897 L2118.5 199.897 L2118.5 235.916 L2114.25 235.916 L2114.25 199.897 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1" /><path clip-path="url(#clip650)" d="M2137.46 212.976 Q2134.04 212.976 2132.05 215.661 Q2130.06 218.323 2130.06 222.976 Q2130.06 227.629 2132.02 230.314 Q2134.01 232.976 2137.46 232.976 Q2140.87 232.976 2142.86 230.291 Q2144.85 227.606 2144.85 222.976 Q2144.85 218.37 2142.86 215.684 Q2140.87 212.976 2137.46 212.976 M2137.46 209.365 Q2143.02 209.365 2146.19 212.976 Q2149.36 216.587 2149.36 222.976 Q2149.36 229.342 2146.19 232.976 Q2143.02 236.587 2137.46 236.587 Q2131.88 236.587 2128.71 232.976 Q2125.56 229.342 2125.56 222.976 Q2125.56 216.587 2128.71 212.976 Q2131.88 209.365 2137.46 209.365 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1" /><path clip-path="url(#clip650)" d="M2168.2 222.883 Q2163.04 222.883 2161.05 224.064 Q2159.06 225.244 2159.06 228.092 Q2159.06 230.36 2160.54 231.703 Q2162.05 233.022 2164.62 233.022 Q2168.16 233.022 2170.29 230.522 Q2172.44 227.999 2172.44 223.832 L2172.44 222.883 L2168.2 222.883 M2176.7 221.124 L2176.7 235.916 L2172.44 235.916 L2172.44 231.981 Q2170.98 234.342 2168.81 235.476 Q2166.63 236.587 2163.48 236.587 Q2159.5 236.587 2157.14 234.365 Q2154.8 232.119 2154.8 228.369 Q2154.8 223.994 2157.72 221.772 Q2160.66 219.55 2166.47 219.55 L2172.44 219.55 L2172.44 219.133 Q2172.44 216.194 2170.5 214.596 Q2168.57 212.976 2165.08 212.976 Q2162.86 212.976 2160.75 213.508 Q2158.64 214.041 2156.7 215.106 L2156.7 211.17 Q2159.04 210.268 2161.24 209.828 Q2163.44 209.365 2165.52 209.365 Q2171.14 209.365 2173.92 212.282 Q2176.7 215.198 2176.7 221.124 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1" /><path clip-path="url(#clip650)" d="M2189.68 202.629 L2189.68 209.99 L2198.46 209.99 L2198.46 213.3 L2189.68 213.3 L2189.68 227.374 Q2189.68 230.545 2190.54 231.448 Q2191.42 232.351 2194.08 232.351 L2198.46 232.351 L2198.46 235.916 L2194.08 235.916 Q2189.15 235.916 2187.28 234.087 Q2185.4 232.235 2185.4 227.374 L2185.4 213.3 L2182.28 213.3 L2182.28 209.99 L2185.4 209.99 L2185.4 202.629 L2189.68 202.629 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1" /><path clip-path="url(#clip650)" d="M2218.83 217.282 Q2222.18 217.999 2224.06 220.268 Q2225.96 222.536 2225.96 225.869 Q2225.96 230.985 2222.44 233.786 Q2218.92 236.587 2212.44 236.587 Q2210.26 236.587 2207.95 236.147 Q2205.66 235.731 2203.2 234.874 L2203.2 230.36 Q2205.15 231.494 2207.46 232.073 Q2209.78 232.652 2212.3 232.652 Q2216.7 232.652 2218.99 230.916 Q2221.31 229.18 2221.31 225.869 Q2221.31 222.814 2219.15 221.101 Q2217.02 219.365 2213.2 219.365 L2209.18 219.365 L2209.18 215.522 L2213.39 215.522 Q2216.84 215.522 2218.67 214.157 Q2220.49 212.768 2220.49 210.175 Q2220.49 207.513 2218.6 206.101 Q2216.72 204.666 2213.2 204.666 Q2211.28 204.666 2209.08 205.083 Q2206.88 205.499 2204.25 206.379 L2204.25 202.212 Q2206.91 201.471 2209.22 201.101 Q2211.56 200.731 2213.62 200.731 Q2218.94 200.731 2222.05 203.161 Q2225.15 205.569 2225.15 209.689 Q2225.15 212.559 2223.5 214.55 Q2221.86 216.518 2218.83 217.282 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1" /><path clip-path="url(#clip650)" d="M2238.85 231.981 L2255.17 231.981 L2255.17 235.916 L2233.23 235.916 L2233.23 231.981 Q2235.89 229.226 2240.47 224.596 Q2245.08 219.944 2246.26 218.601 Q2248.5 216.078 2249.38 214.342 Q2250.29 212.583 2250.29 210.893 Q2250.29 208.138 2248.34 206.402 Q2246.42 204.666 2243.32 204.666 Q2241.12 204.666 2238.67 205.43 Q2236.24 206.194 2233.46 207.745 L2233.46 203.022 Q2236.28 201.888 2238.74 201.309 Q2241.19 200.731 2243.23 200.731 Q2248.6 200.731 2251.79 203.416 Q2254.99 206.101 2254.99 210.592 Q2254.99 212.721 2254.18 214.643 Q2253.39 216.541 2251.28 219.133 Q2250.7 219.805 2247.6 223.022 Q2244.5 226.217 2238.85 231.981 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1" /><polyline clip-path="url(#clip650)" style="stroke:#e26f46; stroke-linecap:round; stroke-linejoin:round; stroke-width:16; stroke-opacity:1; fill:none" points="1579.62,270.476 1722.87,270.476 "/>
+<path clip-path="url(#clip650)" d="M1767.09 266.807 Q1768.69 263.936 1770.91 262.571 Q1773.14 261.205 1776.15 261.205 Q1780.2 261.205 1782.4 264.052 Q1784.59 266.876 1784.59 272.108 L1784.59 287.756 L1780.31 287.756 L1780.31 272.247 Q1780.31 268.52 1778.99 266.714 Q1777.67 264.909 1774.96 264.909 Q1771.65 264.909 1769.73 267.108 Q1767.81 269.307 1767.81 273.103 L1767.81 287.756 L1763.53 287.756 L1763.53 272.247 Q1763.53 268.497 1762.21 266.714 Q1760.89 264.909 1758.14 264.909 Q1754.87 264.909 1752.95 267.131 Q1751.03 269.33 1751.03 273.103 L1751.03 287.756 L1746.75 287.756 L1746.75 261.83 L1751.03 261.83 L1751.03 265.858 Q1752.49 263.473 1754.53 262.339 Q1756.56 261.205 1759.36 261.205 Q1762.19 261.205 1764.15 262.64 Q1766.15 264.075 1767.09 266.807 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1" /><path clip-path="url(#clip650)" d="M1803.88 290.163 Q1802.07 294.793 1800.36 296.205 Q1798.65 297.617 1795.78 297.617 L1792.37 297.617 L1792.37 294.052 L1794.87 294.052 Q1796.63 294.052 1797.6 293.219 Q1798.58 292.385 1799.76 289.283 L1800.52 287.339 L1790.03 261.83 L1794.55 261.83 L1802.65 282.108 L1810.75 261.83 L1815.27 261.83 L1803.88 290.163 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1" /><path clip-path="url(#clip650)" d="M1838.21 274.492 Q1838.21 269.862 1836.28 267.316 Q1834.39 264.77 1830.94 264.77 Q1827.51 264.77 1825.59 267.316 Q1823.69 269.862 1823.69 274.492 Q1823.69 279.098 1825.59 281.645 Q1827.51 284.191 1830.94 284.191 Q1834.39 284.191 1836.28 281.645 Q1838.21 279.098 1838.21 274.492 M1842.46 284.538 Q1842.46 291.158 1839.52 294.376 Q1836.58 297.617 1830.52 297.617 Q1828.27 297.617 1826.28 297.27 Q1824.29 296.945 1822.42 296.251 L1822.42 292.108 Q1824.29 293.126 1826.12 293.612 Q1827.95 294.098 1829.85 294.098 Q1834.04 294.098 1836.12 291.899 Q1838.21 289.723 1838.21 285.302 L1838.21 283.196 Q1836.89 285.487 1834.83 286.621 Q1832.77 287.756 1829.9 287.756 Q1825.13 287.756 1822.21 284.121 Q1819.29 280.487 1819.29 274.492 Q1819.29 268.473 1822.21 264.839 Q1825.13 261.205 1829.9 261.205 Q1832.77 261.205 1834.83 262.339 Q1836.89 263.473 1838.21 265.765 L1838.21 261.83 L1842.46 261.83 L1842.46 284.538 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1" /><path clip-path="url(#clip650)" d="M1873.41 273.728 L1873.41 275.811 L1853.83 275.811 Q1854.11 280.209 1856.47 282.524 Q1858.85 284.816 1863.09 284.816 Q1865.54 284.816 1867.83 284.214 Q1870.15 283.612 1872.42 282.409 L1872.42 286.436 Q1870.13 287.408 1867.72 287.918 Q1865.31 288.427 1862.83 288.427 Q1856.63 288.427 1853 284.816 Q1849.39 281.205 1849.39 275.047 Q1849.39 268.682 1852.81 264.955 Q1856.26 261.205 1862.09 261.205 Q1867.33 261.205 1870.36 264.585 Q1873.41 267.941 1873.41 273.728 M1869.15 272.478 Q1869.11 268.983 1867.19 266.899 Q1865.29 264.816 1862.14 264.816 Q1858.58 264.816 1856.42 266.83 Q1854.29 268.844 1853.97 272.501 L1869.15 272.478 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1" /><path clip-path="url(#clip650)" d="M1900.59 266.807 Q1902.19 263.936 1904.41 262.571 Q1906.63 261.205 1909.64 261.205 Q1913.69 261.205 1915.89 264.052 Q1918.09 266.876 1918.09 272.108 L1918.09 287.756 L1913.81 287.756 L1913.81 272.247 Q1913.81 268.52 1912.49 266.714 Q1911.17 264.909 1908.46 264.909 Q1905.15 264.909 1903.23 267.108 Q1901.31 269.307 1901.31 273.103 L1901.31 287.756 L1897.02 287.756 L1897.02 272.247 Q1897.02 268.497 1895.71 266.714 Q1894.39 264.909 1891.63 264.909 Q1888.37 264.909 1886.45 267.131 Q1884.52 269.33 1884.52 273.103 L1884.52 287.756 L1880.24 287.756 L1880.24 261.83 L1884.52 261.83 L1884.52 265.858 Q1885.98 263.473 1888.02 262.339 Q1890.06 261.205 1892.86 261.205 Q1895.68 261.205 1897.65 262.64 Q1899.64 264.075 1900.59 266.807 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1" /><path clip-path="url(#clip650)" d="M1946.77 266.807 Q1948.37 263.936 1950.59 262.571 Q1952.81 261.205 1955.82 261.205 Q1959.87 261.205 1962.07 264.052 Q1964.27 266.876 1964.27 272.108 L1964.27 287.756 L1959.99 287.756 L1959.99 272.247 Q1959.99 268.52 1958.67 266.714 Q1957.35 264.909 1954.64 264.909 Q1951.33 264.909 1949.41 267.108 Q1947.49 269.307 1947.49 273.103 L1947.49 287.756 L1943.2 287.756 L1943.2 272.247 Q1943.2 268.497 1941.89 266.714 Q1940.57 264.909 1937.81 264.909 Q1934.55 264.909 1932.63 267.131 Q1930.7 269.33 1930.7 273.103 L1930.7 287.756 L1926.42 287.756 L1926.42 261.83 L1930.7 261.83 L1930.7 265.858 Q1932.16 263.473 1934.2 262.339 Q1936.24 261.205 1939.04 261.205 Q1941.86 261.205 1943.83 262.64 Q1945.82 264.075 1946.77 266.807 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1" /><path clip-path="url(#clip650)" d="M1992.46 295.626 L1992.46 298.936 L1967.83 298.936 L1967.83 295.626 L1992.46 295.626 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1" /><path clip-path="url(#clip650)" d="M2000.59 283.867 L2000.59 297.617 L1996.31 297.617 L1996.31 261.83 L2000.59 261.83 L2000.59 265.765 Q2001.93 263.45 2003.97 262.339 Q2006.03 261.205 2008.88 261.205 Q2013.6 261.205 2016.54 264.955 Q2019.5 268.705 2019.5 274.816 Q2019.5 280.927 2016.54 284.677 Q2013.6 288.427 2008.88 288.427 Q2006.03 288.427 2003.97 287.316 Q2001.93 286.182 2000.59 283.867 M2015.08 274.816 Q2015.08 270.117 2013.13 267.455 Q2011.21 264.77 2007.83 264.77 Q2004.45 264.77 2002.51 267.455 Q2000.59 270.117 2000.59 274.816 Q2000.59 279.515 2002.51 282.2 Q2004.45 284.862 2007.83 284.862 Q2011.21 284.862 2013.13 282.2 Q2015.08 279.515 2015.08 274.816 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1" /><path clip-path="url(#clip650)" d="M2026.56 261.83 L2030.82 261.83 L2030.82 288.219 Q2030.82 293.172 2028.92 295.395 Q2027.05 297.617 2022.86 297.617 L2021.24 297.617 L2021.24 294.006 L2022.37 294.006 Q2024.8 294.006 2025.68 292.871 Q2026.56 291.76 2026.56 288.219 L2026.56 261.83 M2026.56 251.737 L2030.82 251.737 L2030.82 257.131 L2026.56 257.131 L2026.56 251.737 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1" /><path clip-path="url(#clip650)" d="M2039.73 261.83 L2043.99 261.83 L2043.99 287.756 L2039.73 287.756 L2039.73 261.83 M2039.73 251.737 L2043.99 251.737 L2043.99 257.131 L2039.73 257.131 L2039.73 251.737 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1" /><path clip-path="url(#clip650)" d="M2055.59 281.876 L2060.29 281.876 L2060.29 287.756 L2055.59 287.756 L2055.59 281.876 M2055.59 253.196 L2060.29 253.196 L2060.29 268.358 L2059.82 276.622 L2056.07 276.622 L2055.59 268.358 L2055.59 253.196 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1" /><path clip-path="url(#clip650)" d="M2087.16 253.196 L2107.02 253.196 L2107.02 257.131 L2091.84 257.131 L2091.84 267.316 L2105.54 267.316 L2105.54 271.251 L2091.84 271.251 L2091.84 287.756 L2087.16 287.756 L2087.16 253.196 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1" /><path clip-path="url(#clip650)" d="M2114.25 251.737 L2118.5 251.737 L2118.5 287.756 L2114.25 287.756 L2114.25 251.737 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1" /><path clip-path="url(#clip650)" d="M2137.46 264.816 Q2134.04 264.816 2132.05 267.501 Q2130.06 270.163 2130.06 274.816 Q2130.06 279.469 2132.02 282.154 Q2134.01 284.816 2137.46 284.816 Q2140.87 284.816 2142.86 282.131 Q2144.85 279.446 2144.85 274.816 Q2144.85 270.21 2142.86 267.524 Q2140.87 264.816 2137.46 264.816 M2137.46 261.205 Q2143.02 261.205 2146.19 264.816 Q2149.36 268.427 2149.36 274.816 Q2149.36 281.182 2146.19 284.816 Q2143.02 288.427 2137.46 288.427 Q2131.88 288.427 2128.71 284.816 Q2125.56 281.182 2125.56 274.816 Q2125.56 268.427 2128.71 264.816 Q2131.88 261.205 2137.46 261.205 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1" /><path clip-path="url(#clip650)" d="M2168.2 274.723 Q2163.04 274.723 2161.05 275.904 Q2159.06 277.084 2159.06 279.932 Q2159.06 282.2 2160.54 283.543 Q2162.05 284.862 2164.62 284.862 Q2168.16 284.862 2170.29 282.362 Q2172.44 279.839 2172.44 275.672 L2172.44 274.723 L2168.2 274.723 M2176.7 272.964 L2176.7 287.756 L2172.44 287.756 L2172.44 283.821 Q2170.98 286.182 2168.81 287.316 Q2166.63 288.427 2163.48 288.427 Q2159.5 288.427 2157.14 286.205 Q2154.8 283.959 2154.8 280.209 Q2154.8 275.834 2157.72 273.612 Q2160.66 271.39 2166.47 271.39 L2172.44 271.39 L2172.44 270.973 Q2172.44 268.034 2170.5 266.436 Q2168.57 264.816 2165.08 264.816 Q2162.86 264.816 2160.75 265.348 Q2158.64 265.881 2156.7 266.946 L2156.7 263.01 Q2159.04 262.108 2161.24 261.668 Q2163.44 261.205 2165.52 261.205 Q2171.14 261.205 2173.92 264.122 Q2176.7 267.038 2176.7 272.964 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1" /><path clip-path="url(#clip650)" d="M2189.68 254.469 L2189.68 261.83 L2198.46 261.83 L2198.46 265.14 L2189.68 265.14 L2189.68 279.214 Q2189.68 282.385 2190.54 283.288 Q2191.42 284.191 2194.08 284.191 L2198.46 284.191 L2198.46 287.756 L2194.08 287.756 Q2189.15 287.756 2187.28 285.927 Q2185.4 284.075 2185.4 279.214 L2185.4 265.14 L2182.28 265.14 L2182.28 261.83 L2185.4 261.83 L2185.4 254.469 L2189.68 254.469 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1" /><path clip-path="url(#clip650)" d="M2215.24 268.612 Q2212.09 268.612 2210.24 270.765 Q2208.41 272.918 2208.41 276.668 Q2208.41 280.395 2210.24 282.571 Q2212.09 284.723 2215.24 284.723 Q2218.39 284.723 2220.22 282.571 Q2222.07 280.395 2222.07 276.668 Q2222.07 272.918 2220.22 270.765 Q2218.39 268.612 2215.24 268.612 M2224.52 253.96 L2224.52 258.219 Q2222.76 257.386 2220.96 256.946 Q2219.18 256.506 2217.42 256.506 Q2212.79 256.506 2210.33 259.631 Q2207.9 262.756 2207.56 269.075 Q2208.92 267.061 2210.98 265.997 Q2213.04 264.909 2215.52 264.909 Q2220.73 264.909 2223.74 268.08 Q2226.77 271.228 2226.77 276.668 Q2226.77 281.992 2223.62 285.209 Q2220.47 288.427 2215.24 288.427 Q2209.25 288.427 2206.07 283.844 Q2202.9 279.237 2202.9 270.51 Q2202.9 262.316 2206.79 257.455 Q2210.68 252.571 2217.23 252.571 Q2218.99 252.571 2220.77 252.918 Q2222.58 253.265 2224.52 253.96 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1" /><path clip-path="url(#clip650)" d="M2247.67 257.27 L2235.87 275.719 L2247.67 275.719 L2247.67 257.27 M2246.44 253.196 L2252.32 253.196 L2252.32 275.719 L2257.25 275.719 L2257.25 279.608 L2252.32 279.608 L2252.32 287.756 L2247.67 287.756 L2247.67 279.608 L2232.07 279.608 L2232.07 275.094 L2246.44 253.196 Z" fill="#000000" fill-rule="nonzero" fill-opacity="1" /></svg>
+</div></div>
+</div>
+<p>By uncommenting each of the individual <code class="docutils literal notranslate"><span class="pre">my_gemm</span></code> with the different loop orderings in the above code, for <code class="docutils literal notranslate"><span class="pre">Float64</span></code> precision, we find that the best loop ordering for this problem is <code class="docutils literal notranslate"><span class="pre">pji</span></code>. Notice that Julia stores matrices in clumn-major order and data in columns are stored contiguously. The <code class="docutils literal notranslate"><span class="pre">pji</span></code> loop ordering performs a rank-one update (it repeatedly updates all elements of <span class="math notranslate nohighlight">\(C\)</span>) with outer product computed using <code class="docutils literal notranslate"><span class="pre">axpy</span></code> with the column vector <span class="math notranslate nohighlight">\(a_p\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[
+  a_{p} \tilde{b}_{p}^T =
+  \begin{bmatrix}
+    a_{p} \beta_{1p} &amp; \cdots &amp; a_{p} \beta_{mp}
+  \end{bmatrix}
+\]</div>
+<p>In the code snippet</p>
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="k">for</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="o">:</span><span class="n">k</span>
+<span class="w">   </span><span class="k">for</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="o">:</span><span class="n">n</span>
+<span class="w">      </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="o">:</span><span class="n">m</span>
+<span class="w">         </span><span class="nd">@inbounds</span><span class="w"> </span><span class="n">C</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">]</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="p">]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">B</span><span class="p">[</span><span class="n">j</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="p">]</span>
+<span class="w">      </span><span class="k">end</span>
+<span class="w">   </span><span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+<p>being <code class="docutils literal notranslate"><span class="pre">i</span></code> the fastest index, each execution of the inner-most loop traverses the <span class="math notranslate nohighlight">\(p\)</span>-th column of <span class="math notranslate nohighlight">\(A\)</span>, <span class="math notranslate nohighlight">\( a_{p}\)</span>, multiplies it by the <code class="docutils literal notranslate"><span class="pre">\beta_{jp}</span></code> entry of <span class="math notranslate nohighlight">\(B\)</span> (moving down in the column entries at the next iteration of the <code class="docutils literal notranslate"><span class="pre">j</span></code> loop), and updates columns of <span class="math notranslate nohighlight">\(C\)</span>.</p>
+<p>The following numbers are the result of the executions on my machine:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>size |      reference      |           mygemm_ijp!
+     |   seconds   GFLOPS  |   seconds   GFLOPS     diff
+  48 |  8.01e-06    27.60  |  1.12e-04     1.97   7.11e-15
+  96 |  4.83e-05    36.66  |  9.83e-04     1.80   1.78e-14
+ 144 |  1.46e-04    40.88  |  3.45e-03     1.73   2.84e-14
+ 192 |  3.58e-04    39.55  |  8.47e-03     1.67   3.55e-14
+ 240 |  6.21e-04    44.56  |  1.66e-02     1.67   5.68e-14
+ 288 |  1.04e-03    45.74  |  2.91e-02     1.64   1.71e-13
+ 336 |  1.65e-03    45.98  |  4.57e-02     1.66   2.27e-13
+ 384 |  2.47e-03    45.87  |  1.57e-01     0.72   2.70e-13
+ 432 |  3.63e-03    44.47  |  9.70e-02     1.66   2.84e-13
+ 480 |  6.10e-03    36.26  |  1.53e-01     1.45   3.69e-13
+
+
+size |      reference      |           mygemm_ipj!
+     |   seconds   GFLOPS  |   seconds   GFLOPS     diff
+  48 |  8.06e-06    27.46  |  6.83e-05     3.24   7.11e-15
+  96 |  4.79e-05    36.91  |  7.54e-04     2.35   1.78e-14
+ 144 |  1.45e-04    41.06  |  1.84e-03     3.25   2.84e-14
+ 192 |  5.21e-04    27.15  |  1.07e-02     1.33   3.55e-14
+ 240 |  6.73e-04    41.10  |  1.11e-02     2.49   5.68e-14
+ 288 |  1.04e-03    45.78  |  3.44e-02     1.39   1.71e-13
+ 336 |  1.64e-03    46.33  |  5.30e-02     1.43   2.27e-13
+ 384 |  2.44e-03    46.42  |  1.85e-01     0.61   2.70e-13
+ 432 |  3.58e-03    45.06  |  1.13e-01     1.43   2.84e-13
+ 480 |  5.58e-03    39.60  |  1.60e-01     1.38   3.69e-13
+
+
+size |      reference      |           mygemm_pij!
+     |   seconds   GFLOPS  |   seconds   GFLOPS     diff
+  48 |  8.06e-06    27.45  |  6.95e-05     3.18   7.11e-15
+  96 |  4.83e-05    36.66  |  6.73e-04     2.63   1.78e-14
+ 144 |  1.46e-04    40.84  |  1.92e-03     3.10   2.84e-14
+ 192 |  3.30e-04    42.90  |  1.15e-02     1.24   3.55e-14
+ 240 |  8.77e-04    31.52  |  1.62e-02     1.71   5.68e-14
+ 288 |  1.95e-03    24.56  |  3.74e-02     1.28   1.71e-13
+ 336 |  1.65e-03    45.88  |  5.72e-02     1.33   2.27e-13
+ 384 |  2.62e-03    43.23  |  1.83e-01     0.62   2.70e-13
+ 432 |  4.90e-03    32.88  |  1.23e-01     1.31   2.84e-13
+ 480 |  5.94e-03    37.23  |  1.75e-01     1.26   3.69e-13
+
+ 
+size |      reference      |           mygemm_pji!
+     |   seconds   GFLOPS  |   seconds   GFLOPS     diff
+  48 |  8.02e-06    27.58  |  2.07e-05    10.67   7.11e-15
+  96 |  4.79e-05    36.91  |  1.35e-04    13.10   1.78e-14
+ 144 |  1.46e-04    40.96  |  4.31e-04    13.86   2.84e-14
+ 192 |  3.28e-04    43.12  |  1.21e-03    11.65   3.55e-14
+ 240 |  1.04e-03    26.66  |  3.47e-03     7.96   5.68e-14
+ 288 |  1.08e-03    44.19  |  5.37e-03     8.90   1.71e-13
+ 336 |  1.71e-03    44.50  |  8.59e-03     8.84   2.27e-13
+ 384 |  2.46e-03    46.06  |  1.28e-02     8.84   2.70e-13
+ 432 |  3.52e-03    45.80  |  1.82e-02     8.87   2.84e-13
+ 480 |  4.66e-03    47.48  |  2.52e-02     8.79   3.69e-13
+
+
+size |      reference      |           mygemm_jpi!
+     |   seconds   GFLOPS  |   seconds   GFLOPS     diff
+  48 |  8.22e-06    26.92  |  6.79e-05     3.26   7.11e-15
+  96 |  4.81e-05    36.81  |  5.03e-04     3.51   1.78e-14
+ 144 |  1.46e-04    40.87  |  1.80e-03     3.31   2.84e-14
+ 192 |  3.43e-04    41.29  |  4.41e-03     3.21   3.55e-14
+ 240 |  6.30e-04    43.89  |  8.90e-03     3.11   5.68e-14
+ 288 |  1.44e-03    33.24  |  1.69e-02     2.83   1.71e-13
+ 336 |  1.66e-03    45.60  |  2.48e-02     3.06   2.27e-13
+ 384 |  2.46e-03    46.03  |  3.52e-02     3.22   2.70e-13
+ 432 |  5.47e-03    29.50  |  4.89e-02     3.30   2.84e-13
+ 480 |  5.36e-03    41.30  |  6.70e-02     3.30   3.69e-13
+
+
+size |      reference      |           mygemm_jip!
+     |   seconds   GFLOPS  |   seconds   GFLOPS     diff
+  48 |  8.03e-06    27.54  |  9.19e-05     2.41   7.11e-15
+  96 |  4.81e-05    36.78  |  9.87e-04     1.79   1.78e-14
+ 144 |  1.46e-04    40.82  |  3.36e-03     1.78   2.84e-14
+ 192 |  5.79e-04    24.44  |  8.46e-03     1.67   3.55e-14
+ 240 |  7.41e-04    37.32  |  1.76e-02     1.57   5.68e-14
+ 288 |  1.06e-03    45.07  |  2.90e-02     1.65   1.71e-13
+ 336 |  1.65e-03    45.99  |  4.48e-02     1.69   2.27e-13
+ 384 |  2.43e-03    46.61  |  1.60e-01     0.71   2.70e-13
+ 432 |  4.82e-03    33.43  |  9.61e-02     1.68   2.84e-13
+ 480 |  6.59e-03    33.57  |  1.53e-01     1.44   3.69e-13
+</pre></div>
+</div>
+<p>And the following figure compares all of the six loop orderings for square matrices filled with <code class="docutils literal notranslate"><span class="pre">Float64</span></code> numbers:</p>
+<p><img alt="My solution for HW2 showing mygemm_pji is the best loop ordering" src="../_images/assignment2_square_F64.png" /></p>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "sdsu-comp605/spring25",
+            ref: "main",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "julia-1.10"
+        },
+        kernelOptions: {
+            name: "julia-1.10",
+            path: "./lectures"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'julia-1.10'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="module4-2_case_study_2_climacore.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">15) Case Study 2: ClimaCore</p>
+      </div>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Valeria Barra
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
