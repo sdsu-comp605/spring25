@@ -1,0 +1,26 @@
+#!/bin/bash
+
+#note: 16cpus per node are configured (in a particular way -- see /etc/slurm/slurm.conf);
+#      but here we fire up an size-18 array. the first 16 tasks run on a single node, the
+#      remaining 2 tasks run on the next consecutive node. each task has the same
+#      "command" statement here -- each has an independent task ID.
+#      18 independent output files are created.
+
+#SBATCH --job-name=array_job
+#SBATCH --output=a%A-%a.out
+#SBATCH --ntasks=1
+#SBATCH --array=1-18
+#SBATCH --mem=0
+
+# $SLURM_ARRAY_TASK_ID goes from 1 to 18 -- the first 16 tasks on nodeN,
+#       the last 2 tasks on nodeN+1 (or next available).
+
+# 1-loop silliness -- this is not a true do-loop. there's just one instance
+#                     of "hostname" below. we do get 18 of them because
+#                     of the array of tasks where the command below is
+#                     replicated for each task.
+for i in $(seq 1 1)
+do
+  bash -c "echo `hostname` 'seq-id=$i' 'TASK_ID:' $SLURM_ARRAY_TASK_ID" &
+done
+wait

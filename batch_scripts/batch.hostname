@@ -1,0 +1,29 @@
+#!/bin/bash
+
+#note: run hostname as a command within this script -- no use of srun.
+#      because the --cpus-per-task=16 flag is omitted, other jobs may
+#      be allowed to run at the same time on the node requested (via
+#      specification of node feature -- each node has it's hostname
+#      (node1, node2, etc.) configure as a node feature -- so the name
+#      can be used to request a specific node -- we do that here.
+#
+#      the "sleep=30" can be used to verify that the 2 processes that
+#      are run, do run simultaneously (due to backgrounding). verification
+#      can be done using the "squeue" command while the jobs is running,
+#      in order to monitor the length of runtime.
+#
+
+#SBATCH --job-name=echo_hostname
+#SBATCH --output=%A.out
+#SBATCH --ntasks=1
+#SBATCH --ntasks-per-node=2
+#SBATCH --constraint=node12
+#SBATCH --mem=0
+
+# 1-loop
+for i in $(seq 1 2)
+do
+  bash -c "echo `hostname`: 'seq-id=$i' 'JOB_ID: $SLURM_JOB_ID' 'running on $SLURM_JOB_NODELIST'; sleep 30" &
+done
+wait
+# here $SLURM_JOB_NODELIST shows Nodes assigned to job
