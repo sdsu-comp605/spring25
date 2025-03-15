@@ -1,0 +1,874 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>18) Introduction to MPI &#8212; Scientific Computing</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'lectures/module5-2_intro_to_mpi';</script>
+    <link rel="icon" href="../_static/SDSU-comp605_logo.svg"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="19) Introduction to Batch Jobs" href="module5-3_intro_to_slurm.html" />
+    <link rel="prev" title="17) Parallel reductions and scans" href="module5-1_reductions_and_scans.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/SDSU-comp605_logo.svg" class="logo__image only-light" alt="Scientific Computing - Home"/>
+    <script>document.write(`<img src="../_static/SDSU-comp605_logo.svg" class="logo__image only-dark" alt="Scientific Computing - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../index.html">
+                    Welcome
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../syllabus.html">Syllabus</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../lectures.html">Lectures</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="module1-1_first_class.html">1) First Class: Reproducibility and Git</a></li>
+
+
+<li class="toctree-l2"><a class="reference internal" href="module1-2_linux.html">2) The Linux Filesystem and commands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module1-3_community_projects.html">3) Community Projects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module1-4_intro_architectures.html">4) Introduction to Computer Architectures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module1-5_intro_vectorization.html">5) Introduction to Vectorization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module2-1_measuring_performance.html">6) Measuring Performance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module2-2_cpu_optimization.html">7) CPU Optimization: Matrix-Matrix Multiply</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module2-3_blocked_mmm.html">8) Blocked Matrix-Matrix Multiplication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module2-4_packing_for_cache.html">9) Packing for cache</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module2-5_intro_multithreading.html">10) Introduction to Multithreading</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module3-1_intro_parallel_scaling.html">11) Introduction to Parallel Scaling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module3-2_intro_to_openmp.html">12) Introduction to OpenMP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module3-3_openmp_tasks.html">13) More on OpenMP and OpenMP Tasks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module4-1_case_study_1_libceed.html">14) Case Study 1: libCEED</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module4-2_case_study_2_climacore.html">15) Case Study 2: ClimaCore</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hw2_notebook.html">16) HW2 solution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module5-1_reductions_and_scans.html">17) Parallel reductions and scans</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">18) Introduction to MPI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module5-3_intro_to_slurm.html">19) Introduction to Batch Jobs</a></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li>
+<button onclick="initThebeSBT()"
+  class="btn btn-sm btn-launch-thebe dropdown-item"
+  title="Launch Thebe"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-play"></i>
+  </span>
+<span class="btn__text-container">Live Code</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/sdsu-comp605/spring25" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/sdsu-comp605/spring25/issues/new?title=Issue%20on%20page%20%2Flectures/module5-2_intro_to_mpi.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/lectures/module5-2_intro_to_mpi.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>18) Introduction to MPI</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#processes-and-threads">1. Processes and Threads</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#myths-about-processes">Myths about processes</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mpi-message-passing-interface">2. MPI: Message Passing Interface</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#advice-from-bill-gropp">Advice from Bill Gropp:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#communicators">2.1 Communicators</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#collective-operations">Collective operations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#point-to-point-messaging">Point-to-point messaging</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#neighbors">Neighbors</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="introduction-to-mpi">
+<h1>18) Introduction to MPI<a class="headerlink" href="#introduction-to-mpi" title="Link to this heading">#</a></h1>
+<p>Last time:</p>
+<ul class="simple">
+<li><p>Parallel reductions and scans</p></li>
+<li><p>Graphs</p></li>
+</ul>
+<p>Today:</p>
+<ol class="arabic simple">
+<li><p><a class="reference internal" href="#processes-and-threads"><span class="xref myst">Processes and Threads</span></a></p></li>
+<li><p><a class="reference internal" href="#mpi-message-passing-interface"><span class="xref myst">MPI: Message Passing Interface</span></a><br />
+2.1 <a class="reference internal" href="#communicators"><span class="xref myst">Communicators</span></a></p></li>
+</ol>
+<section id="processes-and-threads">
+<h2>1. Processes and Threads<a class="headerlink" href="#processes-and-threads" title="Link to this heading">#</a></h2>
+<p>Threads and processes are indeed very similar.</p>
+<p>Similarities:</p>
+<ul class="simple">
+<li><p>Both created via <a class="reference external" href="https://linux.die.net/man/2/clone"><code class="docutils literal notranslate"><span class="pre">clone</span></code> system call</a> on Linux.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">clone</span></code> allows the child process to share parts of its execution context with the calling process, such as the memory space, the table of file descriptors, and the table of signal handlers.</p></li>
+<li><p>The main use of <code class="docutils literal notranslate"><span class="pre">clone()</span></code> is to implement threads: multiple threads of control in a program that run concurrently in a <strong>shared memory</strong> space.</p></li>
+<li><p>Threads and processes are scheduled in the same way by the operating system</p></li>
+<li><p>They have separate stacks (automatic variables)</p></li>
+<li><p>They have access to same memory before <code class="docutils literal notranslate"><span class="pre">fork()</span></code> or <code class="docutils literal notranslate"><span class="pre">clone()</span></code>.</p></li>
+</ul>
+<p>But some important distinctions:</p>
+<ul class="simple">
+<li><p>Threads set <code class="docutils literal notranslate"><span class="pre">CLONE_VM</span></code>: which means the calling process and the child process run in the <em>same memory space</em>. In particular, memory writes performed by the calling process or by the child process are also visible in the other process.</p></li>
+<li><p>Threads <em>share</em> the same virtual-to-physical address mapping.</p></li>
+<li><p>Threads can access the same data at the same addresses; <code class="docutils literal notranslate"><span class="pre">private</span></code> data is private only because other threads don’t know its address.</p></li>
+<li><p>Threads set <code class="docutils literal notranslate"><span class="pre">CLONE_FILES</span></code> (which means the calling process and the child process share the same file descriptor table).</p></li>
+<li><p>Threads set <code class="docutils literal notranslate"><span class="pre">CLONE_THREAD</span></code> (hence, the child is placed in the same thread group as the calling process. ) and <code class="docutils literal notranslate"><span class="pre">CLONE_SIGHAND</span></code> (the calling process and the child process share the same table of signal handlers)</p></li>
+<li><p>Process id and signal handlers are shared</p></li>
+</ul>
+<section id="myths-about-processes">
+<h3>Myths about processes<a class="headerlink" href="#myths-about-processes" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Processes can’t share memory</p>
+<ul>
+<li><p>Not true. See: <code class="docutils literal notranslate"><span class="pre">mmap()</span></code>, <code class="docutils literal notranslate"><span class="pre">shm_open()</span></code>, and <code class="docutils literal notranslate"><span class="pre">MPI_Win_allocate_shared()</span></code></p></li>
+</ul>
+</li>
+<li><p>Processes are “heavy”</p>
+<ul>
+<li><p>They actually share same data structures and kernel scheduling; no difference in context switching</p></li>
+<li><p>Startup costs: ~100 microseconds to duplicate page tables</p></li>
+<li><p>Caches are physically tagged; processes can share L1 cache</p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+<section id="mpi-message-passing-interface">
+<h2>2. <a class="reference external" href="https://en.wikipedia.org/wiki/Message_Passing_Interface">MPI: Message Passing Interface</a><a class="headerlink" href="#mpi-message-passing-interface" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Just a library: you will find it in your plain C, C++, or Fortran compiler (just like OpenMP)</p></li>
+<li><p>Two active open source library implementations: <a class="reference external" href="https://www.mpich.org/">MPICH</a> and <a class="reference external" href="https://www.open-mpi.org/">Open MPI</a></p></li>
+<li><p>Numerous vendor implementations modify/extend these open source implementations</p></li>
+<li><p>MVAPICH is an MPICH-derived open source implementation for InfiniBand and related networks</p></li>
+<li><p>Bindings from many other languages; for instance, <a class="reference external" href="https://mpi4py.readthedocs.io/en/stable/">mpi4py</a> is popular for Python and <a class="reference external" href="https://github.com/JuliaParallel/MPI.jl">MPI.jl</a> for Julia</p></li>
+<li><p>Scales to millions of processes across ~100k nodes</p>
+<ul>
+<li><p>Shared memory systems can be scaled up to <a class="reference external" href="https://www.uvhpc.com/sgi-uv-3000">~4000 cores</a>, but latency and price ($) increase</p></li>
+</ul>
+</li>
+<li><p>Standard usage: processes are separate on startup</p></li>
+<li><p>Timeline</p>
+<ul>
+<li><p>MPI-1 (1994) point-to-point messaging, collectives</p></li>
+<li><p>MPI-2 (1997) parallel IO, dynamic processes, one-sided</p></li>
+<li><p>MPI-3 (2012) nonblocking collectives, neighborhood collectives, improved one-sided</p></li>
+</ul>
+</li>
+</ul>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;mpi.h&gt;</span>
+<span class="linenos"> 2</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdio.h&gt;</span>
+<span class="linenos"> 3</span>
+<span class="linenos"> 4</span><span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">argc</span><span class="p">,</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">**</span><span class="n">argv</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos"> 5</span><span class="w">  </span><span class="n">MPI_Init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">argc</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">argv</span><span class="p">);</span><span class="w">   </span><span class="c1">// Must call before any other MPI functions</span>
+<span class="linenos"> 6</span><span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">size</span><span class="p">,</span><span class="w"> </span><span class="n">rank</span><span class="p">,</span><span class="w"> </span><span class="n">sum</span><span class="p">;</span>
+<span class="linenos"> 7</span><span class="w">  </span><span class="n">MPI_Comm_rank</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">rank</span><span class="p">);</span>
+<span class="linenos"> 8</span><span class="w">  </span><span class="n">MPI_Comm_size</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">size</span><span class="p">);</span>
+<span class="linenos"> 9</span><span class="w">  </span><span class="n">MPI_Allreduce</span><span class="p">(</span><span class="o">&amp;</span><span class="n">rank</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">sum</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_INT</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_SUM</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
+<span class="linenos">10</span><span class="w">  </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;I am rank %d of %d: sum=%d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">rank</span><span class="p">,</span><span class="w"> </span><span class="n">size</span><span class="p">,</span><span class="w"> </span><span class="n">sum</span><span class="p">);</span>
+<span class="linenos">11</span><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">MPI_Finalize</span><span class="p">();</span>
+<span class="linenos">12</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>This may remind you of the top-level OpenMP strategy</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="cp">#pragma omp parallel</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">rank</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">omp_get_thread_num</span><span class="p">();</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">omp_get_num_threads</span><span class="p">();</span>
+<span class="w">        </span><span class="c1">// your code</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>We use the compiler wrapper <code class="docutils literal notranslate"><span class="pre">mpicc</span></code>, but it just passes some flags to the real compiler.</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span><span class="w"> </span>mpicc<span class="w"> </span>-show
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>gcc -I/usr/local/include -pthread -L/usr/local/lib -Wl,-rpath -Wl,/usr/local/lib -Wl,--enable-new-dtags -lmpi
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span><span class="w"> </span>mpicc<span class="w"> </span>-Wall<span class="w">    </span>mpi-demo.c<span class="w">   </span>-o<span class="w"> </span>mpi-demo
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold">cc1:</span> <span class=" -Color -Color-Bold -Color-Bold-Red">fatal error: </span>mpi-demo.c: No such file or directory
+compilation terminated.
+</pre></div>
+</div>
+</div>
+</div>
+<p>To execute:</p>
+<ul class="simple">
+<li><p>We use <code class="docutils literal notranslate"><span class="pre">mpiexec</span></code> to run locally.  Clusters/supercomputers often have different job launching programs (such as <code class="docutils literal notranslate"><span class="pre">srun</span></code> or <code class="docutils literal notranslate"><span class="pre">mpirun</span></code>).</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span><span class="w"> </span>mpiexec<span class="w"> </span>-n<span class="w"> </span><span class="m">2</span><span class="w"> </span>./mpi-demo
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>--------------------------------------------------------------------------
+mpiexec was unable to launch the specified application as it could not access
+or execute an executable:
+
+Executable: ./mpi-demo
+Node: work-xps
+
+while attempting to start process rank 0.
+--------------------------------------------------------------------------
+2 total processes failed to start
+</pre></div>
+</div>
+</div>
+</div>
+<ul class="simple">
+<li><p>In MPI terminology, <code class="docutils literal notranslate"><span class="pre">ranks</span></code> is the same as processes</p></li>
+<li><p>We can run more MPI processes than cores (or hardware threads), but you might need to use the <code class="docutils literal notranslate"><span class="pre">--oversubscribe</span></code> option because <strong>oversubscription is usually expensive</strong>.</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span><span class="w"> </span>mpiexec<span class="w"> </span>-n<span class="w"> </span><span class="m">6</span><span class="w"> </span>--oversubscribe<span class="w"> </span>./mpi-demo
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>--------------------------------------------------------------------------
+mpiexec was unable to launch the specified application as it could not access
+or execute an executable:
+
+Executable: ./mpi-demo
+Node: work-xps
+
+while attempting to start process rank 0.
+--------------------------------------------------------------------------
+6 total processes failed to start
+</pre></div>
+</div>
+</div>
+</div>
+<ul class="simple">
+<li><p>You can use OpenMP <em>within</em> ranks of MPI (but use <code class="docutils literal notranslate"><span class="pre">MPI_Init_thread()</span></code> in your program)</p></li>
+<li><p>Everything is <em>private</em> by default</p></li>
+</ul>
+<section id="advice-from-bill-gropp">
+<h3><a class="reference external" href="https://www.rce-cast.com/Podcast/rce-28-mpich2.html">Advice from Bill Gropp</a>:<a class="headerlink" href="#advice-from-bill-gropp" title="Link to this heading">#</a></h3>
+<blockquote>
+<div><p>You want to think about how you decompose your data structures, how
+you think about them globally.  […]  If you were building a house,
+you’d start with a set of blueprints that give you a picture of what
+the whole house looks like.  You wouldn’t start with a bunch of
+tiles and say. “Well I’ll put this tile down on the ground, and
+then I’ll find a tile to go next to it.”  But all too many people
+try to build their parallel programs by creating the smallest
+possible tiles and then trying to have the structure of their code
+emerge from the chaos of all these little pieces.  You have to have
+an organizing principle if you’re going to survive making your code
+parallel.</p>
+</div></blockquote>
+</section>
+<section id="communicators">
+<h3>2.1 Communicators<a class="headerlink" href="#communicators" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">MPI_COMM_WORLD</span></code> contains all ranks in the <code class="docutils literal notranslate"><span class="pre">mpiexec</span></code>.  Those ranks may be on different nodes, even in different parts of the world.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">MPI_COMM_SELF</span></code> contains only one rank</p></li>
+<li><p>Can create new communicators from existing ones</p></li>
+</ul>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="nf">MPI_Comm_dup</span><span class="p">(</span><span class="n">MPI_Comm</span><span class="w"> </span><span class="n">comm</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_Comm</span><span class="w"> </span><span class="o">*</span><span class="n">newcomm</span><span class="p">);</span><span class="w"> </span><span class="c1">// To duplicate</span>
+<span class="kt">int</span><span class="w"> </span><span class="nf">MPI_Comm_split</span><span class="p">(</span><span class="n">MPI_Comm</span><span class="w"> </span><span class="n">comm</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">color</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">key</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_Comm</span><span class="w"> </span><span class="o">*</span><span class="n">newcomm</span><span class="p">);</span><span class="w"> </span><span class="c1">// can split based on colors and keys</span>
+<span class="kt">int</span><span class="w"> </span><span class="nf">MPI_Comm_create</span><span class="p">(</span><span class="n">MPI_Comm</span><span class="w"> </span><span class="n">comm</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_Group</span><span class="w"> </span><span class="n">group</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_Comm</span><span class="w"> </span><span class="o">*</span><span class="n">newcomm</span><span class="p">);</span><span class="w"> </span><span class="c1">// Creates a new communicator</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Can spawn new processes (but not supported on all machines)</p></li>
+</ul>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="nf">MPI_Comm_spawn</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">command</span><span class="p">,</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">argv</span><span class="p">[],</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">maxprocs</span><span class="p">,</span>
+<span class="w">            </span><span class="n">MPI_Info</span><span class="w"> </span><span class="n">info</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_Comm</span><span class="w"> </span><span class="n">comm</span><span class="p">,</span>
+<span class="w">            </span><span class="n">MPI_Comm</span><span class="w"> </span><span class="o">*</span><span class="n">intercomm</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">array_of_errcodes</span><span class="p">[]);</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Can attach <em>attributes</em> to communicators (useful for library composition)</p></li>
+</ul>
+</section>
+<section id="collective-operations">
+<h3>Collective operations<a class="headerlink" href="#collective-operations" title="Link to this heading">#</a></h3>
+<p>MPI has a rich set of collective operations scoped by communicator, including the following.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="nf">MPI_Reduce</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">sendbuf</span><span class="p">,</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">recvbuf</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">count</span><span class="p">,</span>
+<span class="w">        </span><span class="n">MPI_Datatype</span><span class="w"> </span><span class="n">datatype</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_Op</span><span class="w"> </span><span class="n">op</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_Comm</span><span class="w"> </span><span class="n">comm</span><span class="p">);</span><span class="w"> </span><span class="c1">// Reduces values on all processes to a single value</span>
+<span class="kt">int</span><span class="w"> </span><span class="nf">MPI_Allreduce</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">sendbuf</span><span class="p">,</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">recvbuf</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">count</span><span class="p">,</span>
+<span class="w">        </span><span class="n">MPI_Datatype</span><span class="w"> </span><span class="n">datatype</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_Op</span><span class="w"> </span><span class="n">op</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_Comm</span><span class="w"> </span><span class="n">comm</span><span class="p">);</span><span class="w"> </span><span class="c1">// Combines values from all processes and distributes the result back to all processes</span>
+<span class="kt">int</span><span class="w"> </span><span class="nf">MPI_Scan</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">sendbuf</span><span class="p">,</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">recvbuf</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">count</span><span class="p">,</span>
+<span class="w">        </span><span class="n">MPI_Datatype</span><span class="w"> </span><span class="n">datatype</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_Op</span><span class="w"> </span><span class="n">op</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_Comm</span><span class="w"> </span><span class="n">comm</span><span class="p">);</span><span class="w"> </span><span class="c1">// is an inclusive scan: it performs a prefix reduction across all MPI processes in the given communicator</span>
+<span class="kt">int</span><span class="w"> </span><span class="nf">MPI_Gather</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">sendbuf</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">sendcount</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_Datatype</span><span class="w"> </span><span class="n">sendtype</span><span class="p">,</span>
+<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">recvbuf</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">recvcount</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_Datatype</span><span class="w"> </span><span class="n">recvtype</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_Comm</span><span class="w"> </span><span class="n">comm</span><span class="p">);</span><span class="w"> </span><span class="c1">// Gathers together values from a group of processes</span>
+<span class="kt">int</span><span class="w"> </span><span class="nf">MPI_Scatter</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">sendbuf</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">sendcount</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_Datatype</span><span class="w"> </span><span class="n">sendtype</span><span class="p">,</span>
+<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">recvbuf</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">recvcount</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_Datatype</span><span class="w"> </span><span class="n">recvtype</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_Comm</span><span class="w"> </span><span class="n">comm</span><span class="p">);</span><span class="w"> </span><span class="c1">// Sends data from one process to all other processes in a communicator</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Implementations are optimized by vendors for their custom networks, and can be very fast.</p></li>
+</ul>
+<p>Plot from <a class="reference external" href="https://www.mcs.anl.gov/~fischer/">Paul Fischer</a>, researcher at Argonne National Labb and Professor at UIUC:</p>
+<p><img alt="Fischer BGP plot" src="https://www.mcs.anl.gov/~fischer/gop/bgp_gop_png.png" /></p>
+<p>Notice how the time is basically independent of the number of processes <span class="math notranslate nohighlight">\(P\)</span>, and only a small multiple of the cost to send a single message. Not all networks are this good.</p>
+</section>
+<section id="point-to-point-messaging">
+<h3>Point-to-point messaging<a class="headerlink" href="#point-to-point-messaging" title="Link to this heading">#</a></h3>
+<p>In addition to collectives, MPI supports messaging directly between individual ranks.</p>
+<p><img alt="MPI send-recv" src="../_images/mpi-send-recv.png" /></p>
+<p>In the above sketch, <code class="docutils literal notranslate"><span class="pre">MPI_Isend</span></code> and <code class="docutils literal notranslate"><span class="pre">MPI_Irecv</span></code> are <strong>non-blocking</strong>. The “I” stands for “with Immediate return”; it does not block until the message is received. In fact:</p>
+<ul class="simple">
+<li><p>Interfaces can be:</p>
+<ul>
+<li><p>blocking like <code class="docutils literal notranslate"><span class="pre">MPI_Send()</span></code> and <code class="docutils literal notranslate"><span class="pre">MPI_Recv()</span></code>, or</p></li>
+<li><p>“immediate” (asynchronous), like <code class="docutils literal notranslate"><span class="pre">MPI_Isend()</span></code> and <code class="docutils literal notranslate"><span class="pre">MPI_Irecv()</span></code>.  The immediate varliants return an <code class="docutils literal notranslate"><span class="pre">MPI_Request</span></code>, which must be waited on to complete the send or receive.</p></li>
+</ul>
+</li>
+<li><p>Be careful of deadlock when using blocking interfaces.</p>
+<ul>
+<li><p>I never use blocking send/recv.</p></li>
+<li><p>There are also “synchronous” <code class="docutils literal notranslate"><span class="pre">MPI_Ssend</span></code> and “buffered” <code class="docutils literal notranslate"><span class="pre">MPI_Bsend</span></code>, and nonblocking variants of these, <code class="docutils literal notranslate"><span class="pre">MPI_Issend</span></code>, etc.</p></li>
+</ul>
+</li>
+<li><p>Point-to-point messaging is like the assembly of parallel computing</p>
+<ul>
+<li><p>It can be good for building libraries, but it’s a headache to use directly for most purposes</p></li>
+<li><p>Better to use collectives when possible, or higher level libraries</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="neighbors">
+<h3>Neighbors<a class="headerlink" href="#neighbors" title="Link to this heading">#</a></h3>
+<p>A common pattern involves communicating with neighbors, often many times in sequence (such as each iteration or time step).</p>
+<p><img alt="MPI neighbor communicator" src="../_images/mpi-neighbor-grid.png" /></p>
+<p>This can be achieved with</p>
+<ul class="simple">
+<li><p>Point-to-point communication: <code class="docutils literal notranslate"><span class="pre">MPI_Isend</span></code>, <code class="docutils literal notranslate"><span class="pre">MPI_Irecv</span></code>, <code class="docutils literal notranslate"><span class="pre">MPI_Waitall</span></code></p></li>
+<li><p>Persistent: <code class="docutils literal notranslate"><span class="pre">MPI_Send_init</span></code> (once), <code class="docutils literal notranslate"><span class="pre">MPI_Startall</span></code>, <code class="docutils literal notranslate"><span class="pre">MPI_Waitall</span></code>.</p></li>
+<li><p>Neighborhood collectives (need to create special communicator)</p></li>
+<li><p>One-sided (need to manage safety yourself)</p></li>
+</ul>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "sdsu-comp605/spring25",
+            ref: "main",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./lectures"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="module5-1_reductions_and_scans.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">17) Parallel reductions and scans</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="module5-3_intro_to_slurm.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">19) Introduction to Batch Jobs</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#processes-and-threads">1. Processes and Threads</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#myths-about-processes">Myths about processes</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mpi-message-passing-interface">2. MPI: Message Passing Interface</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#advice-from-bill-gropp">Advice from Bill Gropp:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#communicators">2.1 Communicators</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#collective-operations">Collective operations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#point-to-point-messaging">Point-to-point messaging</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#neighbors">Neighbors</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Valeria Barra
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
