@@ -574,13 +574,7 @@ document.write(`
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span><span class="w"> </span>mpicc<span class="w"> </span>-Wall<span class="w">    </span>../c_codes/module/5-2/mpi-demo.c<span class="w">   </span>-o<span class="w"> </span>mpi-demo
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold">cc1:</span> <span class=" -Color -Color-Bold -Color-Bold-Red">fatal error: </span>../c_codes/module/5-2/mpi-demo.c: No such file or directory
-compilation terminated.
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span><span class="w"> </span>mpicc<span class="w"> </span>-Wall<span class="w">    </span>../c_codes/module5-2/mpi-demo.c<span class="w">   </span>-o<span class="w"> </span>mpi-demo
 </pre></div>
 </div>
 </div>
@@ -596,16 +590,8 @@ compilation terminated.
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>--------------------------------------------------------------------------
-mpiexec was unable to launch the specified application as it could not access
-or execute an executable:
-
-Executable: ./mpi-demo
-Node: work-xps
-
-while attempting to start process rank 0.
---------------------------------------------------------------------------
-2 total processes failed to start
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>I am rank 0 of 2: sum=1
+I am rank 1 of 2: sum=1
 </pre></div>
 </div>
 </div>
@@ -621,16 +607,12 @@ while attempting to start process rank 0.
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>--------------------------------------------------------------------------
-mpiexec was unable to launch the specified application as it could not access
-or execute an executable:
-
-Executable: ./mpi-demo
-Node: work-xps
-
-while attempting to start process rank 0.
---------------------------------------------------------------------------
-6 total processes failed to start
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>I am rank 5 of 6: sum=15
+I am rank 0 of 6: sum=15
+I am rank 1 of 6: sum=15
+I am rank 2 of 6: sum=15
+I am rank 3 of 6: sum=15
+I am rank 4 of 6: sum=15
 </pre></div>
 </div>
 </div>
