@@ -203,6 +203,9 @@
 <li class="toctree-l2"><a class="reference internal" href="module4-1_case_study_1_libceed.html">14) Case Study 1: libCEED</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">15) Case Study 2: ClimaCore</a></li>
 <li class="toctree-l2"><a class="reference internal" href="hw2_notebook.html">16) HW2 solution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module5-1_reductions_and_scans.html">17) Parallel reductions and scans</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module5-2_intro_to_mpi.html">18) Introduction to MPI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module5-3_intro_to_slurm.html">19) Introduction to Batch Jobs</a></li>
 </ul>
 </details></li>
 </ul>
@@ -553,7 +556,7 @@ document.write(`
 <li><p>It can do fusion of multiple operations automatically.</p></li>
 </ul>
 </li>
-<li><p>User-extensible API: can be specialized for custom functions or argument types (e.g., <code class="docutils literal notranslate"><span class="pre">CuArray</span></code> compiles and applies a custom CUDA kernel if you are running on an NVIDIA GPU).</p></li>
+<li><p>User-extensible API: can be specialized for custom functions or argument types (e.g., you can use <code class="docutils literal notranslate"><span class="pre">Array</span></code> of <code class="docutils literal notranslate"><span class="pre">Float32</span></code> or <code class="docutils literal notranslate"><span class="pre">Float64</span></code>, or a  <code class="docutils literal notranslate"><span class="pre">CuArray</span></code>). In the latter case, it compiles and applies a custom CUDA kernel if you are running on an NVIDIA GPU).</p></li>
 </ul>
 <p><img alt="Julia broadcasting code snippet" src="../_images/Julia-broadcasting-snippet.png" /></p>
 <p><code class="docutils literal notranslate"><span class="pre">Operators</span></code> (<code class="docutils literal notranslate"><span class="pre">grad</span></code> for gradient, <code class="docutils literal notranslate"><span class="pre">div</span></code> for divergence, <code class="docutils literal notranslate"><span class="pre">interpolate</span></code> for interpolation, etc.) are “pseudo-functions”:</p>
