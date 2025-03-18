@@ -540,7 +540,7 @@ document.write(`
 <span class="linenos"> 6</span><span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">size</span><span class="p">,</span><span class="w"> </span><span class="n">rank</span><span class="p">,</span><span class="w"> </span><span class="n">sum</span><span class="p">;</span>
 <span class="linenos"> 7</span><span class="w">  </span><span class="n">MPI_Comm_rank</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">rank</span><span class="p">);</span>
 <span class="linenos"> 8</span><span class="w">  </span><span class="n">MPI_Comm_size</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">size</span><span class="p">);</span>
-<span class="linenos"> 9</span><span class="w">  </span><span class="n">MPI_Allreduce</span><span class="p">(</span><span class="o">&amp;</span><span class="n">rank</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">sum</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_INT</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_SUM</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
+<span class="linenos"> 9</span><span class="w">  </span><span class="n">MPI_Allreduce</span><span class="p">(</span><span class="o">&amp;</span><span class="n">rank</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">sum</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_INT</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_SUM</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_COMM_WORLD</span><span class="p">);</span><span class="w"> </span><span class="c1">// performs the sum of the first n-1 integers</span>
 <span class="linenos">10</span><span class="w">  </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;I am rank %d of %d: sum=%d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">rank</span><span class="p">,</span><span class="w"> </span><span class="n">size</span><span class="p">,</span><span class="w"> </span><span class="n">sum</span><span class="p">);</span>
 <span class="linenos">11</span><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">MPI_Finalize</span><span class="p">();</span>
 <span class="linenos">12</span><span class="p">}</span>
@@ -590,8 +590,8 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>I am rank 0 of 2: sum=1
-I am rank 1 of 2: sum=1
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>I am rank 1 of 2: sum=1
+I am rank 0 of 2: sum=1
 </pre></div>
 </div>
 </div>
@@ -607,12 +607,12 @@ I am rank 1 of 2: sum=1
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>I am rank 5 of 6: sum=15
-I am rank 0 of 6: sum=15
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>I am rank 0 of 6: sum=15
 I am rank 1 of 6: sum=15
 I am rank 2 of 6: sum=15
 I am rank 3 of 6: sum=15
 I am rank 4 of 6: sum=15
+I am rank 5 of 6: sum=15
 </pre></div>
 </div>
 </div>
@@ -676,7 +676,13 @@ parallel.</p>
 <span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">recvbuf</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">recvcount</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_Datatype</span><span class="w"> </span><span class="n">recvtype</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_Comm</span><span class="w"> </span><span class="n">comm</span><span class="p">);</span><span class="w"> </span><span class="c1">// Sends data from one process to all other processes in a communicator</span>
 </pre></div>
 </div>
+<p>In details:</p>
 <ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">MPI_Reduce</span></code> is the means by which MPI process can apply a reduction calculation. The values sent by the MPI processes will be combined using the reduction operation given and the result will be stored on the MPI process specified as root. <code class="docutils literal notranslate"><span class="pre">MPI_Reduce</span></code> is a collective operation; it must be called by every MPI process in the communicator given.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">MPI_Allreduce</span></code> is the means by which MPI process can apply a reduction calculation and make the reduction result available to all MPI processes involved. It can be seen as a combination of an <code class="docutils literal notranslate"><span class="pre">MPI_Reduce</span></code> and <code class="docutils literal notranslate"><span class="pre">MPI_Broadcast</span></code>. <code class="docutils literal notranslate"><span class="pre">MPI_Allreduce</span></code> is a collective operation; it must be called by every MPI process in the communicator given.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">MPI_Scan</span></code> is an inclusive scan: it performs a prefix reduction across all MPI processes in the given communicator. In other words, each MPI process receives the result of the reduction operation on the values passed by that MPI process and all MPI processes with a lower rank. <code class="docutils literal notranslate"><span class="pre">MPI_Scan</span></code> is a collective operation; it must be called by all MPI processes in the communicator concerned.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">MPI_Gather</span></code> collects data from all processes in a given communicator and concatenates them in the given buffer on the specified process. The concatenation order follows that of the ranks. This is a collective operation; all processes in the communicator must invoke this routine.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">MPI_Scatter</span></code> dispatches data from a process across all processes in the same communicator. As a blocking operation, the buffer passed can be safely reused as soon as the routine returns. Also, MPI_Scatter is a collective operation; all processes in the communicator must invoke this routine.</p></li>
 <li><p>Implementations are optimized by vendors for their custom networks, and can be very fast.</p></li>
 </ul>
 <p>Plot from <a class="reference external" href="https://www.mcs.anl.gov/~fischer/">Paul Fischer</a>, researcher at Argonne National Labb and Professor at UIUC:</p>
