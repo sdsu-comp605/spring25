@@ -26,3 +26,4 @@ chapters:
   - file: lectures/module5-1_reductions_and_scans.ipynb
   - file: lectures/module5-2_intro_to_mpi.ipynb
   - file: lectures/module5-3_intro_to_slurm.ipynb
+  - file: lectures/module5-4_parallel_linear_alegebra.ipynb
