@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>19) Introduction to Batch Jobs &#8212; Scientific Computing</title>
+    <title>21) Introduction to MPI.jl &#8212; Scientific Computing</title>
   
   
   
@@ -57,12 +57,11 @@
     <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'lectures/module5-3_intro_to_slurm';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'lectures/module6-1_intro_to_mpi_jl';</script>
     <link rel="icon" href="../_static/SDSU-comp605_logo.svg"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="20) Parallel Linear Algebra" href="module5-4_parallel_linear_alegebra.html" />
-    <link rel="prev" title="18) Introduction to MPI" href="module5-2_intro_to_mpi.html" />
+    <link rel="prev" title="20) Parallel Linear Algebra" href="module5-4_parallel_linear_alegebra.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -203,9 +202,9 @@
 <li class="toctree-l2"><a class="reference internal" href="hw2_notebook.html">16) HW2 solution</a></li>
 <li class="toctree-l2"><a class="reference internal" href="module5-1_reductions_and_scans.html">17) Parallel reductions and scans</a></li>
 <li class="toctree-l2"><a class="reference internal" href="module5-2_intro_to_mpi.html">18) Introduction to MPI</a></li>
-<li class="toctree-l2 current active"><a class="current reference internal" href="#">19) Introduction to Batch Jobs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module5-3_intro_to_slurm.html">19) Introduction to Batch Jobs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="module5-4_parallel_linear_alegebra.html">20) Parallel Linear Algebra</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module6-1_intro_to_mpi_jl.html">21) Introduction to MPI.jl</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">21) Introduction to MPI.jl</a></li>
 </ul>
 </details></li>
 </ul>
@@ -310,7 +309,7 @@
       
       
       
-      <li><a href="https://github.com/sdsu-comp605/spring25/issues/new?title=Issue%20on%20page%20%2Flectures/module5-3_intro_to_slurm.html&body=Your%20issue%20content%20here." target="_blank"
+      <li><a href="https://github.com/sdsu-comp605/spring25/issues/new?title=Issue%20on%20page%20%2Flectures/module6-1_intro_to_mpi_jl.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm btn-source-issues-button dropdown-item"
    title="Open an issue"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -340,7 +339,7 @@
       
       
       
-      <li><a href="../_sources/lectures/module5-3_intro_to_slurm.ipynb" target="_blank"
+      <li><a href="../_sources/lectures/module6-1_intro_to_mpi_jl.ipynb" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -424,7 +423,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>19) Introduction to Batch Jobs</h1>
+    <h1>21) Introduction to MPI.jl</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -434,16 +433,10 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction-to-batch-jobs-and-job-scripting">1. Introduction to Batch Jobs and Job Scripting</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jobs-scripting">Jobs scripting</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#running-a-job-script">Running a job script</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#making-a-job-script">Making a job script</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#directives">Directives</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#slurm-demo">2. SLURM Demo</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">1. Introduction to MPI.jl</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setup-mpi-jl">2. Setup MPI.jl</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hello-world">3. Hello world</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setup-on-tuckoo-cluster">4. Setup on tuckoo cluster</a></li>
 </ul>
             </nav>
         </div>
@@ -455,119 +448,111 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="introduction-to-batch-jobs">
-<h1>19) Introduction to Batch Jobs<a class="headerlink" href="#introduction-to-batch-jobs" title="Link to this heading">#</a></h1>
+  <section class="tex2jax_ignore mathjax_ignore" id="introduction-to-mpi-jl">
+<h1>21) Introduction to MPI.jl<a class="headerlink" href="#introduction-to-mpi-jl" title="Link to this heading">#</a></h1>
 <p>Last time:</p>
 <ul class="simple">
-<li><p>Introduction to MPI</p></li>
+<li><p>Slurm demo</p></li>
+<li><p>Parallel linear algebra</p></li>
 </ul>
 <p>Today:</p>
 <ol class="arabic simple">
-<li><p><a class="reference internal" href="#introduction-to-batch-jobs-and-job-scripting"><span class="xref myst">Introduction to Batch Jobs and Job Scripting</span></a></p></li>
-<li><p><a class="reference internal" href="#slurm-demo"><span class="xref myst">SLURM Demo</span></a></p></li>
+<li><p>Introduction to MPI.jl</p></li>
+<li><p>Setup MPI.jl</p></li>
+<li><p>Hello world</p></li>
+<li><p>Setup on tuckoo cluster</p></li>
 </ol>
-<section id="introduction-to-batch-jobs-and-job-scripting">
-<h2>1. Introduction to Batch Jobs and Job Scripting<a class="headerlink" href="#introduction-to-batch-jobs-and-job-scripting" title="Link to this heading">#</a></h2>
+<section id="id1">
+<h2>1. Introduction to MPI.jl<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
+<p>Recap on MPI so far:</p>
 <ul class="simple">
-<li><p>Batch jobs are, by far, the most common type of job on HPC systems.</p></li>
-<li><p>Batch jobs are resource provisions that run applications on compute nodes and do not require supervision or interaction.</p></li>
-<li><p>Batch jobs are commonly used for applications that run for long periods of time or require little to no user input.</p></li>
-<li><p>To submit jobs that use multiple resources in parallel, you need a <a class="reference external" href="https://en.wikipedia.org/wiki/Parallel_task_scheduling">job/task scheduling system</a>.</p>
-<ul>
-<li><p>SLURM is a very popular parallel job scheduler (although not the only one).</p></li>
-<li><p>SLURM submits/manages jobs to its own scheduling system via the <a class="reference external" href="https://slurm.schedmd.com/sbatch.html"><code class="docutils literal notranslate"><span class="pre">sbatch</span></code></a> command.</p></li>
+<li><p>Each process executes its own program with its own data (<strong>MPMD: Multiple Program, Multiple Data</strong>)</p></li>
+<li><p>Each process can communicate with every other process through messages (chunks of binary data, generally arrays of primitive data types like <code class="docutils literal notranslate"><span class="pre">int</span></code>, <code class="docutils literal notranslate"><span class="pre">double</span></code>, etc..)</p></li>
+<li><p>Messages can be <em>point-to-point</em> (between only two processes) or <em>collective</em> such as <em>broadcasts</em> (one to all) and <em>reductions</em> (all to one).</p></li>
+<li><p>Though in principle each process can execute a unique program, generally each process executes the same program but the work it does depends on it’s unique number within all the processes.</p></li>
 </ul>
-</li>
-</ul>
-<section id="jobs-scripting">
-<h3>Jobs scripting<a class="headerlink" href="#jobs-scripting" title="Link to this heading">#</a></h3>
-<p>Even though it is possible to run jobs completely from the command line, it is often overly tedious and unorganized to do so.</p>
-<p>Instead, it is recommended to construct a <strong>job script</strong> for your batch jobs.</p>
+<p><strong>Terminology</strong>:</p>
 <ul class="simple">
-<li><p>A job script is a set of Linux commands paired with a set of resource requirements that can be passed to the Slurm job scheduler.</p></li>
-<li><p>Slurm will then generate a job according to the parameters set in the job script.</p></li>
-<li><p>Any commands that are included with the job script will be run within the job.</p></li>
+<li><p><strong>communicator</strong>: a group of processes that can communicate (a process can be in many different communicators, though in this class we will generally just use a single global communicator).</p></li>
+<li><p><strong>rank</strong>: the unique identifying number of a process within a communicator. Process ranks run from 0 to the number of processes minus one in the communicator. In general, a processes rank will have a different in each communicator it is a member of.</p></li>
 </ul>
+<p><a class="reference external" href="https://juliaparallel.org/MPI.jl/stable/">MPI.jl</a> is a basic Julia wrapper for the MPI standard.</p>
 </section>
-<section id="running-a-job-script">
-<h3>Running a job script<a class="headerlink" href="#running-a-job-script" title="Link to this heading">#</a></h3>
-<p>Running a job script can be done with the <code class="docutils literal notranslate"><span class="pre">sbatch</span></code> command:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sbatch<span class="w"> </span>&lt;your-job-script-name&gt;
+<section id="setup-mpi-jl">
+<h2>2. Setup MPI.jl<a class="headerlink" href="#setup-mpi-jl" title="Link to this heading">#</a></h2>
+<p>To be able to run MPI instructions in Julia, we first need to <a class="reference external" href="https://juliaparallel.org/MPI.jl/stable/configuration/">configure MPI.jl</a>.</p>
+<p>To do so, we need the auxiliary package MPIPreferences.jl. This will (hopefully) detect an MPI implementation library on your system at one of the default locations.</p>
+<p>To do so, launch Julia and in the REPL do the following:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>julia
 </pre></div>
 </div>
-<p>Once you submit yout batch job, you may see the following message:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>Submitted<span class="w"> </span>batch<span class="w"> </span>job<span class="w"> </span>&lt;job_ID&gt;
-</pre></div>
-</div>
-<p>You can query the status of your job (wait in queue/running/ended, etc) with:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>squeue<span class="w"> </span>-u<span class="w"> </span>your_user_name
-</pre></div>
-</div>
-</section>
-<section id="making-a-job-script">
-<h3>Making a job script<a class="headerlink" href="#making-a-job-script" title="Link to this heading">#</a></h3>
-<p>A job script looks something like this:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">julia</span><span class="o">&gt;</span><span class="w"> </span><span class="k">using</span><span class="w"> </span><span class="n">Pkg</span><span class="p">;</span><span class="w"> </span><span class="n">Pkg</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s">&quot;MPIPreferences.jl&quot;</span><span class="p">)</span>
 
-<span class="c1">#SBATCH --nodes=1</span>
-<span class="c1">#SBATCH --ntasks=1</span>
-<span class="c1">#SBATCH --time=00:10:00</span>
-<span class="c1">#SBATCH --partition=&lt;any_needed_specific_partition&gt;</span>
-<span class="c1">#SBATCH --output=sample-%j.out</span>
-
-module<span class="w"> </span>purge
-
-module<span class="w"> </span>load<span class="w"> </span>&lt;necessary_modules_to_be_loaded&gt;<span class="w"> </span><span class="c1"># such as compilers needed etc</span>
-
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;== This is the scripting step! ==&quot;</span>
-sleep<span class="w"> </span><span class="m">30</span>
-./executable
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;== End of Job ==&quot;</span>
+<span class="n">julia</span><span class="o">&gt;</span><span class="w"> </span><span class="k">using</span><span class="w"> </span><span class="n">MPIPreferences</span><span class="p">;</span><span class="w"> </span><span class="n">MPIPreferences</span><span class="o">.</span><span class="n">use_system_binary</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>Normally job scripts are divided into 3 primary parts:</p>
-<ul class="simple">
-<li><p>directives</p></li>
-<li><p>loading software</p></li>
-<li><p>user scripting.</p></li>
-</ul>
-<p>Directives give the terminal and the Slurm daemon instructions on setting up the job.</p>
-<p>Loading software involves cleaning out the environment and loading specific pieces of software you need for your job.</p>
-<p>User scripting is simply the commands you wish to be executed in your job.</p>
-<section id="directives">
-<h4>Directives<a class="headerlink" href="#directives" title="Link to this heading">#</a></h4>
-<p>The first directive, the <code class="docutils literal notranslate"><span class="pre">shebang</span></code> directive, is always on the first line of any script.</p>
-<p>The directive indicates which shell you want running commands in your job.</p>
-<p>Most users employ bash as their shell, so we will specify bash by typing:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
-</pre></div>
-</div>
-<p>The next directives that must be included with your job script are <em>sbatch</em> directives.</p>
-<p>These directives specify resource requirements to Slurm for a batch job.</p>
-<p>These directives must come <em>after</em> the <em>shebang</em> directive and before any commands are issued in the job script.</p>
-<p>Each directive contains a flag that requests a resource the job would need to complete execution.</p>
-<p>You can also send yourself an email to alert you that your job has ended.</p>
-<p>An sbatch directive is written as such:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1">#SBATCH --&lt;resource&gt;=&lt;amount&gt;</span>
-</pre></div>
-</div>
-<p>For example, if you wanted to request 2 nodes with an sbatch directive, you would write:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1">#SBATCH --nodes=2</span>
-</pre></div>
-</div>
-<p>Other useful directives:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">--ntasks=processes</span></code> to specify <strong>total</strong> number of tasks</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--ntasks-per-node=processes</span></code> to specify the number of processes you wish to assign to each node</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--mem=memory</span></code> sets the <strong>total memory</strong> (per node requested) required for the job.</p></li>
-</ul>
-<p>Having more resources (e.g., they can be subdivided in “Resource Sets” etc.) means having more parameters to specify! For instance, researchers at ORNL, put together workshops on <a class="reference external" href="https://www.olcf.ornl.gov/wp-content/uploads/2022/02/Introduction-to-Job-Submission-on-Summit.pdf">How to submit jobs on the Summit supercomputer</a>.</p>
+<p>The call to <code class="docutils literal notranslate"><span class="pre">use_system_binary()</span></code> should automatically detect the MPI binary.</p>
+<p>Now you should be ready to run your first MPI.jl hello world program.</p>
 </section>
+<section id="hello-world">
+<h2>3. Hello world<a class="headerlink" href="#hello-world" title="Link to this heading">#</a></h2>
+<p>In the Julia REPL, you can do:</p>
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">julia</span><span class="o">&gt;</span><span class="w"> </span><span class="k">using</span><span class="w"> </span><span class="n">Pkg</span><span class="p">;</span><span class="w"> </span><span class="n">Pkg</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s">&quot;MPI.jl&quot;</span><span class="p">)</span>
+
+<span class="n">julia</span><span class="o">&gt;</span><span class="w"> </span><span class="k">using</span><span class="w"> </span><span class="n">MPI</span><span class="p">;</span><span class="w"> </span><span class="n">mpiexec</span><span class="p">(</span><span class="n">cmd</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">run</span><span class="p">(</span><span class="sb">`</span><span class="si">$cmd</span><span class="sb"> -n 3 echo hello world`</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Or you can find the following example in <a class="reference external" href="https://github.com/sdsu-comp605/spring25/tree/main/julia_codes/module6-1/"><code class="docutils literal notranslate"><span class="pre">julia_codes/module6-1/</span></code></a>.</p>
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="k">using</span><span class="w"> </span><span class="n">MPI</span>
+<span class="linenos">2</span>
+<span class="linenos">3</span><span class="n">MPI</span><span class="o">.</span><span class="n">Init</span><span class="p">()</span>
+<span class="linenos">4</span><span class="n">comm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MPI</span><span class="o">.</span><span class="n">COMM_WORLD</span>
+<span class="linenos">5</span>
+<span class="linenos">6</span><span class="n">rank</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MPI</span><span class="o">.</span><span class="n">Comm_rank</span><span class="p">(</span><span class="n">comm</span><span class="p">)</span>
+<span class="linenos">7</span><span class="n">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MPI</span><span class="o">.</span><span class="n">Comm_rank</span><span class="p">(</span><span class="n">comm</span><span class="p">)</span>
+<span class="linenos">8</span>
+<span class="linenos">9</span><span class="n">println</span><span class="p">(</span><span class="s">&quot;I&#39;m rank </span><span class="si">$rank</span><span class="s"> of </span><span class="si">$size</span><span class="s">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Once you have setup your environment via MPIPreferences and added MPI, you can run the above example under your <code class="docutils literal notranslate"><span class="pre">mpiexec</span></code>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mpiexec<span class="w"> </span>-n<span class="w"> </span><span class="m">4</span><span class="w"> </span>julia<span class="w"> </span>./julia_codes/module6-1/mpi_hello_world.jl
+</pre></div>
+</div>
 </section>
-</section>
-<section id="slurm-demo">
-<h2>2. SLURM Demo<a class="headerlink" href="#slurm-demo" title="Link to this heading">#</a></h2>
-<p>You can find a couple of batch job scripts in <a class="reference external" href="https://github.com/sdsu-comp605/spring25/tree/main/batch_scripts"><code class="docutils literal notranslate"><span class="pre">batch_scripts/</span></code></a> that you can execute via <code class="docutils literal notranslate"><span class="pre">sbatch</span></code> on the cluster.</p>
+<section id="setup-on-tuckoo-cluster">
+<h2>4. Setup on tuckoo cluster<a class="headerlink" href="#setup-on-tuckoo-cluster" title="Link to this heading">#</a></h2>
+<p>On the cluster, you can simply start julia by typing <code class="docutils literal notranslate"><span class="pre">julia</span></code> from any location.</p>
+<p>We will still use MPIPreferences to set up our environment, but this time the call to <code class="docutils literal notranslate"><span class="pre">use_system_binary()</span></code> instead of having an empty default list of arguments, will include the argument <code class="docutils literal notranslate"><span class="pre">library_names</span></code> with the location of where the MPI binary resides on the parallel file system in the cluster.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ julia
+
+julia&gt; using Pkg; Pkg.add(&quot;MPIPreferences&quot;)
+julia&gt; using MPIPreferences
+julia&gt; MPIPreferences.use_system_binary(library_names=&quot;/usr/lib64/openmpi/lib/libmpi.so&quot;)
+julia&gt; using Pkg; Pkg.add(&quot;MPI&quot;)
+</pre></div>
+</div>
+<p>Once your environment is setup on the cluster, you can run with</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mpiexec<span class="w"> </span>-np<span class="w"> </span><span class="m">4</span><span class="w"> </span>julia<span class="w"> </span>mpi_hello_world.jl
+</pre></div>
+</div>
+<p>You can find an example of a batch script that launches a julia job in <code class="docutils literal notranslate"><span class="pre">/examples/slurm/batch-jello</span></code></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/sh</span>
+
+<span class="c1">#note: run julia hello-world on a single node</span>
+
+<span class="c1">#SBATCH --job-name=jhello</span>
+<span class="c1">#SBATCH --output=%A-jhello.out</span>
+<span class="c1">#SBATCH --ntasks=16</span>
+
+<span class="nb">export</span><span class="w"> </span><span class="nv">OMPI_MCA_pml</span><span class="o">=</span>ob1
+<span class="nb">export</span><span class="w"> </span><span class="nv">OMPI_MCA_btl</span><span class="o">=</span>tcp,self
+
+<span class="c1">#require tcp over infiniband</span>
+<span class="nb">export</span><span class="w"> </span>OMPI_MCA_btl_tcp_if_include<span class="w"> </span>ib0
+
+mpirun<span class="w"> </span>julia<span class="w"> </span>mpi_hello_world.jl
+</pre></div>
+</div>
 </section>
 </section>
 
@@ -602,22 +587,13 @@ sleep<span class="w"> </span><span class="m">30</span>
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="module5-2_intro_to_mpi.html"
+       href="module5-4_parallel_linear_alegebra.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">18) Introduction to MPI</p>
-      </div>
-    </a>
-    <a class="right-next"
-       href="module5-4_parallel_linear_alegebra.html"
-       title="next page">
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
         <p class="prev-next-title">20) Parallel Linear Algebra</p>
       </div>
-      <i class="fa-solid fa-angle-right"></i>
     </a>
 </div>
                 </footer>
@@ -635,16 +611,10 @@ sleep<span class="w"> </span><span class="m">30</span>
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction-to-batch-jobs-and-job-scripting">1. Introduction to Batch Jobs and Job Scripting</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jobs-scripting">Jobs scripting</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#running-a-job-script">Running a job script</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#making-a-job-script">Making a job script</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#directives">Directives</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#slurm-demo">2. SLURM Demo</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">1. Introduction to MPI.jl</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setup-mpi-jl">2. Setup MPI.jl</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hello-world">3. Hello world</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setup-on-tuckoo-cluster">4. Setup on tuckoo cluster</a></li>
 </ul>
   </nav></div>
 

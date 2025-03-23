@@ -79,3 +79,6 @@ to run the notebook.
 - For the first part of our course, an online MOOC: [LAFF-On Programming for High Performance (LAFF-On-PfHP)](https://www.cs.utexas.edu/users/flame/laff/pfhp/LAFF-On-PfHP.html) will be particularly useful.
 
 I encourage you to watch the videos before class. When watching the videos, really you should be watching for the _big picture_ and we will revisit most of the material in lecture as well, mainly you will have a better learning experience if the in class lectures are the first time you've seen some of the material.
+
+## Acknowledgements
+For most of this course's materials, I owe huge thanks to my postdoc mentor, [Jed Brown](https://jedbrown.org), Professor at CU Boulder, and former colleague, Dr. Jeremy Kozdon.
