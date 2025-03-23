@@ -1,0 +1,74 @@
+node8:rank7.julia: Unable to create send CQ of size 5080 on mlx4_0: Cannot allocate memory
+node8:rank7.julia: Unable to initialize verbs NIC /sys/class/infiniband/mlx4_0 (unit 2:0)
+node8:rank7: PSM3 can't open nic unit: 2 (err=23)
+--------------------------------------------------------------------------
+Open MPI failed an OFI Libfabric library call (fi_endpoint).  This is highly
+unusual; your job may behave unpredictably (and/or abort) after this.
+
+  Local host: node8
+  Location: mtl_ofi_component.c:513
+  Error: Invalid argument (22)
+--------------------------------------------------------------------------
+node8:rank8.julia: Unable to create send CQ of size 5080 on mlx4_0: Cannot allocate memory
+node8:rank8.julia: Unable to initialize verbs NIC /sys/class/infiniband/mlx4_0 (unit 2:0)
+node8:rank8: PSM3 can't open nic unit: 2 (err=23)
+node8:rank11.julia: Unable to create send CQ of size 5080 on mlx4_0: Cannot allocate memory
+node8:rank11: PSM3 can't open nic unit: 2 (err=23)
+node8:rank11.julia: Unable to initialize verbs NIC /sys/class/infiniband/mlx4_0 (unit 2:0)
+node8:rank1.julia: Unable to create send CQ of size 5080 on mlx4_0: Cannot allocate memory
+node8:rank1.julia: Unable to initialize verbs NIC /sys/class/infiniband/mlx4_0 (unit 2:0)
+node8:rank1: PSM3 can't open nic unit: 2 (err=23)
+node8:rank10.julia: Unable to create send CQ of size 5080 on mlx4_0: Cannot allocate memory
+node8:rank10: PSM3 can't open nic unit: 2 (err=23)
+node8:rank10.julia: Unable to initialize verbs NIC /sys/class/infiniband/mlx4_0 (unit 2:0)
+node8:rank2.julia: Unable to create send CQ of size 5080 on mlx4_0: Cannot allocate memory
+node8:rank2.julia: Unable to initialize verbs NIC /sys/class/infiniband/mlx4_0 (unit 2:0)
+node8:rank2: PSM3 can't open nic unit: 2 (err=23)
+node8:rank12.julia: Unable to create send CQ of size 5080 on mlx4_0: Cannot allocate memory
+node8:rank12.julia: Unable to initialize verbs NIC /sys/class/infiniband/mlx4_0 (unit 2:0)
+node8:rank13.julia: Unable to create send CQ of size 5080 on mlx4_0: Cannot allocate memory
+node8:rank13.julia: Unable to initialize verbs NIC /sys/class/infiniband/mlx4_0 (unit 2:0)
+node8:rank15.julia: Unable to create send CQ of size 5080 on mlx4_0: Cannot allocate memory
+node8:rank15.julia: Unable to initialize verbs NIC /sys/class/infiniband/mlx4_0 (unit 2:0)
+node8:rank0.julia: Unable to create send CQ of size 5080 on mlx4_0: Cannot allocate memory
+node8:rank0.julia: Unable to initialize verbs NIC /sys/class/infiniband/mlx4_0 (unit 2:0)
+node8:rank3.julia: Unable to create send CQ of size 5080 on mlx4_0: Cannot allocate memory
+node8:rank3.julia: Unable to initialize verbs NIC /sys/class/infiniband/mlx4_0 (unit 2:0)
+node8:rank5.julia: Unable to create send CQ of size 5080 on mlx4_0: Cannot allocate memory
+node8:rank5.julia: Unable to initialize verbs NIC /sys/class/infiniband/mlx4_0 (unit 2:0)
+node8:rank12: PSM3 can't open nic unit: 2 (err=23)
+node8:rank13: PSM3 can't open nic unit: 2 (err=23)
+node8:rank0: PSM3 can't open nic unit: 2 (err=23)
+node8:rank3: PSM3 can't open nic unit: 2 (err=23)
+node8:rank5: PSM3 can't open nic unit: 2 (err=23)
+node8:rank6: PSM3 can't open nic unit: 2 (err=23)
+node8:rank15: PSM3 can't open nic unit: 2 (err=23)
+node8:rank6.julia: Unable to create send CQ of size 5080 on mlx4_0: Cannot allocate memory
+node8:rank6.julia: Unable to initialize verbs NIC /sys/class/infiniband/mlx4_0 (unit 2:0)
+node8:rank9.julia: Unable to create send CQ of size 5080 on mlx4_0: Cannot allocate memory
+node8:rank9.julia: Unable to initialize verbs NIC /sys/class/infiniband/mlx4_0 (unit 2:0)
+node8:rank9: PSM3 can't open nic unit: 2 (err=23)
+node8:rank14.julia: Unable to create send CQ of size 5080 on mlx4_0: Cannot allocate memory
+node8:rank14.julia: Unable to initialize verbs NIC /sys/class/infiniband/mlx4_0 (unit 2:0)
+node8:rank14: PSM3 can't open nic unit: 2 (err=23)
+node8:rank4.julia: Unable to create send CQ of size 5080 on mlx4_0: Cannot allocate memory
+node8:rank4.julia: Unable to initialize verbs NIC /sys/class/infiniband/mlx4_0 (unit 2:0)
+node8:rank4: PSM3 can't open nic unit: 2 (err=23)
+I'm rank 11 of 11
+I'm rank 6 of 6
+I'm rank 7 of 7
+I'm rank 9 of 9
+I'm rank 12 of 12
+I'm rank 13 of 13
+I'm rank 14 of 14
+I'm rank 15 of 15
+I'm rank 0 of 0
+I'm rank 1 of 1
+I'm rank 10 of 10
+I'm rank 2 of 2
+I'm rank 3 of 3
+I'm rank 4 of 4
+I'm rank 5 of 5
+I'm rank 8 of 8
+[node8:1444313] 15 more processes have sent help message help-mtl-ofi.txt / OFI call fail
+[node8:1444313] Set MCA parameter "orte_base_help_aggregate" to 0 to see all help / error messages

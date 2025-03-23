@@ -1,0 +1,23 @@
+#!/bin/sh
+
+#note: run "two" mpi program to send a message between 2 mpi processes
+#
+#SBATCH --job-name=two
+#SBATCH --output=%A-two.out
+#SBATCH --nodes=2
+
+#case we want specific nodes
+##SBATCH --nodelist=node[13-14]
+
+###SBATCH --ntasks=16
+
+export OMPI_MCA_pml=ob1
+#or try
+#export OMPI_MCA_pml=ucx
+
+export OMPI_MCA_btl=tcp,self
+
+# use tcp over infiniband (specify ib device ib0)
+export OMPI_MCA_btl_tcp_if_include ib0
+
+mpirun -np 2 ./two
