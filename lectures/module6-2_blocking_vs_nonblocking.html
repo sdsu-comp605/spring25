@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>21) Introduction to MPI.jl &#8212; Scientific Computing</title>
+    <title>22) Blocking and non-blocking communication &#8212; Scientific Computing</title>
   
   
   
@@ -57,12 +57,11 @@
     <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'lectures/module6-1_intro_to_mpi_jl';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'lectures/module6-2_blocking_vs_nonblocking';</script>
     <link rel="icon" href="../_static/SDSU-comp605_logo.svg"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="22) Blocking and non-blocking communication" href="module6-2_blocking_vs_nonblocking.html" />
-    <link rel="prev" title="20) Parallel Linear Algebra" href="module5-4_parallel_linear_alegebra.html" />
+    <link rel="prev" title="21) Introduction to MPI.jl" href="module6-1_intro_to_mpi_jl.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -205,8 +204,8 @@
 <li class="toctree-l2"><a class="reference internal" href="module5-2_intro_to_mpi.html">18) Introduction to MPI</a></li>
 <li class="toctree-l2"><a class="reference internal" href="module5-3_intro_to_slurm.html">19) Introduction to Batch Jobs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="module5-4_parallel_linear_alegebra.html">20) Parallel Linear Algebra</a></li>
-<li class="toctree-l2 current active"><a class="current reference internal" href="#">21) Introduction to MPI.jl</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module6-2_blocking_vs_nonblocking.html">22) Blocking and non-blocking communication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module6-1_intro_to_mpi_jl.html">21) Introduction to MPI.jl</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">22) Blocking and non-blocking communication</a></li>
 </ul>
 </details></li>
 </ul>
@@ -311,7 +310,7 @@
       
       
       
-      <li><a href="https://github.com/sdsu-comp605/spring25/issues/new?title=Issue%20on%20page%20%2Flectures/module6-1_intro_to_mpi_jl.html&body=Your%20issue%20content%20here." target="_blank"
+      <li><a href="https://github.com/sdsu-comp605/spring25/issues/new?title=Issue%20on%20page%20%2Flectures/module6-2_blocking_vs_nonblocking.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm btn-source-issues-button dropdown-item"
    title="Open an issue"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -341,7 +340,7 @@
       
       
       
-      <li><a href="../_sources/lectures/module6-1_intro_to_mpi_jl.ipynb" target="_blank"
+      <li><a href="../_sources/lectures/module6-2_blocking_vs_nonblocking.ipynb" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -425,7 +424,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>21) Introduction to MPI.jl</h1>
+    <h1>22) Blocking and non-blocking communication</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -435,13 +434,11 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">1. Introduction to MPI.jl</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#blocking-vs-non-blocking">Blocking Vs Non-blocking</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#blocking-communication">1. Blocking communication</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#examples">1.1 Examples</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-of-blocking-communication">Example of blocking communication</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setup-mpi-jl">2. Setup MPI.jl</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hello-world">3. Hello world</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setup-on-tuckoo-cluster">4. Setup on tuckoo cluster</a></li>
 </ul>
             </nav>
         </div>
@@ -453,127 +450,81 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="introduction-to-mpi-jl">
-<h1>21) Introduction to MPI.jl<a class="headerlink" href="#introduction-to-mpi-jl" title="Link to this heading">#</a></h1>
+  <section class="tex2jax_ignore mathjax_ignore" id="blocking-and-non-blocking-communication">
+<h1>22) Blocking and non-blocking communication<a class="headerlink" href="#blocking-and-non-blocking-communication" title="Link to this heading">#</a></h1>
 <p>Last time:</p>
 <ul class="simple">
-<li><p>Slurm demo</p></li>
-<li><p>Parallel linear algebra</p></li>
+<li><p>Introduction to MPI.jl</p></li>
 </ul>
 <p>Today:</p>
 <ol class="arabic simple">
-<li><p>Introduction to MPI.jl</p></li>
-<li><p>Setup MPI.jl</p></li>
-<li><p>Hello world</p></li>
-<li><p>Setup on tuckoo cluster</p></li>
+<li><p>Blocking communication<br />
+1.1 Examples</p></li>
+<li><p>Non-blocking communication</p></li>
 </ol>
-<section id="id1">
-<h2>1. Introduction to MPI.jl<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
-<p>Recap on MPI so far:</p>
+<section id="blocking-communication">
+<h2>1. Blocking communication<a class="headerlink" href="#blocking-communication" title="Link to this heading">#</a></h2>
+<p>Note that most MPI routines return error codes indicating successful executing of a function. For the most part these are ignored by the MPI wrappers in Julia… For example, see the help string for the <code class="docutils literal notranslate"><span class="pre">MPI.Send</span></code> below:</p>
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">help</span><span class="o">?&gt;</span><span class="w"> </span><span class="n">MPI</span><span class="o">.</span><span class="n">Send</span>
+<span class="w">  </span><span class="n">Send</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="n">comm</span><span class="o">::</span><span class="kt">Comm</span><span class="p">;</span><span class="w"> </span><span class="n">dest</span><span class="o">::</span><span class="kt">Integer</span><span class="p">,</span><span class="w"> </span><span class="n">tag</span><span class="o">::</span><span class="kt">Integer</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="w">  </span><span class="n">Perform</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">blocking</span><span class="w"> </span><span class="n">send</span><span class="w"> </span><span class="n">from</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">buffer</span><span class="w"> </span><span class="n">buf</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">MPI</span><span class="w"> </span><span class="n">rank</span><span class="w"> </span><span class="n">dest</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">communicator</span><span class="w"> </span><span class="n">comm</span><span class="w"> </span><span class="k">using</span><span class="w"> </span><span class="n">the</span>
+<span class="w">  </span><span class="n">message</span><span class="w"> </span><span class="n">tag</span><span class="w"> </span><span class="n">tag</span><span class="o">.</span>
+
+<span class="w">  </span><span class="n">Send</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span><span class="w"> </span><span class="n">comm</span><span class="o">::</span><span class="kt">Comm</span><span class="p">;</span><span class="w"> </span><span class="n">dest</span><span class="o">::</span><span class="kt">Integer</span><span class="p">,</span><span class="w"> </span><span class="n">tag</span><span class="o">::</span><span class="kt">Integer</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="w">  </span><span class="n">Complete</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">blocking</span><span class="w"> </span><span class="n">send</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">an</span><span class="w"> </span><span class="n">isbits</span><span class="w"> </span><span class="n">object</span><span class="w"> </span><span class="n">obj</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">MPI</span><span class="w"> </span><span class="n">rank</span><span class="w"> </span><span class="n">dest</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">communicator</span><span class="w"> </span><span class="n">comm</span><span class="w"> </span><span class="k">using</span><span class="w"> </span><span class="n">with</span>
+<span class="w">  </span><span class="n">the</span><span class="w"> </span><span class="n">message</span><span class="w"> </span><span class="n">tag</span><span class="w"> </span><span class="n">tag</span><span class="o">.</span>
+
+<span class="w">  </span><span class="n">External</span><span class="w"> </span><span class="n">links</span>
+<span class="w">  </span><span class="o">≡≡≡≡≡≡≡≡≡≡≡≡≡≡</span>
+
+<span class="w">    </span><span class="n">•</span><span class="w">  </span><span class="n">MPI_Send</span><span class="w"> </span><span class="n">man</span><span class="w"> </span><span class="n">page</span><span class="o">:</span><span class="w"> </span><span class="n">OpenMPI</span>
+<span class="w">       </span><span class="p">(</span><span class="n">https</span><span class="o">://</span><span class="n">docs</span><span class="o">.</span><span class="n">open</span><span class="o">-</span><span class="n">mpi</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">en</span><span class="o">/</span><span class="n">main</span><span class="o">/</span><span class="n">man</span><span class="o">-</span><span class="n">openmpi</span><span class="o">/</span><span class="n">man3</span><span class="o">/</span><span class="n">MPI_Send</span><span class="mf">.3</span><span class="o">.</span><span class="n">html</span><span class="p">),</span><span class="w"> </span><span class="n">MPICH</span>
+<span class="w">       </span><span class="p">(</span><span class="n">https</span><span class="o">://</span><span class="n">www</span><span class="o">.</span><span class="n">mpich</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">static</span><span class="o">/</span><span class="n">docs</span><span class="o">/</span><span class="n">v4</span><span class="mf">.0</span><span class="o">/</span><span class="n">www3</span><span class="o">/</span><span class="n">MPI_Send</span><span class="o">.</span><span class="n">html</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Likewise for the <code class="docutils literal notranslate"><span class="pre">MPI.Recv</span></code> function:</p>
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">help</span><span class="o">?&gt;</span><span class="w"> </span><span class="n">MPI</span><span class="o">.</span><span class="n">Recv!</span>
+<span class="w">  </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Recv!</span><span class="p">(</span><span class="n">recvbuf</span><span class="p">,</span><span class="w"> </span><span class="n">comm</span><span class="o">::</span><span class="kt">Comm</span><span class="p">;</span>
+<span class="w">          </span><span class="n">source</span><span class="o">::</span><span class="kt">Integer</span><span class="o">=</span><span class="n">MPI</span><span class="o">.</span><span class="n">ANY_SOURCE</span><span class="p">,</span><span class="w"> </span><span class="n">tag</span><span class="o">::</span><span class="kt">Integer</span><span class="o">=</span><span class="n">MPI</span><span class="o">.</span><span class="n">ANY_TAG</span><span class="p">)</span>
+<span class="w">  </span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Recv!</span><span class="p">(</span><span class="n">recvbuf</span><span class="p">,</span><span class="w"> </span><span class="n">comm</span><span class="o">::</span><span class="kt">Comm</span><span class="p">,</span><span class="w"> </span><span class="n">MPI</span><span class="o">.</span><span class="n">Status</span><span class="p">;</span>
+<span class="w">          </span><span class="n">source</span><span class="o">::</span><span class="kt">Integer</span><span class="o">=</span><span class="n">MPI</span><span class="o">.</span><span class="n">ANY_SOURCE</span><span class="p">,</span><span class="w"> </span><span class="n">tag</span><span class="o">::</span><span class="kt">Integer</span><span class="o">=</span><span class="n">MPI</span><span class="o">.</span><span class="n">ANY_TAG</span><span class="p">)</span>
+
+<span class="w">  </span><span class="n">Completes</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">blocking</span><span class="w"> </span><span class="n">receive</span><span class="w"> </span><span class="n">into</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">buffer</span><span class="w"> </span><span class="n">recvbuf</span><span class="w"> </span><span class="n">from</span><span class="w"> </span><span class="n">MPI</span><span class="w"> </span><span class="n">rank</span><span class="w"> </span><span class="n">source</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">communicator</span><span class="w"> </span><span class="n">comm</span>
+<span class="w">  </span><span class="k">using</span><span class="w"> </span><span class="n">with</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">message</span><span class="w"> </span><span class="n">tag</span><span class="w"> </span><span class="n">tag</span><span class="o">.</span>
+
+<span class="w">  </span><span class="n">recvbuf</span><span class="w"> </span><span class="n">can</span><span class="w"> </span><span class="n">be</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">Buffer</span><span class="p">,</span><span class="w"> </span><span class="n">or</span><span class="w"> </span><span class="n">any</span><span class="w"> </span><span class="n">object</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">which</span><span class="w"> </span><span class="n">Buffer</span><span class="p">(</span><span class="n">recvbuf</span><span class="p">)</span><span class="w"> </span><span class="n">is</span><span class="w"> </span><span class="n">defined</span><span class="o">.</span>
+
+<span class="w">  </span><span class="n">Optionally</span><span class="w"> </span><span class="n">returns</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">Status</span><span class="w"> </span><span class="n">object</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">receive</span><span class="o">.</span>
+
+<span class="w">  </span><span class="n">See</span><span class="w"> </span><span class="n">also</span>
+<span class="w">  </span><span class="o">≡≡≡≡≡≡≡≡</span>
+
+<span class="w">    </span><span class="n">•</span><span class="w">  </span><span class="n">Recv</span>
+
+<span class="w">    </span><span class="n">•</span><span class="w">  </span><span class="n">recv</span>
+
+<span class="w">  </span><span class="n">External</span><span class="w"> </span><span class="n">links</span>
+<span class="w">  </span><span class="o">≡≡≡≡≡≡≡≡≡≡≡≡≡≡</span>
+
+<span class="w">    </span><span class="n">•</span><span class="w">  </span><span class="n">MPI_Recv</span><span class="w"> </span><span class="n">man</span><span class="w"> </span><span class="n">page</span><span class="o">:</span><span class="w"> </span><span class="n">OpenMPI</span>
+<span class="w">       </span><span class="p">(</span><span class="n">https</span><span class="o">://</span><span class="n">docs</span><span class="o">.</span><span class="n">open</span><span class="o">-</span><span class="n">mpi</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">en</span><span class="o">/</span><span class="n">main</span><span class="o">/</span><span class="n">man</span><span class="o">-</span><span class="n">openmpi</span><span class="o">/</span><span class="n">man3</span><span class="o">/</span><span class="n">MPI_Recv</span><span class="mf">.3</span><span class="o">.</span><span class="n">html</span><span class="p">),</span><span class="w"> </span><span class="n">MPICH</span>
+<span class="w">       </span><span class="p">(</span><span class="n">https</span><span class="o">://</span><span class="n">www</span><span class="o">.</span><span class="n">mpich</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">static</span><span class="o">/</span><span class="n">docs</span><span class="o">/</span><span class="n">v4</span><span class="mf">.0</span><span class="o">/</span><span class="n">www3</span><span class="o">/</span><span class="n">MPI_Recv</span><span class="o">.</span><span class="n">html</span><span class="p">)</span>
+</pre></div>
+</div>
 <ul class="simple">
-<li><p>Each process executes its own program with its own data.</p></li>
-<li><p>Each process can communicate with every other process through messages (chunks of binary data, generally arrays of primitive data types like <code class="docutils literal notranslate"><span class="pre">int</span></code>, <code class="docutils literal notranslate"><span class="pre">double</span></code>, etc..)</p></li>
-<li><p>Messages can be <em>point-to-point</em> (between only two processes) or <em>collective</em> such as <em>broadcasts</em> (one to all) and <em>reductions</em> (all to one).</p></li>
-<li><p>Though in principle each process can execute a unique program, generally each process executes the same program but the work it does depends on it’s unique number within all the processes.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">MPI.Send</span></code> blocks until the message has been sent (that means that whatever was in the <code class="docutils literal notranslate"><span class="pre">buf</span></code> can be written over)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">MPI.Recv!</span></code> blocks until the message has been full received (that means that <code class="docutils literal notranslate"><span class="pre">buf</span></code> is the valid data). Since two ranks may be sending multiple messages to one another, <code class="docutils literal notranslate"><span class="pre">tag</span></code> uniquely identifies each message (both ranks must use the same tag).</p></li>
+<li><p>For most applications (everything I’ve ever done) the process receiving the communication can predict how much data it will receive. If this is not the case the status variable can be used to find out how much data was received via <code class="docutils literal notranslate"><span class="pre">MPI.Get_count</span></code>.</p></li>
+<li><p>Similarly, <code class="docutils literal notranslate"><span class="pre">source</span></code> and <code class="docutils literal notranslate"><span class="pre">tag</span></code> in <code class="docutils literal notranslate"><span class="pre">MPI.Recv</span></code> can be set to <code class="docutils literal notranslate"><span class="pre">MPI.ANY_SOURCE</span></code> and <code class="docutils literal notranslate"><span class="pre">MPI.ANY_TAG</span></code> and then the status variable can be used to determine the source process rank and the tag received. That said, I’ve never used this in practice and most likely this is not needed for this class.</p></li>
 </ul>
-<p><strong>Terminology</strong>:</p>
-<ul class="simple">
-<li><p><strong>communicator</strong>: a group of processes that can communicate (a process can be in many different communicators, though in this class we will generally just use a single global communicator).</p></li>
-<li><p><strong>rank</strong>: the unique identifying number of a process within a communicator. Process ranks run from 0 to the number of processes minus one in the communicator. In general, a processes rank will have a different in each communicator it is a member of.</p></li>
-</ul>
-<p>Key points:</p>
-<ul class="simple">
-<li><p>There is no global memory shared by all the processors. Data must be exchanged with messages.</p></li>
-<li><p>All processors operate independently of one another unless synchronization calls are made.</p></li>
-<li><p>We often use the terms MPI rank, processor, processes, program instance, etc. interchangeably. A processor/core may have more than one MPI rank running on it but even in this case they are independent.</p></li>
-<li><p>Note: Though in principle each process can execute a unique program ((<strong>MPMD: Multiple Program, Multiple Data</strong>)), generally each process executes the same program but the work it does depends on it’s unique number within all the processes. This is called <strong>SPMD: Single Program, Multiple Data</strong>.</p></li>
-</ul>
-<section id="blocking-vs-non-blocking">
-<h3>Blocking Vs Non-blocking<a class="headerlink" href="#blocking-vs-non-blocking" title="Link to this heading">#</a></h3>
-<ul class="simple">
-<li><p><strong>Blocking operation</strong>: An MPI communication operation is blocking, if return of control to the calling process indicates that all resources, such as buffers, specified in the call can be reused, e.g., for other operations.  In particular, all state transitions initiated by a blocking operation are completed before control returns to the calling process.</p></li>
-<li><p><strong>Non-blocking operation</strong>: An MPI communication operation is non-blocking, if the corresponding call may return before all effects of the operation are completed and before the resources used by the call can be reused. Thus, a call of a non-blocking operation only starts the operation. The operation itself is completed not before all state transitions caused are completed and the resources specified can be reused.</p></li>
-<li><p>Note that a blocking send is <strong>asynchronous</strong> in the sense that continuing execution does not imply that a message has been received by the receiving MPI rank, just that the buffers can be used (e.g., an MPI implementation might make a copy of the data before and then return control to the program).</p></li>
-<li><p>Required synchronization is achieved through other “wait” calls.</p></li>
-</ul>
-<p><a class="reference external" href="https://juliaparallel.org/MPI.jl/stable/">MPI.jl</a> is a basic Julia wrapper for the MPI standard.</p>
 </section>
+<section id="examples">
+<h2>1.1 Examples<a class="headerlink" href="#examples" title="Link to this heading">#</a></h2>
+<section id="example-of-blocking-communication">
+<h3>Example of blocking communication<a class="headerlink" href="#example-of-blocking-communication" title="Link to this heading">#</a></h3>
 </section>
-<section id="setup-mpi-jl">
-<h2>2. Setup MPI.jl<a class="headerlink" href="#setup-mpi-jl" title="Link to this heading">#</a></h2>
-<p>To be able to run MPI instructions in Julia, we first need to <a class="reference external" href="https://juliaparallel.org/MPI.jl/stable/configuration/">configure MPI.jl</a>.</p>
-<p>To do so, we need the auxiliary package MPIPreferences.jl. This will (hopefully) detect an MPI implementation library on your system at one of the default locations.</p>
-<p>To do so, launch Julia and in the REPL do the following:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>julia
-</pre></div>
-</div>
-<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">julia</span><span class="o">&gt;</span><span class="w"> </span><span class="k">using</span><span class="w"> </span><span class="n">Pkg</span><span class="p">;</span><span class="w"> </span><span class="n">Pkg</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s">&quot;MPIPreferences.jl&quot;</span><span class="p">)</span>
-
-<span class="n">julia</span><span class="o">&gt;</span><span class="w"> </span><span class="k">using</span><span class="w"> </span><span class="n">MPIPreferences</span><span class="p">;</span><span class="w"> </span><span class="n">MPIPreferences</span><span class="o">.</span><span class="n">use_system_binary</span><span class="p">()</span>
-</pre></div>
-</div>
-<p>The call to <code class="docutils literal notranslate"><span class="pre">use_system_binary()</span></code> should automatically detect the MPI binary.</p>
-<p>Now you should be ready to run your first MPI.jl hello world program.</p>
-</section>
-<section id="hello-world">
-<h2>3. Hello world<a class="headerlink" href="#hello-world" title="Link to this heading">#</a></h2>
-<p>In the Julia REPL, you can do:</p>
-<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">julia</span><span class="o">&gt;</span><span class="w"> </span><span class="k">using</span><span class="w"> </span><span class="n">Pkg</span><span class="p">;</span><span class="w"> </span><span class="n">Pkg</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s">&quot;MPI.jl&quot;</span><span class="p">)</span>
-
-<span class="n">julia</span><span class="o">&gt;</span><span class="w"> </span><span class="k">using</span><span class="w"> </span><span class="n">MPI</span><span class="p">;</span><span class="w"> </span><span class="n">mpiexec</span><span class="p">(</span><span class="n">cmd</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">run</span><span class="p">(</span><span class="sb">`</span><span class="si">$cmd</span><span class="sb"> -n 3 echo hello world`</span><span class="p">))</span>
-</pre></div>
-</div>
-<p>Or you can find the following example in <a class="reference external" href="https://github.com/sdsu-comp605/spring25/tree/main/julia_codes/module6-1/"><code class="docutils literal notranslate"><span class="pre">julia_codes/module6-1/</span></code></a>.</p>
-<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="k">using</span><span class="w"> </span><span class="n">MPI</span>
-<span class="linenos">2</span>
-<span class="linenos">3</span><span class="n">MPI</span><span class="o">.</span><span class="n">Init</span><span class="p">()</span>
-<span class="linenos">4</span><span class="n">comm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MPI</span><span class="o">.</span><span class="n">COMM_WORLD</span>
-<span class="linenos">5</span>
-<span class="linenos">6</span><span class="n">rank</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MPI</span><span class="o">.</span><span class="n">Comm_rank</span><span class="p">(</span><span class="n">comm</span><span class="p">)</span>
-<span class="linenos">7</span><span class="n">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MPI</span><span class="o">.</span><span class="n">Comm_rank</span><span class="p">(</span><span class="n">comm</span><span class="p">)</span>
-<span class="linenos">8</span>
-<span class="linenos">9</span><span class="n">println</span><span class="p">(</span><span class="s">&quot;I&#39;m rank </span><span class="si">$rank</span><span class="s"> of </span><span class="si">$size</span><span class="s">&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>Once you have setup your environment via MPIPreferences and added MPI, you can run the above example under your <code class="docutils literal notranslate"><span class="pre">mpiexec</span></code>:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mpiexec<span class="w"> </span>-n<span class="w"> </span><span class="m">4</span><span class="w"> </span>julia<span class="w"> </span>./julia_codes/module6-1/mpi_hello_world.jl
-</pre></div>
-</div>
-</section>
-<section id="setup-on-tuckoo-cluster">
-<h2>4. Setup on tuckoo cluster<a class="headerlink" href="#setup-on-tuckoo-cluster" title="Link to this heading">#</a></h2>
-<p>On the cluster, you can simply start julia by typing <code class="docutils literal notranslate"><span class="pre">julia</span></code> from any location.</p>
-<p>We will still use MPIPreferences to set up our environment, but this time the call to <code class="docutils literal notranslate"><span class="pre">use_system_binary()</span></code> instead of having an empty default list of arguments, will include the argument <code class="docutils literal notranslate"><span class="pre">library_names</span></code> with the location of where the MPI binary resides on the parallel file system in the cluster.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ julia
-
-julia&gt; using Pkg; Pkg.add(&quot;MPIPreferences&quot;)
-julia&gt; using MPIPreferences
-julia&gt; MPIPreferences.use_system_binary(library_names=&quot;/usr/lib64/openmpi/lib/libmpi.so&quot;)
-julia&gt; using Pkg; Pkg.add(&quot;MPI&quot;)
-</pre></div>
-</div>
-<p>Once your environment is setup on the cluster, you can run with</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mpiexec<span class="w"> </span>-np<span class="w"> </span><span class="m">4</span><span class="w"> </span>julia<span class="w"> </span>mpi_hello_world.jl
-</pre></div>
-</div>
-<p>You can find an example of a batch script that launches a julia job in <code class="docutils literal notranslate"><span class="pre">/examples/slurm/batch-jello</span></code></p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/sh</span>
-
-<span class="c1">#note: run julia hello-world on a single node</span>
-
-<span class="c1">#SBATCH --job-name=jhello</span>
-<span class="c1">#SBATCH --output=%A-jhello.out</span>
-<span class="c1">#SBATCH --ntasks=16</span>
-
-<span class="nb">export</span><span class="w"> </span><span class="nv">OMPI_MCA_pml</span><span class="o">=</span>ob1
-<span class="nb">export</span><span class="w"> </span><span class="nv">OMPI_MCA_btl</span><span class="o">=</span>tcp,self
-
-<span class="c1">#require tcp over infiniband</span>
-<span class="nb">export</span><span class="w"> </span>OMPI_MCA_btl_tcp_if_include<span class="w"> </span>ib0
-
-mpirun<span class="w"> </span>julia<span class="w"> </span>mpi_hello_world.jl
-</pre></div>
-</div>
 </section>
 </section>
 
@@ -608,22 +559,13 @@ mpirun<span class="w"> </span>julia<span class="w"> </span>mpi_hello_world.jl
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="module5-4_parallel_linear_alegebra.html"
+       href="module6-1_intro_to_mpi_jl.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">20) Parallel Linear Algebra</p>
+        <p class="prev-next-title">21) Introduction to MPI.jl</p>
       </div>
-    </a>
-    <a class="right-next"
-       href="module6-2_blocking_vs_nonblocking.html"
-       title="next page">
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">22) Blocking and non-blocking communication</p>
-      </div>
-      <i class="fa-solid fa-angle-right"></i>
     </a>
 </div>
                 </footer>
@@ -641,13 +583,11 @@ mpirun<span class="w"> </span>julia<span class="w"> </span>mpi_hello_world.jl
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">1. Introduction to MPI.jl</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#blocking-vs-non-blocking">Blocking Vs Non-blocking</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#blocking-communication">1. Blocking communication</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#examples">1.1 Examples</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-of-blocking-communication">Example of blocking communication</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setup-mpi-jl">2. Setup MPI.jl</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hello-world">3. Hello world</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setup-on-tuckoo-cluster">4. Setup on tuckoo cluster</a></li>
 </ul>
   </nav></div>
 
