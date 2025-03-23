@@ -28,3 +28,4 @@ chapters:
   - file: lectures/module5-3_intro_to_slurm.ipynb
   - file: lectures/module5-4_parallel_linear_alegebra.ipynb
   - file: lectures/module6-1_intro_to_mpi_jl.ipynb
+  - file: lectures/module6-2_blocking_vs_nonblocking.ipynb
