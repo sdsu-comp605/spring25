@@ -507,7 +507,7 @@ document.write(`
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>julia
 </pre></div>
 </div>
-<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">julia</span><span class="o">&gt;</span><span class="w"> </span><span class="k">using</span><span class="w"> </span><span class="n">Pkg</span><span class="p">;</span><span class="w"> </span><span class="n">Pkg</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s">&quot;MPIPreferences.jl&quot;</span><span class="p">)</span>
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">julia</span><span class="o">&gt;</span><span class="w"> </span><span class="k">using</span><span class="w"> </span><span class="n">Pkg</span><span class="p">;</span><span class="w"> </span><span class="n">Pkg</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s">&quot;MPIPreferences&quot;</span><span class="p">)</span>
 
 <span class="n">julia</span><span class="o">&gt;</span><span class="w"> </span><span class="k">using</span><span class="w"> </span><span class="n">MPIPreferences</span><span class="p">;</span><span class="w"> </span><span class="n">MPIPreferences</span><span class="o">.</span><span class="n">use_system_binary</span><span class="p">()</span>
 </pre></div>
@@ -518,7 +518,7 @@ document.write(`
 <section id="hello-world">
 <h2>3. Hello world<a class="headerlink" href="#hello-world" title="Link to this heading">#</a></h2>
 <p>In the Julia REPL, you can do:</p>
-<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">julia</span><span class="o">&gt;</span><span class="w"> </span><span class="k">using</span><span class="w"> </span><span class="n">Pkg</span><span class="p">;</span><span class="w"> </span><span class="n">Pkg</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s">&quot;MPI.jl&quot;</span><span class="p">)</span>
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">julia</span><span class="o">&gt;</span><span class="w"> </span><span class="k">using</span><span class="w"> </span><span class="n">Pkg</span><span class="p">;</span><span class="w"> </span><span class="n">Pkg</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s">&quot;MPI&quot;</span><span class="p">)</span>
 
 <span class="n">julia</span><span class="o">&gt;</span><span class="w"> </span><span class="k">using</span><span class="w"> </span><span class="n">MPI</span><span class="p">;</span><span class="w"> </span><span class="n">mpiexec</span><span class="p">(</span><span class="n">cmd</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">run</span><span class="p">(</span><span class="sb">`</span><span class="si">$cmd</span><span class="sb"> -n 3 echo hello world`</span><span class="p">))</span>
 </pre></div>
@@ -556,6 +556,7 @@ julia&gt; using Pkg; Pkg.add(&quot;MPI&quot;)
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mpiexec<span class="w"> </span>-np<span class="w"> </span><span class="m">4</span><span class="w"> </span>julia<span class="w"> </span>mpi_hello_world.jl
 </pre></div>
 </div>
+<p>Note that we have specified the resources with <code class="docutils literal notranslate"><span class="pre">-np</span></code> on the cluster.</p>
 <p>You can find an example of a batch script that launches a julia job in <code class="docutils literal notranslate"><span class="pre">/examples/slurm/batch-jello</span></code></p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/sh</span>
 
