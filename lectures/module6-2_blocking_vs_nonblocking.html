@@ -437,6 +437,13 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#blocking-communication">1. Blocking communication</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#examples">1.1 Examples</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-of-blocking-communication">Example of blocking communication</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-of-deadlock">Example of deadlock</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#other-blocking-communication">Other blocking communication</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#non-blocking-communication">2. Non-blocking communication</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">2.1 Examples</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-of-non-blocking-communication">Example of non-blocking communication</a></li>
 </ul>
 </li>
 </ul>
@@ -460,21 +467,22 @@ document.write(`
 <ol class="arabic simple">
 <li><p>Blocking communication<br />
 1.1 Examples</p></li>
-<li><p>Non-blocking communication</p></li>
+<li><p>Non-blocking communication<br />
+2.1 Examples</p></li>
 </ol>
 <section id="blocking-communication">
 <h2>1. Blocking communication<a class="headerlink" href="#blocking-communication" title="Link to this heading">#</a></h2>
 <p>Note that most MPI routines return error codes indicating successful executing of a function. For the most part these are ignored by the MPI wrappers in Julia… For example, see the help string for the <code class="docutils literal notranslate"><span class="pre">MPI.Send</span></code> below:</p>
-<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">help</span><span class="o">?&gt;</span><span class="w"> </span><span class="n">MPI</span><span class="o">.</span><span class="n">Send</span>
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="k">using</span><span class="w"> </span><span class="n">MPI</span>
+
+<span class="n">help</span><span class="o">?&gt;</span><span class="w"> </span><span class="n">MPI</span><span class="o">.</span><span class="n">Send</span>
 <span class="w">  </span><span class="n">Send</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="n">comm</span><span class="o">::</span><span class="kt">Comm</span><span class="p">;</span><span class="w"> </span><span class="n">dest</span><span class="o">::</span><span class="kt">Integer</span><span class="p">,</span><span class="w"> </span><span class="n">tag</span><span class="o">::</span><span class="kt">Integer</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
-<span class="w">  </span><span class="n">Perform</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">blocking</span><span class="w"> </span><span class="n">send</span><span class="w"> </span><span class="n">from</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">buffer</span><span class="w"> </span><span class="n">buf</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">MPI</span><span class="w"> </span><span class="n">rank</span><span class="w"> </span><span class="n">dest</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">communicator</span><span class="w"> </span><span class="n">comm</span><span class="w"> </span><span class="k">using</span><span class="w"> </span><span class="n">the</span>
-<span class="w">  </span><span class="n">message</span><span class="w"> </span><span class="n">tag</span><span class="w"> </span><span class="n">tag</span><span class="o">.</span>
+<span class="w">  </span><span class="n">Perform</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">blocking</span><span class="w"> </span><span class="n">send</span><span class="w"> </span><span class="n">from</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">buffer</span><span class="w"> </span><span class="n">buf</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">MPI</span><span class="w"> </span><span class="n">rank</span><span class="w"> </span><span class="n">dest</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">communicator</span><span class="w"> </span><span class="n">comm</span><span class="w"> </span><span class="k">using</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">message</span><span class="w"> </span><span class="n">tag</span><span class="w"> </span><span class="n">tag</span><span class="o">.</span>
 
 <span class="w">  </span><span class="n">Send</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span><span class="w"> </span><span class="n">comm</span><span class="o">::</span><span class="kt">Comm</span><span class="p">;</span><span class="w"> </span><span class="n">dest</span><span class="o">::</span><span class="kt">Integer</span><span class="p">,</span><span class="w"> </span><span class="n">tag</span><span class="o">::</span><span class="kt">Integer</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
-<span class="w">  </span><span class="n">Complete</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">blocking</span><span class="w"> </span><span class="n">send</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">an</span><span class="w"> </span><span class="n">isbits</span><span class="w"> </span><span class="n">object</span><span class="w"> </span><span class="n">obj</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">MPI</span><span class="w"> </span><span class="n">rank</span><span class="w"> </span><span class="n">dest</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">communicator</span><span class="w"> </span><span class="n">comm</span><span class="w"> </span><span class="k">using</span><span class="w"> </span><span class="n">with</span>
-<span class="w">  </span><span class="n">the</span><span class="w"> </span><span class="n">message</span><span class="w"> </span><span class="n">tag</span><span class="w"> </span><span class="n">tag</span><span class="o">.</span>
+<span class="w">  </span><span class="n">Complete</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">blocking</span><span class="w"> </span><span class="n">send</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">an</span><span class="w"> </span><span class="n">isbits</span><span class="w"> </span><span class="n">object</span><span class="w"> </span><span class="n">obj</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">MPI</span><span class="w"> </span><span class="n">rank</span><span class="w"> </span><span class="n">dest</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">communicator</span><span class="w"> </span><span class="n">comm</span><span class="w"> </span><span class="k">using</span><span class="w"> </span><span class="n">with</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">message</span><span class="w"> </span><span class="n">tag</span><span class="w"> </span><span class="n">tag</span><span class="o">.</span>
 
 <span class="w">  </span><span class="n">External</span><span class="w"> </span><span class="n">links</span>
 <span class="w">  </span><span class="o">≡≡≡≡≡≡≡≡≡≡≡≡≡≡</span>
@@ -484,7 +492,14 @@ document.write(`
 <span class="w">       </span><span class="p">(</span><span class="n">https</span><span class="o">://</span><span class="n">www</span><span class="o">.</span><span class="n">mpich</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">static</span><span class="o">/</span><span class="n">docs</span><span class="o">/</span><span class="n">v4</span><span class="mf">.0</span><span class="o">/</span><span class="n">www3</span><span class="o">/</span><span class="n">MPI_Send</span><span class="o">.</span><span class="n">html</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Likewise for the <code class="docutils literal notranslate"><span class="pre">MPI.Recv</span></code> function:</p>
+<ul class="simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">tag</span></code> above is used because sometimes there are cases when A might have to send many different types of messages to B. Instead of B having to go through extra measures to differentiate all these messages, MPI allows senders and receivers to also specify message IDs with the message (known as tags). When process B only requests a message with a certain tag number, messages with different tags will be buffered by the network until B is ready for them.</p>
+<ul>
+<li><p>Note that the receive operation has to match the tag of a message it wants to receive.</p></li>
+</ul>
+</li>
+</ul>
+<p>Likewise for the <code class="docutils literal notranslate"><span class="pre">MPI.Recv!</span></code> function:</p>
 <div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">help</span><span class="o">?&gt;</span><span class="w"> </span><span class="n">MPI</span><span class="o">.</span><span class="n">Recv!</span>
 <span class="w">  </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Recv!</span><span class="p">(</span><span class="n">recvbuf</span><span class="p">,</span><span class="w"> </span><span class="n">comm</span><span class="o">::</span><span class="kt">Comm</span><span class="p">;</span>
 <span class="w">          </span><span class="n">source</span><span class="o">::</span><span class="kt">Integer</span><span class="o">=</span><span class="n">MPI</span><span class="o">.</span><span class="n">ANY_SOURCE</span><span class="p">,</span><span class="w"> </span><span class="n">tag</span><span class="o">::</span><span class="kt">Integer</span><span class="o">=</span><span class="n">MPI</span><span class="o">.</span><span class="n">ANY_TAG</span><span class="p">)</span>
@@ -524,6 +539,152 @@ document.write(`
 <h2>1.1 Examples<a class="headerlink" href="#examples" title="Link to this heading">#</a></h2>
 <section id="example-of-blocking-communication">
 <h3>Example of blocking communication<a class="headerlink" href="#example-of-blocking-communication" title="Link to this heading">#</a></h3>
+<p>Example of a blocking communication can be found at <a class="reference external" href="https://github.com/sdsu-comp605/spring25/tree/main/julia_codes/module6-2/blocking.jl"><code class="docutils literal notranslate"><span class="pre">julia_codes/module6-2/blocking.jl</span></code></a>.</p>
+<p>We will demo this in class.</p>
+</section>
+<section id="example-of-deadlock">
+<h3>Example of deadlock<a class="headerlink" href="#example-of-deadlock" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Deadlock</strong>: One of the dangers of blocking communication is that deadlock can occur where there are waiting patterns that cannot be resolved, i.e., ranks are mutually waiting to receive data.</p></li>
+</ul>
+<p>Example can be found at <a class="reference external" href="https://github.com/sdsu-comp605/spring25/tree/main/julia_codes/module6-2/deadlock.jl"><code class="docutils literal notranslate"><span class="pre">julia_codes/module6-2/deadlock.jl</span></code></a>.</p>
+<ul class="simple">
+<li><p><strong>WARNING</strong>: if the sends were done first in the example shown above deadlock may or may not occur depending on whether the MPI implementation buffered the send or not (i.e., made a copy and returned control to the user).</p></li>
+</ul>
+</section>
+<section id="other-blocking-communication">
+<h3>Other blocking communication<a class="headerlink" href="#other-blocking-communication" title="Link to this heading">#</a></h3>
+<p>Since it’s often the case the two processes exchange messages, in the MPI standard there are two functions to facilitate such pairwise communication. These are the functions: <code class="docutils literal notranslate"><span class="pre">MPI_Sendrecv</span></code> and <code class="docutils literal notranslate"><span class="pre">MPI_Sendrecv_replace</span></code>.</p>
+</section>
+</section>
+<section id="non-blocking-communication">
+<h2>2. Non-blocking communication<a class="headerlink" href="#non-blocking-communication" title="Link to this heading">#</a></h2>
+<p>Two problems with blocking communication:</p>
+<ol class="arabic simple">
+<li><p>As seen above, <strong>deadlock</strong> can occur is the programmer is not careful with the
+sends and receives order.</p></li>
+<li><p>The program has to wait for the sends to complete (or at least the buffer to be reusable) and the receives to complete before doing any more work. In many cases, we can initialize sends and receives to do some work with data that does <em>not</em> depend on the received data then come back to fix things up once we have the extra data. (This is called <em>overlapping communication and computation</em>.)</p></li>
+</ol>
+<p>This gives rise to a need for <strong>non-blocking</strong> operations, where the process can start a send or receive, and then the program can continue and check at some future point whether the communication is done or not.</p>
+<p>The commands for non-blocking sending and receiving are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">MPI.Isend</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">MPI.Irecv</span></code>
+and these have <code class="docutils literal notranslate"><span class="pre">an</span> <span class="pre">MPI.Request</span></code> associated with them that can be checked with <code class="docutils literal notranslate"><span class="pre">MPI.Wait</span></code> and in
+the case of an array of requests an <code class="docutils literal notranslate"><span class="pre">MPI.Waitall</span></code>.</p></li>
+</ul>
+<p>Recall that the “I” stands for “with Immediate return”; it does not block until the message is received.</p>
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">julia</span><span class="o">&gt;</span><span class="w"> </span><span class="k">using</span><span class="w"> </span><span class="n">MPI</span>
+
+<span class="n">help</span><span class="o">?&gt;</span><span class="w"> </span><span class="n">MPI</span><span class="o">.</span><span class="n">Irecv!</span>
+<span class="w">  </span><span class="n">req</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Irecv!</span><span class="p">(</span><span class="n">recvbuf</span><span class="p">,</span><span class="w"> </span><span class="n">comm</span><span class="o">::</span><span class="n">Comm</span><span class="p">[,</span><span class="w"> </span><span class="n">req</span><span class="o">::</span><span class="kt">AbstractRequest</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Request</span><span class="p">()];</span>
+<span class="w">          </span><span class="n">source</span><span class="o">::</span><span class="kt">Integer</span><span class="o">=</span><span class="n">MPI</span><span class="o">.</span><span class="n">ANY_SOURCE</span><span class="p">,</span><span class="w"> </span><span class="n">tag</span><span class="o">::</span><span class="kt">Integer</span><span class="o">=</span><span class="n">MPI</span><span class="o">.</span><span class="n">ANY_TAG</span><span class="p">)</span>
+
+<span class="w">  </span><span class="n">Starts</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">nonblocking</span><span class="w"> </span><span class="n">receive</span><span class="w"> </span><span class="n">into</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">buffer</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="n">from</span><span class="w"> </span><span class="n">MPI</span><span class="w"> </span><span class="n">rank</span><span class="w"> </span><span class="n">source</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">communicator</span><span class="w"> </span><span class="n">comm</span><span class="w"> </span><span class="k">using</span><span class="w"> </span><span class="n">with</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">message</span><span class="w"> </span><span class="n">tag</span><span class="w"> </span><span class="n">tag</span><span class="o">.</span>
+
+<span class="w">  </span><span class="n">data</span><span class="w"> </span><span class="n">can</span><span class="w"> </span><span class="n">be</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">Buffer</span><span class="p">,</span><span class="w"> </span><span class="n">or</span><span class="w"> </span><span class="n">any</span><span class="w"> </span><span class="n">object</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">which</span><span class="w"> </span><span class="n">Buffer</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="w"> </span><span class="n">is</span><span class="w"> </span><span class="n">defined</span><span class="o">.</span>
+
+<span class="w">  </span><span class="n">Returns</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">AbstractRequest</span><span class="w"> </span><span class="n">object</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">nonblocking</span><span class="w"> </span><span class="n">receive</span><span class="o">.</span>
+
+<span class="w">  </span><span class="n">External</span><span class="w"> </span><span class="n">links</span>
+<span class="w">  </span><span class="o">≡≡≡≡≡≡≡≡≡≡≡≡≡≡</span>
+
+<span class="w">    </span><span class="n">•</span><span class="w">  </span><span class="n">MPI_Irecv</span><span class="w"> </span><span class="n">man</span><span class="w"> </span><span class="n">page</span><span class="o">:</span><span class="w"> </span><span class="n">OpenMPI</span>
+<span class="w">       </span><span class="p">(</span><span class="n">https</span><span class="o">://</span><span class="n">docs</span><span class="o">.</span><span class="n">open</span><span class="o">-</span><span class="n">mpi</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">en</span><span class="o">/</span><span class="n">main</span><span class="o">/</span><span class="n">man</span><span class="o">-</span><span class="n">openmpi</span><span class="o">/</span><span class="n">man3</span><span class="o">/</span><span class="n">MPI_Irecv</span><span class="mf">.3</span><span class="o">.</span><span class="n">html</span><span class="p">),</span><span class="w"> </span><span class="n">MPICH</span>
+<span class="w">       </span><span class="p">(</span><span class="n">https</span><span class="o">://</span><span class="n">www</span><span class="o">.</span><span class="n">mpich</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">static</span><span class="o">/</span><span class="n">docs</span><span class="o">/</span><span class="n">v4</span><span class="mf">.0</span><span class="o">/</span><span class="n">www3</span><span class="o">/</span><span class="n">MPI_Irecv</span><span class="o">.</span><span class="n">html</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">help</span><span class="o">?&gt;</span><span class="w"> </span><span class="n">MPI</span><span class="o">.</span><span class="n">Isend</span>
+<span class="w">  </span><span class="n">Isend</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="n">comm</span><span class="o">::</span><span class="n">Comm</span><span class="p">[,</span><span class="w"> </span><span class="n">req</span><span class="o">::</span><span class="kt">AbstractRequest</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Request</span><span class="p">()];</span><span class="w"> </span><span class="n">dest</span><span class="o">::</span><span class="kt">Integer</span><span class="p">,</span><span class="w"> </span><span class="n">tag</span><span class="o">::</span><span class="kt">Integer</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="w">  </span><span class="n">Starts</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">nonblocking</span><span class="w"> </span><span class="n">send</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">MPI</span><span class="w"> </span><span class="n">rank</span><span class="w"> </span><span class="n">dest</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">communicator</span><span class="w"> </span><span class="n">comm</span><span class="w"> </span><span class="k">using</span><span class="w"> </span><span class="n">with</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">message</span><span class="w"> </span><span class="n">tag</span><span class="w"> </span><span class="n">tag</span><span class="o">.</span>
+
+<span class="w">  </span><span class="n">data</span><span class="w"> </span><span class="n">can</span><span class="w"> </span><span class="n">be</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">Buffer</span><span class="p">,</span><span class="w"> </span><span class="n">or</span><span class="w"> </span><span class="n">any</span><span class="w"> </span><span class="n">object</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">which</span><span class="w"> </span><span class="n">Buffer_send</span><span class="w"> </span><span class="n">is</span><span class="w"> </span><span class="n">defined</span><span class="o">.</span>
+
+<span class="w">  </span><span class="n">Returns</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">AbstractRequest</span><span class="w"> </span><span class="n">object</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">nonblocking</span><span class="w"> </span><span class="n">send</span><span class="o">.</span>
+
+<span class="w">  </span><span class="n">External</span><span class="w"> </span><span class="n">links</span>
+<span class="w">  </span><span class="o">≡≡≡≡≡≡≡≡≡≡≡≡≡≡</span>
+
+<span class="w">    </span><span class="n">•</span><span class="w">  </span><span class="n">MPI_Isend</span><span class="w"> </span><span class="n">man</span><span class="w"> </span><span class="n">page</span><span class="o">:</span><span class="w"> </span><span class="n">OpenMPI</span>
+<span class="w">       </span><span class="p">(</span><span class="n">https</span><span class="o">://</span><span class="n">docs</span><span class="o">.</span><span class="n">open</span><span class="o">-</span><span class="n">mpi</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">en</span><span class="o">/</span><span class="n">main</span><span class="o">/</span><span class="n">man</span><span class="o">-</span><span class="n">openmpi</span><span class="o">/</span><span class="n">man3</span><span class="o">/</span><span class="n">MPI_Isend</span><span class="mf">.3</span><span class="o">.</span><span class="n">html</span><span class="p">),</span><span class="w"> </span><span class="n">MPICH</span>
+<span class="w">       </span><span class="p">(</span><span class="n">https</span><span class="o">://</span><span class="n">www</span><span class="o">.</span><span class="n">mpich</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">static</span><span class="o">/</span><span class="n">docs</span><span class="o">/</span><span class="n">v4</span><span class="mf">.0</span><span class="o">/</span><span class="n">www3</span><span class="o">/</span><span class="n">MPI_Isend</span><span class="o">.</span><span class="n">html</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">help</span><span class="o">?&gt;</span><span class="w"> </span><span class="n">MPI</span><span class="o">.</span><span class="n">Wait</span>
+<span class="w">  </span><span class="n">Wait</span><span class="p">(</span><span class="n">req</span><span class="o">::</span><span class="kt">AbstractRequest</span><span class="p">)</span>
+<span class="w">  </span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Wait</span><span class="p">(</span><span class="n">req</span><span class="o">::</span><span class="kt">AbstractRequest</span><span class="p">,</span><span class="w"> </span><span class="n">Status</span><span class="p">)</span>
+
+<span class="w">  </span><span class="n">Block</span><span class="w"> </span><span class="n">until</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">request</span><span class="w"> </span><span class="n">req</span><span class="w"> </span><span class="n">is</span><span class="w"> </span><span class="n">complete</span><span class="w"> </span><span class="n">and</span><span class="w"> </span><span class="n">deallocated</span><span class="o">.</span>
+
+<span class="w">  </span><span class="n">The</span><span class="w"> </span><span class="n">Status</span><span class="w"> </span><span class="n">argument</span><span class="w"> </span><span class="n">returns</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">Status</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">completed</span><span class="w"> </span><span class="n">request</span><span class="o">.</span>
+
+<span class="w">  </span><span class="n">External</span><span class="w"> </span><span class="n">links</span>
+<span class="w">  </span><span class="o">≡≡≡≡≡≡≡≡≡≡≡≡≡≡</span>
+
+<span class="w">    </span><span class="n">•</span><span class="w">  </span><span class="n">MPI_Wait</span><span class="w"> </span><span class="n">man</span><span class="w"> </span><span class="n">page</span><span class="o">:</span><span class="w"> </span><span class="n">OpenMPI</span>
+<span class="w">       </span><span class="p">(</span><span class="n">https</span><span class="o">://</span><span class="n">docs</span><span class="o">.</span><span class="n">open</span><span class="o">-</span><span class="n">mpi</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">en</span><span class="o">/</span><span class="n">main</span><span class="o">/</span><span class="n">man</span><span class="o">-</span><span class="n">openmpi</span><span class="o">/</span><span class="n">man3</span><span class="o">/</span><span class="n">MPI_Wait</span><span class="mf">.3</span><span class="o">.</span><span class="n">html</span><span class="p">),</span><span class="w"> </span><span class="n">MPICH</span>
+<span class="w">       </span><span class="p">(</span><span class="n">https</span><span class="o">://</span><span class="n">www</span><span class="o">.</span><span class="n">mpich</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">static</span><span class="o">/</span><span class="n">docs</span><span class="o">/</span><span class="n">v4</span><span class="mf">.0</span><span class="o">/</span><span class="n">www3</span><span class="o">/</span><span class="n">MPI_Wait</span><span class="o">.</span><span class="n">html</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">help</span><span class="o">?&gt;</span><span class="w"> </span><span class="n">MPI</span><span class="o">.</span><span class="n">Waitall</span>
+<span class="w">  </span><span class="n">Waitall</span><span class="p">(</span><span class="n">reqs</span><span class="o">::</span><span class="kt">AbstractVector</span><span class="p">{</span><span class="kt">Request</span><span class="p">}[,</span><span class="w"> </span><span class="n">statuses</span><span class="o">::</span><span class="kt">Vector</span><span class="p">{</span><span class="kt">Status</span><span class="p">}])</span>
+<span class="w">  </span><span class="n">statuses</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Waitall</span><span class="p">(</span><span class="n">reqs</span><span class="o">::</span><span class="kt">AbstractVector</span><span class="p">{</span><span class="kt">Request</span><span class="p">},</span><span class="w"> </span><span class="n">Status</span><span class="p">)</span>
+
+<span class="w">  </span><span class="n">Block</span><span class="w"> </span><span class="n">until</span><span class="w"> </span><span class="n">all</span><span class="w"> </span><span class="n">active</span><span class="w"> </span><span class="n">requests</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">array</span><span class="w"> </span><span class="n">reqs</span><span class="w"> </span><span class="n">are</span><span class="w"> </span><span class="n">complete</span><span class="o">.</span>
+
+<span class="w">  </span><span class="n">The</span><span class="w"> </span><span class="n">optional</span><span class="w"> </span><span class="n">statuses</span><span class="w"> </span><span class="n">or</span><span class="w"> </span><span class="n">Status</span><span class="w"> </span><span class="n">argument</span><span class="w"> </span><span class="n">can</span><span class="w"> </span><span class="n">be</span><span class="w"> </span><span class="n">used</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">obtain</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">Status</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">each</span><span class="w"> </span><span class="n">request</span><span class="o">.</span>
+
+<span class="w">  </span><span class="n">See</span><span class="w"> </span><span class="n">also</span>
+<span class="w">  </span><span class="o">≡≡≡≡≡≡≡≡</span>
+
+<span class="w">    </span><span class="n">•</span><span class="w">  </span><span class="n">RequestSet</span><span class="w"> </span><span class="n">can</span><span class="w"> </span><span class="n">be</span><span class="w"> </span><span class="n">used</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">minimize</span><span class="w"> </span><span class="n">allocations</span>
+
+<span class="w">  </span><span class="n">External</span><span class="w"> </span><span class="n">links</span>
+<span class="w">  </span><span class="o">≡≡≡≡≡≡≡≡≡≡≡≡≡≡</span>
+
+<span class="w">    </span><span class="n">•</span><span class="w">  </span><span class="n">MPI_Waitall</span><span class="w"> </span><span class="n">man</span><span class="w"> </span><span class="n">page</span><span class="o">:</span><span class="w"> </span><span class="n">OpenMPI</span>
+<span class="w">       </span><span class="p">(</span><span class="n">https</span><span class="o">://</span><span class="n">docs</span><span class="o">.</span><span class="n">open</span><span class="o">-</span><span class="n">mpi</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">en</span><span class="o">/</span><span class="n">main</span><span class="o">/</span><span class="n">man</span><span class="o">-</span><span class="n">openmpi</span><span class="o">/</span><span class="n">man3</span><span class="o">/</span><span class="n">MPI_Waitall</span><span class="mf">.3</span><span class="o">.</span><span class="n">html</span><span class="p">),</span><span class="w"> </span><span class="n">MPICH</span>
+<span class="w">       </span><span class="p">(</span><span class="n">https</span><span class="o">://</span><span class="n">www</span><span class="o">.</span><span class="n">mpich</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">static</span><span class="o">/</span><span class="n">docs</span><span class="o">/</span><span class="n">v4</span><span class="mf">.0</span><span class="o">/</span><span class="n">www3</span><span class="o">/</span><span class="n">MPI_Waitall</span><span class="o">.</span><span class="n">html</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">help</span><span class="o">?&gt;</span><span class="w"> </span><span class="n">MPI</span><span class="o">.</span><span class="n">Waitany</span>
+<span class="w">  </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Waitany</span><span class="p">(</span><span class="n">reqs</span><span class="o">::</span><span class="kt">AbstractVector</span><span class="p">{</span><span class="kt">Request</span><span class="p">}[,</span><span class="w"> </span><span class="n">status</span><span class="o">::</span><span class="kt">Ref</span><span class="p">{</span><span class="kt">Status</span><span class="p">}])</span>
+<span class="w">  </span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Waitany</span><span class="p">(</span><span class="n">reqs</span><span class="o">::</span><span class="kt">AbstractVector</span><span class="p">{</span><span class="kt">Request</span><span class="p">},</span><span class="w"> </span><span class="n">Status</span><span class="p">)</span>
+
+<span class="w">  </span><span class="n">Blocks</span><span class="w"> </span><span class="n">until</span><span class="w"> </span><span class="n">one</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">requests</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">array</span><span class="w"> </span><span class="n">reqs</span><span class="w"> </span><span class="n">is</span><span class="w"> </span><span class="n">complete</span><span class="o">:</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">more</span><span class="w"> </span><span class="n">than</span><span class="w"> </span><span class="n">one</span><span class="w"> </span><span class="n">is</span><span class="w"> </span><span class="n">complete</span><span class="p">,</span><span class="w"> </span><span class="n">one</span><span class="w"> </span><span class="n">is</span><span class="w"> </span><span class="n">chosen</span><span class="w"> </span><span class="n">arbitrarily</span><span class="o">.</span><span class="w"> </span><span class="n">The</span><span class="w"> </span><span class="n">request</span><span class="w"> </span><span class="n">is</span><span class="w"> </span><span class="n">deallocated</span><span class="w"> </span><span class="n">and</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">based</span><span class="p">)</span><span class="w"> </span><span class="n">index</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">completed</span><span class="w"> </span><span class="n">request</span><span class="w"> </span><span class="n">is</span><span class="w"> </span><span class="n">returned</span><span class="o">.</span>
+
+<span class="w">  </span><span class="n">If</span><span class="w"> </span><span class="n">there</span><span class="w"> </span><span class="n">are</span><span class="w"> </span><span class="n">no</span><span class="w"> </span><span class="n">active</span><span class="w"> </span><span class="n">requests</span><span class="p">,</span><span class="w"> </span><span class="n">then</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">nothing</span><span class="o">.</span>
+
+<span class="w">  </span><span class="n">The</span><span class="w"> </span><span class="n">optional</span><span class="w"> </span><span class="n">status</span><span class="w"> </span><span class="n">argument</span><span class="w"> </span><span class="n">can</span><span class="w"> </span><span class="n">be</span><span class="w"> </span><span class="n">used</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">obtain</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">Status</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">request</span><span class="o">.</span>
+
+<span class="w">  </span><span class="n">See</span><span class="w"> </span><span class="n">also</span>
+<span class="w">  </span><span class="o">≡≡≡≡≡≡≡≡</span>
+
+<span class="w">    </span><span class="n">•</span><span class="w">  </span><span class="n">RequestSet</span><span class="w"> </span><span class="n">can</span><span class="w"> </span><span class="n">be</span><span class="w"> </span><span class="n">used</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">minimize</span><span class="w"> </span><span class="n">allocations</span>
+
+<span class="w">  </span><span class="n">External</span><span class="w"> </span><span class="n">links</span>
+<span class="w">  </span><span class="o">≡≡≡≡≡≡≡≡≡≡≡≡≡≡</span>
+
+<span class="w">    </span><span class="n">•</span><span class="w">  </span><span class="n">MPI_Waitany</span><span class="w"> </span><span class="n">man</span><span class="w"> </span><span class="n">page</span><span class="o">:</span><span class="w"> </span><span class="n">OpenMPI</span>
+<span class="w">       </span><span class="p">(</span><span class="n">https</span><span class="o">://</span><span class="n">docs</span><span class="o">.</span><span class="n">open</span><span class="o">-</span><span class="n">mpi</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">en</span><span class="o">/</span><span class="n">main</span><span class="o">/</span><span class="n">man</span><span class="o">-</span><span class="n">openmpi</span><span class="o">/</span><span class="n">man3</span><span class="o">/</span><span class="n">MPI_Waitany</span><span class="mf">.3</span><span class="o">.</span><span class="n">html</span><span class="p">),</span><span class="w"> </span><span class="n">MPICH</span>
+<span class="w">       </span><span class="p">(</span><span class="n">https</span><span class="o">://</span><span class="n">www</span><span class="o">.</span><span class="n">mpich</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">static</span><span class="o">/</span><span class="n">docs</span><span class="o">/</span><span class="n">v4</span><span class="mf">.0</span><span class="o">/</span><span class="n">www3</span><span class="o">/</span><span class="n">MPI_Waitany</span><span class="o">.</span><span class="n">html</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Note:</p>
+<ul class="simple">
+<li><p>The <code class="docutils literal notranslate"> <span class="pre">MPI.Waitany</span></code> function allows a program to wait on any of the request in an array to complete (as opposed to all of them)</p></li>
+<li><p>The functions <code class="docutils literal notranslate"><span class="pre">MPI.Test</span></code>, <code class="docutils literal notranslate"><span class="pre">MPI.Testany</span></code>, and <code class="docutils literal notranslate"><span class="pre">MPI.Testall</span></code> can be used to check whether a request or array of requests is completed without blocking.</p></li>
+</ul>
+</section>
+<section id="id1">
+<h2>2.1 Examples<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
+<section id="example-of-non-blocking-communication">
+<h3>Example of non-blocking communication<a class="headerlink" href="#example-of-non-blocking-communication" title="Link to this heading">#</a></h3>
+<p>Example of a non-blocking communication can be found at <a class="reference external" href="https://github.com/sdsu-comp605/spring25/tree/main/julia_codes/module6-2/non_blocking_wait.jl"><code class="docutils literal notranslate"><span class="pre">julia_codes/module6-2/non_blocking_wait.jl</span></code></a>.</p>
+<p>If we’re not careful about not waiting on the <code class="docutils literal notranslate"><span class="pre">recv</span></code> request you can have problems… Example of a buggy version can be found at <a class="reference external" href="https://github.com/sdsu-comp605/spring25/tree/main/julia_codes/module6-2/non_blocking_wait_with_bug.jl"><code class="docutils literal notranslate"><span class="pre">julia_codes/module6-2/non_blocking_wait_with_bug.jl</span></code></a>.</p>
+<p>In the following example, which can be found at <a class="reference external" href="https://github.com/sdsu-comp605/spring25/tree/main/julia_codes/module6-2/non_blocking_waitall.jl"><code class="docutils literal notranslate"><span class="pre">julia_codes/module6-2/non_blocking_waitall.jl</span></code></a>, the <code class="docutils literal notranslate"><span class="pre">MPI.Wait</span></code> is replaced with <code class="docutils literal notranslate"><span class="pre">MPI.Waitall</span></code> call.</p>
+<p>There is no reason you’d do this, just an example. Generally you do not want to wait on a request until you absolutely have to (so waiting on the send request and receive request together is unneeded!)</p>
 </section>
 </section>
 </section>
@@ -537,16 +698,16 @@ document.write(`
         },
         codeMirrorConfig: {
             theme: "abcdef",
-            mode: "python"
+            mode: "julia-1.10"
         },
         kernelOptions: {
-            name: "python3",
+            name: "julia-1.10",
             path: "./lectures"
         },
         predefinedOutput: true
     }
     </script>
-    <script>kernelName = 'python3'</script>
+    <script>kernelName = 'julia-1.10'</script>
 
                 </article>
               
@@ -586,6 +747,13 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#blocking-communication">1. Blocking communication</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#examples">1.1 Examples</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-of-blocking-communication">Example of blocking communication</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-of-deadlock">Example of deadlock</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#other-blocking-communication">Other blocking communication</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#non-blocking-communication">2. Non-blocking communication</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">2.1 Examples</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-of-non-blocking-communication">Example of non-blocking communication</a></li>
 </ul>
 </li>
 </ul>
