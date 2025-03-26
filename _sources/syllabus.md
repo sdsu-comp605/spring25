@@ -90,7 +90,7 @@ Grading breakdown:
 
 - **Final project** (35%): this project is broken down in two deadlines:
     * Part 1: due Friday, April 18, by midnight (AOE): Creation of a Pull/Merge Request
-    * Part 2: Monday, May 05 and Wednesday, May 07: In class oral presentations.
+    * Part 2: **Friday May 02**, **Monday, May 05** and **Wednesday, May 07**: In class oral presentations.
 
 Assignments will be distributed no later than a week prior to the due date.
 
@@ -100,7 +100,7 @@ The schedule is subject to change (the instructor will announce any changes).
 
 #### Why community projects?
 
-Nowadays, the vital role of scientific software in research is widely recognized. Moreover, modern science is often conducted by large, collaborative multi-institutional aggregate teams scattered across the globe. To facilitate work across teams and to promote partnerships and collaborations, it is crucial for students to be exposed to open-source community projects and learn the best practices and standards by making contributions via software.
+Nowadays, the vital role of scientific software in research is widely recognized. Moreover, modern science is often conducted by large, collaborative multi-institutional aggregate teams scattered across the globe. To facilitate work across teams and to promote partnerships and collaborations, it is crucial for students to be exposed to open-source community projects and learn the best practices and standards by making contributions via software. If you are still unsure, check this reference ["Why contribute to open source?"](https://opensource.guide/how-to-contribute/#why-contribute-to-open-source) from the [How to Contribute to Open Source](https://opensource.guide/how-to-contribute/).guide.
 
 #### Community contributions and analysis
 
