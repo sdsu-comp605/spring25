@@ -553,7 +553,7 @@ document.write(`
 <section id="naive-algorithm">
 <h4>Naive Algorithm<a class="headerlink" href="#naive-algorithm" title="Link to this heading">#</a></h4>
 <p>A naive broadcast just has the root send the message to each rank.</p>
-<p>You can find the following code at <a class="reference external" href="https://github.com/sdsu-comp605/spring25/tree/main/julia_codes/julia_codes/module6-3/naivebcast.jl"><code class="docutils literal notranslate"><span class="pre">julia_codes/module6-3/naivebcast.jl</span></code></a>.</p>
+<p>You can find the following code at <a class="reference external" href="https://github.com/sdsu-comp605/spring25/tree/main/julia_codes/module6-3/naivebcast.jl"><code class="docutils literal notranslate"><span class="pre">julia_codes/module6-3/naivebcast.jl</span></code></a>.</p>
 <div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="c"># Naive broadcast just has the root send the message to each rank</span>
 <span class="linenos"> 2</span><span class="k">function</span><span class="w"> </span><span class="n">naivebcast!</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">mpicomm</span><span class="p">)</span>
 <span class="linenos"> 3</span><span class="w">  </span><span class="c"># Figure out who we are</span>
@@ -587,7 +587,7 @@ document.write(`
 <span class="linenos">31</span><span class="k">end</span>
 </pre></div>
 </div>
-<p>And the following testing code at <a class="reference external" href="https://github.com/sdsu-comp605/spring25/tree/main/julia_codes/julia_codes/module6-3/naivebcast_test.jl"><code class="docutils literal notranslate"><span class="pre">julia_codes/module6-3/naivebcast_test.jl</span></code></a>.</p>
+<p>And the following testing code at <a class="reference external" href="https://github.com/sdsu-comp605/spring25/tree/main/julia_codes/module6-3/naivebcast_test.jl"><code class="docutils literal notranslate"><span class="pre">julia_codes/module6-3/naivebcast_test.jl</span></code></a>.</p>
 <div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="k">using</span><span class="w"> </span><span class="n">MPI</span>
 <span class="linenos"> 2</span><span class="n">include</span><span class="p">(</span><span class="s">&quot;naivebcast.jl&quot;</span><span class="p">)</span>
 <span class="linenos"> 3</span>
@@ -638,7 +638,7 @@ document.write(`
 <section id="minimum-spanning-tree-algorithm">
 <h4>Minimum Spanning Tree Algorithm<a class="headerlink" href="#minimum-spanning-tree-algorithm" title="Link to this heading">#</a></h4>
 <p>See Chan et al. Fig. 3(a) &amp; Fig 4(a); RVDG pages 108-171.</p>
-<p>You can find the following code at <a class="reference external" href="https://github.com/sdsu-comp605/spring25/tree/main/julia_codes/julia_codes/module6-3/mstbcast.jl"><code class="docutils literal notranslate"><span class="pre">julia_codes/module6-3/mstbcast.jl</span></code></a>.</p>
+<p>You can find the following code at <a class="reference external" href="https://github.com/sdsu-comp605/spring25/tree/main/julia_codes/module6-3/mstbcast.jl"><code class="docutils literal notranslate"><span class="pre">julia_codes/module6-3/mstbcast.jl</span></code></a>.</p>
 <div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="c"># Example implementation of MSTBcast (Fig. 3(a)) from</span>
 <span class="linenos"> 2</span><span class="c"># Chan, E., Heimlich, M., Purkayastha, A. and van de Geijn, R. (2007),</span>
 <span class="linenos"> 3</span><span class="c"># Collective communication: theory, practice, and experience. Concurrency</span>
@@ -717,7 +717,7 @@ document.write(`
 <span class="linenos">76</span><span class="k">end</span>
 </pre></div>
 </div>
-<p>And the following testing code at <a class="reference external" href="https://github.com/sdsu-comp605/spring25/tree/main/julia_codes/julia_codes/module6-3/mstbcast_test.jl"><code class="docutils literal notranslate"><span class="pre">julia_codes/module6-3/mstbcast_test.jl</span></code></a>.</p>
+<p>And the following testing code at <a class="reference external" href="https://github.com/sdsu-comp605/spring25/tree/main/julia_codes/module6-3/mstbcast_test.jl"><code class="docutils literal notranslate"><span class="pre">julia_codes/module6-3/mstbcast_test.jl</span></code></a>.</p>
 <div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="k">using</span><span class="w"> </span><span class="n">MPI</span>
 <span class="linenos"> 2</span><span class="n">include</span><span class="p">(</span><span class="s">&quot;mstbcast.jl&quot;</span><span class="p">)</span>
 <span class="linenos"> 3</span>
@@ -767,7 +767,7 @@ document.write(`
 </section>
 <section id="let-s-compare-them">
 <h4>Let’s compare them<a class="headerlink" href="#let-s-compare-them" title="Link to this heading">#</a></h4>
-<p>You can find the driver for the comparison code at <a class="reference external" href="https://github.com/sdsu-comp605/spring25/tree/main/julia_codes/julia_codes/module6-3/bcast_compare.jl"><code class="docutils literal notranslate"><span class="pre">julia_codes/module6-3/bcast_compare.jl</span></code></a>.</p>
+<p>You can find the driver for the comparison code at <a class="reference external" href="https://github.com/sdsu-comp605/spring25/tree/main/julia_codes/module6-3/bcast_compare.jl"><code class="docutils literal notranslate"><span class="pre">julia_codes/module6-3/bcast_compare.jl</span></code></a>.</p>
 <div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="k">using</span><span class="w"> </span><span class="n">MPI</span>
 <span class="linenos"> 2</span><span class="n">include</span><span class="p">(</span><span class="s">&quot;naivebcast.jl&quot;</span><span class="p">)</span>
 <span class="linenos"> 3</span><span class="n">include</span><span class="p">(</span><span class="s">&quot;mstbcast.jl&quot;</span><span class="p">)</span>
