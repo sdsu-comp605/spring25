@@ -57,6 +57,8 @@
     <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'lectures/module6-3_collectives';</script>
     <link rel="icon" href="../_static/SDSU-comp605_logo.svg"/>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -435,9 +437,21 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mpi-collective-communication">1. MPI Collective Communication</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#minimum-spanning-trees">2. Minimum Spanning Trees</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#broadcast">2.1 Broadcast</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mpi-collective-communication">1. MPI Collective Communication</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reductions">Reductions</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#example">Example</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#minimum-spanning-trees-mst">2. Minimum Spanning Trees (MST)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#broadcast">2.1 Broadcast</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#naive-algorithm">Naive Algorithm</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#minimum-spanning-tree-algorithm">Minimum Spanning Tree Algorithm</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#let-s-compare-them">Let’s compare them</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minimum-spanning-tree-reduce">Minimum Spanning Tree Reduce?</a></li>
 </ul>
 </li>
 </ul>
@@ -473,34 +487,336 @@ document.write(`
 </ol>
 </div>
 <p>In the previous lecture we considered point-to-point communication, that is communication between two MPI ranks. In this lecture we will consider communication that involves <em>all</em> the ranks in a communicator.</p>
-<p>From Fig. 1 in Chan et al.</p>
+<section id="reductions">
+<h3>Reductions<a class="headerlink" href="#reductions" title="Link to this heading">#</a></h3>
+<p>Recall that <a class="reference external" href="https://en.wikipedia.org/wiki/Reduction_operator">reductions</a> are a case of collective communication operations.</p>
+<blockquote>
+<div><p>An operator is a reduction operator if:</p>
+<ol class="arabic simple">
+<li><p>It can reduce an array to a single scalar value.</p></li>
+<li><p>The final result should be obtainable from the results of the partial tasks that were created.</p></li>
+</ol>
+</div></blockquote>
+<p>These two requirements are satisfied for <strong>commutative</strong> and <strong>associative</strong> operators that are applied to <em>all</em> array elements.</p>
+<section id="example">
+<h4>Example<a class="headerlink" href="#example" title="Link to this heading">#</a></h4>
+<p>Suppose we have an array <span class="math notranslate nohighlight">\(x = [1,2,3,4,5,6,7,8]\)</span>. The sum of this array can be computed <em>serially</em> by sequentially reducing the array into a single sum using the <code class="docutils literal notranslate"><span class="pre">+</span></code> operator.</p>
+<p>Starting the summation from the beginning of the array yields:</p>
+<div class="math notranslate nohighlight">
+\[
+(((((((1 + 2) + 3) + 4) + 5) + 6) + 7) + 8)
+\]</div>
+<p>Since <code class="docutils literal notranslate"><span class="pre">+</span></code> is both <em>commutative</em> and <em>associative</em>, it is a reduction operator. Therefore this reduction can be performed in parallel using several processes/cores, where each process/core computes the sum of a subset of the array, and the reduction operator merges the results.</p>
+<p>Using a <a class="reference external" href="https://en.wikipedia.org/wiki/Binary_tree">binary tree</a> reduction would allow <span class="math notranslate nohighlight">\(4\)</span> processes/cores to compute</p>
+<div class="math notranslate nohighlight">
+\[
+\underbrace{ \underbrace{ \underbrace{(1 + 2)}_{p_0} + \underbrace{(3 + 4)}_{p_1}}_{p_0} + \underbrace{ \underbrace{(5 + 6)}_{p_1} + \underbrace{(7 + 8)}_{p_3}}_{p_1} }_{p_0}
+\]</div>
+<p>So a total of <span class="math notranslate nohighlight">\(4\)</span> cores can be used to compute the sum in <span class="math notranslate nohighlight">\(\log_n \equiv \log_2 8 = 3\)</span> steps instead of the <span class="math notranslate nohighlight">\(7\)</span> steps required for the serial version.</p>
+<p>Of course the result is the same, but only because of the associativity of the reduction operator. The commutativity of the reduction operator would be important if there were a master core distributing work to several processors, since then the results could arrive back to the master processor in any order. The property of commutativity guarantees that the result will be the same.</p>
+<ul class="simple">
+<li><p>From Fig. 1 in Chan et al.</p></li>
+</ul>
 <p><img alt="Figure 1 of Chang et al, Collective communication: theory, practice, and experience article" src="../_images/MPI_collective_comm_Chang_et_al_fig1.png" /></p>
 <p>Types of possible collective communication:</p>
 <ul class="simple">
-<li><p>Broadcast: one rank sends data to all the other ranks (RVDG: 103, <code class="docutils literal notranslate"><span class="pre">MPI_Bcast</span></code>)</p></li>
-<li><p>Reduce(-to-one): Combine (e.g., <code class="docutils literal notranslate"><span class="pre">sum</span></code>, <code class="docutils literal notranslate"><span class="pre">max</span></code>/<code class="docutils literal notranslate"><span class="pre">min</span></code>, etc.) information from all ranks to one rank (RVDG: 104, <code class="docutils literal notranslate"><span class="pre">MPI_Reduce</span></code>)</p></li>
-<li><p>Scatter: One rank send data to all other ranks (RVDG: 106, <code class="docutils literal notranslate"><span class="pre">MPI_Scatter</span></code>)</p></li>
-<li><p>Gather: All ranks send data to one rank (RVDG: 107, <code class="docutils literal notranslate"><span class="pre">MPI_Gather</span></code>)</p></li>
-<li><p>Allgather: All ranks sends information to All ranks (RVDG: 109, <code class="docutils literal notranslate"><span class="pre">MPI_Allgather</span></code>)</p></li>
-<li><p>Allreduce: All ranks combine information from all ranks (RVDG: 112, <code class="docutils literal notranslate"><span class="pre">MPI_Allreduce</span></code>)</p></li>
-<li><p>Reduce-scatter: Reduce the send out reduced results (RVDG: 110, <code class="docutils literal notranslate"><span class="pre">MPI_Reduce_scatter</span></code>)</p></li>
+<li><p>Broadcast: one rank sends data to all the other ranks (RVDG: 93, <code class="docutils literal notranslate"><span class="pre">MPI_Bcast</span></code>)</p></li>
+<li><p>Reduce(-to-one): Combine (e.g., <code class="docutils literal notranslate"><span class="pre">sum</span></code>, <code class="docutils literal notranslate"><span class="pre">max</span></code>/<code class="docutils literal notranslate"><span class="pre">min</span></code>, etc.) information from all ranks to one rank (RVDG: 94, <code class="docutils literal notranslate"><span class="pre">MPI_Reduce</span></code>)</p></li>
+<li><p>Scatter: One rank send data to all other ranks (RVDG: 96, <code class="docutils literal notranslate"><span class="pre">MPI_Scatter</span></code>)</p></li>
+<li><p>Gather: All ranks send data to one rank (RVDG: 97, <code class="docutils literal notranslate"><span class="pre">MPI_Gather</span></code>)</p></li>
+<li><p>Allgather: All ranks sends information to all ranks (RVDG: 99, <code class="docutils literal notranslate"><span class="pre">MPI_Allgather</span></code>)</p></li>
+<li><p>Reduce-scatter: Reduce and scatter out the reduced result (RVDG: 101, <code class="docutils literal notranslate"><span class="pre">MPI_Reduce_scatter</span></code>)</p></li>
+<li><p>Allreduce: All ranks combine information from all ranks and the result is available to all ranks (RVDG: 102, <code class="docutils literal notranslate"><span class="pre">MPI_Allreduce</span></code>)</p></li>
 </ul>
-<p>Note that there are pairs of reciproval operations:</p>
+<p>Note that there are pairs of reciprocal/dual operations:</p>
 <ul class="simple">
-<li><p>Broadcast/Reduce(-to-one) (RVDG: 105)</p></li>
-<li><p>Scatter/Gather (RVDG: 108)</p></li>
-<li><p>Allgather/Reduce-scatter (RVDG: 111)</p></li>
+<li><p>Broadcast/Reduce(-to-one) (RVDG: 95)</p></li>
+<li><p>Scatter/Gather (RVDG: 98)</p></li>
+<li><p>Allgather/Reduce-scatter (RVDG: 101)</p></li>
 </ul>
-<p>Two broad classes of collective operations (Chan et al., 1752)</p>
-<ul class="simple">
+<p>Allreduce is the only operationthat does not have a dual (or it can be viewed as its own dual).</p>
+<p>Two broad classes of collective operations (Chan et al., 1752):</p>
+<blockquote>
+<div><ul class="simple">
 <li><p><em>Data redistribution operations:</em> Broadcast, scatter, gather, and allgather. These operations move data between processors.</p></li>
 <li><p><em>Data consolidation operations:</em> Reduce(-to-one), reduce–scatter, and allreduce. These operations consolidate contributions from different processors by applying a reduction operation. We will only consider reduction operations that are both commutative and associative.</p></li>
 </ul>
+</div></blockquote>
 </section>
-<section id="minimum-spanning-trees">
-<h2>2. Minimum Spanning Trees<a class="headerlink" href="#minimum-spanning-trees" title="Link to this heading">#</a></h2>
+</section>
+</section>
+<section id="minimum-spanning-trees-mst">
+<h2>2. <a class="reference external" href="https://en.wikipedia.org/wiki/Parallel_algorithms_for_minimum_spanning_trees">Minimum Spanning Trees (MST)</a><a class="headerlink" href="#minimum-spanning-trees-mst" title="Link to this heading">#</a></h2>
 <section id="broadcast">
 <h3>2.1 Broadcast<a class="headerlink" href="#broadcast" title="Link to this heading">#</a></h3>
+<p>We want to perform a broadcast operation, i.e., we want to send a message from a root rank to all ranks.</p>
+<section id="naive-algorithm">
+<h4>Naive Algorithm<a class="headerlink" href="#naive-algorithm" title="Link to this heading">#</a></h4>
+<p>A naive broadcast just has the root send the message to each rank.</p>
+<p>You can find the following code at <a class="reference external" href="https://github.com/sdsu-comp605/spring25/tree/main/julia_codes/julia_codes/module6-3/naivebcast.jl"><code class="docutils literal notranslate"><span class="pre">julia_codes/module6-3/naivebcast.jl</span></code></a>.</p>
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="c"># Naive broadcast just has the root send the message to each rank</span>
+<span class="linenos"> 2</span><span class="k">function</span><span class="w"> </span><span class="n">naivebcast!</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">mpicomm</span><span class="p">)</span>
+<span class="linenos"> 3</span><span class="w">  </span><span class="c"># Figure out who we are</span>
+<span class="linenos"> 4</span><span class="w">  </span><span class="n">mpirank</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MPI</span><span class="o">.</span><span class="n">Comm_rank</span><span class="p">(</span><span class="n">mpicomm</span><span class="p">)</span>
+<span class="linenos"> 5</span>
+<span class="linenos"> 6</span><span class="w">  </span><span class="c"># If I am the root send the message to everyone</span>
+<span class="linenos"> 7</span><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">mpirank</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">root</span>
+<span class="linenos"> 8</span><span class="w">    </span><span class="c"># How many total ranks are there</span>
+<span class="linenos"> 9</span><span class="w">    </span><span class="n">mpisize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MPI</span><span class="o">.</span><span class="n">Comm_size</span><span class="p">(</span><span class="n">mpicomm</span><span class="p">)</span>
+<span class="linenos">10</span>
+<span class="linenos">11</span><span class="w">    </span><span class="c"># Create an array for the requests</span>
+<span class="linenos">12</span><span class="w">    </span><span class="n">reqs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">Array</span><span class="p">{</span><span class="kt">MPI</span><span class="o">.</span><span class="kt">Request</span><span class="p">}(</span><span class="nb">undef</span><span class="p">,</span><span class="w"> </span><span class="n">mpisize</span><span class="p">)</span>
+<span class="linenos">13</span>
+<span class="linenos">14</span><span class="w">    </span><span class="c"># Loop through ranks and send message</span>
+<span class="linenos">15</span><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="o">:</span><span class="n">mpisize</span>
+<span class="linenos">16</span><span class="w">      </span><span class="c"># MPI uses 0 based indexing for ranks</span>
+<span class="linenos">17</span><span class="w">      </span><span class="n">neighbor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">n</span><span class="o">-</span><span class="mi">1</span>
+<span class="linenos">18</span>
+<span class="linenos">19</span><span class="w">      </span><span class="c"># If its me jst set my request to NULL (e.g., no-op)</span>
+<span class="linenos">20</span><span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="n">neighbor</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">mpirank</span>
+<span class="linenos">21</span><span class="w">        </span><span class="n">reqs</span><span class="p">[</span><span class="n">n</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MPI</span><span class="o">.</span><span class="n">REQUEST_NULL</span>
+<span class="linenos">22</span><span class="w">      </span><span class="k">else</span><span class="w"> </span><span class="c"># otherwise send message to neighbor</span>
+<span class="linenos">23</span><span class="w">        </span><span class="n">reqs</span><span class="p">[</span><span class="n">n</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MPI</span><span class="o">.</span><span class="n">Isend</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="n">neighbor</span><span class="p">,</span><span class="w"> </span><span class="mi">7</span><span class="p">,</span><span class="w"> </span><span class="n">mpicomm</span><span class="p">)</span>
+<span class="linenos">24</span><span class="w">      </span><span class="k">end</span>
+<span class="linenos">25</span><span class="w">    </span><span class="k">end</span>
+<span class="linenos">26</span><span class="w">    </span><span class="c"># Wait on all the requests</span>
+<span class="linenos">27</span><span class="w">    </span><span class="n">MPI</span><span class="o">.</span><span class="n">Waitall!</span><span class="p">(</span><span class="n">reqs</span><span class="p">)</span>
+<span class="linenos">28</span><span class="w">  </span><span class="k">else</span><span class="w"> </span><span class="c"># Since we are not the root, we receive</span>
+<span class="linenos">29</span><span class="w">    </span><span class="n">MPI</span><span class="o">.</span><span class="n">Recv!</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="mi">7</span><span class="p">,</span><span class="w"> </span><span class="n">mpicomm</span><span class="p">)</span>
+<span class="linenos">30</span><span class="w">  </span><span class="k">end</span>
+<span class="linenos">31</span><span class="k">end</span>
+</pre></div>
+</div>
+<p>And the following testing code at <a class="reference external" href="https://github.com/sdsu-comp605/spring25/tree/main/julia_codes/julia_codes/module6-3/naivebcast_test.jl"><code class="docutils literal notranslate"><span class="pre">julia_codes/module6-3/naivebcast_test.jl</span></code></a>.</p>
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="k">using</span><span class="w"> </span><span class="n">MPI</span>
+<span class="linenos"> 2</span><span class="n">include</span><span class="p">(</span><span class="s">&quot;naivebcast.jl&quot;</span><span class="p">)</span>
+<span class="linenos"> 3</span>
+<span class="linenos"> 4</span><span class="k">let</span>
+<span class="linenos"> 5</span><span class="w">  </span><span class="c"># Initialize MPI</span>
+<span class="linenos"> 6</span><span class="w">  </span><span class="n">MPI</span><span class="o">.</span><span class="n">Init</span><span class="p">()</span>
+<span class="linenos"> 7</span>
+<span class="linenos"> 8</span><span class="w">  </span><span class="c"># store communicator</span>
+<span class="linenos"> 9</span><span class="w">  </span><span class="n">mpicomm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MPI</span><span class="o">.</span><span class="n">COMM_WORLD</span>
+<span class="linenos">10</span>
+<span class="linenos">11</span><span class="w">  </span><span class="c"># Get some MPI info</span>
+<span class="linenos">12</span><span class="w">  </span><span class="n">mpirank</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MPI</span><span class="o">.</span><span class="n">Comm_rank</span><span class="p">(</span><span class="n">mpicomm</span><span class="p">)</span>
+<span class="linenos">13</span><span class="w">  </span><span class="n">mpisize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MPI</span><span class="o">.</span><span class="n">Comm_size</span><span class="p">(</span><span class="n">mpicomm</span><span class="p">)</span>
+<span class="linenos">14</span>
+<span class="linenos">15</span><span class="w">  </span><span class="c"># Divide all ranks halfway to determine the root</span>
+<span class="linenos">16</span><span class="w">  </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">div</span><span class="p">(</span><span class="n">mpisize</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="c"># Integer division</span>
+<span class="linenos">17</span>
+<span class="linenos">18</span><span class="w">  </span><span class="c"># create buffer for the communication</span>
+<span class="linenos">19</span><span class="w">  </span><span class="n">buf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="n">mpirank</span><span class="p">]</span>
+<span class="linenos">20</span>
+<span class="linenos">21</span><span class="w">  </span><span class="c"># have root broadcast message to everyone</span>
+<span class="linenos">22</span><span class="w">  </span><span class="n">naivebcast!</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">mpicomm</span><span class="p">)</span>
+<span class="linenos">23</span>
+<span class="linenos">24</span><span class="w">  </span><span class="c"># check to make sure we got back the right message</span>
+<span class="linenos">25</span><span class="w">  </span><span class="nd">@assert</span><span class="w"> </span><span class="n">buf</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">root</span>
+<span class="linenos">26</span>
+<span class="linenos">27</span><span class="w">  </span><span class="n">MPI</span><span class="o">.</span><span class="n">Barrier</span><span class="p">(</span><span class="n">mpicomm</span><span class="p">)</span>
+<span class="linenos">28</span><span class="w">  </span><span class="n">time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nd">@elapsed</span><span class="w"> </span><span class="k">begin</span>
+<span class="linenos">29</span><span class="w">    </span><span class="n">naivebcast!</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">mpicomm</span><span class="p">)</span>
+<span class="linenos">30</span><span class="w">    </span><span class="n">MPI</span><span class="o">.</span><span class="n">Barrier</span><span class="p">(</span><span class="n">mpicomm</span><span class="p">)</span>
+<span class="linenos">31</span><span class="w">  </span><span class="k">end</span>
+<span class="linenos">32</span>
+<span class="linenos">33</span><span class="w">  </span><span class="c"># Let&#39;s print the execution time:</span>
+<span class="linenos">34</span><span class="w">  </span><span class="c"># Short hand for:</span>
+<span class="linenos">35</span><span class="w">  </span><span class="cm">#=</span>
+<span class="linenos">36</span><span class="cm">  if mpirank == 0</span>
+<span class="linenos">37</span><span class="cm">    print(&quot;Execution time: &quot;, time,&quot;\n&quot;)</span>
+<span class="linenos">38</span><span class="cm">  end</span>
+<span class="linenos">39</span><span class="cm">  =#</span>
+<span class="linenos">40</span><span class="w">  </span><span class="n">mpirank</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">print</span><span class="p">(</span><span class="s">&quot;Execution time: &quot;</span><span class="p">,</span><span class="w"> </span><span class="n">time</span><span class="p">,</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="linenos">41</span>
+<span class="linenos">42</span><span class="w">  </span><span class="c"># shutdown MPI</span>
+<span class="linenos">43</span><span class="w">  </span><span class="n">MPI</span><span class="o">.</span><span class="n">Finalize</span><span class="p">()</span>
+<span class="linenos">44</span><span class="k">end</span>
+</pre></div>
+</div>
+</section>
+<section id="minimum-spanning-tree-algorithm">
+<h4>Minimum Spanning Tree Algorithm<a class="headerlink" href="#minimum-spanning-tree-algorithm" title="Link to this heading">#</a></h4>
+<p>See Chan et al. Fig. 3(a) &amp; Fig 4(a); RVDG pages 108-171.</p>
+<p>You can find the following code at <a class="reference external" href="https://github.com/sdsu-comp605/spring25/tree/main/julia_codes/julia_codes/module6-3/mstbcast.jl"><code class="docutils literal notranslate"><span class="pre">julia_codes/module6-3/mstbcast.jl</span></code></a>.</p>
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="c"># Example implementation of MSTBcast (Fig. 3(a)) from</span>
+<span class="linenos"> 2</span><span class="c"># Chan, E., Heimlich, M., Purkayastha, A. and van de Geijn, R. (2007),</span>
+<span class="linenos"> 3</span><span class="c"># Collective communication: theory, practice, and experience. Concurrency</span>
+<span class="linenos"> 4</span><span class="c"># Computat.: Pract. Exper., 19: 1749–1783. doi:10.1002/cpe.1206</span>
+<span class="linenos"> 5</span><span class="c">#</span>
+<span class="linenos"> 6</span><span class="c"># In this minimum spanning tree (mst) broadcast algorithm:</span>
+<span class="linenos"> 7</span><span class="c">#   - Divide ranks into two (almost) equal group</span>
+<span class="linenos"> 8</span><span class="c">#   - root sends data to one rank in other group (called the dest)</span>
+<span class="linenos"> 9</span><span class="c">#   - recurse on two groups with root and dest being the &quot;roots&quot; of respective</span>
+<span class="linenos">10</span><span class="c">#     groups</span>
+<span class="linenos">11</span><span class="c">#</span>
+<span class="linenos">12</span><span class="c">#  For nine ranks with root = 1 the algorithm would be (letters just represent</span>
+<span class="linenos">13</span><span class="c">#  who sends/recvs data)</span>
+<span class="linenos">14</span><span class="c">#</span>
+<span class="linenos">15</span><span class="c">#  0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8</span>
+<span class="linenos">16</span><span class="c">#  ---------------------------------</span>
+<span class="linenos">17</span><span class="c">#    | x |   |   |   |   |   |   |</span>
+<span class="linenos">18</span><span class="c">#    | a |   |   |   |   |   |   | a  1-&gt;8</span>
+<span class="linenos">19</span><span class="c">#    | a |   |   | a |   | b |   | b  1-&gt;4, 8-&gt;6</span>
+<span class="linenos">20</span><span class="c">#    | a | a | c | c | d | d | b | b  1-&gt;2, 4-&gt;3, 6-&gt;5, 8-&gt;7</span>
+<span class="linenos">21</span><span class="c">#  a | a | x | x | x | x | x | x | x  1-&gt;0</span>
+<span class="linenos">22</span><span class="k">function</span><span class="w"> </span><span class="n">mstbcast!</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">mpicomm</span><span class="p">;</span>
+<span class="linenos">23</span><span class="w">                   </span><span class="n">left</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MPI</span><span class="o">.</span><span class="n">Comm_size</span><span class="p">(</span><span class="n">mpicomm</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="linenos">24</span>
+<span class="linenos">25</span><span class="w">  </span><span class="c"># If there is no one else, let&#39;s get outta here!</span>
+<span class="linenos">26</span><span class="w">  </span><span class="n">left</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">right</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="k">return</span>
+<span class="linenos">27</span><span class="w">  </span><span class="c"># Short hand for:</span>
+<span class="linenos">28</span><span class="w">  </span><span class="cm">#=</span>
+<span class="linenos">29</span><span class="cm">  if left == right</span>
+<span class="linenos">30</span><span class="cm">    return</span>
+<span class="linenos">31</span><span class="cm">  end</span>
+<span class="linenos">32</span><span class="cm">  =#</span>
+<span class="linenos">33</span>
+<span class="linenos">34</span><span class="w">  </span><span class="c"># Determine the split</span>
+<span class="linenos">35</span><span class="w">  </span><span class="n">mid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">div</span><span class="p">(</span><span class="n">left</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">right</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="c"># integer division</span>
+<span class="linenos">36</span>
+<span class="linenos">37</span><span class="w">  </span><span class="c"># Whom do I send to?</span>
+<span class="linenos">38</span><span class="w">  </span><span class="n">dest</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">root</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">mid</span><span class="p">)</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">right</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">left</span>
+<span class="linenos">39</span><span class="w">  </span><span class="c"># Short hand for:</span>
+<span class="linenos">40</span><span class="w">  </span><span class="cm">#=</span>
+<span class="linenos">41</span><span class="cm">  if root &lt;= mid</span>
+<span class="linenos">42</span><span class="cm">    dest = right;</span>
+<span class="linenos">43</span><span class="cm">  else</span>
+<span class="linenos">44</span><span class="cm">    dest = left;</span>
+<span class="linenos">45</span><span class="cm">  end</span>
+<span class="linenos">46</span><span class="cm">  =#</span>
+<span class="linenos">47</span>
+<span class="linenos">48</span><span class="w">  </span><span class="c"># Figure out who we are</span>
+<span class="linenos">49</span><span class="w">  </span><span class="n">mpirank</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MPI</span><span class="o">.</span><span class="n">Comm_rank</span><span class="p">(</span><span class="n">mpicomm</span><span class="p">)</span>
+<span class="linenos">50</span>
+<span class="linenos">51</span><span class="w">  </span><span class="c"># If I&#39;m the root or dest send or recv (respectively)</span>
+<span class="linenos">52</span><span class="w">  </span><span class="n">req</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MPI</span><span class="o">.</span><span class="n">REQUEST_NULL</span>
+<span class="linenos">53</span><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">mpirank</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">root</span>
+<span class="linenos">54</span><span class="w">    </span><span class="n">req</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MPI</span><span class="o">.</span><span class="n">Isend</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="n">dest</span><span class="p">,</span><span class="w"> </span><span class="mi">7</span><span class="p">,</span><span class="w"> </span><span class="n">mpicomm</span><span class="p">)</span>
+<span class="linenos">55</span><span class="w">  </span><span class="k">elseif</span><span class="w"> </span><span class="n">mpirank</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">dest</span>
+<span class="linenos">56</span><span class="w">    </span><span class="n">MPI</span><span class="o">.</span><span class="n">Recv!</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="mi">7</span><span class="p">,</span><span class="w"> </span><span class="n">mpicomm</span><span class="p">)</span>
+<span class="linenos">57</span><span class="w">  </span><span class="k">end</span>
+<span class="linenos">58</span>
+<span class="linenos">59</span><span class="w">  </span><span class="c"># Recursion:</span>
+<span class="linenos">60</span><span class="w">  </span><span class="c"># I&#39;m in the left group and the root is my new root</span>
+<span class="linenos">61</span><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">mpirank</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">mid</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">mid</span>
+<span class="linenos">62</span><span class="w">    </span><span class="n">mstbcast!</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">mpicomm</span><span class="p">;</span><span class="w"> </span><span class="n">left</span><span class="o">=</span><span class="n">left</span><span class="p">,</span><span class="w"> </span><span class="n">right</span><span class="o">=</span><span class="n">mid</span><span class="p">)</span>
+<span class="linenos">63</span><span class="w">  </span><span class="c"># I&#39;m in the left group and the dest is my new root</span>
+<span class="linenos">64</span><span class="w">  </span><span class="k">elseif</span><span class="w"> </span><span class="n">mpirank</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">mid</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">mid</span>
+<span class="linenos">65</span><span class="w">    </span><span class="n">mstbcast!</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="n">dest</span><span class="p">,</span><span class="w"> </span><span class="n">mpicomm</span><span class="p">;</span><span class="w"> </span><span class="n">left</span><span class="o">=</span><span class="n">left</span><span class="p">,</span><span class="w"> </span><span class="n">right</span><span class="o">=</span><span class="n">mid</span><span class="p">)</span>
+<span class="linenos">66</span><span class="w">  </span><span class="c"># I&#39;m in the right group and the dest is my new root</span>
+<span class="linenos">67</span><span class="w">  </span><span class="k">elseif</span><span class="w"> </span><span class="n">mpirank</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">mid</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">mid</span>
+<span class="linenos">68</span><span class="w">    </span><span class="n">mstbcast!</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="n">dest</span><span class="p">,</span><span class="w"> </span><span class="n">mpicomm</span><span class="p">,</span><span class="w"> </span><span class="n">left</span><span class="o">=</span><span class="n">mid</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">right</span><span class="o">=</span><span class="n">right</span><span class="p">)</span>
+<span class="linenos">69</span><span class="w">  </span><span class="c"># I&#39;m in the right group and the root is my new root</span>
+<span class="linenos">70</span><span class="w">  </span><span class="k">elseif</span><span class="w"> </span><span class="n">mpirank</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">mid</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">mid</span>
+<span class="linenos">71</span><span class="w">    </span><span class="n">mstbcast!</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">mpicomm</span><span class="p">,</span><span class="w"> </span><span class="n">left</span><span class="o">=</span><span class="n">mid</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">right</span><span class="o">=</span><span class="n">right</span><span class="p">)</span>
+<span class="linenos">72</span><span class="w">  </span><span class="k">end</span>
+<span class="linenos">73</span>
+<span class="linenos">74</span><span class="w">  </span><span class="c"># Make sure all my sends are done before I get outta dodge</span>
+<span class="linenos">75</span><span class="w">  </span><span class="n">MPI</span><span class="o">.</span><span class="n">Wait!</span><span class="p">(</span><span class="n">req</span><span class="p">)</span>
+<span class="linenos">76</span><span class="k">end</span>
+</pre></div>
+</div>
+<p>And the following testing code at <a class="reference external" href="https://github.com/sdsu-comp605/spring25/tree/main/julia_codes/julia_codes/module6-3/mstbcast_test.jl"><code class="docutils literal notranslate"><span class="pre">julia_codes/module6-3/mstbcast_test.jl</span></code></a>.</p>
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="k">using</span><span class="w"> </span><span class="n">MPI</span>
+<span class="linenos"> 2</span><span class="n">include</span><span class="p">(</span><span class="s">&quot;mstbcast.jl&quot;</span><span class="p">)</span>
+<span class="linenos"> 3</span>
+<span class="linenos"> 4</span><span class="k">let</span>
+<span class="linenos"> 5</span><span class="w">  </span><span class="c"># Initialize MPI</span>
+<span class="linenos"> 6</span><span class="w">  </span><span class="n">MPI</span><span class="o">.</span><span class="n">Init</span><span class="p">()</span>
+<span class="linenos"> 7</span>
+<span class="linenos"> 8</span><span class="w">  </span><span class="c"># store communicator</span>
+<span class="linenos"> 9</span><span class="w">  </span><span class="n">mpicomm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MPI</span><span class="o">.</span><span class="n">COMM_WORLD</span>
+<span class="linenos">10</span>
+<span class="linenos">11</span><span class="w">  </span><span class="c"># Get some MPI info</span>
+<span class="linenos">12</span><span class="w">  </span><span class="n">mpirank</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MPI</span><span class="o">.</span><span class="n">Comm_rank</span><span class="p">(</span><span class="n">mpicomm</span><span class="p">)</span>
+<span class="linenos">13</span><span class="w">  </span><span class="n">mpisize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MPI</span><span class="o">.</span><span class="n">Comm_size</span><span class="p">(</span><span class="n">mpicomm</span><span class="p">)</span>
+<span class="linenos">14</span>
+<span class="linenos">15</span><span class="w">  </span><span class="c"># Divide all ranks halfway to determine the root</span>
+<span class="linenos">16</span><span class="w">  </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">div</span><span class="p">(</span><span class="n">mpisize</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="c"># Integer division</span>
+<span class="linenos">17</span>
+<span class="linenos">18</span><span class="w">  </span><span class="c"># create buffer for the communication</span>
+<span class="linenos">19</span><span class="w">  </span><span class="n">buf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="n">mpirank</span><span class="p">]</span>
+<span class="linenos">20</span>
+<span class="linenos">21</span><span class="w">  </span><span class="c"># have root broadcast message to everyone</span>
+<span class="linenos">22</span><span class="w">  </span><span class="n">mstbcast!</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">mpicomm</span><span class="p">)</span>
+<span class="linenos">23</span>
+<span class="linenos">24</span><span class="w">  </span><span class="c"># check to make sure we got back the right message</span>
+<span class="linenos">25</span><span class="w">  </span><span class="nd">@assert</span><span class="w"> </span><span class="n">buf</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">root</span>
+<span class="linenos">26</span>
+<span class="linenos">27</span><span class="w">  </span><span class="n">MPI</span><span class="o">.</span><span class="n">Barrier</span><span class="p">(</span><span class="n">mpicomm</span><span class="p">)</span>
+<span class="linenos">28</span><span class="w">  </span><span class="n">time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nd">@elapsed</span><span class="w"> </span><span class="k">begin</span>
+<span class="linenos">29</span><span class="w">    </span><span class="n">mstbcast!</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">mpicomm</span><span class="p">)</span>
+<span class="linenos">30</span><span class="w">    </span><span class="n">MPI</span><span class="o">.</span><span class="n">Barrier</span><span class="p">(</span><span class="n">mpicomm</span><span class="p">)</span>
+<span class="linenos">31</span><span class="w">  </span><span class="k">end</span>
+<span class="linenos">32</span>
+<span class="linenos">33</span><span class="w">  </span><span class="c"># Let&#39;s print the execution time:</span>
+<span class="linenos">34</span><span class="w">  </span><span class="c"># Short hand for:</span>
+<span class="linenos">35</span><span class="w">  </span><span class="cm">#=</span>
+<span class="linenos">36</span><span class="cm">  if mpirank == 0</span>
+<span class="linenos">37</span><span class="cm">    print(&quot;Execution time: &quot;, time,&quot;\n&quot;)</span>
+<span class="linenos">38</span><span class="cm">  end</span>
+<span class="linenos">39</span><span class="cm">  =#</span>
+<span class="linenos">40</span><span class="w">  </span><span class="n">mpirank</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">print</span><span class="p">(</span><span class="s">&quot;Execution time: &quot;</span><span class="p">,</span><span class="w"> </span><span class="n">time</span><span class="p">,</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="linenos">41</span>
+<span class="linenos">42</span><span class="w">  </span><span class="c"># shutdown MPI</span>
+<span class="linenos">43</span><span class="w">  </span><span class="n">MPI</span><span class="o">.</span><span class="n">Finalize</span><span class="p">()</span>
+<span class="linenos">44</span><span class="k">end</span>
+</pre></div>
+</div>
+</section>
+<section id="let-s-compare-them">
+<h4>Let’s compare them<a class="headerlink" href="#let-s-compare-them" title="Link to this heading">#</a></h4>
+<p>You can find the driver for the comparison code at <a class="reference external" href="https://github.com/sdsu-comp605/spring25/tree/main/julia_codes/julia_codes/module6-3/bcast_compare.jl"><code class="docutils literal notranslate"><span class="pre">julia_codes/module6-3/bcast_compare.jl</span></code></a>.</p>
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="k">using</span><span class="w"> </span><span class="n">MPI</span>
+<span class="linenos"> 2</span><span class="n">include</span><span class="p">(</span><span class="s">&quot;naivebcast.jl&quot;</span><span class="p">)</span>
+<span class="linenos"> 3</span><span class="n">include</span><span class="p">(</span><span class="s">&quot;mstbcast.jl&quot;</span><span class="p">)</span>
+<span class="linenos"> 4</span><span class="k">let</span>
+<span class="linenos"> 5</span><span class="w">  </span><span class="c"># Initialize MPI</span>
+<span class="linenos"> 6</span><span class="w">  </span><span class="n">MPI</span><span class="o">.</span><span class="n">Init</span><span class="p">()</span>
+<span class="linenos"> 7</span>
+<span class="linenos"> 8</span><span class="w">  </span><span class="c"># store communicator</span>
+<span class="linenos"> 9</span><span class="w">  </span><span class="n">mpicomm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MPI</span><span class="o">.</span><span class="n">COMM_WORLD</span>
+<span class="linenos">10</span>
+<span class="linenos">11</span><span class="w">  </span><span class="c"># Get some MPI info</span>
+<span class="linenos">12</span><span class="w">  </span><span class="n">mpirank</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MPI</span><span class="o">.</span><span class="n">Comm_rank</span><span class="p">(</span><span class="n">mpicomm</span><span class="p">)</span>
+<span class="linenos">13</span><span class="w">  </span><span class="n">mpisize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MPI</span><span class="o">.</span><span class="n">Comm_size</span><span class="p">(</span><span class="n">mpicomm</span><span class="p">)</span>
+<span class="linenos">14</span>
+<span class="linenos">15</span><span class="w">  </span><span class="c"># Divide all ranks halfway to determine the root</span>
+<span class="linenos">16</span><span class="w">  </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">div</span><span class="p">(</span><span class="n">mpisize</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="c"># Integer division</span>
+<span class="linenos">17</span>
+<span class="linenos">18</span><span class="w">  </span><span class="c"># create buffer for the communication</span>
+<span class="linenos">19</span><span class="w">  </span><span class="n">buf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="n">mpirank</span><span class="p">]</span>
+<span class="linenos">20</span>
+<span class="linenos">21</span><span class="w">  </span><span class="c"># have root broadcast message to everyone</span>
+<span class="linenos">22</span><span class="w">  </span><span class="n">mstbcast!</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">mpicomm</span><span class="p">)</span>
+<span class="linenos">23</span><span class="w">  </span><span class="n">naivebcast!</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">mpicomm</span><span class="p">)</span>
+<span class="linenos">24</span>
+<span class="linenos">25</span><span class="w">  </span><span class="n">mst_t1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">time_ns</span><span class="p">()</span><span class="w"> </span><span class="c"># The time_ns() function in Julia returns the current time in nanoseconds</span>
+<span class="linenos">26</span><span class="w">  </span><span class="n">mstbcast!</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">mpicomm</span><span class="p">)</span>
+<span class="linenos">27</span><span class="w">  </span><span class="n">mst_t2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">time_ns</span><span class="p">()</span>
+<span class="linenos">28</span><span class="w">  </span><span class="n">nve_t1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">time_ns</span><span class="p">()</span>
+<span class="linenos">29</span><span class="w">  </span><span class="n">naivebcast!</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">mpicomm</span><span class="p">)</span>
+<span class="linenos">30</span><span class="w">  </span><span class="n">nve_t2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">time_ns</span><span class="p">()</span>
+<span class="linenos">31</span>
+<span class="linenos">32</span><span class="w">  </span><span class="n">mpirank</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">print</span><span class="p">(</span><span class="s">&quot;Elapsed time for the naive algorithm: </span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="linenos">33</span><span class="w">  </span><span class="n">mpirank</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nd">@show</span><span class="w"> </span><span class="p">(</span><span class="n">nve_t2</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">nve_t1</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">1e-9</span>
+<span class="linenos">34</span><span class="w">  </span><span class="n">mpirank</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">print</span><span class="p">(</span><span class="s">&quot;Elapsed time for the mst algorithm: </span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="linenos">35</span><span class="w">  </span><span class="n">mpirank</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nd">@show</span><span class="w"> </span><span class="p">(</span><span class="n">mst_t2</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">mst_t1</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">1e-9</span>
+<span class="linenos">36</span>
+<span class="linenos">37</span><span class="w">  </span><span class="c"># shutdown MPI</span>
+<span class="linenos">38</span><span class="w">  </span><span class="n">MPI</span><span class="o">.</span><span class="n">Finalize</span><span class="p">()</span>
+<span class="linenos">39</span><span class="k">end</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="minimum-spanning-tree-reduce">
+<h3>Minimum Spanning Tree Reduce?<a class="headerlink" href="#minimum-spanning-tree-reduce" title="Link to this heading">#</a></h3>
+<p>For a <strong>Minimum Spanning Tree (MST) Reduce</strong> see See Chan et al. Fig. 3(b) &amp; Fig. 4(b); RVDG pages 172-184.</p>
+<ul class="simple">
+<li><p><strong>Note</strong>: It’s possible to write the <code class="docutils literal notranslate"><span class="pre">mstbcast</span></code> (and a corresponding MST reduce version) without recursion (although we won’t see it in this class) and doing it with blocking communication is easier than non-blocking…</p></li>
+</ul>
 </section>
 </section>
 </section>
@@ -560,9 +876,21 @@ document.write(`
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mpi-collective-communication">1. MPI Collective Communication</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#minimum-spanning-trees">2. Minimum Spanning Trees</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#broadcast">2.1 Broadcast</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mpi-collective-communication">1. MPI Collective Communication</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reductions">Reductions</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#example">Example</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#minimum-spanning-trees-mst">2. Minimum Spanning Trees (MST)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#broadcast">2.1 Broadcast</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#naive-algorithm">Naive Algorithm</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#minimum-spanning-tree-algorithm">Minimum Spanning Tree Algorithm</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#let-s-compare-them">Let’s compare them</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minimum-spanning-tree-reduce">Minimum Spanning Tree Reduce?</a></li>
 </ul>
 </li>
 </ul>
