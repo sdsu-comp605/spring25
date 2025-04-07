@@ -31,3 +31,4 @@ chapters:
   - file: lectures/module6-2_blocking_vs_nonblocking.ipynb
   - file: lectures/module6-3_collectives.ipynb
   - file: lectures/hw3_solution.ipynb
+  - file: lectures/module7-1_coprocessors.ipynb
