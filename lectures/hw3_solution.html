@@ -549,13 +549,7 @@ compilation terminated.
 <p>See all the <code class="docutils literal notranslate"><span class="pre">bdot_opt*_simd</span></code> versions and related results (where <code class="docutils literal notranslate"><span class="pre">*</span></code> is 1,2,3). The addition of the <code class="docutils literal notranslate"><span class="pre">#pragma</span> <span class="pre">omp</span> <span class="pre">simd</span></code> directive only significantly helps the <code class="docutils literal notranslate"><span class="pre">bdot_opt3</span></code> optimized version, and leaves the <code class="docutils literal notranslate"><span class="pre">bdot_opt1</span></code> and <code class="docutils literal notranslate"><span class="pre">bdot_opt2</span></code> results essentially unaltered.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span><span class="w"> </span>gcc<span class="w"> </span>-O3<span class="w"> </span>-march<span class="o">=</span>native<span class="w"> </span>-fopenmp-simd<span class="w"> </span>-fopenmp<span class="w"> </span>dot.c<span class="w"> </span>-o<span class="w"> </span>dot
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold">cc1:</span> <span class=" -Color -Color-Bold -Color-Bold-Red">fatal error: </span>dot.c: No such file or directory
-compilation terminated.
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span><span class="w"> </span>gcc<span class="w"> </span>-O3<span class="w"> </span>-march<span class="o">=</span>native<span class="w"> </span>-fopenmp-simd<span class="w"> </span>-fopenmp<span class="w"> </span>../c_codes/hw3_solution/dot.c<span class="w"> </span>-o<span class="w"> </span>dot
 </pre></div>
 </div>
 </div>
@@ -567,7 +561,89 @@ compilation terminated.
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/bin/bash: line 1: ./dot: No such file or directory
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Name    	flops	ticks	flops/tick
+bdot_ref	640000	3711098	    0.17	
+bdot_ref	640000	3784536	    0.17	
+bdot_ref	640000	3719078	    0.17	
+bdot_ref	640000	3734050	    0.17	
+bdot_ref	640000	3776542	    0.17	
+bdot_ref	640000	3735870	    0.17	
+bdot_ref	640000	3740194	    0.17	
+bdot_ref	640000	3711514	    0.17	
+bdot_ref	640000	3706514	    0.17	
+bdot_ref	640000	3706824	    0.17	
+bdot_opt1	640000	2229244	    0.29	
+bdot_opt1	640000	1343308	    0.48	
+bdot_opt1	640000	1319386	    0.49	
+bdot_opt1	640000	1282050	    0.50	
+bdot_opt1	640000	1321408	    0.48	
+bdot_opt1	640000	1291920	    0.50	
+bdot_opt1	640000	1317398	    0.49	
+bdot_opt1	640000	1294556	    0.49	
+bdot_opt1	640000	1316542	    0.49	
+bdot_opt1	640000	1285068	    0.50	
+bdot_opt2	640000	1324240	    0.48	
+bdot_opt2	640000	1302526	    0.49	
+bdot_opt2	640000	1328800	    0.48	
+bdot_opt2	640000	1298966	    0.49	
+bdot_opt2	640000	1329274	    0.48	
+bdot_opt2	640000	1290456	    0.50	
+bdot_opt2	640000	1328920	    0.48	
+bdot_opt2	640000	1293720	    0.49	
+bdot_opt2	640000	1321658	    0.48	
+bdot_opt2	640000	1289784	    0.50	
+bdot_opt3	640000	1293114	    0.49	
+bdot_opt3	640000	1287492	    0.50	
+bdot_opt3	640000	1273236	    0.50	
+bdot_opt3	640000	1261016	    0.51	
+bdot_opt3	640000	1398142	    0.46	
+bdot_opt3	640000	1258424	    0.51	
+bdot_opt3	640000	1417378	    0.45	
+bdot_opt3	640000	1259812	    0.51	
+bdot_opt3	640000	1283180	    0.50	
+bdot_opt3	640000	1256928	    0.51	
+bdot_opt1_simd	640000	1318454	    0.49	
+bdot_opt1_simd	640000	1282060	    0.50	
+bdot_opt1_simd	640000	1307144	    0.49	
+bdot_opt1_simd	640000	1295028	    0.49	
+bdot_opt1_simd	640000	1330520	    0.48	
+bdot_opt1_simd	640000	1282156	    0.50	
+bdot_opt1_simd	640000	1323992	    0.48	
+bdot_opt1_simd	640000	1309798	    0.49	
+bdot_opt1_simd	640000	1283038	    0.50	
+bdot_opt1_simd	640000	1310928	    0.49	
+bdot_opt2_simd	640000	1300768	    0.49	
+bdot_opt2_simd	640000	1317316	    0.49	
+bdot_opt2_simd	640000	1300204	    0.49	
+bdot_opt2_simd	640000	1324052	    0.48	
+bdot_opt2_simd	640000	1301784	    0.49	
+bdot_opt2_simd	640000	1336192	    0.48	
+bdot_opt2_simd	640000	1298626	    0.49	
+bdot_opt2_simd	640000	1313742	    0.49	
+bdot_opt2_simd	640000	1292728	    0.50	
+bdot_opt2_simd	640000	1321808	    0.48	
+bdot_opt3_simd	640000	567196	    1.13	
+bdot_opt3_simd	640000	556038	    1.15	
+bdot_opt3_simd	640000	561746	    1.14	
+bdot_opt3_simd	640000	584484	    1.09	
+bdot_opt3_simd	640000	558204	    1.15	
+bdot_opt3_simd	640000	561384	    1.14	
+bdot_opt3_simd	640000	562602	    1.14	
+bdot_opt3_simd	640000	576142	    1.11	
+bdot_opt3_simd	640000	558714	    1.15	
+bdot_opt3_simd	640000	561228	    1.14	
+bdot_opt3_simd_reordered	640000	570704	    1.12	
+bdot_opt3_simd_reordered	640000	565220	    1.13	
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>bdot_opt3_simd_reordered	640000	585190	    1.09	
+bdot_opt3_simd_reordered	640000	563410	    1.14	
+bdot_opt3_simd_reordered	640000	560840	    1.14	
+bdot_opt3_simd_reordered	640000	558124	    1.15	
+bdot_opt3_simd_reordered	640000	591622	    1.08	
+bdot_opt3_simd_reordered	640000	556034	    1.15	
+bdot_opt3_simd_reordered	640000	552848	    1.16	
+bdot_opt3_simd_reordered	640000	553842	    1.16	
 </pre></div>
 </div>
 </div>
