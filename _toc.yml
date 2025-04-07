@@ -32,3 +32,4 @@ chapters:
   - file: lectures/module6-3_collectives.ipynb
   - file: lectures/hw3_solution.ipynb
   - file: lectures/module7-1_coprocessors.ipynb
+  - file: lectures/module7-2_cuda.ipynb
