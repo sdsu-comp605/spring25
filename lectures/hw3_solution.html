@@ -1,0 +1,1111 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>24) HW3 solution &#8212; Scientific Computing</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'lectures/hw3_solution';</script>
+    <link rel="icon" href="../_static/SDSU-comp605_logo.svg"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="23) Collective communication" href="module6-3_collectives.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/SDSU-comp605_logo.svg" class="logo__image only-light" alt="Scientific Computing - Home"/>
+    <script>document.write(`<img src="../_static/SDSU-comp605_logo.svg" class="logo__image only-dark" alt="Scientific Computing - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../index.html">
+                    Welcome
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../syllabus.html">Syllabus</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../lectures.html">Lectures</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="module1-1_first_class.html">1) First Class: Reproducibility and Git</a></li>
+
+
+<li class="toctree-l2"><a class="reference internal" href="module1-2_linux.html">2) The Linux Filesystem and commands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module1-3_community_projects.html">3) Community Projects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module1-4_intro_architectures.html">4) Introduction to Computer Architectures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module1-5_intro_vectorization.html">5) Introduction to Vectorization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module2-1_measuring_performance.html">6) Measuring Performance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module2-2_cpu_optimization.html">7) CPU Optimization: Matrix-Matrix Multiply</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module2-3_blocked_mmm.html">8) Blocked Matrix-Matrix Multiplication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module2-4_packing_for_cache.html">9) Packing for cache</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module2-5_intro_multithreading.html">10) Introduction to Multithreading</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module3-1_intro_parallel_scaling.html">11) Introduction to Parallel Scaling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module3-2_intro_to_openmp.html">12) Introduction to OpenMP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module3-3_openmp_tasks.html">13) More on OpenMP and OpenMP Tasks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module4-1_case_study_1_libceed.html">14) Case Study 1: libCEED</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module4-2_case_study_2_climacore.html">15) Case Study 2: ClimaCore</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hw2_notebook.html">16) HW2 solution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module5-1_reductions_and_scans.html">17) Parallel reductions and scans</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module5-2_intro_to_mpi.html">18) Introduction to MPI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module5-3_intro_to_slurm.html">19) Introduction to Batch Jobs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module5-4_parallel_linear_alegebra.html">20) Parallel Linear Algebra</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module6-1_intro_to_mpi_jl.html">21) Introduction to MPI.jl</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module6-2_blocking_vs_nonblocking.html">22) Blocking and non-blocking communication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module6-3_collectives.html">23) Collective communication</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">24) HW3 solution</a></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li>
+<button onclick="initThebeSBT()"
+  class="btn btn-sm btn-launch-thebe dropdown-item"
+  title="Launch Thebe"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-play"></i>
+  </span>
+<span class="btn__text-container">Live Code</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/sdsu-comp605/spring25" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/sdsu-comp605/spring25/issues/new?title=Issue%20on%20page%20%2Flectures/hw3_solution.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/lectures/hw3_solution.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>24) HW3 solution</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-1-optimizing-dot-product-30">Part 1: Optimizing dot product (30%)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-2-optimizing-block-inner-product-70">Part 2: Optimizing block inner product (%70)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#code">Code:</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="hw3-solution">
+<h1>24) HW3 solution<a class="headerlink" href="#hw3-solution" title="Link to this heading">#</a></h1>
+<section id="part-1-optimizing-dot-product-30">
+<h2>Part 1: Optimizing dot product (30%)<a class="headerlink" href="#part-1-optimizing-dot-product-30" title="Link to this heading">#</a></h2>
+<p>(5%) The compile/runtime unrolling factor versions achieve performance similar to the <code class="docutils literal notranslate"><span class="pre">dot_opt2</span></code> version, but not as good as the <code class="docutils literal notranslate"><span class="pre">dot_opt3</span></code> version.</p>
+<p>In addition to your commentary, answer the following questions:</p>
+<ol class="arabic simple">
+<li><p>(5%) Is this code correct for all values of n?</p>
+<ul class="simple">
+<li><p>No, for odd <code class="docutils literal notranslate"><span class="pre">n</span></code>, we incur in out-of-bound access when we perform the second product, <code class="docutils literal notranslate"><span class="pre">a[i+1]</span> <span class="pre">*</span> <span class="pre">b[i+1]</span></code>.</p></li>
+</ul>
+</li>
+<li><p>(5%) Can this code change the numerically computed result?</p>
+<ul class="simple">
+<li><p>Yes, because of floating-point aritmethic (FPA). We’re adding an extra operation. If any of the numbers to add were exrtemely small (or large), we will suffer from roundoff errors. Also, as you’ve learned, the C standard does not allow floating point arithmetic to be reordered because it may change the computed values (non associativity).</p></li>
+</ul>
+</li>
+<li><p>(5%) Can you extend this technique to increase performance further (longer vector registers and/or more instruction-level parallelism)?</p>
+<ul class="simple">
+<li><p>Yes, we can definitely consider instead of an unrolling factor 2, chunking the data in larger sizes and apply SIMD-like operations (like we do in Part 2)</p></li>
+</ul>
+</li>
+<li><p>(5%) Can you make the unrolling factor 2 a compile-time constant, perhaps by using an inner loop?</p>
+<ul class="simple">
+<li><p>Yes, we can do that (see <code class="docutils literal notranslate"><span class="pre">dot_opt_comp_time_m</span></code> function)</p></li>
+</ul>
+</li>
+<li><p>(5%) Could that unrolling factor be a run-time parameter?</p>
+<ul class="simple">
+<li><p>Yes, we can do that (see <code class="docutils literal notranslate"><span class="pre">dot_opt_run_time_m</span></code> function).
+There are a couple of different ways this can be achieved.</p>
+<ul>
+<li><p>If someone defined the runtime parameter, in say, <code class="docutils literal notranslate"><span class="pre">main</span></code>, then the compiler would get “smart” and optimize and treat it in the same way as a compile-time constant. Keep in mind that we’re compiling with the optimization flag <code class="docutils literal notranslate"><span class="pre">-O3</span></code>, so if we only used that unrolling factor in the call to our function in <code class="docutils literal notranslate"><span class="pre">main</span></code>, then the the compiler knows at compile time the value that we’re passing, and because we’re calling that function only once, it might just substitute the runtime constant as it were a constant known at compile time</p></li>
+<li><p>But if someone actually added it as a true runtime unrolling factor, passed via a command-line argument, which the compiler cannot know in advance, then, yes, the performance of the runtime version would be lower than the compile-time counterpart.</p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span><span class="w"> </span>gcc<span class="w"> </span>-O3<span class="w"> </span>-march<span class="o">=</span>native<span class="w"> </span>-fopenmp<span class="w">    </span>dot.c<span class="w">   </span>-o<span class="w"> </span>dot
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold">cc1:</span> <span class=" -Color -Color-Bold -Color-Bold-Red">fatal error: </span>dot.c: No such file or directory
+compilation terminated.
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span><span class="w"> </span><span class="nv">OMP_NUM_THREADS</span><span class="o">=</span><span class="m">4</span><span class="w"> </span>./dot<span class="w"> </span>-r<span class="w"> </span><span class="m">10</span><span class="w"> </span>-n<span class="w"> </span><span class="m">10000</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/bin/bash: line 1: ./dot: No such file or directory
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="part-2-optimizing-block-inner-product-70">
+<h2>Part 2: Optimizing block inner product (%70)<a class="headerlink" href="#part-2-optimizing-block-inner-product-70" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>What does it mean to reorder loops? Will it help or hurt performance?</p></li>
+</ul>
+<p>The two lines that originally use the <code class="docutils literal notranslate"><span class="pre">j</span></code> as slowest index and <code class="docutils literal notranslate"><span class="pre">k</span></code> as fastest index to perform the pair-wise products:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="p">(</span><span class="n">size_t</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="n">J</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">size_t</span> <span class="n">k</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">k</span><span class="o">&lt;</span><span class="n">K</span><span class="p">;</span> <span class="n">k</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</pre></div>
+</div>
+<p>tell us that the same row of the matrix <span class="math notranslate nohighlight">\(A^T\)</span> is multiplied by all columns of <span class="math notranslate nohighlight">\(B\)</span>, and we store the result in <span class="math notranslate nohighlight">\(C\)</span> row-wise.</p>
+<p>If we swapped these two lines, (see the <code class="docutils literal notranslate"><span class="pre">bdot_opt3_simd_reordered</span></code> function where we do this), we would multiply the same column of <span class="math notranslate nohighlight">\(B\)</span> by all rows of <span class="math notranslate nohighlight">\(A^T\)</span> and we’d store the result in <span class="math notranslate nohighlight">\(C\)</span> column-wise.</p>
+<p>The effect of doing so it is actually negligible on performance (on my architecture) and might bring only a very minimal advantage on some other architectures. If you think about it, this would only change how 32 pair-wise dot products are performed, but the majority of the work in this code is done in the single pair-wise dot products (20000 FLOPs each).</p>
+<ul class="simple">
+<li><p>Does it help to change the layout in memory (see the <code class="docutils literal notranslate"><span class="pre">aistride</span></code>, <code class="docutils literal notranslate"><span class="pre">ajstride</span></code>, <code class="docutils literal notranslate"><span class="pre">bistride</span></code>, and <code class="docutils literal notranslate"><span class="pre">bkstride</span></code> parameters in the code)?</p></li>
+</ul>
+<p>No, doing it without further algorithmic changes in the functions where we actually perform the dot products, does not help. First of all, the only way the stride parameters can be changed is in the call of the <code class="docutils literal notranslate"><span class="pre">init_bdot</span></code> function. Instead of calling <code class="docutils literal notranslate"><span class="pre">init_bdot</span></code> as we called it originally:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">init_bdot</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">length</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>one of the two arguments between <code class="docutils literal notranslate"><span class="pre">n</span></code> and <code class="docutils literal notranslate"><span class="pre">1</span></code> has to be kept to <code class="docutils literal notranslate"><span class="pre">1</span></code> to fill the whole matrices <code class="docutils literal notranslate"><span class="pre">A</span></code> and <code class="docutils literal notranslate"><span class="pre">B</span></code> without any gaps, as in:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">init_bdot</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">length</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>This would make <code class="docutils literal notranslate"><span class="pre">A</span></code> be stored column-wise and <code class="docutils literal notranslate"><span class="pre">B</span></code> stored row-wise (effectively transposing the matrices). If we did this, in order for the algorithm to still produce the same results of the pairwise dot products, we would also need to perform further algorithmic changes. Even if we did perform those further algorithmic changes to make the results correct, it would not help performance, as we would be back to the original situation.</p>
+<p>One might have also thought to use smaller blocks/stride patterns, such as <code class="docutils literal notranslate"><span class="pre">1,</span> <span class="pre">J</span></code> and <code class="docutils literal notranslate"><span class="pre">1,</span> <span class="pre">K</span></code>. However, again, this would only change how the data entries are laid out, and without further algorithmic changes in the functions that actually call the pair-wise dot products (which are implemented to perform the dot product of the <em>entire</em> vectors), it would not be beneficial.</p>
+<ul class="simple">
+<li><p>Try using the <code class="docutils literal notranslate"><span class="pre">#pragma</span> <span class="pre">omp</span> <span class="pre">simd</span></code> directive seen in class and the compiler option <code class="docutils literal notranslate"><span class="pre">-fopenmp-simd</span></code>.</p></li>
+</ul>
+<p>See all the <code class="docutils literal notranslate"><span class="pre">bdot_opt*_simd</span></code> versions and related results (where <code class="docutils literal notranslate"><span class="pre">*</span></code> is 1,2,3). The addition of the <code class="docutils literal notranslate"><span class="pre">#pragma</span> <span class="pre">omp</span> <span class="pre">simd</span></code> directive only significantly helps the <code class="docutils literal notranslate"><span class="pre">bdot_opt3</span></code> optimized version, and leaves the <code class="docutils literal notranslate"><span class="pre">bdot_opt1</span></code> and <code class="docutils literal notranslate"><span class="pre">bdot_opt2</span></code> results essentially unaltered.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span><span class="w"> </span>gcc<span class="w"> </span>-O3<span class="w"> </span>-march<span class="o">=</span>native<span class="w"> </span>-fopenmp-simd<span class="w"> </span>-fopenmp<span class="w"> </span>dot.c<span class="w"> </span>-o<span class="w"> </span>dot
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold">cc1:</span> <span class=" -Color -Color-Bold -Color-Bold-Red">fatal error: </span>dot.c: No such file or directory
+compilation terminated.
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span><span class="w"> </span><span class="nv">OMP_NUM_THREADS</span><span class="o">=</span><span class="m">4</span><span class="w"> </span>./dot<span class="w"> </span>-r<span class="w"> </span><span class="m">10</span><span class="w"> </span>-n<span class="w"> </span><span class="m">10000</span><span class="w"> </span>-b
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/bin/bash: line 1: ./dot: No such file or directory
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="code">
+<h2>Code:<a class="headerlink" href="#code" title="Link to this heading">#</a></h2>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="linenos">  1</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;rdtsc.h&quot;</span>
+<span class="linenos">  2</span>
+<span class="linenos">  3</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;argp.h&gt;</span>
+<span class="linenos">  4</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;math.h&gt;</span>
+<span class="linenos">  5</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;omp.h&gt;</span>
+<span class="linenos">  6</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdbool.h&gt;</span>
+<span class="linenos">  7</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdio.h&gt;</span>
+<span class="linenos">  8</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdlib.h&gt;</span>
+<span class="linenos">  9</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;string.h&gt;</span>
+<span class="linenos"> 10</span>
+<span class="linenos"> 11</span><span class="k">struct</span><span class="w"> </span><span class="nc">Args</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos"> 12</span><span class="w">  </span><span class="kt">size_t</span><span class="w"> </span><span class="n">length</span><span class="p">;</span>
+<span class="linenos"> 13</span><span class="w">  </span><span class="kt">size_t</span><span class="w"> </span><span class="n">nreps</span><span class="p">;</span>
+<span class="linenos"> 14</span><span class="w">  </span><span class="kt">bool</span><span class="w"> </span><span class="n">block</span><span class="p">;</span>
+<span class="linenos"> 15</span><span class="w">  </span><span class="kt">size_t</span><span class="w"> </span><span class="n">unroll_factor</span><span class="p">;</span>
+<span class="linenos"> 16</span><span class="p">};</span>
+<span class="linenos"> 17</span>
+<span class="linenos"> 18</span><span class="k">static</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">argp_option</span><span class="w"> </span><span class="n">options</span><span class="p">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos"> 19</span><span class="w">  </span><span class="p">{</span><span class="s">&quot;length&quot;</span><span class="p">,</span><span class="w"> </span><span class="sc">&#39;n&#39;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;size_t&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Length of each vector&quot;</span><span class="p">},</span>
+<span class="linenos"> 20</span><span class="w">  </span><span class="p">{</span><span class="s">&quot;nreps&quot;</span><span class="p">,</span><span class="w"> </span><span class="sc">&#39;r&#39;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;size_t&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Number of repetitions&quot;</span><span class="p">},</span>
+<span class="linenos"> 21</span><span class="w">  </span><span class="p">{</span><span class="s">&quot;block&quot;</span><span class="p">,</span><span class="w"> </span><span class="sc">&#39;b&#39;</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Compute block dot products (versus a single dot product)&quot;</span><span class="p">},</span>
+<span class="linenos"> 22</span><span class="w">  </span><span class="p">{</span><span class="s">&quot;unroll_factor&quot;</span><span class="p">,</span><span class="w"> </span><span class="sc">&#39;m&#39;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;size_t&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Runtime unrolling factor for dot product&quot;</span><span class="p">},</span>
+<span class="linenos"> 23</span><span class="p">};</span>
+<span class="linenos"> 24</span>
+<span class="linenos"> 25</span><span class="k">static</span><span class="w"> </span><span class="n">error_t</span><span class="w"> </span><span class="nf">parse_opt</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">key</span><span class="p">,</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">arg</span><span class="p">,</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">argp_state</span><span class="w"> </span><span class="o">*</span><span class="n">state</span><span class="p">)</span>
+<span class="linenos"> 26</span><span class="p">{</span>
+<span class="linenos"> 27</span><span class="w">  </span><span class="k">struct</span><span class="w"> </span><span class="nc">Args</span><span class="w"> </span><span class="o">*</span><span class="n">args</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">state</span><span class="o">-&gt;</span><span class="n">input</span><span class="p">;</span>
+<span class="linenos"> 28</span><span class="w">  </span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="n">key</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos"> 29</span><span class="w">  </span><span class="k">case</span><span class="w"> </span><span class="no">ARGP_KEY_INIT</span><span class="p">:</span>
+<span class="linenos"> 30</span><span class="w">    </span><span class="n">args</span><span class="o">-&gt;</span><span class="n">length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">100</span><span class="p">;</span>
+<span class="linenos"> 31</span><span class="w">    </span><span class="n">args</span><span class="o">-&gt;</span><span class="n">nreps</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span><span class="p">;</span>
+<span class="linenos"> 32</span><span class="w">    </span><span class="n">args</span><span class="o">-&gt;</span><span class="n">block</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="linenos"> 33</span><span class="w">    </span><span class="n">args</span><span class="o">-&gt;</span><span class="n">unroll_factor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="p">;</span>
+<span class="linenos"> 34</span><span class="w">    </span><span class="k">break</span><span class="p">;</span>
+<span class="linenos"> 35</span><span class="w">  </span><span class="k">case</span><span class="w"> </span><span class="sc">&#39;n&#39;</span><span class="p">:</span>
+<span class="linenos"> 36</span><span class="w">    </span><span class="n">args</span><span class="o">-&gt;</span><span class="n">length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">strtol</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="mi">10</span><span class="p">);</span>
+<span class="linenos"> 37</span><span class="w">    </span><span class="k">break</span><span class="p">;</span>
+<span class="linenos"> 38</span><span class="w">  </span><span class="k">case</span><span class="w"> </span><span class="sc">&#39;r&#39;</span><span class="p">:</span>
+<span class="linenos"> 39</span><span class="w">    </span><span class="n">args</span><span class="o">-&gt;</span><span class="n">nreps</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">strtol</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="mi">10</span><span class="p">);</span>
+<span class="linenos"> 40</span><span class="w">    </span><span class="k">break</span><span class="p">;</span>
+<span class="linenos"> 41</span><span class="w">  </span><span class="k">case</span><span class="w"> </span><span class="sc">&#39;b&#39;</span><span class="p">:</span>
+<span class="linenos"> 42</span><span class="w">    </span><span class="n">args</span><span class="o">-&gt;</span><span class="n">block</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="linenos"> 43</span><span class="w">    </span><span class="k">break</span><span class="p">;</span>
+<span class="linenos"> 44</span><span class="w">  </span><span class="k">case</span><span class="w"> </span><span class="sc">&#39;m&#39;</span><span class="p">:</span>
+<span class="linenos"> 45</span><span class="w">    </span><span class="n">args</span><span class="o">-&gt;</span><span class="n">unroll_factor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">strtol</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="mi">10</span><span class="p">);</span>
+<span class="linenos"> 46</span><span class="w">    </span><span class="k">break</span><span class="p">;</span>
+<span class="linenos"> 47</span><span class="w">  </span><span class="k">default</span><span class="o">:</span>
+<span class="linenos"> 48</span><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">ARGP_ERR_UNKNOWN</span><span class="p">;</span>
+<span class="linenos"> 49</span><span class="w">  </span><span class="p">}</span>
+<span class="linenos"> 50</span><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="linenos"> 51</span><span class="p">}</span>
+<span class="linenos"> 52</span>
+<span class="linenos"> 53</span><span class="c1">// This part is to answer Part 1</span>
+<span class="linenos"> 54</span><span class="cp">#define COMP_TIME_M 4</span>
+<span class="linenos"> 55</span>
+<span class="linenos"> 56</span><span class="c1">// dot_opt_comp_time_m uses a compile-time unrolling factor (Part 1, Q4)</span>
+<span class="linenos"> 57</span><span class="kt">double</span><span class="w"> </span><span class="nf">dot_opt_comp_time_m</span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos"> 58</span>
+<span class="linenos"> 59</span><span class="w">  </span><span class="c1">// check if n is divided evenly by the compile-time unrolling factor</span>
+<span class="linenos"> 60</span><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="n">COMP_TIME_M</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos"> 61</span><span class="w">    </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;Error, the compile time unrolling factor must be perfectly contained in n </span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<span class="linenos"> 62</span><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">-1</span><span class="p">;</span>
+<span class="linenos"> 63</span><span class="w">  </span><span class="p">}</span>
+<span class="linenos"> 64</span>
+<span class="linenos"> 65</span><span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="n">sum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">sums</span><span class="p">[</span><span class="n">n</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">COMP_TIME_M</span><span class="p">];</span>
+<span class="linenos"> 66</span><span class="w">  </span><span class="n">memset</span><span class="p">(</span><span class="n">sums</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">sums</span><span class="p">));</span>
+<span class="linenos"> 67</span>
+<span class="linenos"> 68</span><span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">+=</span><span class="n">COMP_TIME_M</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos"> 69</span><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="o">&lt;</span><span class="n">COMP_TIME_M</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos"> 70</span><span class="w">      </span><span class="n">sums</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="n">j</span><span class="p">]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="n">j</span><span class="p">];</span>
+<span class="linenos"> 71</span><span class="w">    </span><span class="p">}</span>
+<span class="linenos"> 72</span><span class="w">  </span><span class="p">}</span>
+<span class="linenos"> 73</span><span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">n</span><span class="o">/</span><span class="n">COMP_TIME_M</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos"> 74</span><span class="w">    </span><span class="n">sum</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">sums</span><span class="p">[</span><span class="n">j</span><span class="p">];</span>
+<span class="linenos"> 75</span><span class="w">  </span><span class="p">}</span>
+<span class="linenos"> 76</span><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">sum</span><span class="p">;</span>
+<span class="linenos"> 77</span><span class="p">}</span>
+<span class="linenos"> 78</span>
+<span class="linenos"> 79</span><span class="c1">// dot_opt_run_time_m uses a runtime unrolling factor (Part 1, Q5)</span>
+<span class="linenos"> 80</span><span class="kt">double</span><span class="w"> </span><span class="nf">dot_opt_run_time_m</span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">m</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos"> 81</span>
+<span class="linenos"> 82</span><span class="w">  </span><span class="c1">// check if n is divided evenly by the compile-time unrolling factor</span>
+<span class="linenos"> 83</span><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos"> 84</span><span class="w">    </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;Error, the compile time unrolling factor must be perfectly contained in n </span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<span class="linenos"> 85</span><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">-1</span><span class="p">;</span>
+<span class="linenos"> 86</span><span class="w">  </span><span class="p">}</span>
+<span class="linenos"> 87</span>
+<span class="linenos"> 88</span><span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="n">sum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">sums</span><span class="p">[</span><span class="n">n</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">m</span><span class="p">];</span>
+<span class="linenos"> 89</span>
+<span class="linenos"> 90</span><span class="w">  </span><span class="c1">// initialize the dynamically created sums array to zero</span>
+<span class="linenos"> 91</span><span class="w">  </span><span class="n">memset</span><span class="p">(</span><span class="n">sums</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">sums</span><span class="p">));</span>
+<span class="linenos"> 92</span><span class="w">  </span><span class="c1">// printf(&quot;Before for-loop \n&quot;);</span>
+<span class="linenos"> 93</span><span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">+=</span><span class="n">m</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos"> 94</span><span class="w">    </span><span class="c1">// printf(&quot;Inside first for-loop \n&quot;);</span>
+<span class="linenos"> 95</span><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">m</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos"> 96</span><span class="w">      </span><span class="c1">// printf(&quot;Inside 2nd for-loop. I is %d, j is %d \n&quot;, i, j);</span>
+<span class="linenos"> 97</span><span class="w">      </span><span class="n">sums</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="n">j</span><span class="p">]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="n">j</span><span class="p">];</span>
+<span class="linenos"> 98</span><span class="w">    </span><span class="p">}</span>
+<span class="linenos"> 99</span><span class="w">  </span><span class="p">}</span>
+<span class="linenos">100</span><span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">n</span><span class="o">/</span><span class="n">m</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">101</span><span class="w">    </span><span class="c1">// printf(&quot;Inside the reduction for-loop. j is %d \n&quot;, j);</span>
+<span class="linenos">102</span><span class="w">    </span><span class="n">sum</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">sums</span><span class="p">[</span><span class="n">j</span><span class="p">];</span>
+<span class="linenos">103</span><span class="w">  </span><span class="p">}</span>
+<span class="linenos">104</span><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">sum</span><span class="p">;</span>
+<span class="linenos">105</span><span class="p">}</span>
+<span class="linenos">106</span><span class="c1">// This part ends to answer Part 1</span>
+<span class="linenos">107</span>
+<span class="linenos">108</span><span class="n">__attribute</span><span class="p">((</span><span class="n">noinline</span><span class="p">))</span>
+<span class="linenos">109</span><span class="k">static</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">dot_ref</span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">110</span><span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="n">sum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="linenos">111</span><span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+<span class="linenos">112</span><span class="w">    </span><span class="n">sum</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+<span class="linenos">113</span><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">sum</span><span class="p">;</span>
+<span class="linenos">114</span><span class="p">}</span>
+<span class="linenos">115</span>
+<span class="linenos">116</span><span class="c1">// The following even-odd function given in the assignment tries to alleviate some data dependency from one loop iteration to another.</span>
+<span class="linenos">117</span><span class="c1">// Note: the following function is NOT correct for all values of n. In fact, for n odd we incur in out-of-bound access when we perform the second partial sum sum1 += a[i+1] * b[i+1]</span>
+<span class="linenos">118</span><span class="kt">double</span><span class="w"> </span><span class="n">dot_opt_even_odd</span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">119</span><span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="n">sum0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">sum1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="linenos">120</span><span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">+=</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">121</span><span class="w">    </span><span class="n">sum0</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">0</span><span class="p">];</span>
+<span class="linenos">122</span><span class="w">    </span><span class="n">sum1</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">];</span>
+<span class="linenos">123</span><span class="w">  </span><span class="p">}</span>
+<span class="linenos">124</span><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">sum0</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">sum1</span><span class="p">;</span>
+<span class="linenos">125</span><span class="p">}</span>
+<span class="linenos">126</span>
+<span class="linenos">127</span><span class="n">__attribute</span><span class="p">((</span><span class="n">noinline</span><span class="p">))</span>
+<span class="linenos">128</span><span class="k">static</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">dot_opt1</span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">129</span><span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="n">sums</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{};</span>
+<span class="linenos">130</span><span class="w">  </span><span class="n">omp_set_num_threads</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+<span class="linenos">131</span><span class="w">  </span><span class="cp">#pragma omp parallel</span>
+<span class="linenos">132</span><span class="w">  </span><span class="p">{</span>
+<span class="linenos">133</span><span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">omp_get_thread_num</span><span class="p">();</span>
+<span class="linenos">134</span><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="n">id</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">+=</span><span class="mi">4</span><span class="p">)</span>
+<span class="linenos">135</span><span class="w">      </span><span class="n">sums</span><span class="p">[</span><span class="n">id</span><span class="p">]</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+<span class="linenos">136</span><span class="w">  </span><span class="p">}</span>
+<span class="linenos">137</span><span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">j</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="o">&lt;</span><span class="mi">4</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="n">sums</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">sums</span><span class="p">[</span><span class="n">j</span><span class="p">];</span>
+<span class="linenos">138</span><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">sums</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+<span class="linenos">139</span><span class="p">}</span>
+<span class="linenos">140</span>
+<span class="linenos">141</span><span class="c1">// dot_opt1_simd is the dot_opt1 version to which we added the #pragma omp simd directive</span>
+<span class="linenos">142</span><span class="n">__attribute</span><span class="p">((</span><span class="n">noinline</span><span class="p">))</span>
+<span class="linenos">143</span><span class="k">static</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">dot_opt1_simd</span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">144</span><span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="n">sums</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{};</span>
+<span class="linenos">145</span><span class="w">  </span><span class="n">omp_set_num_threads</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+<span class="linenos">146</span><span class="w">  </span><span class="cp">#pragma omp parallel</span>
+<span class="linenos">147</span><span class="w">  </span><span class="p">{</span>
+<span class="linenos">148</span><span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">omp_get_thread_num</span><span class="p">();</span>
+<span class="linenos">149</span><span class="w">    </span><span class="cp">#pragma omp simd</span>
+<span class="linenos">150</span><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="n">id</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">+=</span><span class="mi">4</span><span class="p">)</span>
+<span class="linenos">151</span><span class="w">      </span><span class="n">sums</span><span class="p">[</span><span class="n">id</span><span class="p">]</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+<span class="linenos">152</span><span class="w">  </span><span class="p">}</span>
+<span class="linenos">153</span><span class="w">  </span><span class="cp">#pragma omp simd</span>
+<span class="linenos">154</span><span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">j</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="o">&lt;</span><span class="mi">4</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="n">sums</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">sums</span><span class="p">[</span><span class="n">j</span><span class="p">];</span>
+<span class="linenos">155</span><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">sums</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+<span class="linenos">156</span><span class="p">}</span>
+<span class="linenos">157</span>
+<span class="linenos">158</span><span class="n">__attribute</span><span class="p">((</span><span class="n">noinline</span><span class="p">))</span>
+<span class="linenos">159</span><span class="k">static</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">dot_opt2</span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">160</span><span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="n">sums</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{};</span>
+<span class="linenos">161</span><span class="w">  </span><span class="n">omp_set_num_threads</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+<span class="linenos">162</span><span class="w">  </span><span class="cp">#pragma omp parallel</span>
+<span class="linenos">163</span><span class="w">  </span><span class="p">{</span>
+<span class="linenos">164</span><span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">omp_get_thread_num</span><span class="p">();</span>
+<span class="linenos">165</span><span class="w">    </span><span class="cp">#pragma omp for</span>
+<span class="linenos">166</span><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+<span class="linenos">167</span><span class="w">      </span><span class="n">sums</span><span class="p">[</span><span class="n">id</span><span class="p">]</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+<span class="linenos">168</span><span class="w">  </span><span class="p">}</span>
+<span class="linenos">169</span><span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">j</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="o">&lt;</span><span class="mi">4</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="n">sums</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">sums</span><span class="p">[</span><span class="n">j</span><span class="p">];</span>
+<span class="linenos">170</span><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">sums</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+<span class="linenos">171</span><span class="p">}</span>
+<span class="linenos">172</span>
+<span class="linenos">173</span><span class="c1">// dot_opt2_simd is the dot_opt2 version to which we added the #pragma omp simd directive</span>
+<span class="linenos">174</span><span class="n">__attribute</span><span class="p">((</span><span class="n">noinline</span><span class="p">))</span>
+<span class="linenos">175</span><span class="k">static</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">dot_opt2_simd</span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">176</span><span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="n">sums</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{};</span>
+<span class="linenos">177</span><span class="w">  </span><span class="n">omp_set_num_threads</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+<span class="linenos">178</span><span class="w">  </span><span class="cp">#pragma omp parallel</span>
+<span class="linenos">179</span><span class="w">  </span><span class="p">{</span>
+<span class="linenos">180</span><span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">omp_get_thread_num</span><span class="p">();</span>
+<span class="linenos">181</span><span class="w">    </span><span class="cp">#pragma omp for simd</span>
+<span class="linenos">182</span><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+<span class="linenos">183</span><span class="w">      </span><span class="n">sums</span><span class="p">[</span><span class="n">id</span><span class="p">]</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+<span class="linenos">184</span><span class="w">  </span><span class="p">}</span>
+<span class="linenos">185</span><span class="w">  </span><span class="cp">#pragma omp simd</span>
+<span class="linenos">186</span><span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">j</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="o">&lt;</span><span class="mi">4</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="n">sums</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">sums</span><span class="p">[</span><span class="n">j</span><span class="p">];</span>
+<span class="linenos">187</span><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">sums</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+<span class="linenos">188</span><span class="p">}</span>
+<span class="linenos">189</span>
+<span class="linenos">190</span><span class="n">__attribute</span><span class="p">((</span><span class="n">noinline</span><span class="p">))</span>
+<span class="linenos">191</span><span class="k">static</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">dot_opt3</span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">192</span><span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="n">sum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="linenos">193</span><span class="w">  </span><span class="n">omp_set_num_threads</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+<span class="linenos">194</span><span class="w">  </span><span class="cp">#pragma omp parallel</span>
+<span class="linenos">195</span><span class="w">  </span><span class="p">{</span>
+<span class="linenos">196</span><span class="w">    </span><span class="cp">#pragma omp for reduction(+:sum)</span>
+<span class="linenos">197</span><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+<span class="linenos">198</span><span class="w">      </span><span class="n">sum</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+<span class="linenos">199</span><span class="w">  </span><span class="p">}</span>
+<span class="linenos">200</span><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">sum</span><span class="p">;</span>
+<span class="linenos">201</span><span class="p">}</span>
+<span class="linenos">202</span>
+<span class="linenos">203</span><span class="c1">// dot_opt3_simd is the dot_opt3 version to which we added the #pragma omp simd directive</span>
+<span class="linenos">204</span><span class="n">__attribute</span><span class="p">((</span><span class="n">noinline</span><span class="p">))</span>
+<span class="linenos">205</span><span class="k">static</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">dot_opt3_simd</span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">206</span><span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="n">sum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="linenos">207</span><span class="w">  </span><span class="n">omp_set_num_threads</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+<span class="linenos">208</span><span class="w">  </span><span class="cp">#pragma omp parallel</span>
+<span class="linenos">209</span><span class="w">  </span><span class="p">{</span>
+<span class="linenos">210</span><span class="w">    </span><span class="cp">#pragma omp for simd reduction(+:sum)</span>
+<span class="linenos">211</span><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+<span class="linenos">212</span><span class="w">      </span><span class="n">sum</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+<span class="linenos">213</span><span class="w">  </span><span class="p">}</span>
+<span class="linenos">214</span><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">sum</span><span class="p">;</span>
+<span class="linenos">215</span><span class="p">}</span>
+<span class="linenos">216</span>
+<span class="linenos">217</span><span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">report_dot</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">ticks_t</span><span class="w"> </span><span class="n">start_ticks</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">flops</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">result</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">218</span><span class="w">  </span><span class="n">ticks_t</span><span class="w"> </span><span class="n">ticks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rdtsc</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">start_ticks</span><span class="p">;</span>
+<span class="linenos">219</span><span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="n">rate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1.</span><span class="o">*</span><span class="n">flops</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">ticks</span><span class="p">;</span>
+<span class="linenos">220</span><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">fabs</span><span class="p">(</span><span class="n">result</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">flops</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mf">1e-10</span><span class="p">)</span>
+<span class="linenos">221</span><span class="w">    </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;Result %f failed to validate with expected value %ld</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">result</span><span class="p">,</span><span class="w"> </span><span class="n">flops</span><span class="p">);</span>
+<span class="linenos">222</span><span class="w">  </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;%8s</span><span class="se">\t</span><span class="s">%ld</span><span class="se">\t</span><span class="s">%lld</span><span class="se">\t</span><span class="s">%8.2f</span><span class="se">\t\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">flops</span><span class="p">,</span><span class="w"> </span><span class="n">ticks</span><span class="p">,</span><span class="w"> </span><span class="n">rate</span><span class="p">);</span>
+<span class="linenos">223</span><span class="p">}</span>
+<span class="linenos">224</span>
+<span class="linenos">225</span><span class="cp">#define REPORT_DOT(f) do {                                              \</span>
+<span class="linenos">226</span><span class="cp">    for (int rep=0; rep&lt;args.nreps; rep++) {                            \</span>
+<span class="linenos">227</span><span class="cp">      ticks_t ticks_start = rdtsc();                                    \</span>
+<span class="linenos">228</span><span class="cp">      report_dot(#f, ticks_start, 2*args.length, f(args.length, a, b)); \</span>
+<span class="linenos">229</span><span class="cp">    }                                                                   \</span>
+<span class="linenos">230</span><span class="cp">  } while (0)</span>
+<span class="linenos">231</span>
+<span class="linenos">232</span><span class="c1">// The following macro is to test the perfomance of the runtime loop unrolling constant to answer Part 1.5</span>
+<span class="linenos">233</span><span class="cp">#define REPORT_DOT_RUNTIME(f, m) do {                                              \</span>
+<span class="linenos">234</span><span class="cp">  for (int rep=0; rep&lt;args.nreps; rep++) {                            \</span>
+<span class="linenos">235</span><span class="cp">    ticks_t ticks_start = rdtsc();                                    \</span>
+<span class="linenos">236</span><span class="cp">    report_dot(#f, ticks_start, 2*args.length, f(args.length, a, b, m)); \</span>
+<span class="linenos">237</span><span class="cp">  }                                                                   \</span>
+<span class="linenos">238</span><span class="cp">} while (0)</span>
+<span class="linenos">239</span>
+<span class="linenos">240</span><span class="c1">// Dimensions of the matrices for block dot products.</span>
+<span class="linenos">241</span><span class="cp">#define J 8</span>
+<span class="linenos">242</span><span class="cp">#define K 4</span>
+<span class="linenos">243</span>
+<span class="linenos">244</span><span class="c1">// Performs the operation</span>
+<span class="linenos">245</span><span class="c1">//   C = A * B</span>
+<span class="linenos">246</span><span class="c1">// where A and B have shape (J,n) and (n,K) respectively.</span>
+<span class="linenos">247</span><span class="c1">// This reference version stores A as row-major and B as column-major.</span>
+<span class="linenos">248</span><span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">bdot_ref</span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">c</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">249</span><span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="o">&lt;</span><span class="n">J</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">250</span><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">k</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">k</span><span class="o">&lt;</span><span class="n">K</span><span class="p">;</span><span class="w"> </span><span class="n">k</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">251</span><span class="w">      </span><span class="n">c</span><span class="p">[</span><span class="n">j</span><span class="o">*</span><span class="n">K</span><span class="o">+</span><span class="n">k</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dot_ref</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">a</span><span class="p">[</span><span class="n">j</span><span class="o">*</span><span class="n">n</span><span class="p">],</span><span class="w"> </span><span class="o">&amp;</span><span class="n">b</span><span class="p">[</span><span class="n">k</span><span class="o">*</span><span class="n">n</span><span class="p">]);</span>
+<span class="linenos">252</span><span class="w">    </span><span class="p">}</span>
+<span class="linenos">253</span><span class="w">  </span><span class="p">}</span>
+<span class="linenos">254</span><span class="p">}</span>
+<span class="linenos">255</span>
+<span class="linenos">256</span><span class="c1">// bdot_opt1 internally calls dot_opt1</span>
+<span class="linenos">257</span><span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">bdot_opt1</span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">c</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">258</span>
+<span class="linenos">259</span><span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="o">&lt;</span><span class="n">J</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">260</span><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">k</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">k</span><span class="o">&lt;</span><span class="n">K</span><span class="p">;</span><span class="w"> </span><span class="n">k</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">261</span><span class="w">      </span><span class="n">c</span><span class="p">[</span><span class="n">j</span><span class="o">*</span><span class="n">K</span><span class="o">+</span><span class="n">k</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dot_opt1</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">a</span><span class="p">[</span><span class="n">j</span><span class="o">*</span><span class="n">n</span><span class="p">],</span><span class="w"> </span><span class="o">&amp;</span><span class="n">b</span><span class="p">[</span><span class="n">k</span><span class="o">*</span><span class="n">n</span><span class="p">]);</span>
+<span class="linenos">262</span><span class="w">    </span><span class="p">}</span>
+<span class="linenos">263</span><span class="w">  </span><span class="p">}</span>
+<span class="linenos">264</span><span class="p">}</span>
+<span class="linenos">265</span>
+<span class="linenos">266</span><span class="c1">// bdot_opt1_simd internally calls dot_opt1_simd</span>
+<span class="linenos">267</span><span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">bdot_opt1_simd</span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">c</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">268</span>
+<span class="linenos">269</span><span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="o">&lt;</span><span class="n">J</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">270</span><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">k</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">k</span><span class="o">&lt;</span><span class="n">K</span><span class="p">;</span><span class="w"> </span><span class="n">k</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">271</span><span class="w">      </span><span class="n">c</span><span class="p">[</span><span class="n">j</span><span class="o">*</span><span class="n">K</span><span class="o">+</span><span class="n">k</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dot_opt1_simd</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">a</span><span class="p">[</span><span class="n">j</span><span class="o">*</span><span class="n">n</span><span class="p">],</span><span class="w"> </span><span class="o">&amp;</span><span class="n">b</span><span class="p">[</span><span class="n">k</span><span class="o">*</span><span class="n">n</span><span class="p">]);</span>
+<span class="linenos">272</span><span class="w">    </span><span class="p">}</span>
+<span class="linenos">273</span><span class="w">  </span><span class="p">}</span>
+<span class="linenos">274</span><span class="p">}</span>
+<span class="linenos">275</span>
+<span class="linenos">276</span><span class="c1">// bdot_opt2 internally calls dot_opt2</span>
+<span class="linenos">277</span><span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">bdot_opt2</span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">c</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">278</span>
+<span class="linenos">279</span><span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="o">&lt;</span><span class="n">J</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">280</span><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">k</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">k</span><span class="o">&lt;</span><span class="n">K</span><span class="p">;</span><span class="w"> </span><span class="n">k</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">281</span><span class="w">      </span><span class="n">c</span><span class="p">[</span><span class="n">j</span><span class="o">*</span><span class="n">K</span><span class="o">+</span><span class="n">k</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dot_opt2</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">a</span><span class="p">[</span><span class="n">j</span><span class="o">*</span><span class="n">n</span><span class="p">],</span><span class="w"> </span><span class="o">&amp;</span><span class="n">b</span><span class="p">[</span><span class="n">k</span><span class="o">*</span><span class="n">n</span><span class="p">]);</span>
+<span class="linenos">282</span><span class="w">    </span><span class="p">}</span>
+<span class="linenos">283</span><span class="w">  </span><span class="p">}</span>
+<span class="linenos">284</span><span class="p">}</span>
+<span class="linenos">285</span>
+<span class="linenos">286</span><span class="c1">// bdot_opt2_simd internally calls dot_opt2_simd</span>
+<span class="linenos">287</span><span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">bdot_opt2_simd</span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">c</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">288</span>
+<span class="linenos">289</span><span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="o">&lt;</span><span class="n">J</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">290</span><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">k</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">k</span><span class="o">&lt;</span><span class="n">K</span><span class="p">;</span><span class="w"> </span><span class="n">k</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">291</span><span class="w">      </span><span class="n">c</span><span class="p">[</span><span class="n">j</span><span class="o">*</span><span class="n">K</span><span class="o">+</span><span class="n">k</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dot_opt2_simd</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">a</span><span class="p">[</span><span class="n">j</span><span class="o">*</span><span class="n">n</span><span class="p">],</span><span class="w"> </span><span class="o">&amp;</span><span class="n">b</span><span class="p">[</span><span class="n">k</span><span class="o">*</span><span class="n">n</span><span class="p">]);</span>
+<span class="linenos">292</span><span class="w">    </span><span class="p">}</span>
+<span class="linenos">293</span><span class="w">  </span><span class="p">}</span>
+<span class="linenos">294</span><span class="p">}</span>
+<span class="linenos">295</span>
+<span class="linenos">296</span><span class="c1">// bdot_opt3 internally calls dot_opt3</span>
+<span class="linenos">297</span><span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">bdot_opt3</span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">c</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">298</span>
+<span class="linenos">299</span><span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="o">&lt;</span><span class="n">J</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">300</span><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">k</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">k</span><span class="o">&lt;</span><span class="n">K</span><span class="p">;</span><span class="w"> </span><span class="n">k</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">301</span><span class="w">      </span><span class="n">c</span><span class="p">[</span><span class="n">j</span><span class="o">*</span><span class="n">K</span><span class="o">+</span><span class="n">k</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dot_opt3</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">a</span><span class="p">[</span><span class="n">j</span><span class="o">*</span><span class="n">n</span><span class="p">],</span><span class="w"> </span><span class="o">&amp;</span><span class="n">b</span><span class="p">[</span><span class="n">k</span><span class="o">*</span><span class="n">n</span><span class="p">]);</span>
+<span class="linenos">302</span><span class="w">    </span><span class="p">}</span>
+<span class="linenos">303</span><span class="w">  </span><span class="p">}</span>
+<span class="linenos">304</span><span class="p">}</span>
+<span class="linenos">305</span>
+<span class="linenos">306</span><span class="c1">// bdot_opt3_simd internally calls dot_opt3_simd</span>
+<span class="linenos">307</span><span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">bdot_opt3_simd</span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">c</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">308</span>
+<span class="linenos">309</span><span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="o">&lt;</span><span class="n">J</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">310</span><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">k</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">k</span><span class="o">&lt;</span><span class="n">K</span><span class="p">;</span><span class="w"> </span><span class="n">k</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">311</span><span class="w">      </span><span class="n">c</span><span class="p">[</span><span class="n">j</span><span class="o">*</span><span class="n">K</span><span class="o">+</span><span class="n">k</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dot_opt3_simd</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">a</span><span class="p">[</span><span class="n">j</span><span class="o">*</span><span class="n">n</span><span class="p">],</span><span class="w"> </span><span class="o">&amp;</span><span class="n">b</span><span class="p">[</span><span class="n">k</span><span class="o">*</span><span class="n">n</span><span class="p">]);</span>
+<span class="linenos">312</span><span class="w">    </span><span class="p">}</span>
+<span class="linenos">313</span><span class="w">  </span><span class="p">}</span>
+<span class="linenos">314</span><span class="p">}</span>
+<span class="linenos">315</span>
+<span class="linenos">316</span><span class="c1">// bdot_opt3_simd_reordered performs the J * K (=32) pairwise products swapping the k,j indices</span>
+<span class="linenos">317</span><span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">bdot_opt3_simd_reordered</span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">c</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">318</span>
+<span class="linenos">319</span><span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">k</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">k</span><span class="o">&lt;</span><span class="n">K</span><span class="p">;</span><span class="w"> </span><span class="n">k</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">320</span><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="o">&lt;</span><span class="n">J</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">321</span><span class="w">      </span><span class="n">c</span><span class="p">[</span><span class="n">j</span><span class="o">*</span><span class="n">K</span><span class="o">+</span><span class="n">k</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dot_opt3_simd</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">a</span><span class="p">[</span><span class="n">j</span><span class="o">*</span><span class="n">n</span><span class="p">],</span><span class="w"> </span><span class="o">&amp;</span><span class="n">b</span><span class="p">[</span><span class="n">k</span><span class="o">*</span><span class="n">n</span><span class="p">]);</span>
+<span class="linenos">322</span><span class="w">    </span><span class="p">}</span>
+<span class="linenos">323</span><span class="w">  </span><span class="p">}</span>
+<span class="linenos">324</span><span class="p">}</span>
+<span class="linenos">325</span>
+<span class="linenos">326</span>
+<span class="linenos">327</span><span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">init_bdot</span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">ajstride</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">aistride</span><span class="p">,</span>
+<span class="linenos">328</span><span class="w">                      </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">bistride</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">bkstride</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">329</span><span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">330</span><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="o">&lt;</span><span class="n">J</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="o">++</span><span class="p">)</span>
+<span class="linenos">331</span><span class="w">      </span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="n">aistride</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">j</span><span class="o">*</span><span class="n">ajstride</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1000</span><span class="o">*</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span>
+<span class="linenos">332</span><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">k</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">k</span><span class="o">&lt;</span><span class="n">K</span><span class="p">;</span><span class="w"> </span><span class="n">k</span><span class="o">++</span><span class="p">)</span>
+<span class="linenos">333</span><span class="w">      </span><span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="n">bistride</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">k</span><span class="o">*</span><span class="n">bkstride</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1.</span><span class="o">/</span><span class="p">(</span><span class="mi">1000</span><span class="o">*</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span>
+<span class="linenos">334</span><span class="w">  </span><span class="p">}</span>
+<span class="linenos">335</span><span class="p">}</span>
+<span class="linenos">336</span>
+<span class="linenos">337</span><span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">report_bdot</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">ticks_t</span><span class="w"> </span><span class="n">start_ticks</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">flops</span><span class="p">,</span>
+<span class="linenos">338</span><span class="w">                        </span><span class="k">const</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">result</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">jstride</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">kstride</span><span class="p">,</span>
+<span class="linenos">339</span><span class="w">                        </span><span class="k">const</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">ref_result</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">340</span><span class="w">  </span><span class="n">ticks_t</span><span class="w"> </span><span class="n">ticks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rdtsc</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">start_ticks</span><span class="p">;</span>
+<span class="linenos">341</span><span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="n">rate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1.</span><span class="o">*</span><span class="n">flops</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">ticks</span><span class="p">;</span>
+<span class="linenos">342</span><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">result</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">ref_result</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">ref_result</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">343</span><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="o">&lt;</span><span class="n">J</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">344</span><span class="w">      </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">k</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">k</span><span class="o">&lt;</span><span class="n">K</span><span class="p">;</span><span class="w"> </span><span class="n">k</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">345</span><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">fabs</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="n">j</span><span class="o">*</span><span class="n">jstride</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">k</span><span class="o">*</span><span class="n">kstride</span><span class="p">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">ref_result</span><span class="p">[</span><span class="n">j</span><span class="o">*</span><span class="n">K</span><span class="o">+</span><span class="n">k</span><span class="p">])</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mf">1e-10</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">346</span><span class="w">          </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;Result[%d,%d] = %f failed to validate with expected value %f</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">,</span><span class="w"> </span><span class="n">k</span><span class="p">,</span><span class="w"> </span><span class="n">result</span><span class="p">[</span><span class="n">j</span><span class="o">*</span><span class="n">jstride</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">k</span><span class="o">*</span><span class="n">kstride</span><span class="p">],</span><span class="w"> </span><span class="n">ref_result</span><span class="p">[</span><span class="n">j</span><span class="o">*</span><span class="n">K</span><span class="o">+</span><span class="n">k</span><span class="p">]);</span>
+<span class="linenos">347</span><span class="w">        </span><span class="p">}</span>
+<span class="linenos">348</span><span class="w">      </span><span class="p">}</span>
+<span class="linenos">349</span><span class="w">    </span><span class="p">}</span>
+<span class="linenos">350</span><span class="w">  </span><span class="p">}</span>
+<span class="linenos">351</span><span class="w">  </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;%s</span><span class="se">\t</span><span class="s">%ld</span><span class="se">\t</span><span class="s">%lld</span><span class="se">\t</span><span class="s">%8.2f</span><span class="se">\t\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">flops</span><span class="p">,</span><span class="w"> </span><span class="n">ticks</span><span class="p">,</span><span class="w"> </span><span class="n">rate</span><span class="p">);</span>
+<span class="linenos">352</span><span class="p">}</span>
+<span class="linenos">353</span>
+<span class="linenos">354</span><span class="cp">#define REPORT_BDOT(f, c, jstride, kstride, c_ref) do {                 \</span>
+<span class="linenos">355</span><span class="cp">    for (int rep=0; rep&lt;args.nreps; rep++) {                            \</span>
+<span class="linenos">356</span><span class="cp">      ticks_t ticks_start = rdtsc();                                    \</span>
+<span class="linenos">357</span><span class="cp">      f(args.length, a, b, c);                                          \</span>
+<span class="linenos">358</span><span class="cp">      report_bdot(#f, ticks_start, 2*J*K*args.length, c, jstride, kstride, c_ref); \</span>
+<span class="linenos">359</span><span class="cp">    }                                                                   \</span>
+<span class="linenos">360</span><span class="cp">  } while (0)</span>
+<span class="linenos">361</span>
+<span class="linenos">362</span><span class="kt">int</span><span class="w"> </span><span class="n">main</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">argc</span><span class="p">,</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">**</span><span class="n">argv</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">363</span><span class="w">  </span><span class="k">struct</span><span class="w"> </span><span class="nc">Args</span><span class="w"> </span><span class="n">args</span><span class="p">;</span>
+<span class="linenos">364</span><span class="w">  </span><span class="k">struct</span><span class="w"> </span><span class="nc">argp</span><span class="w"> </span><span class="n">argp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="n">options</span><span class="p">,</span><span class="w"> </span><span class="n">parse_opt</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">};</span>
+<span class="linenos">365</span><span class="w">  </span><span class="n">argp_parse</span><span class="p">(</span><span class="o">&amp;</span><span class="n">argp</span><span class="p">,</span><span class="w"> </span><span class="n">argc</span><span class="p">,</span><span class="w"> </span><span class="n">argv</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">args</span><span class="p">);</span>
+<span class="linenos">366</span><span class="w">  </span><span class="kt">size_t</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">args</span><span class="p">.</span><span class="n">length</span><span class="p">;</span>
+<span class="linenos">367</span>
+<span class="linenos">368</span><span class="w">  </span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="n">args</span><span class="p">.</span><span class="n">block</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">369</span><span class="w">  </span><span class="k">case</span><span class="w"> </span><span class="no">false</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">370</span><span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">malloc</span><span class="p">(</span><span class="n">n</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="kt">double</span><span class="p">));</span>
+<span class="linenos">371</span><span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">malloc</span><span class="p">(</span><span class="n">n</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="kt">double</span><span class="p">));</span>
+<span class="linenos">372</span><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">373</span><span class="w">      </span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">2.</span><span class="o">*</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span>
+<span class="linenos">374</span><span class="w">      </span><span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1.</span><span class="o">/</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span>
+<span class="linenos">375</span><span class="w">    </span><span class="p">}</span>
+<span class="linenos">376</span>
+<span class="linenos">377</span><span class="w">    </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;  Name  </span><span class="se">\t</span><span class="s">flops</span><span class="se">\t</span><span class="s">ticks</span><span class="se">\t</span><span class="s">flops/tick</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<span class="linenos">378</span><span class="w">    </span><span class="n">REPORT_DOT</span><span class="p">(</span><span class="n">dot_ref</span><span class="p">);</span>
+<span class="linenos">379</span><span class="w">    </span><span class="n">REPORT_DOT</span><span class="p">(</span><span class="n">dot_opt1</span><span class="p">);</span>
+<span class="linenos">380</span><span class="w">    </span><span class="n">REPORT_DOT</span><span class="p">(</span><span class="n">dot_opt2</span><span class="p">);</span>
+<span class="linenos">381</span><span class="w">    </span><span class="n">REPORT_DOT</span><span class="p">(</span><span class="n">dot_opt3</span><span class="p">);</span>
+<span class="linenos">382</span><span class="w">    </span><span class="c1">// To answer Part 1, we will test the excution for the even-odd, and compile/runtime loop unrolling constant versions</span>
+<span class="linenos">383</span><span class="w">    </span><span class="n">REPORT_DOT</span><span class="p">(</span><span class="n">dot_opt_even_odd</span><span class="p">);</span>
+<span class="linenos">384</span><span class="w">    </span><span class="n">REPORT_DOT</span><span class="p">(</span><span class="n">dot_opt_comp_time_m</span><span class="p">);</span>
+<span class="linenos">385</span><span class="w">    </span><span class="n">REPORT_DOT_RUNTIME</span><span class="p">(</span><span class="n">dot_opt_run_time_m</span><span class="p">,</span><span class="w"> </span><span class="n">args</span><span class="p">.</span><span class="n">unroll_factor</span><span class="p">);</span>
+<span class="linenos">386</span>
+<span class="linenos">387</span><span class="w">    </span><span class="n">free</span><span class="p">(</span><span class="n">a</span><span class="p">);</span><span class="w"> </span><span class="n">free</span><span class="p">(</span><span class="n">b</span><span class="p">);</span>
+<span class="linenos">388</span><span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">break</span><span class="p">;</span>
+<span class="linenos">389</span><span class="w">  </span><span class="k">case</span><span class="w"> </span><span class="no">true</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">390</span><span class="w">    </span><span class="c1">// Initialize the matrices (as flattened vectors)</span>
+<span class="linenos">391</span><span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">malloc</span><span class="p">(</span><span class="n">J</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="kt">double</span><span class="p">));</span>
+<span class="linenos">392</span><span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">malloc</span><span class="p">(</span><span class="n">K</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="kt">double</span><span class="p">));</span>
+<span class="linenos">393</span><span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">malloc</span><span class="p">(</span><span class="n">J</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">K</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="kt">double</span><span class="p">));</span>
+<span class="linenos">394</span><span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">c_ref</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">malloc</span><span class="p">(</span><span class="n">J</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">K</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="kt">double</span><span class="p">));</span>
+<span class="linenos">395</span>
+<span class="linenos">396</span><span class="w">    </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;Name    </span><span class="se">\t</span><span class="s">flops</span><span class="se">\t</span><span class="s">ticks</span><span class="se">\t</span><span class="s">flops/tick</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<span class="linenos">397</span><span class="w">    </span><span class="n">init_bdot</span><span class="p">(</span><span class="n">args</span><span class="p">.</span><span class="n">length</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">);</span>
+<span class="linenos">398</span><span class="w">    </span><span class="n">REPORT_BDOT</span><span class="p">(</span><span class="n">bdot_ref</span><span class="p">,</span><span class="w"> </span><span class="n">c_ref</span><span class="p">,</span><span class="w"> </span><span class="n">K</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">c_ref</span><span class="p">);</span>
+<span class="linenos">399</span>
+<span class="linenos">400</span><span class="w">    </span><span class="c1">// You may initialize a and b differently and call more variants by editing</span>
+<span class="linenos">401</span><span class="w">    </span><span class="c1">// the two lines below, or by creating new variants.</span>
+<span class="linenos">402</span><span class="w">    </span><span class="n">init_bdot</span><span class="p">(</span><span class="n">args</span><span class="p">.</span><span class="n">length</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">);</span>
+<span class="linenos">403</span><span class="w">    </span><span class="c1">// To answer Part 2, we will test the excution for the three different blocked opt versions</span>
+<span class="linenos">404</span><span class="w">    </span><span class="n">REPORT_BDOT</span><span class="p">(</span><span class="n">bdot_opt1</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="p">,</span><span class="w"> </span><span class="n">K</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">c_ref</span><span class="p">);</span>
+<span class="linenos">405</span><span class="w">    </span><span class="n">REPORT_BDOT</span><span class="p">(</span><span class="n">bdot_opt2</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="p">,</span><span class="w"> </span><span class="n">K</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">c_ref</span><span class="p">);</span>
+<span class="linenos">406</span><span class="w">    </span><span class="n">REPORT_BDOT</span><span class="p">(</span><span class="n">bdot_opt3</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="p">,</span><span class="w"> </span><span class="n">K</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">c_ref</span><span class="p">);</span>
+<span class="linenos">407</span><span class="w">    </span><span class="n">REPORT_BDOT</span><span class="p">(</span><span class="n">bdot_opt1_simd</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="p">,</span><span class="w"> </span><span class="n">K</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">c_ref</span><span class="p">);</span>
+<span class="linenos">408</span><span class="w">    </span><span class="n">REPORT_BDOT</span><span class="p">(</span><span class="n">bdot_opt2_simd</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="p">,</span><span class="w"> </span><span class="n">K</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">c_ref</span><span class="p">);</span>
+<span class="linenos">409</span><span class="w">    </span><span class="n">REPORT_BDOT</span><span class="p">(</span><span class="n">bdot_opt3_simd</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="p">,</span><span class="w"> </span><span class="n">K</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">c_ref</span><span class="p">);</span>
+<span class="linenos">410</span><span class="w">    </span><span class="n">REPORT_BDOT</span><span class="p">(</span><span class="n">bdot_opt3_simd_reordered</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="p">,</span><span class="w"> </span><span class="n">K</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">c_ref</span><span class="p">);</span>
+<span class="linenos">411</span>
+<span class="linenos">412</span><span class="w">    </span><span class="n">free</span><span class="p">(</span><span class="n">a</span><span class="p">);</span><span class="w"> </span><span class="n">free</span><span class="p">(</span><span class="n">b</span><span class="p">);</span><span class="w"> </span><span class="n">free</span><span class="p">(</span><span class="n">c</span><span class="p">);</span><span class="w"> </span><span class="n">free</span><span class="p">(</span><span class="n">c_ref</span><span class="p">);</span>
+<span class="linenos">413</span><span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">break</span><span class="p">;</span>
+<span class="linenos">414</span><span class="w">  </span><span class="p">}</span>
+<span class="linenos">415</span><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="linenos">416</span><span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "sdsu-comp605/spring25",
+            ref: "main",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./lectures"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="module6-3_collectives.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">23) Collective communication</p>
+      </div>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-1-optimizing-dot-product-30">Part 1: Optimizing dot product (30%)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-2-optimizing-block-inner-product-70">Part 2: Optimizing block inner product (%70)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#code">Code:</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Valeria Barra
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
