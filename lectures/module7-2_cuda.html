@@ -1,0 +1,857 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>26) GPUs and CUDA &#8212; Scientific Computing</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'lectures/module7-2_cuda';</script>
+    <link rel="icon" href="../_static/SDSU-comp605_logo.svg"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="25) Coprocessor architectures" href="module7-1_coprocessors.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/SDSU-comp605_logo.svg" class="logo__image only-light" alt="Scientific Computing - Home"/>
+    <script>document.write(`<img src="../_static/SDSU-comp605_logo.svg" class="logo__image only-dark" alt="Scientific Computing - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../index.html">
+                    Welcome
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../syllabus.html">Syllabus</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../lectures.html">Lectures</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="module1-1_first_class.html">1) First Class: Reproducibility and Git</a></li>
+
+
+<li class="toctree-l2"><a class="reference internal" href="module1-2_linux.html">2) The Linux Filesystem and commands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module1-3_community_projects.html">3) Community Projects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module1-4_intro_architectures.html">4) Introduction to Computer Architectures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module1-5_intro_vectorization.html">5) Introduction to Vectorization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module2-1_measuring_performance.html">6) Measuring Performance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module2-2_cpu_optimization.html">7) CPU Optimization: Matrix-Matrix Multiply</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module2-3_blocked_mmm.html">8) Blocked Matrix-Matrix Multiplication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module2-4_packing_for_cache.html">9) Packing for cache</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module2-5_intro_multithreading.html">10) Introduction to Multithreading</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module3-1_intro_parallel_scaling.html">11) Introduction to Parallel Scaling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module3-2_intro_to_openmp.html">12) Introduction to OpenMP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module3-3_openmp_tasks.html">13) More on OpenMP and OpenMP Tasks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module4-1_case_study_1_libceed.html">14) Case Study 1: libCEED</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module4-2_case_study_2_climacore.html">15) Case Study 2: ClimaCore</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hw2_notebook.html">16) HW2 solution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module5-1_reductions_and_scans.html">17) Parallel reductions and scans</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module5-2_intro_to_mpi.html">18) Introduction to MPI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module5-3_intro_to_slurm.html">19) Introduction to Batch Jobs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module5-4_parallel_linear_alegebra.html">20) Parallel Linear Algebra</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module6-1_intro_to_mpi_jl.html">21) Introduction to MPI.jl</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module6-2_blocking_vs_nonblocking.html">22) Blocking and non-blocking communication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module6-3_collectives.html">23) Collective communication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hw3_solution.html">24) HW3 solution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module7-1_coprocessors.html">25) Coprocessor architectures</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">26) GPUs and CUDA</a></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li>
+<button onclick="initThebeSBT()"
+  class="btn btn-sm btn-launch-thebe dropdown-item"
+  title="Launch Thebe"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-play"></i>
+  </span>
+<span class="btn__text-container">Live Code</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/sdsu-comp605/spring25" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/sdsu-comp605/spring25/issues/new?title=Issue%20on%20page%20%2Flectures/module7-2_cuda.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/lectures/module7-2_cuda.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>26) GPUs and CUDA</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#graphics-processing-units">1. Graphics Processing Units</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gpu-vs-cpu-characterization">GPU vs CPU characterization</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cuda-preview">2. CUDA preview</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kernel-syntax-example">2.1 Kernel syntax example</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#thread-heirarchy">2.2 Thread Heirarchy</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#memory">3. Memory</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#memory-transfer-example">Memory transfer example</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#optimization-details">4. Optimization Details</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#intrinsic-function-instructions">Intrinsic function instructions</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Memory</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hiding-memory-transfers">Hiding Memory Transfers:</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#global-memory-access-size-and-memory-alignment">Global memory access size and memory alignment:</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#coalescence">Coalescence:</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#global-memory-coalescence">Global-memory coalescence</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#shared-memory-coalescence-bank-distribution">Shared-memory coalescence: Bank Distribution</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#texture-specific-memory-features">Texture-specific memory features:</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="gpus-and-cuda">
+<h1>26) GPUs and CUDA<a class="headerlink" href="#gpus-and-cuda" title="Link to this heading">#</a></h1>
+<p>Last time:</p>
+<ul class="simple">
+<li><p>Coprocessors</p></li>
+<li><p>Energy efficiency</p></li>
+<li><p>GPU programming models</p></li>
+</ul>
+<p>Today:</p>
+<ol class="arabic simple">
+<li><p>Graphics Processing Units</p></li>
+<li><p>CUDA preview</p></li>
+<li><p>Memory</p></li>
+<li><p>Optimization Details</p></li>
+</ol>
+<section id="graphics-processing-units">
+<h2>1. Graphics Processing Units<a class="headerlink" href="#graphics-processing-units" title="Link to this heading">#</a></h2>
+<p>Graphics Processing Units (GPUs) evolved from commercial demand for high-definition graphics.</p>
+<p>HPC general-purpose computing with GPUs picked up after programmable shaders were added in early 2000s.</p>
+<section id="gpu-vs-cpu-characterization">
+<h3>GPU vs CPU characterization<a class="headerlink" href="#gpu-vs-cpu-characterization" title="Link to this heading">#</a></h3>
+<p>GPU compute performance relative to CPU is not magic, rather it is based on difference in goals; GPUs were unpolluted by CPU demands for user-adaptability.</p>
+<img src="../img/gpu-devotes-more-transistors-to-data-processing.png" width="600"/>
+<center><i>Nvidia.com: real-estate difference</i></center>
+<p>GPUs have no* branch prediction and no speculative execution.  (In the early days, computational uses even needed to implement their own error correction in software!).</p>
+<p>Longer memory access latencies from tiny cache size is meant to be hidden behind co-resident compute.  The difference in mentality allowed GPUs to far surpass CPU compute efficiency.</p>
+<p><em>* : recent devices use branch prediction to group divergent threads</em></p>
+<p><img alt="karlrupp.net: compute efficiency" src="../_images/karlrupp.net_costpercomputetrend.png" /></p>
+<center><i>karlrupp.net: compute efficiency</i></center>
+<p>Power can dominate the cost in HPC.</p>
+<p>Consider the Summit supercomputer example (from <a class="reference external" href="https://www.top500.org/lists/green500/2019/06/">June 2019</a>’s chart):</p>
+<ul class="simple">
+<li><p>#2 GREEN500 (was #3, but #1 was decomissioned)</p></li>
+<li><p>cost $200 million to build</p></li>
+<li><p>13 MW to run compute+interconnect+file systems =&gt; roughly $7 million/year in raw electricity to power</p></li>
+<li><p>(does not count facilities/infrastructure cost to actually supply this power, nor cooling or personnel)</p></li>
+</ul>
+<p>The drawbacks: GPU efficiency needs the problem to fit well into SIMD operations and have a relatively high computation intensity.</p>
+</section>
+</section>
+<section id="cuda-preview">
+<h2>2. CUDA preview<a class="headerlink" href="#cuda-preview" title="Link to this heading">#</a></h2>
+<p>Early general purpose computing GPU efforts required formulating problems in terms of graphics primatives (e.g. DirectX).</p>
+<p>NVIDIA publicly launched CUDA in 2006, allowing programming in C (and Fortran).</p>
+<p>Competitors: Flash forward to late 2010s - early 2020s: AMD has its own language and there are also several vendor-independent languages (dominant: OpenCL), but CUDA still dominates overall.</p>
+<p>Nvidia maintains good documentation to ease adoption, like its <a class="reference external" href="https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html">programming guide</a>.</p>
+<section id="kernel-syntax-example">
+<h3>2.1 Kernel syntax example<a class="headerlink" href="#kernel-syntax-example" title="Link to this heading">#</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">//</span> <span class="n">Add</span> <span class="n">two</span> <span class="n">matrices</span> <span class="n">A</span> <span class="ow">and</span> <span class="n">B</span> <span class="n">of</span> <span class="n">size</span> <span class="n">NxN</span> <span class="ow">and</span> <span class="n">stores</span> <span class="n">the</span> <span class="n">result</span> <span class="n">into</span> <span class="n">matrix</span> <span class="n">C</span><span class="p">:</span>
+<span class="o">//</span> <span class="n">Kernel</span> <span class="n">definition</span>
+<span class="n">__global__</span> <span class="n">void</span> <span class="n">MatAdd</span><span class="p">(</span><span class="nb">float</span> <span class="n">A</span><span class="p">[</span><span class="n">N</span><span class="p">][</span><span class="n">N</span><span class="p">],</span> <span class="nb">float</span> <span class="n">B</span><span class="p">[</span><span class="n">N</span><span class="p">][</span><span class="n">N</span><span class="p">],</span> <span class="nb">float</span> <span class="n">C</span><span class="p">[</span><span class="n">N</span><span class="p">][</span><span class="n">N</span><span class="p">])</span>
+<span class="p">{</span>
+    <span class="nb">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">blockIdx</span><span class="o">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">blockDim</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">threadIdx</span><span class="o">.</span><span class="n">x</span><span class="p">;</span>
+    <span class="nb">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">blockIdx</span><span class="o">.</span><span class="n">y</span> <span class="o">*</span> <span class="n">blockDim</span><span class="o">.</span><span class="n">y</span> <span class="o">+</span> <span class="n">threadIdx</span><span class="o">.</span><span class="n">y</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span> <span class="o">&amp;&amp;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">)</span>
+        <span class="n">C</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">+</span> <span class="n">B</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="nb">int</span> <span class="n">main</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="o">...</span>
+    <span class="o">//</span> <span class="n">Kernel</span> <span class="n">invocation</span>
+    <span class="n">dim3</span> <span class="n">threadsPerBlock</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">16</span><span class="p">);</span>
+    <span class="n">dim3</span> <span class="n">numBlocks</span><span class="p">(</span><span class="n">N</span> <span class="o">/</span> <span class="n">threadsPerBlock</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">N</span> <span class="o">/</span> <span class="n">threadsPerBlock</span><span class="o">.</span><span class="n">y</span><span class="p">);</span>
+    <span class="n">MatAdd</span><span class="o">&lt;&lt;&lt;</span><span class="n">numBlocks</span><span class="p">,</span> <span class="n">threadsPerBlock</span><span class="o">&gt;&gt;&gt;</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">C</span><span class="p">);</span>
+    <span class="o">...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>CUDA-specific additions:</p>
+<ul class="simple">
+<li><p>Kernels are defined with a <code class="docutils literal notranslate"><span class="pre">__global__</span></code> specifier (when called by the host).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;&lt;&lt;numBlocks,</span> <span class="pre">threadsPerBlock&gt;&gt;&gt;</span></code> gives the <em>execution configuration</em>.</p></li>
+<li><p>Ways for threads to query their location: <code class="docutils literal notranslate"><span class="pre">threadIdx</span></code>, <code class="docutils literal notranslate"><span class="pre">blockIdx</span></code>.</p></li>
+</ul>
+</section>
+<section id="thread-heirarchy">
+<h3>2.2 Thread Heirarchy<a class="headerlink" href="#thread-heirarchy" title="Link to this heading">#</a></h3>
+<p>Threads each have their own register allocation.  They are always executed in “<a class="reference external" href="https://en.wikipedia.org/wiki/Single_instruction,_multiple_threads#"><strong>Single instruction, multiple threads (SIMT)</strong></a>”, which is an execution model used in parallel computing where single instruction, multiple data (SIMD) is combined with multithreading.</p>
+<p>Several <strong>warps</strong> constitute a thread block. Warps are grouped in groups up to 32 (could change, but hasn’t yet).  This means:</p>
+<ul class="simple">
+<li><p>any divergence of instructions between threads within a warp causes some of the threads to no-op (relaxed recently);</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">product(threadsPerBlock)</span></code> should be a multiple of 32 (maximum 1024) where possible.</p></li>
+</ul>
+<p><a class="reference external" href="https://en.wikipedia.org/wiki/Thread_block_(CUDA_programming)">Thread blocks</a> each have their own shared memory allocation.  All threads in a block are resident on the same processing core.  Thread layout can be up to three dimensions.</p>
+<ul class="simple">
+<li><p>can perform a lightweight synchronization within a block;</p></li>
+<li><p>co-resident blocks can be helpful at masking latency, but this is limited by block memory and register use.</p></li>
+</ul>
+<p>Blocks themselves are layed out on a <a class="reference external" href="https://en.wikipedia.org/wiki/Thread_block_(CUDA_programming)#Hardware%20perspective"><strong>grid</strong></a> of up to three dimensions (on recent compute capabilities).  They must be logically executable in parallel or any serial order.</p>
+<ul class="simple">
+<li><p>no synchronization across blocks within a kernel;</p></li>
+<li><p>embarassingly parallel only, although caches can be reused.</p></li>
+</ul>
+<p>Several thread blocks are assigned to a <strong>Streaming Multiprocessor (SM)</strong>. Several SM constitute the whole GPU unit (which executes the whole Kernel Grid).</p>
+<img src="../img/grid-of-thread-blocks.png" width="400"/>
+<center><i>Nvidia.com: 2d grid and threads</i></center></section>
+</section>
+<section id="memory">
+<h2>3. Memory<a class="headerlink" href="#memory" title="Link to this heading">#</a></h2>
+<img src="../img/hardware-model.png" width="400"/>
+<center><i>Nvidia.com: model of memory connections</i></center>
+<p><strong>Global</strong>, <strong>constant</strong>, and <strong>texture</strong> memories persist across kernel calls, and each has its own cache per SM (L2 cache shared by SMs).  By default, host and device are assumed to maintain separate memory:</p>
+<ul class="simple">
+<li><p>explicit device allocation and deallocation;</p></li>
+<li><p>explicit transfer between host and device.</p></li>
+</ul>
+<p>Alternatively, there is a “Unified Memory” configuration that automates these on an as-needed basis, pretending there is one common address space.</p>
+<p>Each block has <strong>shared</strong> memory which tends to be fast (equivalent to a user-managed L1 cache).</p>
+<p>Each thread has “<strong>local</strong>” memory (that is actually no more local than global memory!), which is mostly used for register spilling.  (Register and shared memory usage are reported by the compiler when compiling with the <code class="docutils literal notranslate"><span class="pre">-ptxas-options=-v</span></code> option.)</p>
+<section id="memory-transfer-example">
+<h3>Memory transfer example<a class="headerlink" href="#memory-transfer-example" title="Link to this heading">#</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">__global__</span> <span class="n">void</span> <span class="n">VecAdd</span><span class="p">(</span><span class="nb">float</span><span class="o">*</span> <span class="n">A</span><span class="p">,</span> <span class="nb">float</span><span class="o">*</span> <span class="n">B</span><span class="p">,</span> <span class="nb">float</span><span class="o">*</span> <span class="n">C</span><span class="p">,</span> <span class="nb">int</span> <span class="n">N</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="nb">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">blockDim</span><span class="o">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">blockIdx</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">threadIdx</span><span class="o">.</span><span class="n">x</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">)</span>
+        <span class="n">C</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">B</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="nb">int</span> <span class="n">main</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="nb">int</span> <span class="n">N</span> <span class="o">=</span> <span class="o">...</span><span class="p">;</span>
+    <span class="n">size_t</span> <span class="n">size</span> <span class="o">=</span> <span class="n">N</span> <span class="o">*</span> <span class="n">sizeof</span><span class="p">(</span><span class="nb">float</span><span class="p">);</span>
+    
+    <span class="o">//</span> <span class="n">Allocate</span> <span class="nb">input</span> <span class="n">vectors</span> <span class="n">h_A</span> <span class="ow">and</span> <span class="n">h_B</span> <span class="ow">in</span> <span class="n">host</span> <span class="n">memory</span>
+    <span class="nb">float</span><span class="o">*</span> <span class="n">h_A</span> <span class="o">=</span> <span class="p">(</span><span class="nb">float</span><span class="o">*</span><span class="p">)</span><span class="n">malloc</span><span class="p">(</span><span class="n">size</span><span class="p">);</span>
+    <span class="nb">float</span><span class="o">*</span> <span class="n">h_B</span> <span class="o">=</span> <span class="p">(</span><span class="nb">float</span><span class="o">*</span><span class="p">)</span><span class="n">malloc</span><span class="p">(</span><span class="n">size</span><span class="p">);</span>
+    <span class="nb">float</span><span class="o">*</span> <span class="n">h_C</span> <span class="o">=</span> <span class="p">(</span><span class="nb">float</span><span class="o">*</span><span class="p">)</span><span class="n">malloc</span><span class="p">(</span><span class="n">size</span><span class="p">);</span>
+
+    <span class="o">//</span> <span class="n">Initialize</span> <span class="nb">input</span> <span class="n">vectors</span>
+    <span class="o">...</span>
+
+    
+    <span class="o">//</span> <span class="n">Allocate</span> <span class="n">vectors</span> <span class="ow">in</span> <span class="n">device</span> <span class="n">memory</span>
+    <span class="nb">float</span><span class="o">*</span> <span class="n">d_A</span><span class="p">;</span>
+    <span class="n">cudaMalloc</span><span class="p">(</span><span class="o">&amp;</span><span class="n">d_A</span><span class="p">,</span> <span class="n">size</span><span class="p">);</span>
+    <span class="nb">float</span><span class="o">*</span> <span class="n">d_B</span><span class="p">;</span>
+    <span class="n">cudaMalloc</span><span class="p">(</span><span class="o">&amp;</span><span class="n">d_B</span><span class="p">,</span> <span class="n">size</span><span class="p">);</span>
+    <span class="nb">float</span><span class="o">*</span> <span class="n">d_C</span><span class="p">;</span>
+    <span class="n">cudaMalloc</span><span class="p">(</span><span class="o">&amp;</span><span class="n">d_C</span><span class="p">,</span> <span class="n">size</span><span class="p">);</span>
+
+    <span class="o">//</span> <span class="n">Copy</span> <span class="n">vectors</span> <span class="kn">from</span> <span class="nn">host</span> <span class="n">memory</span> <span class="n">to</span> <span class="n">device</span> <span class="n">memory</span>
+    <span class="n">cudaMemcpy</span><span class="p">(</span><span class="n">d_A</span><span class="p">,</span> <span class="n">h_A</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">cudaMemcpyHostToDevice</span><span class="p">);</span>
+    <span class="n">cudaMemcpy</span><span class="p">(</span><span class="n">d_B</span><span class="p">,</span> <span class="n">h_B</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">cudaMemcpyHostToDevice</span><span class="p">);</span>
+
+
+    <span class="o">//</span> <span class="n">Invoke</span> <span class="n">kernel</span>
+    <span class="nb">int</span> <span class="n">threadsPerBlock</span> <span class="o">=</span> <span class="mi">256</span><span class="p">;</span>
+    <span class="nb">int</span> <span class="n">blocksPerGrid</span> <span class="o">=</span> <span class="p">(</span><span class="n">N</span> <span class="o">+</span> <span class="n">threadsPerBlock</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">threadsPerBlock</span><span class="p">;</span>
+    <span class="n">VecAdd</span><span class="o">&lt;&lt;&lt;</span><span class="n">blocksPerGrid</span><span class="p">,</span> <span class="n">threadsPerBlock</span><span class="o">&gt;&gt;&gt;</span><span class="p">(</span><span class="n">d_A</span><span class="p">,</span> <span class="n">d_B</span><span class="p">,</span> <span class="n">d_C</span><span class="p">,</span> <span class="n">N</span><span class="p">);</span>
+
+
+    <span class="o">//</span> <span class="n">Copy</span> <span class="n">result</span> <span class="kn">from</span> <span class="nn">device</span> <span class="n">memory</span> <span class="n">to</span> <span class="n">host</span> <span class="n">memory</span>
+    <span class="o">//</span> <span class="n">h_C</span> <span class="n">contains</span> <span class="n">the</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">host</span> <span class="n">memory</span>
+    <span class="n">cudaMemcpy</span><span class="p">(</span><span class="n">h_C</span><span class="p">,</span> <span class="n">d_C</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">cudaMemcpyDeviceToHost</span><span class="p">);</span>
+
+    <span class="o">//</span> <span class="n">Free</span> <span class="n">device</span> <span class="n">memory</span>
+    <span class="n">cudaFree</span><span class="p">(</span><span class="n">d_A</span><span class="p">);</span>
+    <span class="n">cudaFree</span><span class="p">(</span><span class="n">d_B</span><span class="p">);</span>
+    <span class="n">cudaFree</span><span class="p">(</span><span class="n">d_C</span><span class="p">);</span>
+            
+    <span class="o">//</span> <span class="n">Free</span> <span class="n">host</span> <span class="n">memory</span>
+    <span class="o">...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<hline></section>
+</section>
+<section id="optimization-details">
+<h2>4. Optimization Details<a class="headerlink" href="#optimization-details" title="Link to this heading">#</a></h2>
+<p>Often details depend on the particular “compute capability” of the device.</p>
+<section id="intrinsic-function-instructions">
+<h3>Intrinsic function instructions<a class="headerlink" href="#intrinsic-function-instructions" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>similar tradeoffs to the compiler optimization flag <code class="docutils literal notranslate"><span class="pre">--ffast-math</span></code></p></li>
+</ul>
+</section>
+<section id="id1">
+<h3>Memory<a class="headerlink" href="#id1" title="Link to this heading">#</a></h3>
+<section id="hiding-memory-transfers">
+<h4>Hiding Memory Transfers:<a class="headerlink" href="#hiding-memory-transfers" title="Link to this heading">#</a></h4>
+<p>Memory transfers between host and device generally have the greatest latency.  Modern capabilities can hide data transfer between host and device by giving the device other tasks to work on and having the host use <strong>asynchronous</strong> versions of the transfer functions.</p>
+<p>This is managed through  <strong>streams</strong> on the host, where CUDA calls within a stream are guaranteed to execute on the device in order, but those between streams may be out of order or overlap <em>depending on the compute capability</em>.</p>
+<p>To minimize waiting with the following code, the compute capability needs to allow concurrent data transfers, concurrent kernel execution, and overlap of data transfer and kernel execution.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="p">(</span><span class="nb">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">cudaMemcpyAsync</span><span class="p">(</span><span class="n">inputDevPtr</span> <span class="o">+</span> <span class="n">i</span> <span class="o">*</span> <span class="n">size</span><span class="p">,</span> <span class="n">hostPtr</span> <span class="o">+</span> <span class="n">i</span> <span class="o">*</span> <span class="n">size</span><span class="p">,</span>
+                    <span class="n">size</span><span class="p">,</span> <span class="n">cudaMemcpyHostToDevice</span><span class="p">,</span> <span class="n">stream</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+    <span class="n">MyKernel</span> <span class="o">&lt;&lt;&lt;</span><span class="mi">100</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">stream</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">&gt;&gt;&gt;</span>
+          <span class="p">(</span><span class="n">outputDevPtr</span> <span class="o">+</span> <span class="n">i</span> <span class="o">*</span> <span class="n">size</span><span class="p">,</span> <span class="n">inputDevPtr</span> <span class="o">+</span> <span class="n">i</span> <span class="o">*</span> <span class="n">size</span><span class="p">,</span> <span class="n">size</span><span class="p">);</span>
+    <span class="n">cudaMemcpyAsync</span><span class="p">(</span><span class="n">hostPtr</span> <span class="o">+</span> <span class="n">i</span> <span class="o">*</span> <span class="n">size</span><span class="p">,</span> <span class="n">outputDevPtr</span> <span class="o">+</span> <span class="n">i</span> <span class="o">*</span> <span class="n">size</span><span class="p">,</span>
+                    <span class="n">size</span><span class="p">,</span> <span class="n">cudaMemcpyDeviceToHost</span><span class="p">,</span> <span class="n">stream</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="global-memory-access-size-and-memory-alignment">
+<h4>Global memory access size and memory alignment:<a class="headerlink" href="#global-memory-access-size-and-memory-alignment" title="Link to this heading">#</a></h4>
+<p>Example: an array of this struct would have elements that aren’t aligned if not for the <code class="docutils literal notranslate"><span class="pre">__align__(16)</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">struct</span> <span class="n">__align__</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nb">float</span> <span class="n">x</span><span class="p">;</span>
+    <span class="nb">float</span> <span class="n">y</span><span class="p">;</span>
+    <span class="nb">float</span> <span class="n">z</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>This usually crops up with 2D arrays, which are more efficient if width-padded to a multiple of the warp size.</p>
+</section>
+</section>
+<section id="coalescence">
+<h3>Coalescence:<a class="headerlink" href="#coalescence" title="Link to this heading">#</a></h3>
+<section id="global-memory-coalescence">
+<h4>Global-memory coalescence<a class="headerlink" href="#global-memory-coalescence" title="Link to this heading">#</a></h4>
+<p>Global (and local*) memory requests must be <strong>coalesced</strong>—falling into the same 128-byte wide+aligned window (for all modern capabilities)—or they will require multiple instructions.</p>
+<p><em>*: the compiler will generally ensure that local memory use is coalesced</em></p>
+</section>
+<section id="shared-memory-coalescence-bank-distribution">
+<h4>Shared-memory coalescence: Bank Distribution<a class="headerlink" href="#shared-memory-coalescence-bank-distribution" title="Link to this heading">#</a></h4>
+<p>Similar, but different from global-memory coalescence. Shared memory is divided into <strong>banks</strong> (typically 32), where each bank can be accessed simultaneously.</p>
+<img src="../img/six-examples-of-shared-memory-accesses.png" width="450"/>
+<center><i>Nvidia.com: A) conflict-free, B) conflict depth 2, C) conflict-free, D) conflict-free, E) conflict-free, F) conflict-free</i></center>
+<p><em>My impression is that most programmers rely on the compiler to sensibly structure bank accesses for temporary variables, but occasionally breaking into the “CUDA assembly” language <code class="docutils literal notranslate"><span class="pre">PTX</span></code> will yeild significant performance improvements.</em></p>
+<p>The combination of coalescence and shared banks can cause an interesting interplay for certain problems.  Consider:</p>
+<ul class="simple">
+<li><p>Mx31 processor, array made of structs of 2 32-bit floats.</p></li>
+<li><p>Coalescence would suggest padding the array to 32 wide when reading from global memory, but then once it resides in a shared memory with 32-bit strided banks, a warp of threads accessing the first of the pair of floats will cause bank conflicts of depth 2.</p></li>
+<li><p>Shared memory would be better served by padding the array width to 31.5.</p></li>
+</ul>
+<p>(the better solution might be to pull the struct apart…)</p>
+</section>
+<section id="texture-specific-memory-features">
+<h4>Texture-specific memory features:<a class="headerlink" href="#texture-specific-memory-features" title="Link to this heading">#</a></h4>
+<ul class="simple">
+<li><p>Optimized for 2d locality; can be faster than non-coalesced global/constant memory requests.</p></li>
+<li><p>Ability to automatically cast 8/16-bit integers into [0,1] 32-bit floats.</p></li>
+</ul>
+</section>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "sdsu-comp605/spring25",
+            ref: "main",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./lectures"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="module7-1_coprocessors.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">25) Coprocessor architectures</p>
+      </div>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#graphics-processing-units">1. Graphics Processing Units</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gpu-vs-cpu-characterization">GPU vs CPU characterization</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cuda-preview">2. CUDA preview</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kernel-syntax-example">2.1 Kernel syntax example</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#thread-heirarchy">2.2 Thread Heirarchy</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#memory">3. Memory</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#memory-transfer-example">Memory transfer example</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#optimization-details">4. Optimization Details</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#intrinsic-function-instructions">Intrinsic function instructions</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Memory</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hiding-memory-transfers">Hiding Memory Transfers:</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#global-memory-access-size-and-memory-alignment">Global memory access size and memory alignment:</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#coalescence">Coalescence:</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#global-memory-coalescence">Global-memory coalescence</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#shared-memory-coalescence-bank-distribution">Shared-memory coalescence: Bank Distribution</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#texture-specific-memory-features">Texture-specific memory features:</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Valeria Barra
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
