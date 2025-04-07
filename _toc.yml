@@ -30,3 +30,4 @@ chapters:
   - file: lectures/module6-1_intro_to_mpi_jl.ipynb
   - file: lectures/module6-2_blocking_vs_nonblocking.ipynb
   - file: lectures/module6-3_collectives.ipynb
+  - file: lectures/hw3_solution.ipynb
