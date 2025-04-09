@@ -444,7 +444,7 @@ document.write(`
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cuda-preview">2. CUDA preview</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kernel-syntax-example">2.1 Kernel syntax example</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#thread-heirarchy">2.2 Thread Heirarchy</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#thread-hierarchy">2.2 Thread hierarchy</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#memory">3. Memory</a><ul class="nav section-nav flex-column">
@@ -488,7 +488,9 @@ document.write(`
 <p>Today:</p>
 <ol class="arabic simple">
 <li><p>Graphics Processing Units</p></li>
-<li><p>CUDA preview</p></li>
+<li><p>CUDA preview<br />
+2.1 Kernel syntax example<br />
+2.2 Thread hierarchy</p></li>
 <li><p>Memory</p></li>
 <li><p>Optimization Details</p></li>
 </ol>
@@ -499,14 +501,12 @@ document.write(`
 <section id="gpu-vs-cpu-characterization">
 <h3>GPU vs CPU characterization<a class="headerlink" href="#gpu-vs-cpu-characterization" title="Link to this heading">#</a></h3>
 <p>GPU compute performance relative to CPU is not magic, rather it is based on difference in goals; GPUs were unpolluted by CPU demands for user-adaptability.</p>
-<blockquote>
-<div><p>Reading: <a class="reference external" href="https://developer.nvidia.com/blog/cuda-refresher-reviewing-the-origins-of-gpu-computing/">CUDA Refresher: Reviewing the Origins of GPU Computing</a></p>
-</div></blockquote>
+<p><img alt="Nvidia.com: real-estate difference" src="../_images/gpu-devotes-more-transistors-to-data-processing.png" /></p>
 <p>GPUs have no* branch prediction and no speculative execution.  (In the early days, computational uses even needed to implement their own error correction in software!).</p>
 <p>Longer memory access latencies from tiny cache size is meant to be hidden behind co-resident compute.  The difference in mentality allowed GPUs to far surpass CPU compute efficiency.</p>
 <p><em>* : recent devices use branch prediction to group divergent threads</em></p>
 <p><img alt="karlrupp.net: compute efficiency" src="../_images/karlrupp.net_costpercomputetrend.png" /></p>
-<center><i>karlrupp.net: compute efficiency</i></center>
+<center><i> <a href="https://www.karlrupp.net/2013/06/cpu-gpu-and-mic-hardware-characteristics-over-time/">karlrupp.net: compute efficiency</a></i></center>
 <p>Power can dominate the cost in HPC.</p>
 <p>Consider the Summit supercomputer example (from <a class="reference external" href="https://www.top500.org/lists/green500/2019/06/">June 2019</a>’s chart):</p>
 <ul class="simple">
@@ -554,8 +554,8 @@ document.write(`
 <li><p>Ways for threads to query their location: <code class="docutils literal notranslate"><span class="pre">threadIdx</span></code>, <code class="docutils literal notranslate"><span class="pre">blockIdx</span></code>.</p></li>
 </ul>
 </section>
-<section id="thread-heirarchy">
-<h3>2.2 Thread Heirarchy<a class="headerlink" href="#thread-heirarchy" title="Link to this heading">#</a></h3>
+<section id="thread-hierarchy">
+<h3>2.2 Thread hierarchy<a class="headerlink" href="#thread-hierarchy" title="Link to this heading">#</a></h3>
 <p>Threads each have their own register allocation.  They are always executed in “<a class="reference external" href="https://en.wikipedia.org/wiki/Single_instruction,_multiple_threads#"><strong>Single instruction, multiple threads (SIMT)</strong></a>”, which is an execution model used in parallel computing where single instruction, multiple data (SIMD) is combined with multithreading.</p>
 <p>Several <strong>warps</strong> constitute a thread block. Warps are grouped in groups up to 32 (could change, but hasn’t yet).  This means:</p>
 <ul class="simple">
@@ -573,12 +573,12 @@ document.write(`
 <li><p>embarassingly parallel only, although caches can be reused.</p></li>
 </ul>
 <p>Several thread blocks are assigned to a <strong>Streaming Multiprocessor (SM)</strong>. Several SM constitute the whole GPU unit (which executes the whole Kernel Grid).</p>
-<img src="../img/grid-of-thread-blocks.png" width="400"/>
+<p><img alt="2D grid and threads from nvidia.com website" src="../_images/grid-of-thread-blocks.png" /></p>
 <center><i>Nvidia.com: 2d grid and threads</i></center></section>
 </section>
 <section id="memory">
 <h2>3. Memory<a class="headerlink" href="#memory" title="Link to this heading">#</a></h2>
-<img src="../img/hardware-model.png" width="400"/>
+<p><img alt="Model of memory connections from nvidia.com" src="../_images/hardware-model.png" /></p>
 <center><i>Nvidia.com: model of memory connections</i></center>
 <p><strong>Global</strong>, <strong>constant</strong>, and <strong>texture</strong> memories persist across kernel calls, and each has its own cache per SM (L2 cache shared by SMs).  By default, host and device are assumed to maintain separate memory:</p>
 <ul class="simple">
@@ -696,7 +696,7 @@ document.write(`
 <section id="shared-memory-coalescence-bank-distribution">
 <h4>Shared-memory coalescence: Bank Distribution<a class="headerlink" href="#shared-memory-coalescence-bank-distribution" title="Link to this heading">#</a></h4>
 <p>Similar, but different from global-memory coalescence. Shared memory is divided into <strong>banks</strong> (typically 32), where each bank can be accessed simultaneously.</p>
-<img src="../img/six-examples-of-shared-memory-accesses.png" width="450"/>
+<p><img alt="Examples of memory access from nvidia.com" src="../_images/six-examples-of-shared-memory-accesses.png" /></p>
 <center><i>Nvidia.com: A) conflict-free, B) conflict depth 2, C) conflict-free, D) conflict-free, E) conflict-free, F) conflict-free</i></center>
 <p><em>My impression is that most programmers rely on the compiler to sensibly structure bank accesses for temporary variables, but occasionally breaking into the “CUDA assembly” language <code class="docutils literal notranslate"><span class="pre">PTX</span></code> will yeild significant performance improvements.</em></p>
 <p>The combination of coalescence and shared banks can cause an interesting interplay for certain problems.  Consider:</p>
@@ -779,7 +779,7 @@ document.write(`
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cuda-preview">2. CUDA preview</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kernel-syntax-example">2.1 Kernel syntax example</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#thread-heirarchy">2.2 Thread Heirarchy</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#thread-hierarchy">2.2 Thread hierarchy</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#memory">3. Memory</a><ul class="nav section-nav flex-column">
