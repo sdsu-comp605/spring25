@@ -502,6 +502,7 @@ document.write(`
 <h3>GPU vs CPU characterization<a class="headerlink" href="#gpu-vs-cpu-characterization" title="Link to this heading">#</a></h3>
 <p>GPU compute performance relative to CPU is not magic, rather it is based on difference in goals; GPUs were unpolluted by CPU demands for user-adaptability.</p>
 <p><img alt="Nvidia.com: real-estate difference" src="../_images/gpu-devotes-more-transistors-to-data-processing.png" /></p>
+<center><i> <a href="https://developer.nvidia.com/blog/cuda-refresher-reviewing-the-origins-of-gpu-computing/">Reference: nvidia.com "CUDA Refresher: Reviewing the Origins of GPU Computing"</a></i></center>
 <p>GPUs have no* branch prediction and no speculative execution.  (In the early days, computational uses even needed to implement their own error correction in software!).</p>
 <p>Longer memory access latencies from tiny cache size is meant to be hidden behind co-resident compute.  The difference in mentality allowed GPUs to far surpass CPU compute efficiency.</p>
 <p><em>* : recent devices use branch prediction to group divergent threads</em></p>
