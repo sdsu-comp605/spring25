@@ -443,7 +443,11 @@ document.write(`
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cuda-preview">2. CUDA preview</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kernel-syntax-example">2.1 Kernel syntax example</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kernel-syntax-examples">2.1 Kernel syntax examples</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hello-world">2.1.1 Hello, World!</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#add-two-matrices">2.1.2 Add two matrices</a></li>
+</ul>
+</li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#thread-hierarchy">2.2 Thread hierarchy</a></li>
 </ul>
 </li>
@@ -489,7 +493,7 @@ document.write(`
 <ol class="arabic simple">
 <li><p>Graphics Processing Units</p></li>
 <li><p>CUDA preview<br />
-2.1 Kernel syntax example<br />
+2.1 Kernel syntax examples<br />
 2.2 Thread hierarchy</p></li>
 <li><p>Memory</p></li>
 <li><p>Optimization Details</p></li>
@@ -505,7 +509,7 @@ document.write(`
 <center><i> <a href="https://developer.nvidia.com/blog/cuda-refresher-reviewing-the-origins-of-gpu-computing/">Reference: nvidia.com "CUDA Refresher: Reviewing the Origins of GPU Computing"</a></i></center>
 <p>GPUs have no* branch prediction and no speculative execution.  (In the early days, computational uses even needed to implement their own error correction in software!).</p>
 <p>Longer memory access latencies from tiny cache size is meant to be hidden behind co-resident compute.  The difference in mentality allowed GPUs to far surpass CPU compute efficiency.</p>
-<p><em>* : recent devices use branch prediction to group divergent threads</em></p>
+<p><em>* : recent devices use branch prediction to group divergent threads. Starting with the NVIDIA Volta architecture, Independent Thread Scheduling allows full concurrency between threads, regardless of warp.</em></p>
 <p><img alt="karlrupp.net: compute efficiency" src="../_images/karlrupp.net_costpercomputetrend.png" /></p>
 <center><i> <a href="https://www.karlrupp.net/2013/06/cpu-gpu-and-mic-hardware-characteristics-over-time/">karlrupp.net: compute efficiency</a></i></center>
 <p>Power can dominate the cost in HPC.</p>
@@ -525,8 +529,52 @@ document.write(`
 <p>NVIDIA publicly launched CUDA in 2006, allowing programming in C (and Fortran).</p>
 <p>Competitors: Flash forward to late 2010s - early 2020s: AMD has its own language and there are also several vendor-independent languages (dominant: OpenCL), but CUDA still dominates overall.</p>
 <p>Nvidia maintains good documentation to ease adoption, like its <a class="reference external" href="https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html">programming guide</a>.</p>
-<section id="kernel-syntax-example">
-<h3>2.1 Kernel syntax example<a class="headerlink" href="#kernel-syntax-example" title="Link to this heading">#</a></h3>
+<section id="kernel-syntax-examples">
+<h3>2.1 Kernel syntax examples<a class="headerlink" href="#kernel-syntax-examples" title="Link to this heading">#</a></h3>
+<section id="hello-world">
+<h4>2.1.1 Hello, World!<a class="headerlink" href="#hello-world" title="Link to this heading">#</a></h4>
+<p>Our very first CUDA C example:</p>
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="c">#include &lt;stdio.h&gt;</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span><span class="o">//</span><span class="w"> </span><span class="n">empty</span><span class="w"> </span><span class="k">function</span><span class="w"> </span><span class="n">kernel</span><span class="p">()</span><span class="w"> </span><span class="n">qualified</span><span class="w"> </span><span class="n">with</span><span class="w"> </span><span class="n">__global__</span>
+<span class="linenos"> 4</span><span class="n">__global__</span><span class="w"> </span><span class="n">void</span><span class="w"> </span><span class="n">kernel</span><span class="p">(</span><span class="n">void</span><span class="p">)</span>
+<span class="linenos"> 5</span><span class="p">{</span>
+<span class="linenos"> 6</span><span class="p">}</span>
+<span class="linenos"> 7</span>
+<span class="linenos"> 8</span><span class="n">int</span><span class="w"> </span><span class="n">main</span><span class="p">(</span><span class="n">void</span><span class="p">)</span>
+<span class="linenos"> 9</span><span class="p">{</span>
+<span class="linenos">10</span><span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="kt">A</span><span class="w"> </span><span class="kt">call</span><span class="w"> </span><span class="kt">to</span><span class="w"> </span><span class="kt">the</span><span class="w"> </span><span class="kt">empty</span><span class="w"> </span><span class="kt">function</span><span class="p">,</span><span class="w"> </span><span class="kt">with</span><span class="w"> </span><span class="kt">additional</span><span class="w"> </span><span class="o">&lt;&lt;&lt;</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="o">&gt;&gt;&gt;</span>
+<span class="linenos">11</span><span class="w">    </span><span class="kt">kernel</span><span class="o">&lt;&lt;&lt;</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="o">&gt;&gt;&gt;</span><span class="p">();</span>
+<span class="linenos">12</span>
+<span class="linenos">13</span><span class="w">    </span><span class="kt">printf</span><span class="p">(</span><span class="s">&quot;Hello, World! </span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<span class="linenos">14</span><span class="w">    </span><span class="kt">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="linenos">15</span><span class="p">}</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>This simple code defines an empty function, called <code class="docutils literal notranslate"><span class="pre">kernel()</span></code>, qualified with the <code class="docutils literal notranslate"><span class="pre">__global__</span></code> directive.</p></li>
+<li><p>In <code class="docutils literal notranslate"><span class="pre">main</span></code>, we have a call to the empty function, with additional <code class="docutils literal notranslate"><span class="pre">&lt;&lt;&lt;1,1&gt;&gt;&gt;</span></code> runtime configuration parameters.</p></li>
+</ul>
+<p>The code is compiled by the system’s standard compiler by default (<code class="docutils literal notranslate"><span class="pre">nvcc</span></code>).</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>nvcc<span class="w"> </span>hello_cuda.cu<span class="w"> </span>-o<span class="w"> </span>hello_cuda
+</pre></div>
+</div>
+<p>This will produce the executable/object file <code class="docutils literal notranslate"><span class="pre">hello_cuda</span></code>, which you can simply run with</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./hello_cuda
+</pre></div>
+</div>
+<p>The NVIDIA tools simply feed the host compiler the source code, and everything behaves at it would be without CUDA (as it were a pure C code).</p>
+<ul class="simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">__global__</span></code> qualifier alerts the C compiler that a function should be compiled to run on a device instead of the host.</p></li>
+<li><p>In this example <code class="docutils literal notranslate"><span class="pre">nvcc</span></code> gives the function <code class="docutils literal notranslate"><span class="pre">kernel()</span></code> to the compiler that handles the device code, and it feeds <code class="docutils literal notranslate"><span class="pre">main()</span></code> to the host compiler.</p></li>
+<li><p>In CUDA C, device function calls look very much like host function calls.</p></li>
+<li><p>The CUDA compiler and runtime invoke device code from the host.</p></li>
+<li><p>The angle brackets denote arguments one plans to pass to the runtime system. These are not arguments to the device code but are parameters that will influence how the device code will be launched at <em>runtime</em>.</p></li>
+<li><p>Arguments to the device code itself get passed within the parenthesis, just like any other function.</p></li>
+</ul>
+</section>
+<section id="add-two-matrices">
+<h4>2.1.2 Add two matrices<a class="headerlink" href="#add-two-matrices" title="Link to this heading">#</a></h4>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">//</span> <span class="n">Add</span> <span class="n">two</span> <span class="n">matrices</span> <span class="n">A</span> <span class="ow">and</span> <span class="n">B</span> <span class="n">of</span> <span class="n">size</span> <span class="n">NxN</span> <span class="ow">and</span> <span class="n">stores</span> <span class="n">the</span> <span class="n">result</span> <span class="n">into</span> <span class="n">matrix</span> <span class="n">C</span><span class="p">:</span>
 <span class="o">//</span> <span class="n">Kernel</span> <span class="n">definition</span>
 <span class="n">__global__</span> <span class="n">void</span> <span class="n">MatAdd</span><span class="p">(</span><span class="nb">float</span> <span class="n">A</span><span class="p">[</span><span class="n">N</span><span class="p">][</span><span class="n">N</span><span class="p">],</span> <span class="nb">float</span> <span class="n">B</span><span class="p">[</span><span class="n">N</span><span class="p">][</span><span class="n">N</span><span class="p">],</span> <span class="nb">float</span> <span class="n">C</span><span class="p">[</span><span class="n">N</span><span class="p">][</span><span class="n">N</span><span class="p">])</span>
@@ -550,25 +598,35 @@ document.write(`
 </div>
 <p>CUDA-specific additions:</p>
 <ul class="simple">
-<li><p>Kernels are defined with a <code class="docutils literal notranslate"><span class="pre">__global__</span></code> specifier (when called by the host).</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">&lt;&lt;&lt;numBlocks,</span> <span class="pre">threadsPerBlock&gt;&gt;&gt;</span></code> gives the <em>execution configuration</em>.</p></li>
+<li><p><em>Kernels</em> are defined with a <code class="docutils literal notranslate"><span class="pre">__global__</span></code> specifier (when called by the host). (A function that executes on the device is typically called a <em>kernel</em>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;&lt;&lt;numBlocks,</span> <span class="pre">threadsPerBlock&gt;&gt;&gt;</span></code> gives the <em>execution configuration</em>.</p>
+<ul>
+<li><p>This means that <code class="docutils literal notranslate"><span class="pre">numBlocks</span> <span class="pre">*</span> <span class="pre">threadsPerBlock</span></code> copies of the kernel will be created and run in parallel.</p></li>
+</ul>
+</li>
 <li><p>Ways for threads to query their location: <code class="docutils literal notranslate"><span class="pre">threadIdx</span></code>, <code class="docutils literal notranslate"><span class="pre">blockIdx</span></code>.</p></li>
 </ul>
 </section>
+</section>
 <section id="thread-hierarchy">
 <h3>2.2 Thread hierarchy<a class="headerlink" href="#thread-hierarchy" title="Link to this heading">#</a></h3>
-<p>Threads each have their own register allocation.  They are always executed in “<a class="reference external" href="https://en.wikipedia.org/wiki/Single_instruction,_multiple_threads#"><strong>Single instruction, multiple threads (SIMT)</strong></a>”, which is an execution model used in parallel computing where single instruction, multiple data (SIMD) is combined with multithreading.</p>
-<p>Several <strong>warps</strong> constitute a thread block. Warps are grouped in groups up to 32 (could change, but hasn’t yet).  This means:</p>
+<p>Threads each have their own register allocation.</p>
+<p>They are always executed in “<a class="reference external" href="https://en.wikipedia.org/wiki/Single_instruction,_multiple_threads#"><strong>Single instruction, multiple threads (SIMT)</strong></a>”, which is an execution model used in parallel computing where single instruction, multiple data (SIMD) is combined with multithreading.</p>
+<p>The SIMT architecture is akin to SIMD (Single Instruction, Multiple Data) vector organizations in that a single instruction controls multiple processing elements. A key difference is that SIMD vector organizations expose the SIMD width to the software, whereas SIMT instructions specify the execution and branching behavior of a single thread. In contrast with SIMD vector machines, SIMT enables programmers to write thread-level parallel code for independent, scalar threads, as well as data-parallel code for coordinated threads.</p>
+<p>In CUDA’s SIMT architecture, at the hardware level the multiprocessor executes <em>threads</em> in groups of 32 called <strong>warps</strong>. If there exists a data-dependent conditional branch in the application code such that threads within a warp diverge, then the warp serially executes each branch disabling threads not on that path. The threads that remain active on the path are referred to as <em>coalesced</em>.</p>
+<p>Several <strong>warps</strong> constitute a <strong>thread block</strong>. Warps are grouped in groups up to 32 (could change, but hasn’t yet).  This means:</p>
 <ul class="simple">
 <li><p>any divergence of instructions between threads within a warp causes some of the threads to no-op (relaxed recently);</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">product(threadsPerBlock)</span></code> should be a multiple of 32 (maximum 1024) where possible.</p></li>
 </ul>
-<p><a class="reference external" href="https://en.wikipedia.org/wiki/Thread_block_(CUDA_programming)">Thread blocks</a> each have their own shared memory allocation.  All threads in a block are resident on the same processing core.  Thread layout can be up to three dimensions.</p>
+<p><a class="reference external" href="https://en.wikipedia.org/wiki/Thread_block_(CUDA_programming)">Thread blocks</a> each have their own shared memory allocation.  All threads in a block are resident on the same processing core.</p>
+<p>Thread layout can be up to three dimensions</p>
 <ul class="simple">
 <li><p>can perform a lightweight synchronization within a block;</p></li>
 <li><p>co-resident blocks can be helpful at masking latency, but this is limited by block memory and register use.</p></li>
 </ul>
-<p>Blocks themselves are layed out on a <a class="reference external" href="https://en.wikipedia.org/wiki/Thread_block_(CUDA_programming)#Hardware%20perspective"><strong>grid</strong></a> of up to three dimensions (on recent compute capabilities).  They must be logically executable in parallel or any serial order.</p>
+<p>Blocks themselves are layed out on a <a class="reference external" href="https://en.wikipedia.org/wiki/Thread_block_(CUDA_programming)#Hardware%20perspective"><strong>grid</strong></a> of up to three dimensions (on recent compute capabilities).</p>
+<p>They must be logically executable in parallel or any serial order</p>
 <ul class="simple">
 <li><p>no synchronization across blocks within a kernel;</p></li>
 <li><p>embarassingly parallel only, although caches can be reused.</p></li>
@@ -581,14 +639,22 @@ document.write(`
 <h2>3. Memory<a class="headerlink" href="#memory" title="Link to this heading">#</a></h2>
 <p><img alt="Model of memory connections from nvidia.com" src="../_images/hardware-model.png" /></p>
 <center><i>Nvidia.com: model of memory connections</i></center>
-<p><strong>Global</strong>, <strong>constant</strong>, and <strong>texture</strong> memories persist across kernel calls, and each has its own cache per SM (L2 cache shared by SMs).  By default, host and device are assumed to maintain separate memory:</p>
+<p><strong>Global</strong>, <strong>constant</strong>, and <strong>texture</strong> memories persist across kernel calls, and each has its own cache per SM (L2 cache shared by SMs).</p>
 <ul class="simple">
+<li><p>By default, host and device are assumed to maintain separate memory:</p>
+<ul>
 <li><p>explicit device allocation and deallocation;</p></li>
 <li><p>explicit transfer between host and device.</p></li>
 </ul>
-<p>Alternatively, there is a “Unified Memory” configuration that automates these on an as-needed basis, pretending there is one common address space.</p>
-<p>Each block has <strong>shared</strong> memory which tends to be fast (equivalent to a user-managed L1 cache).</p>
-<p>Each thread has “<strong>local</strong>” memory (that is actually no more local than global memory!), which is mostly used for register spilling.  (Register and shared memory usage are reported by the compiler when compiling with the <code class="docutils literal notranslate"><span class="pre">-ptxas-options=-v</span></code> option.)</p>
+</li>
+<li><p>Alternatively, there is a “Unified Memory” configuration that automates these on an as-needed basis, pretending there is one common address space.</p></li>
+<li><p>Each block has <strong>shared</strong> memory which tends to be fast (equivalent to a user-managed L1 cache).</p></li>
+<li><p>Each thread has “<strong>local</strong>” memory (that is actually no more local than global memory!), which is mostly used for register spilling.  (Register and shared memory usage are reported by the compiler when compiling with the <code class="docutils literal notranslate"><span class="pre">-ptxas-options=-v</span></code> option.)</p></li>
+</ul>
+<p><strong>Global memory</strong> resides in device memory and device memory is accessed via 32-, 64-, or 128-byte memory transactions. These memory transactions must be naturally aligned: Only the 32-, 64-, or 128-byte segments of device memory that are aligned to their size (i.e., whose first address is a multiple of their size) can be read or written by memory transactions.</p>
+<ul class="simple">
+<li><p>When a warp executes an instruction that accesses global memory, it <strong>coalesces</strong> the memory accesses of the threads within the warp into one or more of these memory transactions depending on the size of the word accessed by each thread and the distribution of the memory addresses across the threads.</p></li>
+</ul>
 <section id="memory-transfer-example">
 <h3>Memory transfer example<a class="headerlink" href="#memory-transfer-example" title="Link to this heading">#</a></h3>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">__global__</span> <span class="n">void</span> <span class="n">VecAdd</span><span class="p">(</span><span class="nb">float</span><span class="o">*</span> <span class="n">A</span><span class="p">,</span> <span class="nb">float</span><span class="o">*</span> <span class="n">B</span><span class="p">,</span> <span class="nb">float</span><span class="o">*</span> <span class="n">C</span><span class="p">,</span> <span class="nb">int</span> <span class="n">N</span><span class="p">)</span>
@@ -684,14 +750,30 @@ document.write(`
 <span class="p">};</span>
 </pre></div>
 </div>
-<p>This usually crops up with 2D arrays, which are more efficient if width-padded to a multiple of the warp size.</p>
+<ul class="simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">__align__(n)</span></code> directive enforces that the memory for the struct begins at an address in memory that is a multiple of <code class="docutils literal notranslate"><span class="pre">n</span></code> byte (16 in this case).</p></li>
+<li><p>If the size of the struct is not a multiple of <code class="docutils literal notranslate"><span class="pre">n</span></code>, then in an array of those structs, padding will be inserted to ensure each struct is properly aligned. To choose a proper value for <code class="docutils literal notranslate"><span class="pre">n</span></code>, you want to minimize the amount of padding required (and this will vary if you’re on a 32-bit or 64-bit machine).</p></li>
+<li><p>This usually crops up with 2D arrays, which are more efficient if width-padded to a multiple of the warp size.</p>
+<ul>
+<li><p>For 2D array memory accesses to be fully coalesced, both the width of the thread block and the width of the array must be a multiple of the warp size.</p></li>
+</ul>
+</li>
+<li><p>Note: it’s a tradeoff between wasting padded memory that isn’t used and not have eccessive memory loads.</p></li>
+</ul>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>For more on this, read the dedicated section on <a class="reference external" href="https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html?highlight=__align__#device-memory-accesses">device memory accesses</a> in the CUDA programming guide.</p>
+</div>
 </section>
 </section>
 <section id="coalescence">
 <h3>Coalescence:<a class="headerlink" href="#coalescence" title="Link to this heading">#</a></h3>
 <section id="global-memory-coalescence">
 <h4>Global-memory coalescence<a class="headerlink" href="#global-memory-coalescence" title="Link to this heading">#</a></h4>
-<p>Global (and local*) memory requests must be <strong>coalesced</strong>—falling into the same 128-byte wide+aligned window (for all modern capabilities)—or they will require multiple instructions.</p>
+<ul class="simple">
+<li><p>Global (and local*) memory requests must be <strong>coalesced</strong>—falling into the same 128-byte wide+aligned window (for all modern capabilities)—or they will require multiple instructions.</p></li>
+<li><p>A coalesced memory transaction is one in which all of the threads in a half-warp access global memory at the same time. This is oversimplified, but coalescence occurs when <em>consecutive threads access consecutive memory addresses</em>.</p></li>
+</ul>
 <p><em>*: the compiler will generally ensure that local memory use is coalesced</em></p>
 </section>
 <section id="shared-memory-coalescence-bank-distribution">
@@ -779,7 +861,11 @@ document.write(`
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cuda-preview">2. CUDA preview</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kernel-syntax-example">2.1 Kernel syntax example</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kernel-syntax-examples">2.1 Kernel syntax examples</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hello-world">2.1.1 Hello, World!</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#add-two-matrices">2.1.2 Add two matrices</a></li>
+</ul>
+</li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#thread-hierarchy">2.2 Thread hierarchy</a></li>
 </ul>
 </li>
