@@ -61,6 +61,7 @@
     <link rel="icon" href="../_static/SDSU-comp605_logo.svg"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="27) Practical CUDA" href="module7-3_practical_cuda.html" />
     <link rel="prev" title="25) Coprocessor architectures" href="module7-1_coprocessors.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -210,6 +211,7 @@
 <li class="toctree-l2"><a class="reference internal" href="hw3_solution.html">24) HW3 solution</a></li>
 <li class="toctree-l2"><a class="reference internal" href="module7-1_coprocessors.html">25) Coprocessor architectures</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">26) GPUs and CUDA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module7-3_practical_cuda.html">27) Practical CUDA</a></li>
 </ul>
 </details></li>
 </ul>
@@ -632,6 +634,10 @@ document.write(`
 <li><p>embarassingly parallel only, although caches can be reused.</p></li>
 </ul>
 <p>Several thread blocks are assigned to a <strong>Streaming Multiprocessor (SM)</strong>. Several SM constitute the whole GPU unit (which executes the whole Kernel Grid).</p>
+<p>You can think of Streaming Multiprocessors (SMs) to be “roughly” analogous to the cores of CPUs.</p>
+<blockquote>
+<div><p>The CUDA architecture is built around a scalable array of multithreaded Streaming Multiprocessors (SMs). When a CUDA program on the host CPU invokes a kernel grid, the blocks of the grid are enumerated and distributed to multiprocessors with available execution capacity. The threads of a thread block execute concurrently on one multiprocessor, and multiple thread blocks can execute concurrently on one multiprocessor.</p>
+</div></blockquote>
 <p><img alt="2D grid and threads from nvidia.com website" src="../_images/grid-of-thread-blocks.png" /></p>
 <center><i>Nvidia.com: 2d grid and threads</i></center></section>
 </section>
@@ -839,6 +845,15 @@ document.write(`
         <p class="prev-next-subtitle">previous</p>
         <p class="prev-next-title">25) Coprocessor architectures</p>
       </div>
+    </a>
+    <a class="right-next"
+       href="module7-3_practical_cuda.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">27) Practical CUDA</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
     </a>
 </div>
                 </footer>
