@@ -460,6 +460,7 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#on-memory-coalescing-and-strided-access">3.1 On memory coalescing and strided access</a></li>
 </ul>
 </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tuckoo-demo-for-cuda-codes">4. Tuckoo demo for CUDA codes</a></li>
 </ul>
             </nav>
         </div>
@@ -486,6 +487,7 @@ document.write(`
 <li><p>Practical CUDA</p></li>
 <li><p>Memory<br />
 3.1 On memory coalescing and strided access</p></li>
+<li><p>Tuckoo demo for CUDA codes</p></li>
 </ol>
 <section id="when-to-use-a-gpu">
 <h2>1. When to use a GPU?<a class="headerlink" href="#when-to-use-a-gpu" title="Link to this heading">#</a></h2>
@@ -793,6 +795,52 @@ ptxas info    : Used 24 registers, 336 bytes cmem[0]
 <p><img alt="nvidia.com website performance of stridecopy kernel" src="../_images/performance-of-stridecopy-kernel.png" /></p>
 </section>
 </section>
+<section id="tuckoo-demo-for-cuda-codes">
+<h2>4. Tuckoo demo for CUDA codes<a class="headerlink" href="#tuckoo-demo-for-cuda-codes" title="Link to this heading">#</a></h2>
+<p>The Tuckoo cluster is equipped with four NVIDIA P100s. To be able to compile and execute CUDA code on one of the GPU nodes, we first need to log in on an <em>interactive node</em>.</p>
+<p>An <em>interactive node</em> on a cluster is often a node that is dedicated to quick compilation/testing/debugging of your codes-<strong>not</strong> to high-demanding or large-scale computations-. If you misuse an interactive node, a cluster admin might kick you out of that node.</p>
+<ul class="simple">
+<li><p>For tuckoo, <strong><code class="docutils literal notranslate"><span class="pre">node8</span></code></strong> is the node dedicated for interactive usage, where you can find the <code class="docutils literal notranslate"><span class="pre">nvcc</span></code> compiler to compile CUDA codes.</p></li>
+</ul>
+<p>Once you are logged in on tuckoo using</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>ssh<span class="w"> </span>your_user_name@tuckoo.sdsu.edu
+</pre></div>
+</div>
+<p>You will see that you are logged in on the <em>login node</em> because the prompt will show</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="o">[</span>your_user_name@tuckoo<span class="w"> </span>~<span class="o">]</span>$
+</pre></div>
+</div>
+<p>Now you can use <code class="docutils literal notranslate"><span class="pre">rsh</span></code> to connect to <code class="docutils literal notranslate"><span class="pre">node8</span></code> by simply running:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>rsh<span class="w"> </span>node8
+</pre></div>
+</div>
+<p>and you will see that you are indeed on <code class="docutils literal notranslate"><span class="pre">node8</span></code> because the prompt has changed to:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="o">[</span>your_user_name@node8<span class="w"> </span>~<span class="o">]</span>$
+</pre></div>
+</div>
+<p>Now you can compile any CUDA code by invoking the <code class="docutils literal notranslate"><span class="pre">nvcc</span></code> compiler and execute it by sending it to the Slurm batch scheduler via a batch script.</p>
+<p>You can find an example of a batch script to execute our <code class="docutils literal notranslate"><span class="pre">./hello_world</span></code> cuda code in <a class="reference external" href="https://github.com/sdsu-comp605/spring25/tree/main/batch_scripts/batch-cuda"><code class="docutils literal notranslate"><span class="pre">batch_scripts/batch-cuda</span></code></a>.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="ch">#!/bin/sh</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span><span class="c1">#note: run cuda hello-world on a single node, using a GPU</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span><span class="c1">#SBATCH --job-name=cuhello</span>
+<span class="linenos"> 6</span><span class="c1">#SBATCH --output=%A-cuhello.out</span>
+<span class="linenos"> 7</span><span class="c1">#SBATCH --ntasks=16</span>
+<span class="linenos"> 8</span><span class="c1">#SBATCH --constraint=P100</span>
+<span class="linenos"> 9</span>
+<span class="linenos">10</span><span class="nb">export</span><span class="w"> </span><span class="nv">OMPI_MCA_pml</span><span class="o">=</span>ob1
+<span class="linenos">11</span><span class="nb">export</span><span class="w"> </span><span class="nv">OMPI_MCA_btl</span><span class="o">=</span>tcp,self
+<span class="linenos">12</span>
+<span class="linenos">13</span><span class="c1">#require tcp over infiniband</span>
+<span class="linenos">14</span><span class="nb">export</span><span class="w"> </span>OMPI_MCA_btl_tcp_if_include<span class="w"> </span>ib0
+<span class="linenos">15</span>
+<span class="linenos">16</span>./hello_cuda
+<span class="linenos">17</span>
+<span class="linenos">18</span><span class="c1">#-------------------------------------------------------------</span>
+</pre></div>
+</div>
+</section>
 </section>
 
     <script type="text/x-thebe-config">
@@ -871,6 +919,7 @@ ptxas info    : Used 24 registers, 336 bytes cmem[0]
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#on-memory-coalescing-and-strided-access">3.1 On memory coalescing and strided access</a></li>
 </ul>
 </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tuckoo-demo-for-cuda-codes">4. Tuckoo demo for CUDA codes</a></li>
 </ul>
   </nav></div>
 
