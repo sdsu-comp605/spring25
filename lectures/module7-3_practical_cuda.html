@@ -840,6 +840,11 @@ ptxas info    : Used 24 registers, 336 bytes cmem[0]
 <span class="linenos">18</span><span class="c1">#-------------------------------------------------------------</span>
 </pre></div>
 </div>
+<p>Notice the</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1">#SBATCH --constraint=P100</span>
+</pre></div>
+</div>
+<p>directive that tells Slurm to execute this code on one of the available compute nodes equipped with the P100s.</p>
 </section>
 </section>
 
