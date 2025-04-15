@@ -455,7 +455,11 @@ document.write(`
 </li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#memory">3. Memory</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#memory">3. Memory</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unified-managed-memory">Unified/managed memory</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#on-memory-coalescing-and-strided-access">3.1 On memory coalescing and strided access</a></li>
+</ul>
+</li>
 </ul>
             </nav>
         </div>
@@ -480,7 +484,8 @@ document.write(`
 <ol class="arabic simple">
 <li><p>When to use a GPU?</p></li>
 <li><p>Practical CUDA</p></li>
-<li><p>Memory</p></li>
+<li><p>Memory<br />
+3.1 On memory coalescing and strided access</p></li>
 </ol>
 <section id="when-to-use-a-gpu">
 <h2>1. When to use a GPU?<a class="headerlink" href="#when-to-use-a-gpu" title="Link to this heading">#</a></h2>
@@ -631,6 +636,27 @@ ptxas info    : Used 24 registers, 344 bytes cmem[0]
 <li><p>This shows us <a class="reference external" href="https://docs.nvidia.com/cuda/parallel-thread-execution/">PTX</a> information, where <strong>PTX</strong> is a low-level parallel thread execution virtual machine and instruction set architecture (ISA). PTX exposes the GPU as a data-parallel computing device.</p></li>
 <li><p><a class="reference external" href="https://docs.nvidia.com/cuda/parallel-thread-execution/#syntax"><code class="docutils literal notranslate"><span class="pre">ptxas</span></code></a>: PTX programs are a collection of text source modules (files). PTX source modules have an assembly-language style syntax with instruction operation codes and operands. Pseudo-operations specify symbol and addressing management. The <code class="docutils literal notranslate"><span class="pre">ptxas</span></code> optimizing backend compiler optimizes and assembles PTX source modules to produce corresponding binary object files.</p></li>
 </ul>
+<p><strong>Understanding the <code class="docutils literal notranslate"><span class="pre">ptxas</span> <span class="pre">info</span></code></strong>:</p>
+<ul class="simple">
+<li><p>Find the documentation page <a class="reference external" href="https://docs.nvidia.com/cuda/cuda-compiler-driver-nvcc/index.html#printing-code-generation-statistics">here</a>.</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">gmem</span></code>: global memory</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">stack</span> <span class="pre">frame</span></code> is per thread stack usage used by this function.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">spill</span> <span class="pre">stores</span></code> and <code class="docutils literal notranslate"><span class="pre">spill</span> <span class="pre">loads</span></code> represent stores and loads done on stack memory which are being used for storing variables that couldn’t be allocated to physical registers.</p></li>
+<li><p>Similarly number of <code class="docutils literal notranslate"><span class="pre">registers</span></code>, amount of total space in constant bank, <code class="docutils literal notranslate"><span class="pre">cmem</span></code>, allocated is shown.</p></li>
+<li><p>On more modern versions, also amount of shared memory, <code class="docutils literal notranslate"><span class="pre">smem</span></code>, can be shown.</p></li>
+</ul>
+</li>
+</ul>
+<p>Remarks:</p>
+<ul class="simple">
+<li><p>A stack is not a concept that is unique or specific to CUDA. A stack frame is simply the space utilized by the stack, or the space utilized to conduct a particular operation on/with the stack (such as a function or subroutine call).</p></li>
+<li><p>Spill stores and spill loads relate to the usage of variables in the logical local space. Such variables may manifest in a register, or they may manifest in DRAM memory, or perhaps the caches.</p>
+<ul>
+<li><p>The GPU is a load/store architecture for the most part, so when it comes time to use variables in calculations, they almost universally manifest in GPU registers.</p></li>
+</ul>
+</li>
+</ul>
 <div class="highlight-cuda notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="kr">__global__</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">copy</span><span class="p">(</span><span class="kt">float</span><span class="w"> </span><span class="o">*</span><span class="n">dst</span><span class="p">,</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="o">*</span><span class="n">src</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="linenos">2</span><span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">iblock</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">blockIdx</span><span class="p">.</span><span class="n">x</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nb">blockIdx</span><span class="p">.</span><span class="n">y</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nb">gridDim</span><span class="p">.</span><span class="n">x</span><span class="p">;</span>
 <span class="linenos">3</span><span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">index</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="nb">threadIdx</span><span class="p">.</span><span class="n">x</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">TILE_SIZE</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">iblock</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nb">blockDim</span><span class="p">.</span><span class="n">x</span><span class="p">;</span>
@@ -695,6 +721,77 @@ ptxas info    : Used 24 registers, 336 bytes cmem[0]
 </section>
 <section id="memory">
 <h2>3. Memory<a class="headerlink" href="#memory" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>GPU memory is <em>not</em> CPU memory</p></li>
+</ul>
+<p><img alt="A single socket of the Summit supercomputer" src="https://en.wikichip.org/w/images/4/47/summit_single-socket.svg" /></p>
+<p><strong>Duh</strong>, so why does NVIDIA <a class="reference external" href="https://devblogs.nvidia.com/unified-memory-cuda-beginners/">publish this</a>?</p>
+<p><img alt="Image from nvidia.com Unified Memory for CUDA Beginners page" src="https://devblogs.nvidia.com/wp-content/uploads/2017/06/Unified-Memory-MultiGPU.png" /></p>
+<p><strong>Getting your memory into position is often the hardest part of CUDA programming.</strong></p>
+<p>You need to:</p>
+<ul class="simple">
+<li><p>Allocate memory on the GPU:</p></li>
+</ul>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">cudaMalloc</span><span class="p">(</span><span class="o">&amp;</span><span class="n">xdevice</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="o">*</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">double</span><span class="p">));</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Populate it from the host:</p></li>
+</ul>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">cudaMemcpy</span><span class="p">(</span><span class="n">xdevice</span><span class="p">,</span><span class="w"> </span><span class="n">xhost</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="o">*</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">double</span><span class="p">),</span><span class="w"> </span><span class="n">cudaMemcpyHostToDevice</span><span class="p">);</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Repeat for all data, including control parameters</p></li>
+<li><p>Easy to forget, ongoing maintenance/complexity cost</p></li>
+</ul>
+<section id="unified-managed-memory">
+<h3><a class="reference external" href="https://devblogs.nvidia.com/unified-memory-cuda-beginners/">Unified/managed memory</a><a class="headerlink" href="#unified-managed-memory" title="Link to this heading">#</a></h3>
+<blockquote>
+<div><p>This hardware/software technology allows applications to allocate data that can be read or written from code running on either CPUs or GPUs. Allocating Unified Memory is as simple as replacing calls to <code class="docutils literal notranslate"><span class="pre">malloc()</span></code> or <code class="docutils literal notranslate"><span class="pre">new</span></code> with calls to <code class="docutils literal notranslate"><span class="pre">cudaMallocManaged()</span></code>, an allocation function that returns a pointer accessible from any processor.</p>
+</div></blockquote>
+<ul class="simple">
+<li><p>Allocate “managed” memory, accessible from CPU and GPU:</p></li>
+</ul>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">cudaMallocManaged</span><span class="p">(</span><span class="o">&amp;</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="o">*</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">float</span><span class="p">));</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>How?</p></li>
+</ul>
+<p><img alt="Maximizing Unified Memory" src="../_images/maximizing-unified-memory.png" /></p>
+<ul class="simple">
+<li><p>With OpenACC, you can make all dynamic allocations in managed memory. Example: <code class="docutils literal notranslate"><span class="pre">pgcc</span> <span class="pre">-ta=tesla:managed</span></code></p>
+<ul>
+<li><p>The GPU probably has less memory than you have DRAM</p></li>
+<li><p>Really convenient for incremental work in legacy code</p></li>
+<li><p>Performance isn’t great without <code class="docutils literal notranslate"><span class="pre">cudaMemPrefetchAsync</span></code></p></li>
+</ul>
+</li>
+</ul>
+<p><img alt="Streaming performance unified memory GPU" src="../_images/streaming_performance_unified_memory_gpu.png" /></p>
+<p><strong>Further reading</strong>: <a class="reference external" href="https://devblogs.nvidia.com/maximizing-unified-memory-performance-cuda/">Maximizing Unified Memory Performance in CUDA</a></p>
+</section>
+<section id="on-memory-coalescing-and-strided-access">
+<h3>3.1 On memory coalescing and <a class="reference external" href="https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html#strided-accesses">strided access</a><a class="headerlink" href="#on-memory-coalescing-and-strided-access" title="Link to this heading">#</a></h3>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">__global__</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">strideCopy</span><span class="p">(</span><span class="kt">float</span><span class="w"> </span><span class="o">*</span><span class="n">odata</span><span class="p">,</span><span class="w"> </span><span class="kt">float</span><span class="o">*</span><span class="w"> </span><span class="n">idata</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">stride</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">xid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">blockIdx</span><span class="p">.</span><span class="n">x</span><span class="o">*</span><span class="n">blockDim</span><span class="p">.</span><span class="n">x</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">threadIdx</span><span class="p">.</span><span class="n">x</span><span class="p">)</span><span class="o">*</span><span class="n">stride</span><span class="p">;</span>
+<span class="w">    </span><span class="n">odata</span><span class="p">[</span><span class="n">xid</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">idata</span><span class="p">[</span><span class="n">xid</span><span class="p">];</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>This kernel copies data with a stride of <code class="docutils literal notranslate"><span class="pre">stride</span></code> elements between threads from <code class="docutils literal notranslate"><span class="pre">idata</span></code> to <code class="docutils literal notranslate"><span class="pre">odata</span></code>.</p>
+<blockquote>
+<div><p>ensuring that as much as possible of the data in each cache line fetched is actually used is an important part of performance optimization of memory accesses on these devices.</p>
+</div></blockquote>
+<p><img alt="" src="../_images/adjacent-threads-accessing-memory-with-stride-of-2.png" /></p>
+<p>In this case, threads within a warp access words in memory with a stride of 2. This action leads to a load of eight L2 cache segments per warp on a Tesla V100 (compute capability 7.0).</p>
+<p>We lose half of the bandwidth for <code class="docutils literal notranslate"><span class="pre">stride=2</span></code>:</p>
+<p>In fact, a stride of 2 results in a 50% of load/store efficiency since half the elements in the transaction are not used and represent wasted bandwidth.</p>
+<p>As the stride increases, the effective bandwidth decreases until the point where 32 32-byte segments are loaded for the 32 threads in a warp.</p>
+<p>We can do better by aligning the memory loads, stride size and warp size.</p>
+<p><img alt="nvidia.com website performance of stridecopy kernel" src="../_images/performance-of-stridecopy-kernel.png" /></p>
+</section>
 </section>
 </section>
 
@@ -769,7 +866,11 @@ ptxas info    : Used 24 registers, 336 bytes cmem[0]
 </li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#memory">3. Memory</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#memory">3. Memory</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unified-managed-memory">Unified/managed memory</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#on-memory-coalescing-and-strided-access">3.1 On memory coalescing and strided access</a></li>
+</ul>
+</li>
 </ul>
   </nav></div>
 
