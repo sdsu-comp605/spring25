@@ -34,3 +34,4 @@ chapters:
   - file: lectures/module7-1_coprocessors.ipynb
   - file: lectures/module7-2_cuda.ipynb
   - file: lectures/module7-3_practical_cuda.ipynb
+  - file: lectures/module8-1_cuda_jl.ipynb
