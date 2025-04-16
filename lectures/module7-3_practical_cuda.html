@@ -61,6 +61,7 @@
     <link rel="icon" href="../_static/SDSU-comp605_logo.svg"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="28) Intro to GPU programming in Julia" href="module8-1_cuda_jl.html" />
     <link rel="prev" title="26) GPUs and CUDA" href="module7-2_cuda.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -211,6 +212,7 @@
 <li class="toctree-l2"><a class="reference internal" href="module7-1_coprocessors.html">25) Coprocessor architectures</a></li>
 <li class="toctree-l2"><a class="reference internal" href="module7-2_cuda.html">26) GPUs and CUDA</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">27) Practical CUDA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module8-1_cuda_jl.html">28) Intro to GPU programming in Julia</a></li>
 </ul>
 </details></li>
 </ul>
@@ -643,9 +645,10 @@ ptxas info    : Used 24 registers, 344 bytes cmem[0]
 <li><p>Find the documentation page <a class="reference external" href="https://docs.nvidia.com/cuda/cuda-compiler-driver-nvcc/index.html#printing-code-generation-statistics">here</a>.</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">gmem</span></code>: global memory</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">stack</span> <span class="pre">frame</span></code> is per thread stack usage used by this function.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">stack</span> <span class="pre">frame</span></code> is the per thread stack usage used by this function.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">spill</span> <span class="pre">stores</span></code> and <code class="docutils literal notranslate"><span class="pre">spill</span> <span class="pre">loads</span></code> represent stores and loads done on stack memory which are being used for storing variables that couldn’t be allocated to physical registers.</p></li>
-<li><p>Similarly number of <code class="docutils literal notranslate"><span class="pre">registers</span></code>, amount of total space in constant bank, <code class="docutils literal notranslate"><span class="pre">cmem</span></code>, allocated is shown.</p></li>
+<li><p>Number of used <code class="docutils literal notranslate"><span class="pre">registers</span></code> is pretty self-explanatory</p></li>
+<li><p>And amount of total space allocated in constant bank, <code class="docutils literal notranslate"><span class="pre">cmem</span></code>, is shown.</p></li>
 <li><p>On more modern versions, also amount of shared memory, <code class="docutils literal notranslate"><span class="pre">smem</span></code>, can be shown.</p></li>
 </ul>
 </li>
@@ -886,6 +889,15 @@ ptxas info    : Used 24 registers, 336 bytes cmem[0]
         <p class="prev-next-subtitle">previous</p>
         <p class="prev-next-title">26) GPUs and CUDA</p>
       </div>
+    </a>
+    <a class="right-next"
+       href="module8-1_cuda_jl.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">28) Intro to GPU programming in Julia</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
     </a>
 </div>
                 </footer>
