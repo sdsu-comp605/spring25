@@ -57,6 +57,8 @@
     <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'lectures/module8-1_cuda_jl';</script>
     <link rel="icon" href="../_static/SDSU-comp605_logo.svg"/>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -483,9 +485,10 @@ document.write(`
 <section id="add-vectors">
 <h3>Add vectors<a class="headerlink" href="#add-vectors" title="Link to this heading">#</a></h3>
 <p>The real “hello world” of the GPU is adding vectors:</p>
-<div class="highlight-math notranslate"><div class="highlight"><pre><span></span>C = A + B
-</pre></div>
-</div>
+<div class="math notranslate nohighlight">
+\[
+C = A + B
+\]</div>
 <p>Big ideas:</p>
 <ul class="simple">
 <li><p>threads</p></li>
@@ -513,9 +516,10 @@ document.write(`
 <section id="reverse-vectors">
 <h3>Reverse vectors<a class="headerlink" href="#reverse-vectors" title="Link to this heading">#</a></h3>
 <p>The “hello world 2.0” of the GPU is (inplace) reverse vector</p>
-<div class="highlight-math notranslate"><div class="highlight"><pre><span></span>A_i := A_{N - i + 1}, \textrm{with } i = 1, \ldots, N/2
-</pre></div>
-</div>
+<div class="math notranslate nohighlight">
+\[
+A_i := A_{N - i + 1}, \textrm{with } i = 1, \ldots, N/2
+\]</div>
 <p>Big ideas:</p>
 <ul class="simple">
 <li><p>thread independence</p></li>
