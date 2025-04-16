@@ -502,6 +502,13 @@ document.write(`
 </pre></div>
 </div>
 <p>Then you can execute the following script:</p>
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="k">using</span><span class="w"> </span><span class="n">CUDA</span>
+<span class="linenos">2</span>
+<span class="linenos">3</span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">CuArray</span><span class="p">(</span><span class="n">rand</span><span class="p">(</span><span class="mi">100</span><span class="p">))</span>
+<span class="linenos">4</span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">CuArray</span><span class="p">(</span><span class="n">rand</span><span class="p">(</span><span class="mi">100</span><span class="p">))</span>
+<span class="linenos">5</span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">b</span>
+</pre></div>
+</div>
 </section>
 <section id="reverse-vectors">
 <h3>Reverse vectors<a class="headerlink" href="#reverse-vectors" title="Link to this heading">#</a></h3>
