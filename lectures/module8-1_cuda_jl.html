@@ -467,6 +467,7 @@ document.write(`
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#task-based-programming">Task-based programming</a></li>
 </ul>
 </li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Add vectors</a></li>
 </ul>
 </li>
 </ul>
@@ -853,6 +854,117 @@ CopyCuArray<span class="w">   </span><span class="p">|</span><span class="w">   
 </ul>
 </section>
 </section>
+<section id="id1">
+<h3>Add vectors<a class="headerlink" href="#id1" title="Link to this heading">#</a></h3>
+<p>Now, let’s go back to adding two vectors, but this time we will be using warps and thread blocks to do it in parallel:</p>
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="linenos">  1</span><span class="k">using</span><span class="w"> </span><span class="n">CUDA</span>
+<span class="linenos">  2</span>
+<span class="linenos">  3</span><span class="c"># Loop based function</span>
+<span class="linenos">  4</span><span class="k">function</span><span class="w"> </span><span class="n">addvecs!</span><span class="p">(</span><span class="n">c</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">)</span>
+<span class="linenos">  5</span><span class="w">  </span><span class="n">N</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">length</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+<span class="linenos">  6</span><span class="w">  </span><span class="nd">@inbounds</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="o">:</span><span class="n">N</span>
+<span class="linenos">  7</span><span class="w">    </span><span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+<span class="linenos">  8</span><span class="w">  </span><span class="k">end</span>
+<span class="linenos">  9</span><span class="k">end</span>
+<span class="linenos"> 10</span>
+<span class="linenos"> 11</span><span class="c"># Loop based fake &quot;GPU&quot; kernel</span>
+<span class="linenos"> 12</span><span class="k">function</span><span class="w"> </span><span class="n">fake_knl_addvecs!</span><span class="p">(</span><span class="n">c</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">numblocks</span><span class="p">,</span><span class="w"> </span><span class="n">bdim</span><span class="p">)</span>
+<span class="linenos"> 13</span><span class="w">  </span><span class="n">N</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">length</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+<span class="linenos"> 14</span><span class="w">  </span><span class="c"># loop over the &quot;blocks&quot;</span>
+<span class="linenos"> 15</span><span class="w">  </span><span class="nd">@inbounds</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">bidx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="o">:</span><span class="n">numblocks</span>
+<span class="linenos"> 16</span><span class="w">    </span><span class="c"># loop over the &quot;threads&quot;</span>
+<span class="linenos"> 17</span><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">tidx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="o">:</span><span class="n">bdim</span>
+<span class="linenos"> 18</span><span class="w">      </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">bidx</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">bdim</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">tidx</span>
+<span class="linenos"> 19</span><span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">N</span>
+<span class="linenos"> 20</span><span class="w">        </span><span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+<span class="linenos"> 21</span><span class="w">      </span><span class="k">end</span>
+<span class="linenos"> 22</span><span class="w">    </span><span class="k">end</span>
+<span class="linenos"> 23</span><span class="w">  </span><span class="k">end</span>
+<span class="linenos"> 24</span><span class="k">end</span>
+<span class="linenos"> 25</span>
+<span class="linenos"> 26</span><span class="c"># Real GPU kernel</span>
+<span class="linenos"> 27</span><span class="k">function</span><span class="w"> </span><span class="n">knl_addvecs!</span><span class="p">(</span><span class="n">c</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">)</span>
+<span class="linenos"> 28</span>
+<span class="linenos"> 29</span><span class="w">  </span><span class="n">N</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">length</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+<span class="linenos"> 30</span>
+<span class="linenos"> 31</span><span class="w">  </span><span class="n">tidx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">threadIdx</span><span class="p">()</span><span class="o">.</span><span class="n">x</span><span class="w"> </span><span class="c"># get the thread ID</span>
+<span class="linenos"> 32</span><span class="w">  </span><span class="n">bidx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">blockIdx</span><span class="p">()</span><span class="o">.</span><span class="n">x</span><span class="w">  </span><span class="c"># get the block ID</span>
+<span class="linenos"> 33</span><span class="w">  </span><span class="n">bdim</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">blockDim</span><span class="p">()</span><span class="o">.</span><span class="n">x</span><span class="w">  </span><span class="c"># how many threads in each block</span>
+<span class="linenos"> 34</span>
+<span class="linenos"> 35</span><span class="w">  </span><span class="c"># figure out which index we should handle</span>
+<span class="linenos"> 36</span><span class="w">  </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">bidx</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">bdim</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">tidx</span>
+<span class="linenos"> 37</span><span class="w">  </span><span class="nd">@inbounds</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">N</span>
+<span class="linenos"> 38</span><span class="w">    </span><span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+<span class="linenos"> 39</span><span class="w">  </span><span class="k">end</span>
+<span class="linenos"> 40</span>
+<span class="linenos"> 41</span><span class="w">  </span><span class="c">#Kernel must return nothing</span>
+<span class="linenos"> 42</span><span class="w">  </span><span class="nb">nothing</span>
+<span class="linenos"> 43</span><span class="k">end</span>
+<span class="linenos"> 44</span>
+<span class="linenos"> 45</span><span class="k">let</span>
+<span class="linenos"> 46</span><span class="w">  </span><span class="n">N</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">100000000</span>
+<span class="linenos"> 47</span><span class="w">  </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rand</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
+<span class="linenos"> 48</span><span class="w">  </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rand</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
+<span class="linenos"> 49</span>
+<span class="linenos"> 50</span><span class="w">  </span><span class="c">#</span>
+<span class="linenos"> 51</span><span class="w">  </span><span class="c"># Reference Implementation</span>
+<span class="linenos"> 52</span><span class="w">  </span><span class="c">#</span>
+<span class="linenos"> 53</span><span class="w">  </span><span class="n">c0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">similar</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+<span class="linenos"> 54</span><span class="w">  </span><span class="n">c0</span><span class="w"> </span><span class="o">.=</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">.+</span><span class="w"> </span><span class="n">b</span>
+<span class="linenos"> 55</span><span class="w">  </span><span class="nd">@time</span><span class="w"> </span><span class="n">c0</span><span class="w"> </span><span class="o">.=</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">.+</span><span class="w"> </span><span class="n">b</span>
+<span class="linenos"> 56</span>
+<span class="linenos"> 57</span><span class="w">  </span><span class="c">#</span>
+<span class="linenos"> 58</span><span class="w">  </span><span class="c"># Simple for loop implementation</span>
+<span class="linenos"> 59</span><span class="w">  </span><span class="c">#</span>
+<span class="linenos"> 60</span><span class="w">  </span><span class="n">c1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">similar</span><span class="p">(</span><span class="n">c0</span><span class="p">)</span>
+<span class="linenos"> 61</span><span class="w">  </span><span class="n">addvecs!</span><span class="p">(</span><span class="n">c1</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">)</span>
+<span class="linenos"> 62</span><span class="w">  </span><span class="nd">@time</span><span class="w"> </span><span class="n">addvecs!</span><span class="p">(</span><span class="n">c1</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">)</span>
+<span class="linenos"> 63</span><span class="w">  </span><span class="nd">@assert</span><span class="w"> </span><span class="n">c0</span><span class="w"> </span><span class="o">≈</span><span class="w"> </span><span class="n">c1</span>
+<span class="linenos"> 64</span>
+<span class="linenos"> 65</span><span class="w">  </span><span class="c">#</span>
+<span class="linenos"> 66</span><span class="w">  </span><span class="c"># fake GPU kernel</span>
+<span class="linenos"> 67</span><span class="w">  </span><span class="c">#</span>
+<span class="linenos"> 68</span><span class="w">  </span><span class="n">c2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">similar</span><span class="p">(</span><span class="n">c0</span><span class="p">)</span>
+<span class="linenos"> 69</span><span class="w">  </span><span class="n">numthreads</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">256</span>
+<span class="linenos"> 70</span><span class="w">  </span><span class="n">numblocks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">div</span><span class="p">(</span><span class="n">N</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">numthreads</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">numthreads</span><span class="p">)</span>
+<span class="linenos"> 71</span><span class="w">  </span><span class="n">fake_knl_addvecs!</span><span class="p">(</span><span class="n">c2</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">numblocks</span><span class="p">,</span><span class="w"> </span><span class="n">numthreads</span><span class="p">)</span>
+<span class="linenos"> 72</span><span class="w">  </span><span class="nd">@time</span><span class="w"> </span><span class="n">fake_knl_addvecs!</span><span class="p">(</span><span class="n">c2</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">numblocks</span><span class="p">,</span><span class="w"> </span><span class="n">numthreads</span><span class="p">)</span>
+<span class="linenos"> 73</span><span class="w">  </span><span class="nd">@assert</span><span class="w"> </span><span class="n">c0</span><span class="w"> </span><span class="o">≈</span><span class="w"> </span><span class="n">c2</span>
+<span class="linenos"> 74</span>
+<span class="linenos"> 75</span><span class="w">  </span><span class="c">#</span>
+<span class="linenos"> 76</span><span class="w">  </span><span class="c"># Real GPU call</span>
+<span class="linenos"> 77</span><span class="w">  </span><span class="c">#</span>
+<span class="linenos"> 78</span><span class="w">  </span><span class="n">d_a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">CuArray</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="w"> </span><span class="c"># Copy data to GPU</span>
+<span class="linenos"> 79</span><span class="w">  </span><span class="n">d_b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">CuArray</span><span class="p">(</span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="c"># Copy data to GPU</span>
+<span class="linenos"> 80</span><span class="w">  </span><span class="n">d_c3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">CuArray</span><span class="p">{</span><span class="kt">Float64</span><span class="p">}(</span><span class="nb">undef</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="p">)</span><span class="w"> </span><span class="c"># Allocate array on GPU</span>
+<span class="linenos"> 81</span><span class="w">  </span><span class="c"># launch GPU kernel</span>
+<span class="linenos"> 82</span><span class="w">  </span><span class="nd">@cuda</span><span class="w"> </span><span class="n">threads</span><span class="o">=</span><span class="n">numthreads</span><span class="w"> </span><span class="n">blocks</span><span class="o">=</span><span class="n">numblocks</span><span class="w"> </span><span class="n">knl_addvecs!</span><span class="p">(</span><span class="n">d_c3</span><span class="p">,</span><span class="w"> </span><span class="n">d_a</span><span class="p">,</span><span class="w"> </span><span class="n">d_b</span><span class="p">)</span>
+<span class="linenos"> 83</span><span class="w">  </span><span class="c"># Barrier before timing</span>
+<span class="linenos"> 84</span><span class="w">  </span><span class="n">synchronize</span><span class="p">()</span>
+<span class="linenos"> 85</span><span class="w">  </span><span class="nd">@time</span><span class="w"> </span><span class="k">begin</span>
+<span class="linenos"> 86</span><span class="w">    </span><span class="nd">@cuda</span><span class="w"> </span><span class="n">threads</span><span class="o">=</span><span class="n">numthreads</span><span class="w"> </span><span class="n">blocks</span><span class="o">=</span><span class="n">numblocks</span><span class="w"> </span><span class="n">knl_addvecs!</span><span class="p">(</span><span class="n">d_c3</span><span class="p">,</span><span class="w"> </span><span class="n">d_a</span><span class="p">,</span><span class="w"> </span><span class="n">d_b</span><span class="p">)</span>
+<span class="linenos"> 87</span><span class="w">    </span><span class="c"># Barrier before completing</span>
+<span class="linenos"> 88</span><span class="w">    </span><span class="n">synchronize</span><span class="p">()</span>
+<span class="linenos"> 89</span><span class="w">  </span><span class="k">end</span>
+<span class="linenos"> 90</span>
+<span class="linenos"> 91</span><span class="w">  </span><span class="c"># Copy back to the CPU</span>
+<span class="linenos"> 92</span><span class="w">  </span><span class="n">c3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">Array</span><span class="p">(</span><span class="n">d_c3</span><span class="p">)</span>
+<span class="linenos"> 93</span><span class="w">  </span><span class="nd">@assert</span><span class="w"> </span><span class="n">c0</span><span class="w"> </span><span class="o">≈</span><span class="w"> </span><span class="n">c3</span>
+<span class="linenos"> 94</span>
+<span class="linenos"> 95</span><span class="w">  </span><span class="c">#</span>
+<span class="linenos"> 96</span><span class="w">  </span><span class="c"># Try Julia&#39;s native CUDA version</span>
+<span class="linenos"> 97</span><span class="w">  </span><span class="c">#</span>
+<span class="linenos"> 98</span><span class="w">  </span><span class="n">d_c3</span><span class="w"> </span><span class="o">.=</span><span class="w"> </span><span class="n">d_a</span><span class="w"> </span><span class="o">.+</span><span class="w"> </span><span class="n">d_b</span>
+<span class="linenos"> 99</span><span class="w">  </span><span class="n">synchronize</span><span class="p">()</span>
+<span class="linenos">100</span><span class="w">  </span><span class="nd">@time</span><span class="w"> </span><span class="k">begin</span>
+<span class="linenos">101</span><span class="w">    </span><span class="n">d_c3</span><span class="w"> </span><span class="o">.=</span><span class="w"> </span><span class="n">d_a</span><span class="w"> </span><span class="o">.+</span><span class="w"> </span><span class="n">d_b</span>
+<span class="linenos">102</span><span class="w">    </span><span class="n">synchronize</span><span class="p">()</span>
+<span class="linenos">103</span><span class="w">  </span><span class="k">end</span>
+<span class="linenos">104</span><span class="k">end</span>
+<span class="linenos">105</span><span class="nb">nothing</span>
+</pre></div>
+</div>
+</section>
 </section>
 </section>
 
@@ -936,6 +1048,7 @@ CopyCuArray<span class="w">   </span><span class="p">|</span><span class="w">   
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#task-based-programming">Task-based programming</a></li>
 </ul>
 </li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Add vectors</a></li>
 </ul>
 </li>
 </ul>
