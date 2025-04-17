@@ -449,6 +449,10 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reverse-vectors">Reverse vectors</a></li>
 </ul>
 </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cuda-julia-code-on-the-tuckoo-cluster">2. CUDA Julia code on the tuckoo cluster</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#launching-a-cuda-jl-code-with-slurm">2.1 Launching a CUDA.jl code with SLURM</a></li>
+</ul>
+</li>
 </ul>
             </nav>
         </div>
@@ -471,6 +475,8 @@ document.write(`
 <p>Today:</p>
 <ol class="arabic simple">
 <li><p>Intro to GPU programming in Julia (CUDA.jl)</p></li>
+<li><p>CUDA Julia code on the tuckoo cluster<br />
+2.1 Launching a CUDA.jl code with SLURM</p></li>
 </ol>
 <section id="intro-to-gpu-programming-in-julia-cuda-jl">
 <h2>1. Intro to GPU programming in Julia (CUDA.jl)<a class="headerlink" href="#intro-to-gpu-programming-in-julia-cuda-jl" title="Link to this heading">#</a></h2>
@@ -479,7 +485,7 @@ document.write(`
 <p class="admonition-title">Note</p>
 <p>References</p>
 <ul class="simple">
-<li><p><a class="reference external" href="https://www.youtube.com/watch?v=uvVy3CqpVbM">Warburton | youtube video</a> (In the first 47 minutes of the video,Tim gives an excellent introduction to the GPU.)</p></li>
+<li><p><a class="reference external" href="https://www.youtube.com/watch?v=uvVy3CqpVbM">Warburton | youtube video</a> (In the first 47 minutes of the video, Tim gives an excellent introduction to the GPU.)</p></li>
 <li><p><a class="reference external" href="https://extremecomputingtraining.anl.gov/files/2018/08/ATPESC_2018_Track-2_3_8-2_830am_Warburton-Accelerators.pdf">Warburton | ATPESC pdf</a></p></li>
 </ul>
 </div>
@@ -500,7 +506,7 @@ C = A + B
 </section>
 <section id="example-with-cuda-jl">
 <h3>Example with <a class="reference external" href="https://github.com/JuliaGPU/CUDA.jl">CUDA.jl</a><a class="headerlink" href="#example-with-cuda-jl" title="Link to this heading">#</a></h3>
-<p>To run this and following Julia CUDA examples, you need to first add <a class="reference external" href="https://github.com/JuliaGPU/CUDA.jl">CUDA.jl</a> to your environment, with</p>
+<p>To run this and following Julia CUDA examples, you need to first add <a class="reference external" href="https://github.com/JuliaGPU/CUDA.jl">CUDA.jl</a> to your environment. That is, start <code class="docutils literal notranslate"><span class="pre">julia</span></code> and in the REPL run:</p>
 <div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="k">using</span><span class="w"> </span><span class="n">Pkg</span>
 <span class="n">Pkg</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s">&quot;CUDA&quot;</span><span class="p">)</span>
 </pre></div>
@@ -517,20 +523,32 @@ C = A + B
 <section id="memory-management">
 <h3>Memory management<a class="headerlink" href="#memory-management" title="Link to this heading">#</a></h3>
 <p>As we have seen so far, a crucial aspect of working with a GPU is managing the data on it.</p>
-<p>The <code class="docutils literal notranslate"><span class="pre">CuArray</span></code> type is the primary interface for doing so: Creating a <code class="docutils literal notranslate"><span class="pre">CuArray</span></code> will allocate data on the GPU, copying elements to it will upload, and converting back to an <code class="docutils literal notranslate"><span class="pre">Array</span></code> will download values to the CPU. Let’s see it in an example:</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">CuArray</span></code> type is the primary interface for doing so: Creating a <code class="docutils literal notranslate"><span class="pre">CuArray</span></code> will allocate data on the GPU, copying elements to it will upload, and converting back to an <code class="docutils literal notranslate"><span class="pre">Array</span></code> will download values to the CPU. Let’s see it in an example test.</p>
+<p>Note: to run the following test, you first need to also add the <code class="docutils literal notranslate"><span class="pre">Test.jl</span></code> package to your environment:</p>
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="k">using</span><span class="w"> </span><span class="n">Pkg</span>
+<span class="n">Pkg</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s">&quot;Test&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Then you can run the following test example:</p>
 <div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="k">using</span><span class="w"> </span><span class="n">CUDA</span>
-<span class="linenos"> 2</span>
-<span class="linenos"> 3</span><span class="c"># generate some data on the CPU (host array, h_array)</span>
-<span class="linenos"> 4</span><span class="n">h_array</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rand</span><span class="p">(</span><span class="kt">Float32</span><span class="p">,</span><span class="w"> </span><span class="mi">1024</span><span class="p">)</span>
-<span class="linenos"> 5</span>
-<span class="linenos"> 6</span><span class="c"># allocate on the GPU (device array, d_array)</span>
-<span class="linenos"> 7</span><span class="n">d_array</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">CuArray</span><span class="p">{</span><span class="kt">Float32</span><span class="p">}(</span><span class="nb">undef</span><span class="p">,</span><span class="w"> </span><span class="mi">1024</span><span class="p">)</span>
-<span class="linenos"> 8</span>
-<span class="linenos"> 9</span><span class="c"># copy from the CPU to the GPU</span>
-<span class="linenos">10</span><span class="n">copyto!</span><span class="p">(</span><span class="n">d_array</span><span class="p">,</span><span class="w"> </span><span class="n">h_array</span><span class="p">)</span>
-<span class="linenos">11</span>
-<span class="linenos">12</span><span class="c"># download/transfer back to the CPU and verify using the Array casting of the device array</span>
-<span class="linenos">13</span><span class="nd">@test</span><span class="w"> </span><span class="n">h_array</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kt">Array</span><span class="p">(</span><span class="n">d_array</span><span class="p">)</span>
+<span class="linenos"> 2</span><span class="k">using</span><span class="w"> </span><span class="n">Test</span><span class="w"> </span><span class="c"># to be able to use the @test macro</span>
+<span class="linenos"> 3</span>
+<span class="linenos"> 4</span><span class="nd">@testset</span><span class="w"> </span><span class="s">&quot;CopyCuArray&quot;</span><span class="w"> </span><span class="k">begin</span>
+<span class="linenos"> 5</span><span class="w">    </span><span class="n">print</span><span class="p">(</span><span class="s">&quot;Begin test. </span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="linenos"> 6</span>
+<span class="linenos"> 7</span><span class="w">    </span><span class="c"># generate some data on the CPU (host array, h_array)</span>
+<span class="linenos"> 8</span><span class="w">    </span><span class="n">h_array</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rand</span><span class="p">(</span><span class="kt">Float32</span><span class="p">,</span><span class="w"> </span><span class="mi">1024</span><span class="p">)</span>
+<span class="linenos"> 9</span>
+<span class="linenos">10</span><span class="w">    </span><span class="c"># allocate on the GPU (device array, d_array)</span>
+<span class="linenos">11</span><span class="w">    </span><span class="n">d_array</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">CuArray</span><span class="p">{</span><span class="kt">Float32</span><span class="p">}(</span><span class="nb">undef</span><span class="p">,</span><span class="w"> </span><span class="mi">1024</span><span class="p">)</span>
+<span class="linenos">12</span>
+<span class="linenos">13</span><span class="w">    </span><span class="c"># copy from the CPU to the GPU</span>
+<span class="linenos">14</span><span class="w">    </span><span class="n">copyto!</span><span class="p">(</span><span class="n">d_array</span><span class="p">,</span><span class="w"> </span><span class="n">h_array</span><span class="p">)</span>
+<span class="linenos">15</span>
+<span class="linenos">16</span><span class="w">    </span><span class="c"># download/transfer back to the CPU and verify using the Array casting of the device array</span>
+<span class="linenos">17</span><span class="w">    </span><span class="nd">@test</span><span class="w"> </span><span class="n">h_array</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kt">Array</span><span class="p">(</span><span class="n">d_array</span><span class="p">)</span>
+<span class="linenos">18</span><span class="w">    </span><span class="n">print</span><span class="p">(</span><span class="s">&quot;Test ended. </span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="linenos">19</span><span class="k">end</span>
 </pre></div>
 </div>
 <p><strong>Observation on garbage collection</strong>:</p>
@@ -550,6 +568,147 @@ A_i := A_{N - i + 1}, \textrm{with } i = 1, \ldots, N/2
 <li><p>thread independence</p></li>
 <li><p><a class="reference external" href="https://en.wikipedia.org/wiki/Race_condition">race conditions</a></p></li>
 </ul>
+</section>
+</section>
+<section id="cuda-julia-code-on-the-tuckoo-cluster">
+<h2>2. CUDA Julia code on the tuckoo cluster<a class="headerlink" href="#cuda-julia-code-on-the-tuckoo-cluster" title="Link to this heading">#</a></h2>
+<p>As we have seen last <a class="reference external" href="https://sdsu-comp605.github.io/spring25/lectures/module7-3_practical_cuda.html#tuckoo-demo-for-cuda-codes">lecture</a>, we can run CUDA code on the tuckoo cluster.</p>
+<p>Now let’s learn how to configure the <code class="docutils literal notranslate"><span class="pre">CUDA.jl</span></code> package to run with the proper CUDA version available on the cluster.</p>
+<p>Recall that for tuckoo, <strong><code class="docutils literal notranslate"><span class="pre">node8</span></code></strong> is the node dedicated for interactive usage, where you can find the <code class="docutils literal notranslate"><span class="pre">nvcc</span></code> compiler to compile CUDA codes.</p>
+<p>Once you are logged in on tuckoo using</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>ssh<span class="w"> </span>your_user_name@tuckoo.sdsu.edu
+</pre></div>
+</div>
+<p>You will see that you are logged in on the <em>login node</em> because the prompt will show</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="o">[</span>your_user_name@tuckoo<span class="w"> </span>~<span class="o">]</span>$
+</pre></div>
+</div>
+<p>Now you can use <code class="docutils literal notranslate"><span class="pre">rsh</span></code> to connect to <code class="docutils literal notranslate"><span class="pre">node8</span></code> by simply running:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>rsh<span class="w"> </span>node8
+</pre></div>
+</div>
+<p>and you will see that you are indeed on <code class="docutils literal notranslate"><span class="pre">node8</span></code> because the prompt has changed to:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="o">[</span>your_user_name@node8<span class="w"> </span>~<span class="o">]</span>$
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Now you can start a Julia session with a local environment in a  directory of your choice, by running</p></li>
+</ul>
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">julia</span><span class="w"> </span><span class="o">--</span><span class="n">project</span><span class="o">=.</span>
+</pre></div>
+</div>
+<p>Recall that this will generate a <code class="docutils literal notranslate"><span class="pre">Project.toml</span></code> and <code class="docutils literal notranslate"><span class="pre">Manifest.toml</span></code> file in the directory in which you have specified the <code class="docutils literal notranslate"><span class="pre">--project=</span></code> path.</p>
+<ul class="simple">
+<li><p>Once your Julia session has started, you can add the <code class="docutils literal notranslate"><span class="pre">CUDA.jl</span></code> and <code class="docutils literal notranslate"><span class="pre">Test.jl</span></code> packages needed to test your code.</p></li>
+</ul>
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">Pkg</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s">&quot;CUDA&quot;</span><span class="p">)</span>
+<span class="n">Pkg</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s">&quot;Test&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Now if you try to use the <code class="docutils literal notranslate"><span class="pre">CUDA.jl</span></code> package by running <code class="docutils literal notranslate"><span class="pre">using</span> <span class="pre">CUDA</span></code>, the first time you’ll hit the following error:</p>
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">julia</span><span class="o">&gt;</span><span class="w"> </span><span class="k">using</span><span class="w"> </span><span class="n">CUDA</span>
+<span class="n">┌</span><span class="w"> </span><span class="n">Error</span><span class="o">:</span><span class="w"> </span><span class="n">CUDA</span><span class="o">.</span><span class="n">jl</span><span class="w"> </span><span class="n">was</span><span class="w"> </span><span class="n">precompiled</span><span class="w"> </span><span class="n">without</span><span class="w"> </span><span class="n">knowing</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">CUDA</span><span class="w"> </span><span class="n">toolkit</span><span class="w"> </span><span class="n">version</span><span class="o">.</span><span class="w"> </span><span class="n">This</span><span class="w"> </span><span class="n">is</span><span class="w"> </span><span class="n">unsupported</span><span class="o">.</span>
+<span class="n">│</span><span class="w"> </span><span class="n">You</span><span class="w"> </span><span class="n">should</span><span class="w"> </span><span class="n">either</span><span class="w"> </span><span class="n">precompile</span><span class="w"> </span><span class="n">CUDA</span><span class="o">.</span><span class="n">jl</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">an</span><span class="w"> </span><span class="n">environment</span><span class="w"> </span><span class="k">where</span><span class="w"> </span><span class="kt">the</span><span class="w"> </span><span class="n">CUDA</span><span class="w"> </span><span class="n">toolkit</span><span class="w"> </span><span class="n">is</span><span class="w"> </span><span class="n">available</span><span class="p">,</span>
+<span class="n">│</span><span class="w"> </span><span class="n">or</span><span class="w"> </span><span class="n">call</span><span class="w"> </span><span class="sb">`CUDA.set_runtime_version!`</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">specify</span><span class="w"> </span><span class="n">which</span><span class="w"> </span><span class="n">CUDA</span><span class="w"> </span><span class="n">version</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">use</span><span class="o">.</span>
+<span class="n">└</span><span class="w"> </span><span class="err">@</span><span class="w"> </span><span class="n">CUDA</span><span class="w"> </span><span class="o">~/.</span><span class="n">julia</span><span class="o">/</span><span class="n">packages</span><span class="o">/</span><span class="n">CUDA</span><span class="o">/</span><span class="n">TW8fL</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">initialization</span><span class="o">.</span><span class="n">jl</span><span class="o">:</span><span class="mi">148</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Run the <code class="docutils literal notranslate"><span class="pre">CUDA.versioninfo()</span></code> command to see which CUDA version is available on the cluster:</p></li>
+</ul>
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">julia</span><span class="o">&gt;</span><span class="w"> </span><span class="n">CUDA</span><span class="o">.</span><span class="n">versioninfo</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>You will see the following output:</p>
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">julia</span><span class="o">&gt;</span><span class="w"> </span><span class="n">CUDA</span><span class="o">.</span><span class="n">versioninfo</span><span class="p">()</span>
+<span class="n">CUDA</span><span class="w"> </span><span class="n">runtime</span><span class="w"> </span><span class="mf">12.0</span><span class="p">,</span><span class="w"> </span><span class="k">local</span><span class="w"> </span><span class="n">installation</span>
+<span class="n">CUDA</span><span class="w"> </span><span class="n">driver</span><span class="w"> </span><span class="mf">12.0</span>
+<span class="n">NVIDIA</span><span class="w"> </span><span class="n">driver</span><span class="w"> </span><span class="mf">525.60.13</span>
+
+<span class="n">CUDA</span><span class="w"> </span><span class="n">libraries</span><span class="o">:</span><span class="w"> </span>
+<span class="o">-</span><span class="w"> </span><span class="n">CUBLAS</span><span class="o">:</span><span class="w"> </span><span class="mf">12.0.1</span>
+<span class="o">-</span><span class="w"> </span><span class="n">CURAND</span><span class="o">:</span><span class="w"> </span><span class="mf">10.3.1</span>
+<span class="o">-</span><span class="w"> </span><span class="n">CUFFT</span><span class="o">:</span><span class="w"> </span><span class="mf">11.0.0</span>
+<span class="o">-</span><span class="w"> </span><span class="n">CUSOLVER</span><span class="o">:</span><span class="w"> </span><span class="mf">11.4.2</span>
+<span class="o">-</span><span class="w"> </span><span class="n">CUSPARSE</span><span class="o">:</span><span class="w"> </span><span class="mf">12.0.0</span>
+<span class="o">-</span><span class="w"> </span><span class="n">CUPTI</span><span class="o">:</span><span class="w"> </span><span class="mf">2022.4.0</span><span class="w"> </span><span class="p">(</span><span class="n">API</span><span class="w"> </span><span class="mf">18.0.0</span><span class="p">)</span>
+<span class="o">-</span><span class="w"> </span><span class="n">NVML</span><span class="o">:</span><span class="w"> </span><span class="mf">12.0.0</span><span class="o">+</span><span class="mf">525.60.13</span>
+
+<span class="n">Julia</span><span class="w"> </span><span class="n">packages</span><span class="o">:</span><span class="w"> </span>
+<span class="o">-</span><span class="w"> </span><span class="n">CUDA</span><span class="o">:</span><span class="w"> </span><span class="mf">5.7.2</span>
+<span class="o">-</span><span class="w"> </span><span class="n">CUDA_Driver_jll</span><span class="o">:</span><span class="w"> </span><span class="mf">0.12.1</span><span class="o">+</span><span class="mi">1</span>
+<span class="o">-</span><span class="w"> </span><span class="n">CUDA_Runtime_jll</span><span class="o">:</span><span class="w"> </span><span class="mf">0.16.1</span><span class="o">+</span><span class="mi">0</span>
+<span class="o">-</span><span class="w"> </span><span class="n">CUDA_Runtime_Discovery</span><span class="o">:</span><span class="w"> </span><span class="mf">0.3.5</span>
+
+<span class="n">Toolchain</span><span class="o">:</span>
+<span class="o">-</span><span class="w"> </span><span class="n">Julia</span><span class="o">:</span><span class="w"> </span><span class="mf">1.11.4</span>
+<span class="o">-</span><span class="w"> </span><span class="n">LLVM</span><span class="o">:</span><span class="w"> </span><span class="mf">16.0.6</span>
+
+<span class="n">Preferences</span><span class="o">:</span>
+<span class="o">-</span><span class="w"> </span><span class="n">CUDA_Runtime_jll</span><span class="o">.</span><span class="k">local</span><span class="o">:</span><span class="w"> </span><span class="nb">true</span>
+
+<span class="mi">2</span><span class="w"> </span><span class="n">devices</span><span class="o">:</span>
+<span class="w">  </span><span class="mi">0</span><span class="o">:</span><span class="w"> </span><span class="n">Tesla</span><span class="w"> </span><span class="n">P100</span><span class="o">-</span><span class="n">PCIE</span><span class="o">-</span><span class="mi">16</span><span class="n">GB</span><span class="w"> </span><span class="p">(</span><span class="n">sm_60</span><span class="p">,</span><span class="w"> </span><span class="mf">15.892</span><span class="w"> </span><span class="n">GiB</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mf">16.000</span><span class="w"> </span><span class="n">GiB</span><span class="w"> </span><span class="n">available</span><span class="p">)</span>
+<span class="w">  </span><span class="mi">1</span><span class="o">:</span><span class="w"> </span><span class="n">Tesla</span><span class="w"> </span><span class="n">P100</span><span class="o">-</span><span class="n">PCIE</span><span class="o">-</span><span class="mi">16</span><span class="n">GB</span><span class="w"> </span><span class="p">(</span><span class="n">sm_60</span><span class="p">,</span><span class="w"> </span><span class="mf">15.892</span><span class="w"> </span><span class="n">GiB</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mf">16.000</span><span class="w"> </span><span class="n">GiB</span><span class="w"> </span><span class="n">available</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Therefore, we want to set the <code class="docutils literal notranslate"><span class="pre">v12.0</span></code> version for our <code class="docutils literal notranslate"><span class="pre">CUDA.jl</span></code> library. Let’s do it by running the following command:</p></li>
+</ul>
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">julia</span><span class="o">&gt;</span><span class="w"> </span><span class="n">CUDA</span><span class="o">.</span><span class="n">set_runtime_version!</span><span class="p">(</span><span class="sa">v</span><span class="s">&quot;12.0&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>It will print the following output:</p>
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">julia</span><span class="o">&gt;</span><span class="w"> </span><span class="n">CUDA</span><span class="o">.</span><span class="n">set_runtime_version!</span><span class="p">(</span><span class="sa">v</span><span class="s">&quot;12.0&quot;</span><span class="p">)</span>
+<span class="p">[</span><span class="w"> </span><span class="n">Info</span><span class="o">:</span><span class="w"> </span><span class="n">Configure</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">active</span><span class="w"> </span><span class="n">project</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">use</span><span class="w"> </span><span class="n">CUDA</span><span class="w"> </span><span class="mf">12.0</span><span class="p">;</span><span class="w"> </span><span class="n">please</span><span class="w"> </span><span class="n">re</span><span class="o">-</span><span class="n">start</span><span class="w"> </span><span class="n">Julia</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">this</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">take</span><span class="w"> </span><span class="n">effect</span><span class="o">.</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Now your Julia environment on the cluster is properly setup to use the right CUDA version.</p></li>
+<li><p>You will notice that your local <code class="docutils literal notranslate"><span class="pre">Project.toml</span></code> and <code class="docutils literal notranslate"><span class="pre">Manifest.toml</span></code> files have changed and now include the <code class="docutils literal notranslate"><span class="pre">CUDA.jl</span></code> dependency.</p></li>
+</ul>
+<section id="launching-a-cuda-jl-code-with-slurm">
+<h3>2.1 Launching a CUDA.jl code with SLURM<a class="headerlink" href="#launching-a-cuda-jl-code-with-slurm" title="Link to this heading">#</a></h3>
+<p>Once you have verified that your local <code class="docutils literal notranslate"><span class="pre">Project.toml</span></code> and <code class="docutils literal notranslate"><span class="pre">Manifest.toml</span></code> files have been populated correctly, you can copy the <a class="reference external" href="https://github.com/sdsu-comp605/spring25/blob/main/julia_codes/module8-1/copy_cu_array.jl">julia_codes/module8-1/copy_cu_array.jl</a> and <a class="reference external" href="https://github.com/sdsu-comp605/spring25/tree/main/batch_scripts/batch.cuda-julia">batch_scripts/batch.cuda-julia</a> files in the same directory where you have the <code class="docutils literal notranslate"><span class="pre">Project.toml</span></code> and <code class="docutils literal notranslate"><span class="pre">Manifest.toml</span></code> files.</p>
+<p>This is the SLURM batch script to setup and precompile your Julia environment and launch Julia CODE on a P100 on tuckoo:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="ch">#!/bin/sh</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span><span class="c1">#note: run julia hello-world on a single node</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span><span class="c1">#SBATCH --job-name=add_cu</span>
+<span class="linenos"> 6</span><span class="c1">#SBATCH --output=%A-add_cu.out</span>
+<span class="linenos"> 7</span><span class="c1">#SBATCH --ntasks=16</span>
+<span class="linenos"> 8</span><span class="c1">#SBATCH --constraint=P100</span>
+<span class="linenos"> 9</span>
+<span class="linenos">10</span><span class="nb">export</span><span class="w"> </span><span class="nv">OMPI_MCA_pml</span><span class="o">=</span>ob1
+<span class="linenos">11</span><span class="nb">export</span><span class="w"> </span><span class="nv">OMPI_MCA_btl</span><span class="o">=</span>tcp,self
+<span class="linenos">12</span>
+<span class="linenos">13</span><span class="c1">#require tcp over infiniband</span>
+<span class="linenos">14</span><span class="nb">export</span><span class="w"> </span>OMPI_MCA_btl_tcp_if_include<span class="w"> </span>ib0
+<span class="linenos">15</span>
+<span class="linenos">16</span>julia<span class="w"> </span>--project<span class="o">=</span>.<span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;using Pkg; Pkg.instantiate()&#39;</span>
+<span class="linenos">17</span>julia<span class="w"> </span>--project<span class="o">=</span>.<span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;using Pkg; Pkg.precompile()&#39;</span>
+<span class="linenos">18</span>julia<span class="w"> </span>--project<span class="o">=</span>.<span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;using Pkg; Pkg.status()&#39;</span>
+<span class="linenos">19</span>
+<span class="linenos">20</span>julia<span class="w"> </span>copy_cu_array.jl
+<span class="linenos">21</span>
+<span class="linenos">22</span><span class="c1">#-------------------------------------------------------------</span>
+</pre></div>
+</div>
+<p>You can simply launch your SLURM batch script with</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>sbatch<span class="w"> </span>batch.cuda-julia
+</pre></div>
+</div>
+<p>and it should produce the following output:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>Status<span class="w"> </span><span class="sb">`</span>~/comp605/spring25/julia_codes/module8-1/Project.toml<span class="sb">`</span>
+<span class="w">  </span><span class="o">[</span>052768ef<span class="o">]</span><span class="w"> </span>CUDA<span class="w"> </span>v5.7.3
+<span class="w">  </span><span class="o">[</span>8dfed614<span class="o">]</span><span class="w"> </span>Test<span class="w"> </span>v1.11.0
+Begin<span class="w"> </span>test.<span class="w"> </span>
+Test<span class="w"> </span>ended.<span class="w"> </span>
+Test<span class="w"> </span>Summary:<span class="w"> </span><span class="p">|</span><span class="w"> </span>Pass<span class="w">  </span>Total<span class="w">  </span>Time
+CopyCuArray<span class="w">   </span><span class="p">|</span><span class="w">    </span><span class="m">1</span><span class="w">      </span><span class="m">1</span><span class="w">  </span><span class="m">1</span>.0s
+</pre></div>
+</div>
 </section>
 </section>
 </section>
@@ -614,6 +773,10 @@ A_i := A_{N - i + 1}, \textrm{with } i = 1, \ldots, N/2
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-with-cuda-jl">Example with CUDA.jl</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#memory-management">Memory management</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reverse-vectors">Reverse vectors</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cuda-julia-code-on-the-tuckoo-cluster">2. CUDA Julia code on the tuckoo cluster</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#launching-a-cuda-jl-code-with-slurm">2.1 Launching a CUDA.jl code with SLURM</a></li>
 </ul>
 </li>
 </ul>
