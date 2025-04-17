@@ -1,6 +1,6 @@
 #!/bin/sh
 
-#note: run julia hello-world on a single node
+#note: run julia CUDA copy array a single node
 
 #SBATCH --job-name=add_cu
 #SBATCH --output=%A-add_cu.out
