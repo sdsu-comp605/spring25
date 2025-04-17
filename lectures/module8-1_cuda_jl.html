@@ -446,11 +446,27 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#add-vectors">Add vectors</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-with-cuda-jl">Example with CUDA.jl</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#memory-management">Memory management</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reverse-vectors">Reverse vectors</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reverse-vectors">Reverse vectors?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cuda-jl-api-overview">CUDA.jl API Overview</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cuda-jl-kernel-programming">CUDA.jl kernel programming</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#defining-and-launching-kernels">Defining and launching kernels</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#kernel-inputs-and-outputs">Kernel inputs and outputs</a></li>
+</ul>
+</li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#launch-configuration-and-indexing">Launch configuration and indexing</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cuda-julia-code-on-the-tuckoo-cluster">2. CUDA Julia code on the tuckoo cluster</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#launching-a-cuda-jl-code-with-slurm">2.1 Launching a CUDA.jl code with SLURM</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parallel-julia-cuda">3. Parallel Julia CUDA</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tasks-and-threads">Tasks and threads</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#task-based-programming">Task-based programming</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -477,13 +493,14 @@ document.write(`
 <li><p>Intro to GPU programming in Julia (CUDA.jl)</p></li>
 <li><p>CUDA Julia code on the tuckoo cluster<br />
 2.1 Launching a CUDA.jl code with SLURM</p></li>
+<li><p>Parallel CUDA Julia</p></li>
 </ol>
 <section id="intro-to-gpu-programming-in-julia-cuda-jl">
 <h2>1. Intro to GPU programming in Julia (CUDA.jl)<a class="headerlink" href="#intro-to-gpu-programming-in-julia-cuda-jl" title="Link to this heading">#</a></h2>
 <p>For GPU programming there are many great resources. Some that I may refer to are:</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>References</p>
+<p>References:</p>
 <ul class="simple">
 <li><p><a class="reference external" href="https://www.youtube.com/watch?v=uvVy3CqpVbM">Warburton | youtube video</a> (In the first 47 minutes of the video, Tim gives an excellent introduction to the GPU.)</p></li>
 <li><p><a class="reference external" href="https://extremecomputingtraining.anl.gov/files/2018/08/ATPESC_2018_Track-2_3_8-2_830am_Warburton-Accelerators.pdf">Warburton | ATPESC pdf</a></p></li>
@@ -557,11 +574,11 @@ C = A + B
 </ul>
 </section>
 <section id="reverse-vectors">
-<h3>Reverse vectors<a class="headerlink" href="#reverse-vectors" title="Link to this heading">#</a></h3>
+<h3>Reverse vectors?<a class="headerlink" href="#reverse-vectors" title="Link to this heading">#</a></h3>
 <p>The “hello world 2.0” of the GPU is (inplace) reverse vector</p>
 <div class="math notranslate nohighlight">
 \[
-A_i := A_{N - i + 1}, \textrm{with } i = 1, \ldots, N/2
+A_i := A_{N - i + 1}, \textrm{with } i = 1, \ldots, N
 \]</div>
 <p>Big ideas:</p>
 <ul class="simple">
@@ -569,11 +586,73 @@ A_i := A_{N - i + 1}, \textrm{with } i = 1, \ldots, N/2
 <li><p><a class="reference external" href="https://en.wikipedia.org/wiki/Race_condition">race conditions</a></p></li>
 </ul>
 </section>
+<section id="cuda-jl-api-overview">
+<h3>CUDA.jl API <a class="reference external" href="https://cuda.juliagpu.org/stable/usage/overview/">Overview</a><a class="headerlink" href="#cuda-jl-api-overview" title="Link to this heading">#</a></h3>
+<p>The CUDA.jl package provides three distinct, but related, interfaces for CUDA programming:</p>
+<ul class="simple">
+<li><p>the <code class="docutils literal notranslate"><span class="pre">CuArray</span></code> type: for programming with arrays;</p></li>
+<li><p>native kernel programming capabilities: for writing CUDA kernels in Julia;</p></li>
+<li><p>CUDA API wrappers: for low-level interactions with the CUDA libraries.</p></li>
+</ul>
+<p>Much of the Julia CUDA programming stack can be used by just relying on the <code class="docutils literal notranslate"><span class="pre">CuArray</span></code> type, and using platform-agnostic programming patterns like <code class="docutils literal notranslate"><span class="pre">broadcast</span></code> and other array abstractions. Only once you hit a performance bottleneck, or some missing functionality, you might need to write a custom kernel or use the underlying CUDA APIs.</p>
+</section>
+<section id="cuda-jl-kernel-programming">
+<h3>CUDA.jl <a class="reference external" href="https://cuda.juliagpu.org/stable/development/kernel/#Kernel-programming">kernel programming</a><a class="headerlink" href="#cuda-jl-kernel-programming" title="Link to this heading">#</a></h3>
+<p>You can write your own GPU kernels in Julia.</p>
+<ul class="simple">
+<li><p>CUDA.jl aims to expose the full power of the CUDA programming model, i.e., at the same level of abstraction as CUDA C/C++, albeit with some Julia-specific improvements.</p></li>
+</ul>
+<section id="defining-and-launching-kernels">
+<h4>Defining and launching kernels<a class="headerlink" href="#defining-and-launching-kernels" title="Link to this heading">#</a></h4>
+<p>Kernels are written as ordinary Julia functions, but they <strong>have to return</strong> <code class="docutils literal notranslate"><span class="pre">nothing</span></code>:</p>
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="w">    </span><span class="k">function</span><span class="w"> </span><span class="n">my_kernel</span><span class="p">()</span>
+<span class="w">        </span><span class="k">return</span>
+<span class="w">    </span><span class="k">end</span>
+</pre></div>
+</div>
+<p>To launch this kernel, use the &#64;cuda macro:</p>
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="w">    </span><span class="n">julia</span><span class="o">&gt;</span><span class="w"> </span><span class="nd">@cuda</span><span class="w"> </span><span class="n">my_kernel</span><span class="p">()</span>
+</pre></div>
+</div>
+<section id="kernel-inputs-and-outputs">
+<h5>Kernel inputs and outputs<a class="headerlink" href="#kernel-inputs-and-outputs" title="Link to this heading">#</a></h5>
+<ul class="simple">
+<li><p>GPU kernels cannot return values, and should always <code class="docutils literal notranslate"><span class="pre">return</span></code> or <code class="docutils literal notranslate"><span class="pre">return</span> <span class="pre">nothing</span></code>.</p></li>
+<li><p>To communicate values from a kernel, you can use a <code class="docutils literal notranslate"><span class="pre">CuArray</span></code>:</p></li>
+</ul>
+<p>Example:</p>
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="k">function</span><span class="w"> </span><span class="n">my_kernel</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+<span class="w">    </span><span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">42</span>
+<span class="w">    </span><span class="k">return</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+<p>Then you can launch it via:</p>
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">julia</span><span class="o">&gt;</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">CuArray</span><span class="p">{</span><span class="kt">Int</span><span class="p">}(</span><span class="nb">undef</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">julia</span><span class="o">&gt;</span><span class="w"> </span><span class="nd">@cuda</span><span class="w"> </span><span class="n">my_kernel</span><span class="p">(</span><span class="n">a</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">julia</span><span class="o">&gt;</span><span class="w"> </span><span class="n">a</span>
+<span class="mi">1</span><span class="o">-</span><span class="n">element</span><span class="w"> </span><span class="kt">CuArray</span><span class="p">{</span><span class="kt">Int64</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="kt">CUDA</span><span class="o">.</span><span class="kt">DeviceMemory</span><span class="p">}</span><span class="o">:</span>
+<span class="w"> </span><span class="mi">42</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="launch-configuration-and-indexing">
+<h4>Launch configuration and indexing<a class="headerlink" href="#launch-configuration-and-indexing" title="Link to this heading">#</a></h4>
+<ul class="simple">
+<li><p>Simply using <code class="docutils literal notranslate"><span class="pre">&#64;cuda</span></code> only launches a <em>single thread</em>, which is not very useful. To launch more threads, use the <code class="docutils literal notranslate"><span class="pre">threads</span></code> and <code class="docutils literal notranslate"><span class="pre">blocks</span></code> keyword arguments to <code class="docutils literal notranslate"><span class="pre">&#64;cuda</span></code>. Example:</p></li>
+</ul>
+</section>
+</section>
 </section>
 <section id="cuda-julia-code-on-the-tuckoo-cluster">
 <h2>2. CUDA Julia code on the tuckoo cluster<a class="headerlink" href="#cuda-julia-code-on-the-tuckoo-cluster" title="Link to this heading">#</a></h2>
-<p>As we have seen last <a class="reference external" href="https://sdsu-comp605.github.io/spring25/lectures/module7-3_practical_cuda.html#tuckoo-demo-for-cuda-codes">lecture</a>, we can run CUDA code on the tuckoo cluster.</p>
-<p>Now let’s learn how to configure the <code class="docutils literal notranslate"><span class="pre">CUDA.jl</span></code> package to run with the proper CUDA version available on the cluster.</p>
+<p>As we have seen in the last <a class="reference external" href="https://sdsu-comp605.github.io/spring25/lectures/module7-3_practical_cuda.html#tuckoo-demo-for-cuda-codes">lecture</a>, we can run CUDA code on the tuckoo cluster.</p>
+<p>Now let’s learn how to <a class="reference external" href="https://cuda.juliagpu.org/stable/installation/overview/#Specifying-the-CUDA-version">configure</a> the <code class="docutils literal notranslate"><span class="pre">CUDA.jl</span></code> package to run with the proper CUDA version available on the cluster.</p>
 <p>Recall that for tuckoo, <strong><code class="docutils literal notranslate"><span class="pre">node8</span></code></strong> is the node dedicated for interactive usage, where you can find the <code class="docutils literal notranslate"><span class="pre">nvcc</span></code> compiler to compile CUDA codes.</p>
 <p>Once you are logged in on tuckoo using</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>ssh<span class="w"> </span>your_user_name@tuckoo.sdsu.edu
@@ -653,7 +732,7 @@ A_i := A_{N - i + 1}, \textrm{with } i = 1, \ldots, N/2
 </pre></div>
 </div>
 <ul class="simple">
-<li><p>Therefore, we want to set the <code class="docutils literal notranslate"><span class="pre">v12.0</span></code> version for our <code class="docutils literal notranslate"><span class="pre">CUDA.jl</span></code> library. Let’s do it by running the following command:</p></li>
+<li><p>Therefore, we want to set the <strong><code class="docutils literal notranslate"><span class="pre">v12.0</span></code></strong> version for our <code class="docutils literal notranslate"><span class="pre">CUDA.jl</span></code> library. Let’s do it by running the following command:</p></li>
 </ul>
 <div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">julia</span><span class="o">&gt;</span><span class="w"> </span><span class="n">CUDA</span><span class="o">.</span><span class="n">set_runtime_version!</span><span class="p">(</span><span class="sa">v</span><span class="s">&quot;12.0&quot;</span><span class="p">)</span>
 </pre></div>
@@ -673,7 +752,7 @@ A_i := A_{N - i + 1}, \textrm{with } i = 1, \ldots, N/2
 <p>This is the SLURM batch script to setup and precompile your Julia environment and launch Julia CODE on a P100 on tuckoo:</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="ch">#!/bin/sh</span>
 <span class="linenos"> 2</span>
-<span class="linenos"> 3</span><span class="c1">#note: run julia hello-world on a single node</span>
+<span class="linenos"> 3</span><span class="c1">#note: run julia CUDA copy array a single node</span>
 <span class="linenos"> 4</span>
 <span class="linenos"> 5</span><span class="c1">#SBATCH --job-name=add_cu</span>
 <span class="linenos"> 6</span><span class="c1">#SBATCH --output=%A-add_cu.out</span>
@@ -709,6 +788,70 @@ Test<span class="w"> </span>Summary:<span class="w"> </span><span class="p">|</s
 CopyCuArray<span class="w">   </span><span class="p">|</span><span class="w">    </span><span class="m">1</span><span class="w">      </span><span class="m">1</span><span class="w">  </span><span class="m">1</span>.0s
 </pre></div>
 </div>
+</section>
+</section>
+<section id="parallel-julia-cuda">
+<h2>3. Parallel Julia CUDA<a class="headerlink" href="#parallel-julia-cuda" title="Link to this heading">#</a></h2>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<ul class="simple">
+<li><p><strong>Reference</strong>: <a class="reference external" href="https://cuda.juliagpu.org/v2.5/tutorials/introduction/">CUDA.jl tutorials</a></p></li>
+</ul>
+</div>
+<section id="tasks-and-threads">
+<h3><a class="reference external" href="https://cuda.juliagpu.org/stable/usage/multitasking/">Tasks and threads</a><a class="headerlink" href="#tasks-and-threads" title="Link to this heading">#</a></h3>
+<p>CUDA.jl can be used with Julia tasks and threads, offering a convenient way to work with multiple devices, or to perform independent computations that may execute concurrently on the GPU.</p>
+<section id="task-based-programming">
+<h4>Task-based programming<a class="headerlink" href="#task-based-programming" title="Link to this heading">#</a></h4>
+<p>Each Julia task gets its own local CUDA execution environment, with its own stream, library handles, and active device selection. That makes it easy to use one task per device, or to use tasks for independent operations that can be overlapped. At the same time, it’s important to take care when sharing data between tasks.</p>
+<p>For example, let’s take some dummy expensive computation and execute it from two tasks:</p>
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="c"># an expensive computation</span>
+<span class="linenos"> 2</span><span class="k">function</span><span class="w"> </span><span class="n">compute</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">)</span>
+<span class="linenos"> 3</span><span class="w">    </span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">b</span><span class="w">             </span><span class="c"># library call</span>
+<span class="linenos"> 4</span><span class="w">    </span><span class="n">broadcast!</span><span class="p">(</span><span class="n">sin</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="p">)</span><span class="w"> </span><span class="c"># Julia kernel</span>
+<span class="linenos"> 5</span><span class="w">    </span><span class="n">c</span>
+<span class="linenos"> 6</span><span class="k">end</span>
+<span class="linenos"> 7</span>
+<span class="linenos"> 8</span><span class="k">function</span><span class="w"> </span><span class="n">run</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">)</span>
+<span class="linenos"> 9</span><span class="w">    </span><span class="n">results</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">Vector</span><span class="p">{</span><span class="kt">Any</span><span class="p">}(</span><span class="nb">undef</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
+<span class="linenos">10</span>
+<span class="linenos">11</span><span class="w">    </span><span class="c"># computation</span>
+<span class="linenos">12</span><span class="w">    </span><span class="nd">@sync</span><span class="w"> </span><span class="k">begin</span>
+<span class="linenos">13</span><span class="w">        </span><span class="nd">@async</span><span class="w"> </span><span class="k">begin</span>
+<span class="linenos">14</span><span class="w">            </span><span class="n">results</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">Array</span><span class="p">(</span><span class="n">compute</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">))</span>
+<span class="linenos">15</span><span class="w">            </span><span class="nb">nothing</span><span class="w"> </span><span class="c"># JuliaLang/julia#40626</span>
+<span class="linenos">16</span><span class="w">        </span><span class="k">end</span>
+<span class="linenos">17</span><span class="w">        </span><span class="nd">@async</span><span class="w"> </span><span class="k">begin</span>
+<span class="linenos">18</span><span class="w">            </span><span class="n">results</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">Array</span><span class="p">(</span><span class="n">compute</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">))</span>
+<span class="linenos">19</span><span class="w">            </span><span class="nb">nothing</span><span class="w"> </span><span class="c"># JuliaLang/julia#40626</span>
+<span class="linenos">20</span><span class="w">        </span><span class="k">end</span>
+<span class="linenos">21</span><span class="w">    </span><span class="k">end</span>
+<span class="linenos">22</span>
+<span class="linenos">23</span><span class="w">    </span><span class="c"># comparison</span>
+<span class="linenos">24</span><span class="w">    </span><span class="n">results</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">results</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+<span class="linenos">25</span><span class="k">end</span>
+<span class="linenos">26</span>
+<span class="linenos">27</span><span class="c"># main function</span>
+<span class="linenos">28</span><span class="k">function</span><span class="w"> </span><span class="n">main</span><span class="p">(</span><span class="n">N</span><span class="o">=</span><span class="mi">1024</span><span class="p">)</span>
+<span class="linenos">29</span><span class="w">    </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">CUDA</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">N</span><span class="p">,</span><span class="n">N</span><span class="p">)</span>
+<span class="linenos">30</span><span class="w">    </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">CUDA</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">N</span><span class="p">,</span><span class="n">N</span><span class="p">)</span>
+<span class="linenos">31</span>
+<span class="linenos">32</span><span class="w">    </span><span class="c"># make sure this data can be used by other tasks!</span>
+<span class="linenos">33</span><span class="w">    </span><span class="n">synchronize</span><span class="p">()</span>
+<span class="linenos">34</span>
+<span class="linenos">35</span><span class="w">    </span><span class="n">run</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">)</span>
+<span class="linenos">36</span><span class="k">end</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>In the above example, we create two tasks and re-synchronize afterwards (<code class="docutils literal notranslate"><span class="pre">&#64;async</span></code> and <code class="docutils literal notranslate"><span class="pre">&#64;sync</span></code>), while the dummy compute function demonstrates both the use of a library (matrix multiplication uses CUBLAS) and a native Julia kernel.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">main</span></code> function illustrates how we need to take care when sharing data between tasks:</p>
+<ul>
+<li><p>GPU operations typically execute <strong>asynchronously</strong>, queued on an execution stream, so if we switch tasks and thus switch execution streams we need to <code class="docutils literal notranslate"><span class="pre">synchronize()</span></code> to ensure the data is actually available.</p></li>
+</ul>
+</li>
+</ul>
+</section>
 </section>
 </section>
 </section>
@@ -772,11 +915,27 @@ CopyCuArray<span class="w">   </span><span class="p">|</span><span class="w">   
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#add-vectors">Add vectors</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-with-cuda-jl">Example with CUDA.jl</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#memory-management">Memory management</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reverse-vectors">Reverse vectors</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reverse-vectors">Reverse vectors?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cuda-jl-api-overview">CUDA.jl API Overview</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cuda-jl-kernel-programming">CUDA.jl kernel programming</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#defining-and-launching-kernels">Defining and launching kernels</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#kernel-inputs-and-outputs">Kernel inputs and outputs</a></li>
+</ul>
+</li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#launch-configuration-and-indexing">Launch configuration and indexing</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cuda-julia-code-on-the-tuckoo-cluster">2. CUDA Julia code on the tuckoo cluster</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#launching-a-cuda-jl-code-with-slurm">2.1 Launching a CUDA.jl code with SLURM</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parallel-julia-cuda">3. Parallel Julia CUDA</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tasks-and-threads">Tasks and threads</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#task-based-programming">Task-based programming</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
