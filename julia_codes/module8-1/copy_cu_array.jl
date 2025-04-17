@@ -1,13 +1,19 @@
 using CUDA
+using Test # to be able to use the @test macro
 
-# generate some data on the CPU (host array, h_array)
-h_array = rand(Float32, 1024)
+@testset "CopyCuArray" begin
+    print("Begin test. \n")
 
-# allocate on the GPU (device array, d_array)
-d_array = CuArray{Float32}(undef, 1024)
+    # generate some data on the CPU (host array, h_array)
+    h_array = rand(Float32, 1024)
 
-# copy from the CPU to the GPU
-copyto!(d_array, h_array)
+    # allocate on the GPU (device array, d_array)
+    d_array = CuArray{Float32}(undef, 1024)
 
-# download/transfer back to the CPU and verify using the Array casting of the device array
-@test h_array == Array(d_array)
+    # copy from the CPU to the GPU
+    copyto!(d_array, h_array)
+
+    # download/transfer back to the CPU and verify using the Array casting of the device array
+    @test h_array == Array(d_array)
+    print("Test ended. \n")
+end

@@ -1,0 +1,22 @@
+#!/bin/sh
+
+#note: run julia hello-world on a single node
+
+#SBATCH --job-name=add_cu
+#SBATCH --output=%A-add_cu.out
+#SBATCH --ntasks=16
+#SBATCH --constraint=P100
+
+export OMPI_MCA_pml=ob1
+export OMPI_MCA_btl=tcp,self
+
+#require tcp over infiniband
+export OMPI_MCA_btl_tcp_if_include ib0
+
+julia --project=. -e 'using Pkg; Pkg.instantiate()'
+julia --project=. -e 'using Pkg; Pkg.precompile()'
+julia --project=. -e 'using Pkg; Pkg.status()'
+
+julia copy_cu_array.jl
+
+#-------------------------------------------------------------
