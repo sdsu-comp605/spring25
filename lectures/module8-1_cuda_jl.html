@@ -622,23 +622,43 @@ A_i := A_{N - i + 1}, \textrm{with } i = 1, \ldots, N
 <li><p>To communicate values from a kernel, you can use a <code class="docutils literal notranslate"><span class="pre">CuArray</span></code>:</p></li>
 </ul>
 <p>Example:</p>
-<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="k">function</span><span class="w"> </span><span class="n">my_kernel</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="k">using</span><span class="w"> </span><span class="n">CUDA</span>
+
+<span class="k">function</span><span class="w"> </span><span class="n">my_kernel</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
 <span class="w">    </span><span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">42</span>
 <span class="w">    </span><span class="k">return</span>
 <span class="k">end</span>
 </pre></div>
 </div>
-<p>Then you can launch it via:</p>
-<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">julia</span><span class="o">&gt;</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">CuArray</span><span class="p">{</span><span class="kt">Int</span><span class="p">}(</span><span class="nb">undef</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>my_kernel (generic function with 1 method)
 </pre></div>
 </div>
-<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">julia</span><span class="o">&gt;</span><span class="w"> </span><span class="nd">@cuda</span><span class="w"> </span><span class="n">my_kernel</span><span class="p">(</span><span class="n">a</span><span class="p">);</span>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">CuArray</span><span class="p">{</span><span class="kt">Int</span><span class="p">}(</span><span class="nb">undef</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
 </pre></div>
 </div>
-<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">julia</span><span class="o">&gt;</span><span class="w"> </span><span class="n">a</span>
-<span class="mi">1</span><span class="o">-</span><span class="n">element</span><span class="w"> </span><span class="kt">CuArray</span><span class="p">{</span><span class="kt">Int64</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="kt">CUDA</span><span class="o">.</span><span class="kt">DeviceMemory</span><span class="p">}</span><span class="o">:</span>
-<span class="w"> </span><span class="mi">42</span>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="nd">@cuda</span><span class="w"> </span><span class="n">my_kernel</span><span class="p">(</span><span class="n">a</span><span class="p">);</span>
+<span class="n">a</span>
 </pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1-element CuArray{Int64, 1, CUDA.DeviceMemory}:
+ 42
+</pre></div>
+</div>
+</div>
 </div>
 </section>
 </section>
@@ -647,6 +667,33 @@ A_i := A_{N - i + 1}, \textrm{with } i = 1, \ldots, N
 <ul class="simple">
 <li><p>Simply using <code class="docutils literal notranslate"><span class="pre">&#64;cuda</span></code> only launches a <em>single thread</em>, which is not very useful. To launch more threads, use the <code class="docutils literal notranslate"><span class="pre">threads</span></code> and <code class="docutils literal notranslate"><span class="pre">blocks</span></code> keyword arguments to <code class="docutils literal notranslate"><span class="pre">&#64;cuda</span></code>. Example:</p></li>
 </ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="k">function</span><span class="w"> </span><span class="n">my_kernel</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+<span class="w">    </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">threadIdx</span><span class="p">()</span><span class="o">.</span><span class="n">x</span>
+<span class="w">    </span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">42</span>
+<span class="w">    </span><span class="k">return</span>
+<span class="k">end</span>
+
+<span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">CuArray</span><span class="p">{</span><span class="kt">Int</span><span class="p">}(</span><span class="nb">undef</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">);</span>
+
+<span class="nd">@cuda</span><span class="w"> </span><span class="n">threads</span><span class="o">=</span><span class="n">length</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="w"> </span><span class="n">my_kernel</span><span class="p">(</span><span class="n">a</span><span class="p">);</span>
+
+<span class="n">a</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>5-element CuArray{Int64, 1, CUDA.DeviceMemory}:
+ 42
+ 42
+ 42
+ 42
+ 42
+</pre></div>
+</div>
+</div>
+</div>
 </section>
 </section>
 </section>
@@ -804,7 +851,7 @@ CopyCuArray<span class="w">   </span><span class="p">|</span><span class="w">   
 <p>CUDA.jl can be used with Julia tasks and threads, offering a convenient way to work with multiple devices, or to perform independent computations that may execute concurrently on the GPU.</p>
 <section id="task-based-programming">
 <h4>Task-based programming<a class="headerlink" href="#task-based-programming" title="Link to this heading">#</a></h4>
-<p>Each Julia task gets its own local CUDA execution environment, with its own stream, library handles, and active device selection. That makes it easy to use one task per device, or to use tasks for independent operations that can be overlapped. At the same time, it’s important to take care when sharing data between tasks.</p>
+<p>Each Julia task gets its own local CUDA execution environment, with its own <a class="reference external" href="https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html?highlight=stream#asynchronous-and-overlapping-transfers-with-computation">stream</a>, library handles, and active device selection. That makes it easy to use one task per device, or to use tasks for independent operations that can be overlapped. At the same time, it’s important to take care when sharing data between tasks.</p>
 <p>For example, let’s take some dummy expensive computation and execute it from two tasks:</p>
 <div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="c"># an expensive computation</span>
 <span class="linenos"> 2</span><span class="k">function</span><span class="w"> </span><span class="n">compute</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">)</span>
@@ -844,12 +891,13 @@ CopyCuArray<span class="w">   </span><span class="p">|</span><span class="w">   
 <span class="linenos">36</span><span class="k">end</span>
 </pre></div>
 </div>
-<ul class="simple">
+<ul>
 <li><p>In the above example, we create two tasks and re-synchronize afterwards (<code class="docutils literal notranslate"><span class="pre">&#64;async</span></code> and <code class="docutils literal notranslate"><span class="pre">&#64;sync</span></code>), while the dummy compute function demonstrates both the use of a library (matrix multiplication uses CUBLAS) and a native Julia kernel.</p></li>
 <li><p>The <code class="docutils literal notranslate"><span class="pre">main</span></code> function illustrates how we need to take care when sharing data between tasks:</p>
-<ul>
-<li><p>GPU operations typically execute <strong>asynchronously</strong>, queued on an execution stream, so if we switch tasks and thus switch execution streams we need to <code class="docutils literal notranslate"><span class="pre">synchronize()</span></code> to ensure the data is actually available.</p></li>
+<ul class="simple">
+<li><p>GPU operations typically execute <strong>asynchronously</strong>, queued on an execution stream*, so if we switch tasks and thus switch execution streams we need to <code class="docutils literal notranslate"><span class="pre">synchronize()</span></code> to ensure the data is actually available.</p></li>
 </ul>
+<p>** : A <em>stream</em> is simply a sequence of operations that are performed in order on the device.</p>
 </li>
 </ul>
 </section>
@@ -977,16 +1025,16 @@ CopyCuArray<span class="w">   </span><span class="p">|</span><span class="w">   
         },
         codeMirrorConfig: {
             theme: "abcdef",
-            mode: "python"
+            mode: "julia-1.10"
         },
         kernelOptions: {
-            name: "python3",
+            name: "julia-1.10",
             path: "./lectures"
         },
         predefinedOutput: true
     }
     </script>
-    <script>kernelName = 'python3'</script>
+    <script>kernelName = 'julia-1.10'</script>
 
                 </article>
               
