@@ -1,0 +1,1045 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>29) Memory management with CUDA.jl &#8212; Scientific Computing</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'lectures/module8-2_cuda_jl_memory';</script>
+    <link rel="icon" href="../_static/SDSU-comp605_logo.svg"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="28) Intro to GPU programming in Julia" href="module8-1_cuda_jl.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/SDSU-comp605_logo.svg" class="logo__image only-light" alt="Scientific Computing - Home"/>
+    <script>document.write(`<img src="../_static/SDSU-comp605_logo.svg" class="logo__image only-dark" alt="Scientific Computing - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../index.html">
+                    Welcome
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../syllabus.html">Syllabus</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../lectures.html">Lectures</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="module1-1_first_class.html">1) First Class: Reproducibility and Git</a></li>
+
+
+<li class="toctree-l2"><a class="reference internal" href="module1-2_linux.html">2) The Linux Filesystem and commands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module1-3_community_projects.html">3) Community Projects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module1-4_intro_architectures.html">4) Introduction to Computer Architectures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module1-5_intro_vectorization.html">5) Introduction to Vectorization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module2-1_measuring_performance.html">6) Measuring Performance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module2-2_cpu_optimization.html">7) CPU Optimization: Matrix-Matrix Multiply</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module2-3_blocked_mmm.html">8) Blocked Matrix-Matrix Multiplication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module2-4_packing_for_cache.html">9) Packing for cache</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module2-5_intro_multithreading.html">10) Introduction to Multithreading</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module3-1_intro_parallel_scaling.html">11) Introduction to Parallel Scaling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module3-2_intro_to_openmp.html">12) Introduction to OpenMP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module3-3_openmp_tasks.html">13) More on OpenMP and OpenMP Tasks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module4-1_case_study_1_libceed.html">14) Case Study 1: libCEED</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module4-2_case_study_2_climacore.html">15) Case Study 2: ClimaCore</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hw2_notebook.html">16) HW2 solution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module5-1_reductions_and_scans.html">17) Parallel reductions and scans</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module5-2_intro_to_mpi.html">18) Introduction to MPI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module5-3_intro_to_slurm.html">19) Introduction to Batch Jobs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module5-4_parallel_linear_alegebra.html">20) Parallel Linear Algebra</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module6-1_intro_to_mpi_jl.html">21) Introduction to MPI.jl</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module6-2_blocking_vs_nonblocking.html">22) Blocking and non-blocking communication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module6-3_collectives.html">23) Collective communication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hw3_solution.html">24) HW3 solution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module7-1_coprocessors.html">25) Coprocessor architectures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module7-2_cuda.html">26) GPUs and CUDA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module7-3_practical_cuda.html">27) Practical CUDA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module8-1_cuda_jl.html">28) Intro to GPU programming in Julia</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">29) Memory management with CUDA.jl</a></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li>
+<button onclick="initThebeSBT()"
+  class="btn btn-sm btn-launch-thebe dropdown-item"
+  title="Launch Thebe"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-play"></i>
+  </span>
+<span class="btn__text-container">Live Code</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/sdsu-comp605/spring25" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/sdsu-comp605/spring25/issues/new?title=Issue%20on%20page%20%2Flectures/module8-2_cuda_jl_memory.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/lectures/module8-2_cuda_jl_memory.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>29) Memory management with CUDA.jl</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#outline">1. Outline</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-statement">2. Problem statement:</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a-typical-gpu-porting-workflow">A typical GPU-porting workflow</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#scalar-indexing">Scalar indexing</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#simple-kernels-using-global-memory">3. Simple kernels using global memory</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#simple-kernels-using-shared-local-memory">3. Simple kernels using shared/local memory</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#instruction-level-parallelism-both-with-and-without-local-memory">4. Instruction Level Parallelism (both with and without local memory)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bank-conflicts">5. Bank Conflicts</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="memory-management-with-cuda-jl">
+<h1>29) Memory management with CUDA.jl<a class="headerlink" href="#memory-management-with-cuda-jl" title="Link to this heading">#</a></h1>
+<p>Last time:</p>
+<ul class="simple">
+<li><p>Introduction to CUDA.jl</p></li>
+</ul>
+<p>Today:</p>
+<ol class="arabic simple">
+<li><p>Outline</p></li>
+<li><p>Problem statement</p></li>
+<li><p>Simple kernels using global memory</p></li>
+<li><p>Simple kernels using shared/local memory</p></li>
+<li><p>Instruction Level Parallelism (both with and without local memory)</p></li>
+<li><p>Bank Conflicts</p></li>
+</ol>
+<section id="outline">
+<h2>1. Outline<a class="headerlink" href="#outline" title="Link to this heading">#</a></h2>
+<p>In this lecture, we will use efficient matrix transpose on the GPU as an example to illustrate:</p>
+<ul class="simple">
+<li><p>global memory access (<code class="docutils literal notranslate"><span class="pre">CuArrays</span></code>)</p></li>
+<li><p>shared memory usage (<code class="docutils literal notranslate"><span class="pre">&#64;cuStaticSharedMem</span></code>)</p></li>
+<li><p>memory bank conflicts</p></li>
+<li><p>instruction level parallelism</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>References:</p>
+<ul class="simple">
+<li><p>We will follow the outlines of <a class="reference external" href="https://devblogs.nvidia.com/parallelforall/efficient-matrix-transpose-cuda-cc/">An Efficient Matrix Transpose in CUDA C/C++</a>
+by Mark Harris. Though this is an example in CUDA C, the strategy follows
+through directly in Julia as well.</p></li>
+<li><p>We will also reference <a class="reference external" href="https://devblogs.nvidia.com/parallelforall/how-access-global-memory-efficiently-cuda-c-kernels/">How to Access Global Memory Efficiently in CUDA C/C++ Kernels</a>.</p></li>
+</ul>
+</div>
+<p>The code for the matrix transpose can be found in <a class="reference external" href="https://github.com/sdsu-comp605/spring25/blob/main/julia_codes/module8-2/transpose.jl">julia_codes/module8-2/transpose.jl</a></p>
+</section>
+<section id="problem-statement">
+<h2>2. Problem statement:<a class="headerlink" href="#problem-statement" title="Link to this heading">#</a></h2>
+<p>To do an efficient matrix transpose,
+<div class="math notranslate nohighlight">
+\[
+Y = X^T, 
+\]</div>
+
+on the GPU, we will be looking at two operations:</p>
+<ul class="simple">
+<li><p><strong>copy</strong>: <code class="docutils literal notranslate"><span class="pre">y[i,</span> <span class="pre">j]</span> <span class="pre">=</span> <span class="pre">x[i,</span> <span class="pre">j]</span></code></p>
+<ul>
+<li><p>Coalesced memory access on the read and write</p></li>
+</ul>
+</li>
+<li><p><strong>transpose</strong>: <code class="docutils literal notranslate"><span class="pre">y[j,</span> <span class="pre">i]</span> <span class="pre">=</span> <span class="pre">x[i,</span> <span class="pre">j]</span></code></p>
+<ul>
+<li><p>Coalesced memory access on the read but not the write</p></li>
+<li><p>Coalesced memory access on the write but not the read</p></li>
+</ul>
+</li>
+</ul>
+<p>But before doing that, we need to talk about array indexing.</p>
+<section id="a-typical-gpu-porting-workflow">
+<h3>A typical GPU-porting workflow<a class="headerlink" href="#a-typical-gpu-porting-workflow" title="Link to this heading">#</a></h3>
+<p>A typical approach for porting or developing an application for the GPU is as follows:</p>
+<ol class="arabic simple">
+<li><p>develop an application using generic array functionality, and test it on the CPU with the Array type</p></li>
+<li><p>port your application to the GPU by switching to the CuArray type</p></li>
+<li><p>disallow the CPU fallback (“scalar indexing”) to find operations that are not implemented for or incompatible with GPU execution</p></li>
+<li><p>(optional) use lower-level, CUDA-specific interfaces to implement missing functionality or optimize performance</p></li>
+</ol>
+</section>
+<section id="scalar-indexing">
+<h3>Scalar indexing<a class="headerlink" href="#scalar-indexing" title="Link to this heading">#</a></h3>
+<p>Many array operations in Julia are implemented using loops, processing one element at a time.</p>
+<p>Doing so with GPU arrays is <em>very ineffective</em>, as the loop won’t actually execute on the GPU, but transfer one element at a time and process it on the CPU. As this wrecks performance, you will be warned when performing this kind of iteration with the following error message:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="k">using</span><span class="w"> </span><span class="n">CUDA</span>
+
+<span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">CuArray</span><span class="p">([</span><span class="mi">1</span><span class="p">])</span>
+
+<span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">1</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold -Color-Bold-Yellow">┌ Warning: </span>Performing scalar indexing on task Task (runnable) @0x000076db7e7a07e0.
+<span class=" -Color -Color-Bold -Color-Bold-Yellow">│ </span>Invocation of getindex resulted in scalar indexing of a GPU array.
+<span class=" -Color -Color-Bold -Color-Bold-Yellow">│ </span>This is typically caused by calling an iterating implementation of a method.
+<span class=" -Color -Color-Bold -Color-Bold-Yellow">│ </span>Such implementations *do not* execute on the GPU, but very slowly on the CPU,
+<span class=" -Color -Color-Bold -Color-Bold-Yellow">│ </span>and therefore should be avoided.
+<span class=" -Color -Color-Bold -Color-Bold-Yellow">│ </span>
+<span class=" -Color -Color-Bold -Color-Bold-Yellow">│ </span>If you want to allow scalar iteration, use `allowscalar` or `@allowscalar`
+<span class=" -Color -Color-Bold -Color-Bold-Yellow">│ </span>to enable scalar iteration globally or for the operations in question.
+<span class=" -Color -Color-Bold -Color-Bold-Yellow">└ </span>@ GPUArraysCore ~/.julia/packages/GPUArraysCore/aNaXo/src/GPUArraysCore.jl:145
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2
+</pre></div>
+</div>
+</div>
+</div>
+<p>Scalar indexing is only allowed in an interactive session, e.g. the REPL, because it is convenient when porting CPU code to the GPU and for debugging purposes.</p>
+<p>If you want to disallow scalar indexing, e.g. to verify that your application executes correctly on the GPU, call the <code class="docutils literal notranslate"><span class="pre">allowscalar</span></code> function:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">CUDA</span><span class="o">.</span><span class="n">allowscalar</span><span class="p">(</span><span class="nb">false</span><span class="p">)</span>
+
+<span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">.+</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="c"># this will error again</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="n">Scalar</span> <span class="n">indexing</span> <span class="ow">is</span> <span class="n">disallowed</span><span class="o">.</span>
+<span class="n">Invocation</span> <span class="n">of</span> <span class="n">getindex</span> <span class="n">resulted</span> <span class="ow">in</span> <span class="n">scalar</span> <span class="n">indexing</span> <span class="n">of</span> <span class="n">a</span> <span class="n">GPU</span> <span class="n">array</span><span class="o">.</span>
+<span class="n">This</span> <span class="ow">is</span> <span class="n">typically</span> <span class="n">caused</span> <span class="n">by</span> <span class="n">calling</span> <span class="n">an</span> <span class="n">iterating</span> <span class="n">implementation</span> <span class="n">of</span> <span class="n">a</span> <span class="n">method</span><span class="o">.</span>
+<span class="n">Such</span> <span class="n">implementations</span> <span class="o">*</span><span class="n">do</span> <span class="ow">not</span><span class="o">*</span> <span class="n">execute</span> <span class="n">on</span> <span class="n">the</span> <span class="n">GPU</span><span class="p">,</span> <span class="n">but</span> <span class="n">very</span> <span class="n">slowly</span> <span class="n">on</span> <span class="n">the</span> <span class="n">CPU</span><span class="p">,</span>
+<span class="ow">and</span> <span class="n">therefore</span> <span class="n">should</span> <span class="n">be</span> <span class="n">avoided</span><span class="o">.</span>
+
+<span class="n">If</span> <span class="n">you</span> <span class="n">want</span> <span class="n">to</span> <span class="n">allow</span> <span class="n">scalar</span> <span class="n">iteration</span><span class="p">,</span> <span class="n">use</span> <span class="err">`</span><span class="n">allowscalar</span><span class="err">`</span> <span class="ow">or</span> <span class="err">`</span><span class="nd">@allowscalar</span><span class="err">`</span>
+<span class="n">to</span> <span class="n">enable</span> <span class="n">scalar</span> <span class="n">iteration</span> <span class="n">globally</span> <span class="ow">or</span> <span class="k">for</span> <span class="n">the</span> <span class="n">operations</span> <span class="ow">in</span> <span class="n">question</span><span class="o">.</span>
+
+<span class="ne">Stacktrace</span>:
+ <span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="n">error</span><span class="p">(</span><span class="n">s</span><span class="p">::</span><span class="n">String</span><span class="p">)</span>
+   <span class="o">@</span> <span class="n">Base</span> <span class="o">./</span><span class="n">error</span><span class="o">.</span><span class="n">jl</span><span class="p">:</span><span class="mi">35</span>
+ <span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="n">errorscalar</span><span class="p">(</span><span class="n">op</span><span class="p">::</span><span class="n">String</span><span class="p">)</span>
+   <span class="o">@</span> <span class="n">GPUArraysCore</span> <span class="o">~/.</span><span class="n">julia</span><span class="o">/</span><span class="n">packages</span><span class="o">/</span><span class="n">GPUArraysCore</span><span class="o">/</span><span class="n">aNaXo</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">GPUArraysCore</span><span class="o">.</span><span class="n">jl</span><span class="p">:</span><span class="mi">151</span>
+ <span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="n">_assertscalar</span><span class="p">(</span><span class="n">op</span><span class="p">::</span><span class="n">String</span><span class="p">,</span> <span class="n">behavior</span><span class="p">::</span><span class="n">GPUArraysCore</span><span class="o">.</span><span class="n">ScalarIndexing</span><span class="p">)</span>
+   <span class="o">@</span> <span class="n">GPUArraysCore</span> <span class="o">~/.</span><span class="n">julia</span><span class="o">/</span><span class="n">packages</span><span class="o">/</span><span class="n">GPUArraysCore</span><span class="o">/</span><span class="n">aNaXo</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">GPUArraysCore</span><span class="o">.</span><span class="n">jl</span><span class="p">:</span><span class="mi">124</span>
+ <span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="n">assertscalar</span><span class="p">(</span><span class="n">op</span><span class="p">::</span><span class="n">String</span><span class="p">)</span>
+   <span class="o">@</span> <span class="n">GPUArraysCore</span> <span class="o">~/.</span><span class="n">julia</span><span class="o">/</span><span class="n">packages</span><span class="o">/</span><span class="n">GPUArraysCore</span><span class="o">/</span><span class="n">aNaXo</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">GPUArraysCore</span><span class="o">.</span><span class="n">jl</span><span class="p">:</span><span class="mi">112</span>
+ <span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="n">getindex</span><span class="p">(</span><span class="n">A</span><span class="p">::</span><span class="n">CuArray</span><span class="p">{</span><span class="n">Int64</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">CUDA</span><span class="o">.</span><span class="n">DeviceMemory</span><span class="p">},</span> <span class="n">I</span><span class="p">::</span><span class="n">Int64</span><span class="p">)</span>
+   <span class="o">@</span> <span class="n">GPUArrays</span> <span class="o">~/.</span><span class="n">julia</span><span class="o">/</span><span class="n">packages</span><span class="o">/</span><span class="n">GPUArrays</span><span class="o">/</span><span class="n">sBzM5</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">host</span><span class="o">/</span><span class="n">indexing</span><span class="o">.</span><span class="n">jl</span><span class="p">:</span><span class="mi">50</span>
+ <span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="n">top</span><span class="o">-</span><span class="n">level</span> <span class="n">scope</span>
+   <span class="o">@</span> <span class="n">In</span><span class="p">[</span><span class="mi">2</span><span class="p">]:</span><span class="mi">3</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="c"># but this will work:</span>
+
+<span class="n">a</span><span class="w"> </span><span class="o">.+</span><span class="w"> </span><span class="mi">1</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>In a non-interactive session, e.g. when running code from a script or application, scalar indexing is <em>disallowed by default</em>.</p>
+<p>There is no global toggle to allow scalar indexing; if you really need it, you can mark expressions using <code class="docutils literal notranslate"><span class="pre">allowscalar</span></code> with do-block syntax or <code class="docutils literal notranslate"><span class="pre">&#64;allowscalar</span></code> macro:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">CuArray</span><span class="p">([</span><span class="mi">1</span><span class="p">])</span>
+
+<span class="n">CUDA</span><span class="o">.</span><span class="n">allowscalar</span><span class="p">()</span><span class="w"> </span><span class="k">do</span>
+<span class="w">    </span><span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">  </span><span class="k">end</span>
+
+<span class="n">a</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">CUDA</span><span class="o">.</span><span class="nd">@allowscalar</span><span class="w"> </span><span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">1</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="simple-kernels-using-global-memory">
+<h2>3. Simple kernels using global memory<a class="headerlink" href="#simple-kernels-using-global-memory" title="Link to this heading">#</a></h2>
+<p>Recall that <strong>global memory</strong> resides in device memory and device memory is accessed via 32-, 64-, or 128-byte memory transactions. These memory transactions must be naturally aligned: Only the 32-, 64-, or 128-byte segments of device memory that are aligned to their size (i.e., whose first address is a multiple of their size) can be read or written by memory transactions.</p>
+<p>Examples of global memory accesses:</p>
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="c"># Simple routines using global memory</span>
+<span class="k">function</span><span class="w"> </span><span class="n">copy_naive!</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="p">)</span>
+<span class="w">  </span><span class="n">N</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+<span class="w">  </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">blockIdx</span><span class="p">()</span><span class="o">.</span><span class="n">x</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">TILE_DIM</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">threadIdx</span><span class="p">()</span><span class="o">.</span><span class="n">x</span>
+<span class="w">  </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">blockIdx</span><span class="p">()</span><span class="o">.</span><span class="n">y</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">TILE_DIM</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">threadIdx</span><span class="p">()</span><span class="o">.</span><span class="n">y</span>
+
+<span class="w">  </span><span class="nd">@inbounds</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">N</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">N</span>
+<span class="w">    </span><span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">]</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="w">  </span><span class="nb">nothing</span>
+<span class="k">end</span>
+
+<span class="k">function</span><span class="w"> </span><span class="n">transpose_naive!</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="p">)</span>
+<span class="w">  </span><span class="n">N</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+<span class="w">  </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">blockIdx</span><span class="p">()</span><span class="o">.</span><span class="n">x</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">TILE_DIM</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">threadIdx</span><span class="p">()</span><span class="o">.</span><span class="n">x</span>
+<span class="w">  </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">blockIdx</span><span class="p">()</span><span class="o">.</span><span class="n">y</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">TILE_DIM</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">threadIdx</span><span class="p">()</span><span class="o">.</span><span class="n">y</span>
+
+<span class="w">  </span><span class="nd">@inbounds</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">N</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">N</span>
+<span class="w">    </span><span class="n">b</span><span class="p">[</span><span class="n">j</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">]</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="w">  </span><span class="nb">nothing</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</section>
+<section id="simple-kernels-using-shared-local-memory">
+<h2>3. Simple kernels using shared/local memory<a class="headerlink" href="#simple-kernels-using-shared-local-memory" title="Link to this heading">#</a></h2>
+<p>CUDA allows us to allocate shared memory which all threads in a thread block can access.</p>
+<p>Shared memory is a fast, on-chip memory that is accessible by all threads within a single CUDA thread block. It’s designed to facilitate efficient data sharing between threads within a block.</p>
+<p>By using shared memory we can have <em>coalesced</em> reads and writes from global memory (reads from shared memory may not be coalesced: see <a class="reference internal" href="#bank-conflicts"><span class="xref myst">Bank Conflicts</span></a> below).</p>
+<p>The syntax for shared memory is <code class="docutils literal notranslate"><span class="pre">cuStaticSharedMem</span></code> and for convenience is as a double array:</p>
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">tile</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nd">@cuStaticSharedMem</span><span class="p">(</span><span class="kt">Float64</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">SIZE_X</span><span class="p">,</span><span class="w"> </span><span class="n">SIZE_Y</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>where the first index is the continuous/fastest index, e.g.,</p>
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">tile</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">]</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">loc_x</span><span class="p">[</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">SIZE_X</span><span class="p">]</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Access to local memory on the GPU is faster than global memory (though not as fast as registers).</p></li>
+</ul>
+<p><strong>Note</strong>: The size of the array <code class="docutils literal notranslate"><span class="pre">SIZE_X</span></code> and <code class="docutils literal notranslate"><span class="pre">SIZE_Y</span></code> must be known at <strong>compile time</strong>, thus it must be either a global constant or passed into the kernel through a <code class="docutils literal notranslate"><span class="pre">Val</span></code> (recall that we have seen this in <a class="reference external" href="https://sdsu-comp605.github.io/spring25/lectures/module2-3_blocked_mmm.html#compile-time-constants-val">lecture 8</a>) or see the documentation <code class="docutils literal notranslate"><span class="pre">?Val</span></code> for how to pass constants through to functions at compile time.</p>
+<p><strong>Strategy</strong>: Load data first into the local shared memory, then write out from local shared memory to global memory (so that both the reads and writes are coalesced into global memory)</p>
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="cm">#=</span>
+<span class="cm">Simple routines using shared memory</span>
+<span class="cm">Idea is that we first load a patch of x into shared memory then write out from</span>
+<span class="cm">shared memory</span>
+<span class="cm">=#</span>
+<span class="k">function</span><span class="w"> </span><span class="n">copy_shared!</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="p">)</span>
+<span class="w">  </span><span class="n">N</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+<span class="w">  </span><span class="n">tidx</span><span class="p">,</span><span class="w"> </span><span class="n">tidy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">threadIdx</span><span class="p">()</span><span class="o">.</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">threadIdx</span><span class="p">()</span><span class="o">.</span><span class="n">y</span>
+<span class="w">  </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">blockIdx</span><span class="p">()</span><span class="o">.</span><span class="n">x</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">TILE_DIM</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">tidx</span>
+<span class="w">  </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">blockIdx</span><span class="p">()</span><span class="o">.</span><span class="n">y</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">TILE_DIM</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">tidy</span>
+<span class="w">  </span><span class="n">tile</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nd">@cuStaticSharedMem</span><span class="p">(</span><span class="n">eltype</span><span class="p">(</span><span class="n">a</span><span class="p">),</span><span class="w"> </span><span class="p">(</span><span class="n">TILE_DIM</span><span class="p">,</span><span class="w"> </span><span class="n">TILE_DIM</span><span class="p">))</span>
+
+<span class="w">  </span><span class="nd">@inbounds</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">N</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">N</span>
+<span class="w">    </span><span class="n">tile</span><span class="p">[</span><span class="n">tidx</span><span class="p">,</span><span class="w"> </span><span class="n">tidy</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">]</span>
+<span class="w">  </span><span class="k">end</span>
+
+<span class="w">  </span><span class="n">sync_threads</span><span class="p">()</span>
+
+<span class="w">  </span><span class="nd">@inbounds</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">N</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">N</span>
+<span class="w">    </span><span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tile</span><span class="p">[</span><span class="n">tidx</span><span class="p">,</span><span class="w"> </span><span class="n">tidy</span><span class="p">]</span>
+<span class="w">  </span><span class="k">end</span>
+
+<span class="w">  </span><span class="nb">nothing</span>
+<span class="k">end</span>
+
+<span class="k">function</span><span class="w"> </span><span class="n">transpose_shared!</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="p">)</span>
+<span class="w">  </span><span class="n">N</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+<span class="w">  </span><span class="n">tidx</span><span class="p">,</span><span class="w"> </span><span class="n">tidy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">threadIdx</span><span class="p">()</span><span class="o">.</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">threadIdx</span><span class="p">()</span><span class="o">.</span><span class="n">y</span>
+<span class="w">  </span><span class="n">bidx</span><span class="p">,</span><span class="w"> </span><span class="n">bidy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">blockIdx</span><span class="p">()</span><span class="o">.</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">blockIdx</span><span class="p">()</span><span class="o">.</span><span class="n">y</span>
+<span class="w">  </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">bidx</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">TILE_DIM</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">tidx</span>
+<span class="w">  </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">bidy</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">TILE_DIM</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">tidy</span>
+<span class="w">  </span><span class="n">tile</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nd">@cuStaticSharedMem</span><span class="p">(</span><span class="n">eltype</span><span class="p">(</span><span class="n">a</span><span class="p">),</span><span class="w"> </span><span class="p">(</span><span class="n">TILE_DIM</span><span class="p">,</span><span class="w"> </span><span class="n">TILE_DIM</span><span class="p">))</span>
+
+<span class="w">  </span><span class="nd">@inbounds</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">N</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">N</span>
+<span class="w">    </span><span class="n">tile</span><span class="p">[</span><span class="n">tidx</span><span class="p">,</span><span class="w"> </span><span class="n">tidy</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">]</span>
+<span class="w">  </span><span class="k">end</span>
+
+<span class="w">  </span><span class="n">sync_threads</span><span class="p">()</span>
+
+<span class="w">  </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">bidy</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">TILE_DIM</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">tidx</span>
+<span class="w">  </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">bidx</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">TILE_DIM</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">tidy</span>
+
+<span class="w">  </span><span class="nd">@inbounds</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">N</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">N</span>
+<span class="w">    </span><span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tile</span><span class="p">[</span><span class="n">tidy</span><span class="p">,</span><span class="w"> </span><span class="n">tidx</span><span class="p">]</span>
+<span class="w">  </span><span class="k">end</span>
+
+<span class="w">  </span><span class="nb">nothing</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</section>
+<section id="instruction-level-parallelism-both-with-and-without-local-memory">
+<h2>4. Instruction Level Parallelism (both with and without local memory)<a class="headerlink" href="#instruction-level-parallelism-both-with-and-without-local-memory" title="Link to this heading">#</a></h2>
+<p>Instruction level parallelism is the ability of the hardware to execute (in parallel) multiple, independent instructions from the same thread; floating point operations take <code class="docutils literal notranslate"><span class="pre">~4</span> <span class="pre">cycles</span></code> before completing.</p>
+<ul class="simple">
+<li><p>Recall that NVIDIA architectures follow the “<a class="reference external" href="https://en.wikipedia.org/wiki/Single_instruction,_multiple_threads#"><strong>Single instruction, multiple threads (SIMT)</strong></a> paradigm to achieve instruction level parallelism.</p></li>
+</ul>
+<p>Ideas:</p>
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="c"># Non-parallel instructions</span>
+<span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">c</span><span class="p">;</span>
+<span class="c"># stall</span>
+<span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">x</span><span class="p">;</span>
+
+<span class="c"># Instruction level parallelizable</span>
+<span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">c</span><span class="p">;</span>
+<span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">c</span><span class="p">;</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">independent</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">x</span>
+<span class="c"># not stall</span>
+<span class="n">z</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">y</span>
+</pre></div>
+</div>
+<p>This applies to memory access too! If we access memory the thread only stalls once we need the memory</p>
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">loc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">glo_x</span><span class="p">[</span><span class="n">n</span><span class="p">];</span>
+
+<span class="cm">#=</span>
+<span class="cm">lots of work not involving loc...</span>
+<span class="cm">=#</span>
+
+<span class="c"># stall until memory access is done</span>
+<span class="n">loc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">loc</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">loc</span><span class="p">;</span>
+</pre></div>
+</div>
+<blockquote>
+<div><p>To see how this plays out in practice on the GPU see this <a class="reference external" href="https://devtalk.nvidia.com/default/topic/841359/cuda-programming-and-performance/instruction-level-parallelism/post/4562896/#4562896">forum thread</a> as an example.</p>
+</div></blockquote>
+<p>How to use all of this for the transpose? Have one thread issue several calls read and write from global memory and shared memory. (In this case <em>I think</em> the performance boost is coming from:</p>
+<ul class="simple">
+<li><p>(1) fewer registers being used, and thus more thread being scheduled and</p></li>
+<li><p>(2) the scheduling on this card is such that there are a few extra loads being issued at the same time.</p></li>
+</ul>
+<p>Example:</p>
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="cm">#=</span>
+<span class="cm">Tiled routines using global memory:</span>
+<span class="cm">Idea here is that we break up the matrix into blocks of size</span>
+
+<span class="cm">   [TILE_DIM, TILE_DIM]</span>
+
+<span class="cm">We then copy the data over in chunks of size</span>
+
+<span class="cm">   [TILE_DIM, BLOCK_ROWS]</span>
+
+<span class="cm">so we have to copy TILE_DIM / BLOCK_ROWS chunks to loop over. For example, if TILE_DIM = 8 and BLOCK_ROWS = 2 then the data is copied in this order in the transposed matrix (where the number indicates the iteration of the for loop the data is filled by)</span>
+
+<span class="cm">  0 0 1 1 2 2 3 3</span>
+<span class="cm">  0 0 1 1 2 2 3 3</span>
+<span class="cm">  0 0 1 1 2 2 3 3</span>
+<span class="cm">  0 0 1 1 2 2 3 3</span>
+<span class="cm">  0 0 1 1 2 2 3 3</span>
+<span class="cm">  0 0 1 1 2 2 3 3</span>
+<span class="cm">  0 0 1 1 2 2 3 3</span>
+<span class="cm">  0 0 1 1 2 2 3 3</span>
+<span class="cm">=#</span>
+
+<span class="k">function</span><span class="w"> </span><span class="n">copy_tiled!</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="p">)</span>
+<span class="w">  </span><span class="n">N</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+<span class="w">  </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">blockIdx</span><span class="p">()</span><span class="o">.</span><span class="n">x</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">TILE_DIM</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">threadIdx</span><span class="p">()</span><span class="o">.</span><span class="n">x</span>
+<span class="w">  </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">blockIdx</span><span class="p">()</span><span class="o">.</span><span class="n">y</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">TILE_DIM</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">threadIdx</span><span class="p">()</span><span class="o">.</span><span class="n">y</span>
+
+<span class="w">  </span><span class="nd">@inbounds</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="o">:</span><span class="n">BLOCK_ROWS</span><span class="o">:</span><span class="n">TILE_DIM</span><span class="o">-</span><span class="mi">1</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">N</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">j</span><span class="o">+</span><span class="n">k</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">N</span>
+<span class="w">      </span><span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="o">+</span><span class="n">k</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="o">+</span><span class="n">k</span><span class="p">]</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="k">end</span>
+
+<span class="k">function</span><span class="w"> </span><span class="n">transpose_tiled!</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="p">)</span>
+<span class="w">  </span><span class="n">N</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+<span class="w">  </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">blockIdx</span><span class="p">()</span><span class="o">.</span><span class="n">x</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">TILE_DIM</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">threadIdx</span><span class="p">()</span><span class="o">.</span><span class="n">x</span>
+<span class="w">  </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">blockIdx</span><span class="p">()</span><span class="o">.</span><span class="n">y</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">TILE_DIM</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">threadIdx</span><span class="p">()</span><span class="o">.</span><span class="n">y</span>
+
+<span class="w">  </span><span class="nd">@inbounds</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="o">:</span><span class="n">BLOCK_ROWS</span><span class="o">:</span><span class="n">TILE_DIM</span><span class="o">-</span><span class="mi">1</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">N</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">j</span><span class="o">+</span><span class="n">k</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">N</span>
+<span class="w">      </span><span class="n">b</span><span class="p">[</span><span class="n">j</span><span class="o">+</span><span class="n">k</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="o">+</span><span class="n">k</span><span class="p">]</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="k">end</span>
+
+<span class="cm">#=</span>
+<span class="cm">Tiled routines using shared memory:</span>
+<span class="cm">Combine the tiling idea with shared memory</span>
+<span class="cm">=#</span>
+<span class="k">function</span><span class="w"> </span><span class="n">copy_tiled_shared!</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="p">)</span>
+<span class="w">  </span><span class="n">N</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+<span class="w">  </span><span class="n">tidx</span><span class="p">,</span><span class="w"> </span><span class="n">tidy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">threadIdx</span><span class="p">()</span><span class="o">.</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">threadIdx</span><span class="p">()</span><span class="o">.</span><span class="n">y</span>
+<span class="w">  </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">blockIdx</span><span class="p">()</span><span class="o">.</span><span class="n">x</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">TILE_DIM</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">tidx</span>
+<span class="w">  </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">blockIdx</span><span class="p">()</span><span class="o">.</span><span class="n">y</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">TILE_DIM</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">tidy</span>
+
+<span class="w">  </span><span class="n">tile</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nd">@cuStaticSharedMem</span><span class="p">(</span><span class="n">eltype</span><span class="p">(</span><span class="n">a</span><span class="p">),</span><span class="w"> </span><span class="p">(</span><span class="n">TILE_DIM</span><span class="p">,</span><span class="w"> </span><span class="n">TILE_DIM</span><span class="p">))</span>
+
+<span class="w">  </span><span class="nd">@inbounds</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="o">:</span><span class="n">BLOCK_ROWS</span><span class="o">:</span><span class="n">TILE_DIM</span><span class="o">-</span><span class="mi">1</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">N</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">j</span><span class="o">+</span><span class="n">k</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">N</span>
+<span class="w">      </span><span class="n">tile</span><span class="p">[</span><span class="n">tidx</span><span class="p">,</span><span class="w"> </span><span class="n">tidy</span><span class="o">+</span><span class="n">k</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="o">+</span><span class="n">k</span><span class="p">]</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">  </span><span class="k">end</span>
+
+<span class="w">  </span><span class="n">sync_threads</span><span class="p">()</span>
+
+<span class="w">  </span><span class="nd">@inbounds</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="o">:</span><span class="n">BLOCK_ROWS</span><span class="o">:</span><span class="n">TILE_DIM</span><span class="o">-</span><span class="mi">1</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">N</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">j</span><span class="o">+</span><span class="n">k</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">N</span>
+<span class="w">      </span><span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="o">+</span><span class="n">k</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tile</span><span class="p">[</span><span class="n">tidx</span><span class="p">,</span><span class="w"> </span><span class="n">tidy</span><span class="o">+</span><span class="n">k</span><span class="p">]</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">  </span><span class="k">end</span>
+
+<span class="w">  </span><span class="nb">nothing</span>
+<span class="k">end</span>
+
+<span class="k">function</span><span class="w"> </span><span class="n">transpose_tiled_shared!</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="p">)</span>
+<span class="w">  </span><span class="n">N</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+<span class="w">  </span><span class="n">tidx</span><span class="p">,</span><span class="w"> </span><span class="n">tidy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">threadIdx</span><span class="p">()</span><span class="o">.</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">threadIdx</span><span class="p">()</span><span class="o">.</span><span class="n">y</span>
+<span class="w">  </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">blockIdx</span><span class="p">()</span><span class="o">.</span><span class="n">x</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">TILE_DIM</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">tidx</span>
+<span class="w">  </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">blockIdx</span><span class="p">()</span><span class="o">.</span><span class="n">y</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">TILE_DIM</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">tidy</span>
+
+<span class="w">  </span><span class="n">tile</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nd">@cuStaticSharedMem</span><span class="p">(</span><span class="n">eltype</span><span class="p">(</span><span class="n">a</span><span class="p">),</span><span class="w"> </span><span class="p">(</span><span class="n">TILE_DIM</span><span class="p">,</span><span class="w"> </span><span class="n">TILE_DIM</span><span class="p">))</span>
+
+<span class="w">  </span><span class="nd">@inbounds</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="o">:</span><span class="n">BLOCK_ROWS</span><span class="o">:</span><span class="n">TILE_DIM</span><span class="o">-</span><span class="mi">1</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">N</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">j</span><span class="o">+</span><span class="n">k</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">N</span>
+<span class="w">      </span><span class="n">tile</span><span class="p">[</span><span class="n">tidx</span><span class="p">,</span><span class="w"> </span><span class="n">tidy</span><span class="o">+</span><span class="n">k</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="o">+</span><span class="n">k</span><span class="p">]</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">  </span><span class="k">end</span>
+
+<span class="w">  </span><span class="n">sync_threads</span><span class="p">()</span>
+
+<span class="w">  </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">blockIdx</span><span class="p">()</span><span class="o">.</span><span class="n">y</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">TILE_DIM</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">tidx</span>
+<span class="w">  </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">blockIdx</span><span class="p">()</span><span class="o">.</span><span class="n">x</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">TILE_DIM</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">tidy</span>
+<span class="w">  </span><span class="nd">@inbounds</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="o">:</span><span class="n">BLOCK_ROWS</span><span class="o">:</span><span class="n">TILE_DIM</span><span class="o">-</span><span class="mi">1</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">N</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">j</span><span class="o">+</span><span class="n">k</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">N</span>
+<span class="w">      </span><span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="o">+</span><span class="n">k</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tile</span><span class="p">[</span><span class="n">tidy</span><span class="o">+</span><span class="n">k</span><span class="p">,</span><span class="w"> </span><span class="n">tidx</span><span class="p">]</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">  </span><span class="k">end</span>
+
+<span class="w">  </span><span class="nb">nothing</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</section>
+<section id="bank-conflicts">
+<h2>5. Bank Conflicts<a class="headerlink" href="#bank-conflicts" title="Link to this heading">#</a></h2>
+<p>Local memory on most (perhaps all?) GPUs is organized into memory banks (16 in the example below, but it could be 32 most likely on modern GPUs) where each bank is 4 bytes (on NVIDIA Kepler cards this can be changed to 8 bytes inside of CUDA; but default is 4 bytes).</p>
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">Bank</span><span class="w"> </span><span class="o">|</span><span class="w">      </span><span class="mi">0</span><span class="w">     </span><span class="o">|</span><span class="w">      </span><span class="mi">1</span><span class="w">      </span><span class="o">|</span><span class="w">      </span><span class="mi">2</span><span class="w">      </span><span class="o">|</span><span class="w"> </span><span class="o">...</span><span class="w"> </span><span class="o">|</span><span class="w">     </span><span class="mi">16</span>
+<span class="n">Byte</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="mi">0</span><span class="w">  </span><span class="mi">1</span><span class="w">  </span><span class="mi">2</span><span class="w">  </span><span class="mi">3</span><span class="w"> </span><span class="o">|</span><span class="w">  </span><span class="mi">4</span><span class="w">  </span><span class="mi">5</span><span class="w">  </span><span class="mi">6</span><span class="w">  </span><span class="mi">7</span><span class="w"> </span><span class="o">|</span><span class="w">  </span><span class="mi">8</span><span class="w">  </span><span class="mi">9</span><span class="w"> </span><span class="mi">10</span><span class="w"> </span><span class="mi">11</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="o">...</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="mi">28</span><span class="w"> </span><span class="mi">29</span><span class="w"> </span><span class="mi">30</span><span class="w"> </span><span class="mi">31</span>
+<span class="w">     </span><span class="o">|</span><span class="mi">32</span><span class="w"> </span><span class="mi">33</span><span class="w"> </span><span class="mi">34</span><span class="w"> </span><span class="mi">35</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="mi">36</span><span class="w"> </span><span class="mi">37</span><span class="w"> </span><span class="mi">38</span><span class="w"> </span><span class="mi">39</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="mi">40</span><span class="w"> </span><span class="mi">41</span><span class="w"> </span><span class="mi">42</span><span class="w"> </span><span class="mi">43</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="o">...</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="mi">60</span><span class="w"> </span><span class="mi">61</span><span class="w"> </span><span class="mi">62</span><span class="w"> </span><span class="mi">63</span>
+<span class="w">     </span><span class="o">|</span><span class="mi">64</span><span class="w"> </span><span class="mi">65</span><span class="w"> </span><span class="mi">66</span><span class="w"> </span><span class="mi">67</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="mi">68</span><span class="w"> </span><span class="mi">69</span><span class="w"> </span><span class="mi">70</span><span class="w"> </span><span class="mi">71</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="mi">72</span><span class="w"> </span><span class="mi">73</span><span class="w"> </span><span class="mi">74</span><span class="w"> </span><span class="mi">75</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="o">...</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="mi">92</span><span class="w"> </span><span class="mi">93</span><span class="w"> </span><span class="mi">94</span><span class="w"> </span><span class="mi">95</span>
+</pre></div>
+</div>
+<p>Each bank has a bandwidth of 32 bits per clock cycle. This means each bank can hold 4 bytes of data (32 bits).</p>
+<p>The limitation is that if two threads in a warp (group of 32 threads on NVIDIA cards) access different locations of the same bank, the access will be serialized (i.e., take more than one memory access call). In fact, when multiple threads within a warp (a group of 32 threads) attempt to access the same bank simultaneously, a <strong>bank conflict</strong> occurs. This can lead to a performance penalty as the accesses need to be serialized, slowing down the memory access.</p>
+<p>Since it’s optimal to have our work groups as multiples of <code class="docutils literal notranslate"><span class="pre">32</span></code>, it is also optimal to make sure our shared memory access is <em>not</em> a multiple of <code class="docutils literal notranslate"><span class="pre">32</span></code>, thus we want to make the fastest dimension a little faster for the shared memory so two threads don’t access the same bank.</p>
+<p>Example:</p>
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="cm">#=</span>
+<span class="cm">Tiled routines using shared memory:</span>
+<span class="cm">Combine the tiling idea with shared memory, with no bank conflicts</span>
+<span class="cm">=#</span>
+<span class="k">function</span><span class="w"> </span><span class="n">transpose_tiled_shared_noconflicts!</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="p">)</span>
+<span class="w">  </span><span class="n">N</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+<span class="w">  </span><span class="n">tidx</span><span class="p">,</span><span class="w"> </span><span class="n">tidy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">threadIdx</span><span class="p">()</span><span class="o">.</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">threadIdx</span><span class="p">()</span><span class="o">.</span><span class="n">y</span>
+<span class="w">  </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">blockIdx</span><span class="p">()</span><span class="o">.</span><span class="n">x</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">TILE_DIM</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">tidx</span>
+<span class="w">  </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">blockIdx</span><span class="p">()</span><span class="o">.</span><span class="n">y</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">TILE_DIM</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">tidy</span>
+
+<span class="w">  </span><span class="n">tile</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nd">@cuStaticSharedMem</span><span class="p">(</span><span class="n">eltype</span><span class="p">(</span><span class="n">a</span><span class="p">),</span><span class="w"> </span><span class="p">(</span><span class="n">TILE_DIM</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">TILE_DIM</span><span class="p">))</span><span class="w"> </span><span class="c"># note the different TILE_DIM+1</span>
+
+<span class="w">  </span><span class="nd">@inbounds</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="o">:</span><span class="n">BLOCK_ROWS</span><span class="o">:</span><span class="n">TILE_DIM</span><span class="o">-</span><span class="mi">1</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">N</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">j</span><span class="o">+</span><span class="n">k</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">N</span>
+<span class="w">      </span><span class="n">tile</span><span class="p">[</span><span class="n">tidx</span><span class="p">,</span><span class="w"> </span><span class="n">tidy</span><span class="o">+</span><span class="n">k</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="o">+</span><span class="n">k</span><span class="p">]</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">  </span><span class="k">end</span>
+
+<span class="w">  </span><span class="n">sync_threads</span><span class="p">()</span>
+
+<span class="w">  </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">blockIdx</span><span class="p">()</span><span class="o">.</span><span class="n">y</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">TILE_DIM</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">tidx</span>
+<span class="w">  </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">blockIdx</span><span class="p">()</span><span class="o">.</span><span class="n">x</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">TILE_DIM</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">tidy</span>
+<span class="w">  </span><span class="nd">@inbounds</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="o">:</span><span class="n">BLOCK_ROWS</span><span class="o">:</span><span class="n">TILE_DIM</span><span class="o">-</span><span class="mi">1</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">N</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">j</span><span class="o">+</span><span class="n">k</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">N</span>
+<span class="w">      </span><span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="o">+</span><span class="n">k</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tile</span><span class="p">[</span><span class="n">tidy</span><span class="o">+</span><span class="n">k</span><span class="p">,</span><span class="w"> </span><span class="n">tidx</span><span class="p">]</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">  </span><span class="k">end</span>
+
+<span class="w">  </span><span class="nb">nothing</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "sdsu-comp605/spring25",
+            ref: "main",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "julia-1.10"
+        },
+        kernelOptions: {
+            name: "julia-1.10",
+            path: "./lectures"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'julia-1.10'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="module8-1_cuda_jl.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">28) Intro to GPU programming in Julia</p>
+      </div>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#outline">1. Outline</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-statement">2. Problem statement:</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a-typical-gpu-porting-workflow">A typical GPU-porting workflow</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#scalar-indexing">Scalar indexing</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#simple-kernels-using-global-memory">3. Simple kernels using global memory</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#simple-kernels-using-shared-local-memory">3. Simple kernels using shared/local memory</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#instruction-level-parallelism-both-with-and-without-local-memory">4. Instruction Level Parallelism (both with and without local memory)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bank-conflicts">5. Bank Conflicts</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Valeria Barra
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
