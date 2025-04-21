@@ -449,6 +449,7 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#basic-idea">Basic idea</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-global-synchronization">Problem: Global Synchronization</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#solution-kernel-decomposition">Solution: Kernel Decomposition</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#measuring-success-what-are-we-striving-for">Measuring success: what are we striving for?</a></li>
 </ul>
 </li>
 </ul>
@@ -490,7 +491,7 @@ document.write(`
 <p class="admonition-title">Note</p>
 <p>References:</p>
 <ul class="simple">
-<li><p>We will losely follow <a class="reference external" href="http://developer.download.nvidia.com/assets/cuda/files/reduction.pdf">Optimizing Parallel Reduction in CUDA by Mark Harris</a> by Mark Harris. Note that some of our kernels will be different than those given in the talk, but the ideas are (mostly) the same.</p></li>
+<li><p>We will losely follow <a class="reference external" href="http://developer.download.nvidia.com/assets/cuda/files/reduction.pdf">Optimizing Parallel Reduction in CUDA</a> by Mark Harris. Note that some of our kernels will be different than those given in the talk, but the ideas are (mostly) the same.</p></li>
 </ul>
 </div>
 </section>
@@ -558,6 +559,24 @@ same:</p>
 </li>
 </ul>
 </section>
+<section id="measuring-success-what-are-we-striving-for">
+<h3>Measuring success: what are we striving for?<a class="headerlink" href="#measuring-success-what-are-we-striving-for" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>We should strive to reach GPU peak performance</p></li>
+<li><p>But we need to choose the right metric to measure success:</p>
+<ul>
+<li><p>GFLOP/s: for compute-bound kernels</p></li>
+<li><p>Bandwidth: for memory-bound kernels</p></li>
+</ul>
+</li>
+<li><p>Reductions have very low arithmetic intensity</p>
+<ul>
+<li><p>1 flop per element loaded (bandwidth-optimal)</p></li>
+</ul>
+</li>
+<li><p>Therefore we are <em>not</em> compute-bound, hence we should strive for peak bandwidth</p></li>
+</ul>
+</section>
 </section>
 </section>
 
@@ -621,6 +640,7 @@ same:</p>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#basic-idea">Basic idea</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#problem-global-synchronization">Problem: Global Synchronization</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#solution-kernel-decomposition">Solution: Kernel Decomposition</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#measuring-success-what-are-we-striving-for">Measuring success: what are we striving for?</a></li>
 </ul>
 </li>
 </ul>
