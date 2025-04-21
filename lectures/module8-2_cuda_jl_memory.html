@@ -63,6 +63,7 @@
     <link rel="icon" href="../_static/SDSU-comp605_logo.svg"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="30) Parallel reductions with CUDA.jl" href="module8-3_cuda_jl_reduction.html" />
     <link rel="prev" title="28) Intro to GPU programming in Julia" href="module8-1_cuda_jl.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -215,6 +216,7 @@
 <li class="toctree-l2"><a class="reference internal" href="module7-3_practical_cuda.html">27) Practical CUDA</a></li>
 <li class="toctree-l2"><a class="reference internal" href="module8-1_cuda_jl.html">28) Intro to GPU programming in Julia</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">29) Memory management with CUDA.jl</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module8-3_cuda_jl_reduction.html">30) Parallel reductions with CUDA.jl</a></li>
 </ul>
 </details></li>
 </ul>
@@ -548,7 +550,7 @@ on the GPU, we will be looking at two operations:</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold -Color-Bold-Yellow">┌ Warning: </span>Performing scalar indexing on task Task (runnable) @0x000076db7e7a07e0.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold -Color-Bold-Yellow">┌ Warning: </span>Performing scalar indexing on task Task (runnable) @0x0000721af49a07e0.
 <span class=" -Color -Color-Bold -Color-Bold-Yellow">│ </span>Invocation of getindex resulted in scalar indexing of a GPU array.
 <span class=" -Color -Color-Bold -Color-Bold-Yellow">│ </span>This is typically caused by calling an iterating implementation of a method.
 <span class=" -Color -Color-Bold -Color-Bold-Yellow">│ </span>Such implementations *do not* execute on the GPU, but very slowly on the CPU,
@@ -961,6 +963,15 @@ on the GPU, we will be looking at two operations:</p>
         <p class="prev-next-subtitle">previous</p>
         <p class="prev-next-title">28) Intro to GPU programming in Julia</p>
       </div>
+    </a>
+    <a class="right-next"
+       href="module8-3_cuda_jl_reduction.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">30) Parallel reductions with CUDA.jl</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
     </a>
 </div>
                 </footer>
