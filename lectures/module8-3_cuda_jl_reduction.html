@@ -216,7 +216,6 @@
 <li class="toctree-l2"><a class="reference internal" href="module8-1_cuda_jl.html">28) Intro to GPU programming in Julia</a></li>
 <li class="toctree-l2"><a class="reference internal" href="module8-2_cuda_jl_memory.html">29) Memory management with CUDA.jl</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">30) Parallel reductions with CUDA.jl</a></li>
-
 </ul>
 </details></li>
 </ul>
@@ -445,7 +444,6 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">30) Parallel reductions with CUDA.jl</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#outline">1. Outline</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parallel-reduction-on-the-gpu">2. Parallel reduction on the GPU</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#basic-idea">Basic idea</a></li>
@@ -457,17 +455,15 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parallel-reduction-complexity">3. Parallel reduction complexity</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#different-strategies-for-optimization">4. Different strategies for optimization</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#basic-implementation-idea">Basic implementation idea:</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#version-0">Version 0</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#version-1">Version 1</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#version-2">Version 2</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#version-3">Version 3</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#version-4">Version 4</a></li>
 </ul>
 </li>
 </ul>
 </li>
 </ul>
-</li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#version-2">Version 2</a></li>
-</ul>
-
             </nav>
         </div>
     </div>
@@ -619,22 +615,25 @@ same:</p>
 <h2>4. Different strategies for optimization<a class="headerlink" href="#different-strategies-for-optimization" title="Link to this heading">#</a></h2>
 <section id="basic-implementation-idea">
 <h3>Basic implementation idea:<a class="headerlink" href="#basic-implementation-idea" title="Link to this heading">#</a></h3>
+<section id="version-1">
+<h4>Version 1<a class="headerlink" href="#version-1" title="Link to this heading">#</a></h4>
 <p>Because there is no global synchronization, we need to launch the kernel multiple times in <em>work groups</em>.</p>
 <p>In each launch, each work group will work together to reduce the set of numbers to a single summed value.</p>
 <ul class="simple">
 <li><p>In the first iterations we launch <code class="docutils literal notranslate"><span class="pre">num_groups</span></code> work groups to reduce a vector of length <code class="docutils literal notranslate"><span class="pre">N</span></code> to a vector of length <code class="docutils literal notranslate"><span class="pre">num_groups</span></code>.</p></li>
 <li><p>We will then recurse and reduce the vector of length <code class="docutils literal notranslate"><span class="pre">num_groups</span></code> to a smaller vector, and continue until we only have <code class="docutils literal notranslate"><span class="pre">1</span></code> element in the partially reduced vector.</p></li>
 </ul>
-<section id="version-0">
-<h4>Version 0<a class="headerlink" href="#version-0" title="Link to this heading">#</a></h4>
+</section>
+<section id="version-2">
+<h4>Version 2<a class="headerlink" href="#version-2" title="Link to this heading">#</a></h4>
 <ul class="simple">
 <li><p>Work-group size elements of the given array into shared memory</p></li>
 <li><p>Use binary sum to reduce the values to a single number</p></li>
 <li><p>Recurse until there is only one group</p></li>
 </ul>
 </section>
-<section id="version-1">
-<h4>Version 1<a class="headerlink" href="#version-1" title="Link to this heading">#</a></h4>
+<section id="version-3">
+<h4>Version 3<a class="headerlink" href="#version-3" title="Link to this heading">#</a></h4>
 <ul class="simple">
 <li><p>Use sequential addressing of main memory</p></li>
 </ul>
@@ -643,14 +642,14 @@ same:</p>
 <li><p>This version with sequential addressing is conflict free (i.e., no bank conflicts)</p></li>
 </ul>
 </section>
-</section>
-</section>
-</section>
-<section class="tex2jax_ignore mathjax_ignore" id="version-2">
-<h1>Version 2<a class="headerlink" href="#version-2" title="Link to this heading">#</a></h1>
+<section id="version-4">
+<h4>Version 4<a class="headerlink" href="#version-4" title="Link to this heading">#</a></h4>
 <ul class="simple">
 <li><p>Let each thread load <code class="docutils literal notranslate"><span class="pre">OVERLAP</span></code> numbers</p></li>
 </ul>
+</section>
+</section>
+</section>
 </section>
 
     <script type="text/x-thebe-config">
@@ -708,7 +707,6 @@ same:</p>
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">30) Parallel reductions with CUDA.jl</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#outline">1. Outline</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parallel-reduction-on-the-gpu">2. Parallel reduction on the GPU</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#basic-idea">Basic idea</a></li>
@@ -720,17 +718,15 @@ same:</p>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parallel-reduction-complexity">3. Parallel reduction complexity</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#different-strategies-for-optimization">4. Different strategies for optimization</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#basic-implementation-idea">Basic implementation idea:</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#version-0">Version 0</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#version-1">Version 1</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#version-2">Version 2</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#version-3">Version 3</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#version-4">Version 4</a></li>
 </ul>
 </li>
 </ul>
 </li>
 </ul>
-</li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#version-2">Version 2</a></li>
-</ul>
-
   </nav></div>
 
 </div></div>
