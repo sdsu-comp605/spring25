@@ -620,7 +620,7 @@ same:</p>
 <p>Because there is no global synchronization, we need to launch the kernel multiple times in <em>work groups</em>.</p>
 <p>In each launch, each work group will work together to reduce the set of numbers to a single summed value.</p>
 <ul class="simple">
-<li><p>In the first iterations we launch <code class="docutils literal notranslate"><span class="pre">num_groups</span></code> work groups to reduce a vector of length <code class="docutils literal notranslate"><span class="pre">N</span></code> to a vector of length <code class="docutils literal notranslate"><span class="pre">num_groups</span></code>.</p></li>
+<li><p>In the first iterations we launch, say, <code class="docutils literal notranslate"><span class="pre">num_groups</span></code> work groups to reduce a vector of length <code class="docutils literal notranslate"><span class="pre">N</span></code> to a vector of length <code class="docutils literal notranslate"><span class="pre">num_groups</span></code>.</p></li>
 <li><p>We will then recurse and reduce the vector of length <code class="docutils literal notranslate"><span class="pre">num_groups</span></code> to a smaller vector, and continue until we only have <code class="docutils literal notranslate"><span class="pre">1</span></code> element in the partially reduced vector.</p></li>
 </ul>
 </section>

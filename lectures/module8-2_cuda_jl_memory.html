@@ -550,7 +550,7 @@ on the GPU, we will be looking at two operations:</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold -Color-Bold-Yellow">┌ Warning: </span>Performing scalar indexing on task Task (runnable) @0x0000721af49a07e0.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold -Color-Bold-Yellow">┌ Warning: </span>Performing scalar indexing on task Task (runnable) @0x0000794751ba07e0.
 <span class=" -Color -Color-Bold -Color-Bold-Yellow">│ </span>Invocation of getindex resulted in scalar indexing of a GPU array.
 <span class=" -Color -Color-Bold -Color-Bold-Yellow">│ </span>This is typically caused by calling an iterating implementation of a method.
 <span class=" -Color -Color-Bold -Color-Bold-Yellow">│ </span>Such implementations *do not* execute on the GPU, but very slowly on the CPU,
@@ -767,9 +767,9 @@ on the GPU, we will be looking at two operations:</p>
 <blockquote>
 <div><p>To see how this plays out in practice on the GPU see this <a class="reference external" href="https://devtalk.nvidia.com/default/topic/841359/cuda-programming-and-performance/instruction-level-parallelism/post/4562896/#4562896">forum thread</a> as an example.</p>
 </div></blockquote>
-<p>How to use all of this for the transpose? Have one thread issue several calls read and write from global memory and shared memory. (In this case <em>I think</em> the performance boost is coming from:</p>
+<p>How to use all of this for the transpose? Have one thread issue several calls read and write from global memory and shared memory. (In this case <em>I think</em> the performance boost is coming from):</p>
 <ul class="simple">
-<li><p>(1) fewer registers being used, and thus more thread being scheduled and</p></li>
+<li><p>(1) fewer registers being used, and thus more threads being scheduled and</p></li>
 <li><p>(2) the scheduling on this card is such that there are a few extra loads being issued at the same time.</p></li>
 </ul>
 <p>Example:</p>
