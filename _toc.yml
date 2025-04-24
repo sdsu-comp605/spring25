@@ -37,3 +37,4 @@ chapters:
   - file: lectures/module8-1_cuda_jl.ipynb
   - file: lectures/module8-2_cuda_jl_memory.ipynb
   - file: lectures/module8-3_cuda_jl_reduction.ipynb
+  - file: lectures/module9-1_ispc_and_others.ipynb
