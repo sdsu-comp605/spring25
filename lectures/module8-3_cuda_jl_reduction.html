@@ -613,23 +613,127 @@ same:</p>
 </section>
 <section id="different-strategies-for-optimization">
 <h2>4. Different strategies for optimization<a class="headerlink" href="#different-strategies-for-optimization" title="Link to this heading">#</a></h2>
+<p>The code for the Julia GPU reduction can be found in <a class="reference external" href="https://github.com/sdsu-comp605/spring25/blob/main/julia_codes/module8-3/reduction.jl">julia_codes/module8-3/reduction.jl</a></p>
 <section id="basic-implementation-idea">
 <h3>Basic implementation idea:<a class="headerlink" href="#basic-implementation-idea" title="Link to this heading">#</a></h3>
 <section id="version-1">
 <h4>Version 1<a class="headerlink" href="#version-1" title="Link to this heading">#</a></h4>
-<p>Because there is no global synchronization, we need to launch the kernel multiple times in <em>work groups</em>.</p>
-<p>In each launch, each work group will work together to reduce the set of numbers to a single summed value.</p>
+<p>Because there is no global synchronization, we need to launch the kernel multiple times in <em>thread blocks</em> (work groups).</p>
+<p>In each launch, each thread block will work together to reduce the set of numbers to a single summed value.</p>
 <ul class="simple">
-<li><p>In the first iterations we launch, say, <code class="docutils literal notranslate"><span class="pre">num_groups</span></code> work groups to reduce a vector of length <code class="docutils literal notranslate"><span class="pre">N</span></code> to a vector of length <code class="docutils literal notranslate"><span class="pre">num_groups</span></code>.</p></li>
+<li><p>In the first iteration we launch, say, <code class="docutils literal notranslate"><span class="pre">num_groups</span></code> (8 by default in the kernel below) work groups to reduce a vector of length <code class="docutils literal notranslate"><span class="pre">N</span></code> to a vector of length <code class="docutils literal notranslate"><span class="pre">num_groups</span></code>.</p></li>
 <li><p>We will then recurse and reduce the vector of length <code class="docutils literal notranslate"><span class="pre">num_groups</span></code> to a smaller vector, and continue until we only have <code class="docutils literal notranslate"><span class="pre">1</span></code> element in the partially reduced vector.</p></li>
 </ul>
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="s">&quot;&quot;&quot;</span>
+<span class="s">   reduction_knl_v1(x, y; op=+, ldim::Val{LDIM}=Val(256))</span>
+
+<span class="s">Basic interleaved memory access version where each `LDIM` chunk of values from `x`</span>
+<span class="s">are reduced using `op` (+ by default) to single values which are stored in the first</span>
+<span class="s">`gridDim().x` values of `y`</span>
+
+<span class="s">Problems:</span>
+<span class="s">  - Modulo is slow on the GPU &gt;&gt; Remove by calculating</span>
+<span class="s">  - threads in a warp are divergent (for the if statement) &gt;&gt; shift threads as algorithm progresses</span>
+<span class="s">&quot;&quot;&quot;</span>
+<span class="k">function</span><span class="w"> </span><span class="n">knl_reduction_v1!</span><span class="p">(</span><span class="n">y</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="n">op</span><span class="p">,</span><span class="w"> </span><span class="o">::</span><span class="kt">Val</span><span class="p">{</span><span class="kt">LDIM</span><span class="p">})</span><span class="w"> </span><span class="k">where</span><span class="w"> </span><span class="kt">LDIM</span>
+<span class="w">  </span><span class="n">tid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">threadIdx</span><span class="p">()</span><span class="o">.</span><span class="n">x</span>
+<span class="w">  </span><span class="n">bid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">blockIdx</span><span class="p">()</span><span class="o">.</span><span class="n">x</span>
+<span class="w">  </span><span class="n">gid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tid</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">bid</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">LDIM</span><span class="w"> </span><span class="c"># global thread index</span>
+<span class="w">  </span><span class="n">l_x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nd">@cuStaticSharedMem</span><span class="p">(</span><span class="n">eltype</span><span class="p">(</span><span class="n">x</span><span class="p">),</span><span class="w"> </span><span class="n">LDIM</span><span class="p">)</span><span class="w"> </span><span class="c"># shared memory allocation</span>
+
+<span class="w">  </span><span class="nd">@inbounds</span><span class="w"> </span><span class="k">begin</span>
+<span class="w">    </span><span class="c"># set the local/shared memory array</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="n">gid</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">N</span>
+<span class="w">      </span><span class="n">l_x</span><span class="p">[</span><span class="n">tid</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x</span><span class="p">[</span><span class="n">gid</span><span class="p">]</span>
+<span class="w">    </span><span class="k">else</span>
+<span class="w">      </span><span class="n">l_x</span><span class="p">[</span><span class="n">tid</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="n">sync_threads</span><span class="p">()</span>
+
+<span class="w">    </span><span class="n">s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">LDIM</span>
+<span class="w">      </span><span class="c"># I&#39;m still active if my thread ID (minus 1) is divisible by 2*s</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">((</span><span class="n">tid</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="p">(</span><span class="mi">2</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">s</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">        </span><span class="c"># combine my value to my (interleaved/strided) neighbors value</span>
+<span class="w">        </span><span class="n">l_x</span><span class="p">[</span><span class="n">tid</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">op</span><span class="p">(</span><span class="n">l_x</span><span class="p">[</span><span class="n">tid</span><span class="p">],</span><span class="w"> </span><span class="n">l_x</span><span class="p">[</span><span class="n">tid</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">s</span><span class="p">])</span>
+<span class="w">      </span><span class="k">end</span>
+<span class="w">      </span><span class="n">s</span><span class="w"> </span><span class="o">*=</span><span class="w"> </span><span class="mi">2</span>
+<span class="w">      </span><span class="n">sync_threads</span><span class="p">()</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="c"># Thread 1 is the only remaining &quot;real&quot; thread which will carry the result</span>
+<span class="w">    </span><span class="n">tid</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="n">bid</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">l_x</span><span class="p">[</span><span class="n">tid</span><span class="p">])</span>
+<span class="w">  </span><span class="k">end</span>
+
+<span class="w">  </span><span class="nb">nothing</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+<p><strong>Problems</strong>:</p>
+<ol class="arabic simple">
+<li><p>Modulo (<code class="docutils literal notranslate"><span class="pre">%</span></code>) is very slow</p></li>
+<li><p>Highly divergent warps are very inefficient. We have an if-statement for which, at the first step, half of the threads in a warp will be idleing; in subsequent steps, even more will be idleing</p></li>
+</ol>
+<p><img alt="Interleaved reduction on the GPU" src="../_images/interleaved_reduction_gpu.png" /></p>
 </section>
 <section id="version-2">
 <h4>Version 2<a class="headerlink" href="#version-2" title="Link to this heading">#</a></h4>
 <ul class="simple">
-<li><p>Work-group size elements of the given array into shared memory</p></li>
-<li><p>Use binary sum to reduce the values to a single number</p></li>
-<li><p>Recurse until there is only one group</p></li>
+<li><p>Work-group (block size) sized elements of the given array into shared memory (as in version 1)</p></li>
+<li><p>Use binary sum to reduce the values to a single number (as in version 1)</p></li>
+<li><p>Recurse until there is only one group (as in version 1)</p></li>
+<li><p>BUT: replace divergent branch in inner loop, with strided index and non-divergent branch</p></li>
+</ul>
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="s">&quot;&quot;&quot;</span>
+<span class="s">   reduction_knl_v2(x, y; op=+, ldim::Val{LDIM}=Val(256))</span>
+
+<span class="s">Improved strided memory access version where each `LDIM` chunk of values from `x`</span>
+<span class="s">are reduced using `op` to single values which are stored in the first</span>
+<span class="s">`gridDim().x` values of `y`</span>
+
+<span class="s">Problems:</span>
+<span class="s">  - Memory access is still strided, thus bank conflicts &gt;&gt; sequential access</span>
+<span class="s">&quot;&quot;&quot;</span>
+<span class="k">function</span><span class="w"> </span><span class="n">knl_reduction_v2!</span><span class="p">(</span><span class="n">y</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="n">op</span><span class="p">,</span><span class="w"> </span><span class="o">::</span><span class="kt">Val</span><span class="p">{</span><span class="kt">LDIM</span><span class="p">})</span><span class="w"> </span><span class="k">where</span><span class="w"> </span><span class="kt">LDIM</span>
+<span class="w">  </span><span class="n">tid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">threadIdx</span><span class="p">()</span><span class="o">.</span><span class="n">x</span>
+<span class="w">  </span><span class="n">bid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">blockIdx</span><span class="p">()</span><span class="o">.</span><span class="n">x</span>
+<span class="w">  </span><span class="n">gid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tid</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">bid</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">LDIM</span>
+<span class="w">  </span><span class="n">l_x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nd">@cuStaticSharedMem</span><span class="p">(</span><span class="n">eltype</span><span class="p">(</span><span class="n">x</span><span class="p">),</span><span class="w"> </span><span class="n">LDIM</span><span class="p">)</span>
+
+<span class="w">  </span><span class="nd">@inbounds</span><span class="w"> </span><span class="k">begin</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="n">gid</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">N</span>
+<span class="w">      </span><span class="n">l_x</span><span class="p">[</span><span class="n">tid</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x</span><span class="p">[</span><span class="n">gid</span><span class="p">]</span>
+<span class="w">    </span><span class="k">else</span>
+<span class="w">      </span><span class="n">l_x</span><span class="p">[</span><span class="n">tid</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="n">sync_threads</span><span class="p">()</span>
+
+<span class="w">    </span><span class="n">s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">LDIM</span>
+<span class="w">      </span><span class="c"># figure out whether I&#39;m in the active block</span>
+<span class="w">      </span><span class="n">sid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="n">tid</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="n">sid</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">LDIM</span>
+<span class="w">        </span><span class="c"># combine my value to my (strided) neighbors value</span>
+<span class="w">        </span><span class="n">l_x</span><span class="p">[</span><span class="n">sid</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">op</span><span class="p">(</span><span class="n">l_x</span><span class="p">[</span><span class="n">sid</span><span class="p">],</span><span class="w"> </span><span class="n">l_x</span><span class="p">[</span><span class="n">sid</span><span class="o">+</span><span class="n">s</span><span class="p">])</span>
+<span class="w">      </span><span class="k">end</span>
+<span class="w">      </span><span class="n">s</span><span class="w"> </span><span class="o">*=</span><span class="w"> </span><span class="mi">2</span>
+<span class="w">      </span><span class="n">sync_threads</span><span class="p">()</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="c"># Thread 1 is the only remaining &quot;real&quot; thread</span>
+<span class="w">    </span><span class="n">tid</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="n">bid</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">l_x</span><span class="p">[</span><span class="n">tid</span><span class="p">])</span>
+<span class="w">  </span><span class="k">end</span>
+
+<span class="w">  </span><span class="nb">nothing</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+<p><img alt="Interleaved reduction on the GPU without divergence" src="../_images/interleaved_strided_index_no_divergence.png" /></p>
+<p><strong>Problem</strong>:</p>
+<ul class="simple">
+<li><p>New Problem: Shared Memory Bank Conflicts</p></li>
 </ul>
 </section>
 <section id="version-3">
@@ -640,13 +744,67 @@ same:</p>
 <p><img alt="Sequential addressing reduction" src="../_images/sequential_addressing_reduction.png" /></p>
 <ul class="simple">
 <li><p>This version with sequential addressing is conflict free (i.e., no bank conflicts)</p></li>
+<li><p>We replace strided indexing in inner loop, with reversed loop and <code class="docutils literal notranslate"><span class="pre">threadID</span></code>-based indexing</p></li>
+</ul>
+<p><strong>Problem</strong></p>
+<ul class="simple">
+<li><p>Half of the threads are idle on first loop iteration! This is wasteful</p></li>
 </ul>
 </section>
 <section id="version-4">
 <h4>Version 4<a class="headerlink" href="#version-4" title="Link to this heading">#</a></h4>
 <ul class="simple">
-<li><p>Let each thread load <code class="docutils literal notranslate"><span class="pre">OVERLAP</span></code> numbers</p></li>
+<li><p>First add during load: Let each thread load <code class="docutils literal notranslate"><span class="pre">OVERLAP</span></code> numbers and add them together before switching to shared memory.</p></li>
 </ul>
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="s">&quot;&quot;&quot;</span>
+<span class="s">   reduction_knl_v4(x, y; op=+, ldim::Val{LDIM}=Val(256))</span>
+
+<span class="s">Add a few values before switching to shared memory with sequential memory</span>
+<span class="s">access version where each `LDIM` chunk of values from `x` are reduced using</span>
+<span class="s">`op` to single values which are stored in the first `gridDim().x` values of `y`</span>
+<span class="s">&quot;&quot;&quot;</span>
+<span class="k">function</span><span class="w"> </span><span class="n">knl_reduction_v4!</span><span class="p">(</span><span class="n">y</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="n">op</span><span class="p">,</span><span class="w"> </span><span class="o">::</span><span class="kt">Val</span><span class="p">{</span><span class="kt">LDIM</span><span class="p">},</span>
+<span class="w">                           </span><span class="o">::</span><span class="kt">Val</span><span class="p">{</span><span class="kt">OVERLAP</span><span class="p">})</span><span class="w"> </span><span class="k">where</span><span class="w"> </span><span class="p">{</span><span class="kt">LDIM</span><span class="p">,</span><span class="w"> </span><span class="kt">OVERLAP</span><span class="p">}</span>
+<span class="w">  </span><span class="n">tid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">threadIdx</span><span class="p">()</span><span class="o">.</span><span class="n">x</span>
+<span class="w">  </span><span class="n">bid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">blockIdx</span><span class="p">()</span><span class="o">.</span><span class="n">x</span>
+<span class="w">  </span><span class="n">gid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tid</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">bid</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">LDIM</span>
+<span class="w">  </span><span class="n">gsz</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">LDIM</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">gridDim</span><span class="p">()</span><span class="o">.</span><span class="n">x</span><span class="w"> </span><span class="c"># total number of threads</span>
+
+<span class="w">  </span><span class="n">l_x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nd">@cuStaticSharedMem</span><span class="p">(</span><span class="n">eltype</span><span class="p">(</span><span class="n">x</span><span class="p">),</span><span class="w"> </span><span class="n">LDIM</span><span class="p">)</span>
+
+<span class="w">  </span><span class="nd">@inbounds</span><span class="w"> </span><span class="k">begin</span>
+<span class="w">    </span><span class="c"># Have each thread initially load and add OVERLAP values</span>
+<span class="w">    </span><span class="n">p_x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">zero</span><span class="p">(</span><span class="n">eltype</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="o">:</span><span class="n">OVERLAP</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="n">gid</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">gsz</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">N</span>
+<span class="w">        </span><span class="n">p_x</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">x</span><span class="p">[</span><span class="n">gid</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">gsz</span><span class="p">]</span>
+<span class="w">      </span><span class="k">end</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="n">l_x</span><span class="p">[</span><span class="n">tid</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p_x</span>
+
+<span class="w">    </span><span class="n">sync_threads</span><span class="p">()</span>
+
+<span class="w">    </span><span class="c"># bit right shift to divide by 2</span>
+<span class="w">    </span><span class="n">s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">LDIM</span><span class="w"> </span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">      </span><span class="c"># I&#39;m still active if my thread ID is less than</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="n">tid</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">s</span>
+<span class="w">        </span><span class="c"># combine my value to my (strided) neighbors value</span>
+<span class="w">        </span><span class="n">l_x</span><span class="p">[</span><span class="n">tid</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">op</span><span class="p">(</span><span class="n">l_x</span><span class="p">[</span><span class="n">tid</span><span class="p">],</span><span class="w"> </span><span class="n">l_x</span><span class="p">[</span><span class="n">tid</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">s</span><span class="p">])</span>
+<span class="w">      </span><span class="k">end</span>
+<span class="w">      </span><span class="n">s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="c"># bit right shift to divide by 2 again</span>
+<span class="w">      </span><span class="n">sync_threads</span><span class="p">()</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="c"># Thread 1 is the only remaining &quot;real&quot; thread</span>
+<span class="w">    </span><span class="n">tid</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="n">bid</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">l_x</span><span class="p">[</span><span class="n">tid</span><span class="p">])</span>
+<span class="w">  </span><span class="k">end</span>
+
+<span class="w">  </span><span class="nb">nothing</span>
+<span class="k">end</span>
+</pre></div>
+</div>
 </section>
 </section>
 </section>
