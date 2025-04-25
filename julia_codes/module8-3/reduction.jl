@@ -3,6 +3,8 @@ This is a Julia implementation of the reduction kernels described by Mark
 Harris in
 
     http://developer.download.nvidia.com/assets/cuda/files/reduction.pdf
+
+Acknowledgements to Jeremy Kozdon (NPS)
 =#
 
 using CUDA
@@ -20,21 +22,22 @@ end
 """
    reduction_knl_v1(x, y; op=+, ldim::Val{LDIM}=Val(256))
 
-Basic strided memory access version where each `LDIM` chunk of values from `x`
-are reduced using `op` to single values which are stored in the first
+Basic interleaved memory access version where each `LDIM` chunk of values from `x`
+are reduced using `op` (+ by default) to single values which are stored in the first
 `gridDim().x` values of `y`
 
 Problems:
   - Modulo is slow on the GPU >> Remove by calculating
-  - threads in a warp are divergent >> shift threads as algorithm progresses
+  - threads in a warp are divergent (for the if statement) >> shift threads as algorithm progresses
 """
 function knl_reduction_v1!(y, x, N, op, ::Val{LDIM}) where LDIM
   tid = threadIdx().x
   bid = blockIdx().x
-  gid = tid + (bid - 1) * LDIM
+  gid = tid + (bid - 1) * LDIM # global thread index
   l_x = @cuStaticSharedMem(eltype(x), LDIM) # shared memory allocation
 
   @inbounds begin
+    # set the local/shared memory array
     if gid <= N
       l_x[tid] = x[gid]
     else
@@ -47,7 +50,7 @@ function knl_reduction_v1!(y, x, N, op, ::Val{LDIM}) where LDIM
     while s < LDIM
       # I'm still active if my thread ID (minus 1) is divisible by 2*s
       if ((tid-1) % (2 * s) == 0)
-        # combine my value to my (strided) neighbors value
+        # combine my value to my (interleaved/strided) neighbors value
         l_x[tid] = op(l_x[tid], l_x[tid + s])
       end
       s *= 2
@@ -61,6 +64,11 @@ function knl_reduction_v1!(y, x, N, op, ::Val{LDIM}) where LDIM
   nothing
 end
 
+"""
+   reduction_v1!(d_x, numruns; op=+, ldim=256)
+
+Kernel launcher function where we set execution configuration for the knl_reduction_v1! kernel
+"""
 function reduction_v1!(d_x, numruns; op=+, ldim=256)
   N = length(d_x)
 
@@ -129,6 +137,11 @@ function knl_reduction_v2!(y, x, N, op, ::Val{LDIM}) where LDIM
   nothing
 end
 
+"""
+  reduction_v2!(d_x, numruns; op=+, ldim=256)
+
+Kernel launcher function where we set execution configuration for the knl_reduction_v2! kernel
+"""
 function reduction_v2!(d_x, numruns; op=+, ldim=256)
   N = length(d_x)
 
@@ -197,6 +210,11 @@ function knl_reduction_v3!(y, x, N, op, ::Val{LDIM}) where LDIM
   nothing
 end
 
+"""
+  reduction_v3!(d_x, numruns; op=+, ldim=256)
+
+Kernel launcher function where we set execution configuration for the knl_reduction_v3! kernel
+"""
 function reduction_v3!(d_x, numruns; op=+, ldim=256)
   N = length(d_x)
 
@@ -257,7 +275,7 @@ function knl_reduction_v4!(y, x, N, op, ::Val{LDIM},
         # combine my value to my (strided) neighbors value
         l_x[tid] = op(l_x[tid], l_x[tid + s])
       end
-      s = s >> 1
+      s = s >> 1 # bit right shift to divide by 2 again
       sync_threads()
     end
 
@@ -268,6 +286,11 @@ function knl_reduction_v4!(y, x, N, op, ::Val{LDIM},
   nothing
 end
 
+"""
+  reduction_v4!(d_x, numruns; op=+, ldim=256, overlap=16)
+
+Kernel launcher function where we set execution configuration for the knl_reduction_v4! kernel
+"""
 function reduction_v4!(d_x, numruns; op=+, ldim=256, overlap=16)
   N = length(d_x)
 
@@ -295,6 +318,7 @@ function reduction_v4!(d_x, numruns; op=+, ldim=256, overlap=16)
   val[1]
 end
 
+## main function
 function main(; N=1024^2, numruns = 10, DFloat = Float64, ldim = 256, overlap=16)
 
   x = collect(DFloat, 1:N)
