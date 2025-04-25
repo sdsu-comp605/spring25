@@ -746,12 +746,10 @@ same:</p>
 <h4>Version 3<a class="headerlink" href="#version-3" title="Link to this heading">#</a></h4>
 <ul class="simple">
 <li><p>Use sequential addressing of main memory</p></li>
-</ul>
-<p><img alt="Sequential addressing reduction" src="../_images/sequential_addressing_reduction.png" /></p>
-<ul class="simple">
 <li><p>This version with sequential addressing is conflict free (i.e., no bank conflicts)</p></li>
 <li><p>We replace strided indexing in inner loop, with reversed loop and <code class="docutils literal notranslate"><span class="pre">threadID</span></code>-based indexing</p></li>
 </ul>
+<p><img alt="Sequential addressing reduction" src="../_images/sequential_addressing_reduction.png" /></p>
 <div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="s">&quot;&quot;&quot;</span>
 <span class="s">   reduction_knl_v3(x, y; op=+, ldim::Val{LDIM}=Val(256))</span>
 

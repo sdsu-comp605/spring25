@@ -499,18 +499,96 @@ document.write(`
 <li><p>The main idea behind SPMD is that one writes programs as if they were operating on a single data element (a pixel for a pixel shader, for example), but then the underlying hardware and runtime system executes multiple invocations of the program in parallel with different inputs (the values for different pixels, for example).</p></li>
 <li><p>In summary, we can program <strong>SIMT</strong> (e.g., CUDA) devices using directives, but we can also program <strong>SIMD</strong> (e.g., Intel CPUs) using a <strong>SPMD</strong> (recall, the CUDA-like, acronym that comes from “single program” versus “single instruction”) programming model.</p></li>
 </ul>
-<div class="highlight-ispc notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span>export void simple_ispc(uniform double vin[], uniform double vout[],
-<span class="linenos"> 2</span>                        uniform int count) {
-<span class="linenos"> 3</span>  foreach (index = 0 ... count) {
-<span class="linenos"> 4</span>    double v = vin[index];
-<span class="linenos"> 5</span>    if (v &lt; 3.)
-<span class="linenos"> 6</span>      v = v * v;
-<span class="linenos"> 7</span>    else
-<span class="linenos"> 8</span>      v = sqrt(v);
-<span class="linenos"> 9</span>    vout[index] = v;
-<span class="linenos">10</span>  }
-<span class="linenos">11</span>}
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="n">export</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">simple_ispc</span><span class="p">(</span><span class="n">uniform</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">vin</span><span class="p">[],</span><span class="w"> </span><span class="n">uniform</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">vout</span><span class="p">[],</span>
+<span class="linenos"> 2</span><span class="w">                        </span><span class="n">uniform</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">count</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos"> 3</span><span class="w">  </span><span class="n">foreach</span><span class="w"> </span><span class="p">(</span><span class="n">index</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="n">count</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos"> 4</span><span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">vin</span><span class="p">[</span><span class="n">index</span><span class="p">];</span>
+<span class="linenos"> 5</span><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">v</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mf">3.</span><span class="p">)</span>
+<span class="linenos"> 6</span><span class="w">      </span><span class="n">v</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">v</span><span class="p">;</span>
+<span class="linenos"> 7</span><span class="w">    </span><span class="k">else</span>
+<span class="linenos"> 8</span><span class="w">      </span><span class="n">v</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sqrt</span><span class="p">(</span><span class="n">v</span><span class="p">);</span>
+<span class="linenos"> 9</span><span class="w">    </span><span class="n">vout</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v</span><span class="p">;</span>
+<span class="linenos">10</span><span class="w">  </span><span class="p">}</span>
+<span class="linenos">11</span><span class="p">}</span>
 </pre></div>
+</div>
+<p>This function is callable from native C code. Example:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdio.h&gt;</span>
+<span class="linenos"> 2</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;math.h&gt;</span>
+<span class="linenos"> 3</span>
+<span class="linenos"> 4</span><span class="kt">void</span><span class="w"> </span><span class="nf">simple_ispc</span><span class="p">(</span><span class="kt">double</span><span class="w"> </span><span class="n">vin</span><span class="p">[],</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">vout</span><span class="p">[],</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">count</span><span class="p">);</span>
+<span class="linenos"> 5</span>
+<span class="linenos"> 6</span><span class="kt">void</span><span class="w"> </span><span class="nf">simple_c</span><span class="p">(</span><span class="kt">double</span><span class="w"> </span><span class="n">vin</span><span class="p">[],</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">vout</span><span class="p">[],</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">count</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos"> 7</span><span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">index</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">index</span><span class="o">&lt;</span><span class="n">count</span><span class="p">;</span><span class="w"> </span><span class="n">index</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos"> 8</span><span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">vin</span><span class="p">[</span><span class="n">index</span><span class="p">];</span>
+<span class="linenos"> 9</span><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">v</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mf">3.</span><span class="p">)</span>
+<span class="linenos">10</span><span class="w">      </span><span class="n">v</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">v</span><span class="p">;</span>
+<span class="linenos">11</span><span class="w">    </span><span class="k">else</span>
+<span class="linenos">12</span><span class="w">      </span><span class="n">v</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sqrt</span><span class="p">(</span><span class="n">v</span><span class="p">);</span>
+<span class="linenos">13</span><span class="w">    </span><span class="n">vout</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v</span><span class="p">;</span>
+<span class="linenos">14</span><span class="w">  </span><span class="p">}</span>
+<span class="linenos">15</span><span class="p">}</span>
+<span class="linenos">16</span>
+<span class="linenos">17</span><span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">18</span><span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="n">vin</span><span class="p">[</span><span class="mi">16</span><span class="p">],</span><span class="w"> </span><span class="n">vout</span><span class="p">[</span><span class="mi">16</span><span class="p">];</span>
+<span class="linenos">19</span><span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">16</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span>
+<span class="linenos">20</span><span class="w">    </span><span class="n">vin</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">i</span><span class="p">;</span>
+<span class="linenos">21</span>
+<span class="linenos">22</span><span class="w">  </span><span class="n">simple_ispc</span><span class="p">(</span><span class="n">vin</span><span class="p">,</span><span class="w"> </span><span class="n">vout</span><span class="p">,</span><span class="w"> </span><span class="mi">16</span><span class="p">);</span>
+<span class="linenos">23</span>
+<span class="linenos">24</span><span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">16</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span>
+<span class="linenos">25</span><span class="w">    </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;%d: simple_ispc(%f) = %f</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">vin</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="w"> </span><span class="n">vout</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+<span class="linenos">26</span>
+<span class="linenos">27</span><span class="w">  </span><span class="n">simple_c</span><span class="p">(</span><span class="n">vin</span><span class="p">,</span><span class="w"> </span><span class="n">vout</span><span class="p">,</span><span class="w"> </span><span class="mi">16</span><span class="p">);</span>
+<span class="linenos">28</span>
+<span class="linenos">29</span><span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">16</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span>
+<span class="linenos">30</span><span class="w">    </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;%d: simple_c(%f) = %f</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">vin</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="w"> </span><span class="n">vout</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+<span class="linenos">31</span><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="linenos">32</span><span class="p">}</span>
+</pre></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span><span class="w"> </span>gcc<span class="w"> </span>-O3<span class="w"> </span>-march<span class="o">=</span>native<span class="w"> </span>-o<span class="w"> </span>simple.o<span class="w"> </span>-c<span class="w"> </span>../c_codes/module9-1/simple.c<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>ispc<span class="w"> </span>-O3<span class="w"> </span>--target<span class="o">=</span>avx2-i32x8<span class="w"> </span>../c_codes/module9-1/simple-ispc.ispc<span class="w"> </span>-o<span class="w"> </span>simple-ispc.o<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>gcc<span class="w"> </span>simple.o<span class="w"> </span>simple-ispc.o<span class="w">  </span>-lm<span class="w"> </span>-o<span class="w"> </span>simple<span class="w">  </span><span class="o">&amp;&amp;</span><span class="w"> </span>./simple
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0: simple_ispc(0.000000) = 0.000000
+1: simple_ispc(1.000000) = 1.000000
+2: simple_ispc(2.000000) = 4.000000
+3: simple_ispc(3.000000) = 1.732051
+4: simple_ispc(4.000000) = 2.000000
+5: simple_ispc(5.000000) = 2.236068
+6: simple_ispc(6.000000) = 2.449490
+7: simple_ispc(7.000000) = 2.645751
+8: simple_ispc(8.000000) = 2.828427
+9: simple_ispc(9.000000) = 3.000000
+10: simple_ispc(10.000000) = 3.162278
+11: simple_ispc(11.000000) = 3.316625
+12: simple_ispc(12.000000) = 3.464102
+13: simple_ispc(13.000000) = 3.605551
+14: simple_ispc(14.000000) = 3.741657
+15: simple_ispc(15.000000) = 3.872983
+0: simple_c(0.000000) = 0.000000
+1: simple_c(1.000000) = 1.000000
+2: simple_c(2.000000) = 4.000000
+3: simple_c(3.000000) = 1.732051
+4: simple_c(4.000000) = 2.000000
+5: simple_c(5.000000) = 2.236068
+6: simple_c(6.000000) = 2.449490
+7: simple_c(7.000000) = 2.645751
+8: simple_c(8.000000) = 2.828427
+9: simple_c(9.000000) = 3.000000
+10: simple_c(10.000000) = 3.162278
+11: simple_c(11.000000) = 3.316625
+12: simple_c(12.000000) = 3.464102
+13: simple_c(13.000000) = 3.605551
+14: simple_c(14.000000) = 3.741657
+15: simple_c(15.000000) = 3.872983
+</pre></div>
+</div>
+</div>
 </div>
 </section>
 </section>
