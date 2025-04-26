@@ -2,4 +2,6 @@
 _build/
 re
 lectures/.ipynb_checkpoints/
+lectures/*.png
+lectures/*.cvs
 sys

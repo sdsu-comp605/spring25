@@ -1,0 +1,24 @@
+#!/bin/sh
+
+#note: run julia hello-world on a single node
+
+#SBATCH --job-name=jred_comp
+#SBATCH --output=jred_comp.out
+#SBATCH --ntasks=16
+#SBATCH --nodelist=node17
+
+export OMPI_MCA_pml=ob1
+export OMPI_MCA_btl=tcp,self
+
+#require tcp over infiniband
+export OMPI_MCA_btl_tcp_if_include ib0
+
+for n in {1..16}
+do
+    echo "=====================================" >> jred_comp.out
+    echo "Execution $n MPI rank(s):" >> jred_comp.out
+    mpiexec -n $n julia reduce_compare.jl >> jred_comp.out 2>&1
+    echo "=====================================" >> jred_comp.out
+done
+
+#-------------------------------------------------------------

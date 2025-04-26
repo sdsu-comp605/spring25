@@ -1,0 +1,144 @@
+=====================================
+Execution 1 MPI rank(s):
+Elapsed time for the naive algorithm: 
+(nve_t2 - nve_t1) * 1.0e-9 = 1.212e-6
+Elapsed time for the recursive mst algorithm: 
+(mst_t2 - mst_t1) * 1.0e-9 = 2.068e-6
+Elapsed time for the iterative (non-recursive) mst algorithm: 
+(mst_iter_t2 - mst_iter_t1) * 1.0e-9 = 4.041e-6
+=====================================
+=====================================
+Execution 2 MPI rank(s):
+Elapsed time for the naive algorithm: 
+(nve_t2 - nve_t1) * 1.0e-9 = 1.2221e-5
+Elapsed time for the recursive mst algorithm: 
+(mst_t2 - mst_t1) * 1.0e-9 = 3.8713e-5
+Elapsed time for the iterative (non-recursive) mst algorithm: 
+(mst_iter_t2 - mst_iter_t1) * 1.0e-9 = 1.8096e-5
+=====================================
+=====================================
+Execution 3 MPI rank(s):
+Elapsed time for the naive algorithm: 
+(nve_t2 - nve_t1) * 1.0e-9 = 1.1967e-5
+Elapsed time for the recursive mst algorithm: 
+(mst_t2 - mst_t1) * 1.0e-9 = 1.6927000000000002e-5
+Elapsed time for the iterative (non-recursive) mst algorithm: 
+(mst_iter_t2 - mst_iter_t1) * 1.0e-9 = 1.6563e-5
+=====================================
+=====================================
+Execution 4 MPI rank(s):
+Elapsed time for the naive algorithm: 
+(nve_t2 - nve_t1) * 1.0e-9 = 1.0371000000000001e-5
+Elapsed time for the recursive mst algorithm: 
+(mst_t2 - mst_t1) * 1.0e-9 = 1.7359e-5
+Elapsed time for the iterative (non-recursive) mst algorithm: 
+(mst_iter_t2 - mst_iter_t1) * 1.0e-9 = 2.9601000000000003e-5
+=====================================
+=====================================
+Execution 5 MPI rank(s):
+Elapsed time for the naive algorithm: 
+(nve_t2 - nve_t1) * 1.0e-9 = 1.1383000000000001e-5
+Elapsed time for the recursive mst algorithm: 
+(mst_t2 - mst_t1) * 1.0e-9 = 6.0852000000000006e-5
+Elapsed time for the iterative (non-recursive) mst algorithm: 
+(mst_iter_t2 - mst_iter_t1) * 1.0e-9 = 1.9173e-5
+=====================================
+=====================================
+Execution 6 MPI rank(s):
+Elapsed time for the naive algorithm: 
+(nve_t2 - nve_t1) * 1.0e-9 = 1.1012e-5
+Elapsed time for the recursive mst algorithm: 
+(mst_t2 - mst_t1) * 1.0e-9 = 2.2509e-5
+Elapsed time for the iterative (non-recursive) mst algorithm: 
+(mst_iter_t2 - mst_iter_t1) * 1.0e-9 = 2.1242e-5
+=====================================
+=====================================
+Execution 7 MPI rank(s):
+Elapsed time for the naive algorithm: 
+(nve_t2 - nve_t1) * 1.0e-9 = 1.0777e-5
+Elapsed time for the recursive mst algorithm: 
+(mst_t2 - mst_t1) * 1.0e-9 = 1.4656000000000002e-5
+Elapsed time for the iterative (non-recursive) mst algorithm: 
+(mst_iter_t2 - mst_iter_t1) * 1.0e-9 = 2.7966000000000003e-5
+=====================================
+=====================================
+Execution 8 MPI rank(s):
+Elapsed time for the naive algorithm: 
+(nve_t2 - nve_t1) * 1.0e-9 = 2.2222000000000002e-5
+Elapsed time for the recursive mst algorithm: 
+(mst_t2 - mst_t1) * 1.0e-9 = 1.6054000000000002e-5
+Elapsed time for the iterative (non-recursive) mst algorithm: 
+(mst_iter_t2 - mst_iter_t1) * 1.0e-9 = 2.8868000000000002e-5
+=====================================
+=====================================
+Execution 9 MPI rank(s):
+Elapsed time for the naive algorithm: 
+(nve_t2 - nve_t1) * 1.0e-9 = 1.2307000000000001e-5
+Elapsed time for the recursive mst algorithm: 
+(mst_t2 - mst_t1) * 1.0e-9 = 4.9114000000000004e-5
+Elapsed time for the iterative (non-recursive) mst algorithm: 
+(mst_iter_t2 - mst_iter_t1) * 1.0e-9 = 2.4864e-5
+=====================================
+=====================================
+Execution 10 MPI rank(s):
+Elapsed time for the naive algorithm: 
+(nve_t2 - nve_t1) * 1.0e-9 = 1.2650000000000001e-5
+Elapsed time for the recursive mst algorithm: 
+(mst_t2 - mst_t1) * 1.0e-9 = 5.5230000000000005e-5
+Elapsed time for the iterative (non-recursive) mst algorithm: 
+(mst_iter_t2 - mst_iter_t1) * 1.0e-9 = 2.2684e-5
+=====================================
+=====================================
+Execution 11 MPI rank(s):
+Elapsed time for the naive algorithm: 
+(nve_t2 - nve_t1) * 1.0e-9 = 1.3291e-5
+Elapsed time for the recursive mst algorithm: 
+(mst_t2 - mst_t1) * 1.0e-9 = 4.4899000000000005e-5
+Elapsed time for the iterative (non-recursive) mst algorithm: 
+(mst_iter_t2 - mst_iter_t1) * 1.0e-9 = 4.0992e-5
+=====================================
+=====================================
+Execution 12 MPI rank(s):
+Elapsed time for the naive algorithm: 
+(nve_t2 - nve_t1) * 1.0e-9 = 1.3797e-5
+Elapsed time for the recursive mst algorithm: 
+(mst_t2 - mst_t1) * 1.0e-9 = 4.6722000000000004e-5
+Elapsed time for the iterative (non-recursive) mst algorithm: 
+(mst_iter_t2 - mst_iter_t1) * 1.0e-9 = 3.2415e-5
+=====================================
+=====================================
+Execution 13 MPI rank(s):
+Elapsed time for the naive algorithm: 
+(nve_t2 - nve_t1) * 1.0e-9 = 1.3177000000000001e-5
+Elapsed time for the recursive mst algorithm: 
+(mst_t2 - mst_t1) * 1.0e-9 = 4.8987000000000004e-5
+Elapsed time for the iterative (non-recursive) mst algorithm: 
+(mst_iter_t2 - mst_iter_t1) * 1.0e-9 = 2.4223e-5
+=====================================
+=====================================
+Execution 14 MPI rank(s):
+Elapsed time for the naive algorithm: 
+(nve_t2 - nve_t1) * 1.0e-9 = 1.3313000000000001e-5
+Elapsed time for the recursive mst algorithm: 
+(mst_t2 - mst_t1) * 1.0e-9 = 0.00018343300000000002
+Elapsed time for the iterative (non-recursive) mst algorithm: 
+(mst_iter_t2 - mst_iter_t1) * 1.0e-9 = 2.7845000000000002e-5
+=====================================
+=====================================
+Execution 15 MPI rank(s):
+Elapsed time for the naive algorithm: 
+(nve_t2 - nve_t1) * 1.0e-9 = 1.1634e-5
+Elapsed time for the recursive mst algorithm: 
+(mst_t2 - mst_t1) * 1.0e-9 = 1.6341e-5
+Elapsed time for the iterative (non-recursive) mst algorithm: 
+(mst_iter_t2 - mst_iter_t1) * 1.0e-9 = 2.9658000000000003e-5
+=====================================
+=====================================
+Execution 16 MPI rank(s):
+Elapsed time for the naive algorithm: 
+(nve_t2 - nve_t1) * 1.0e-9 = 1.2317e-5
+Elapsed time for the recursive mst algorithm: 
+(mst_t2 - mst_t1) * 1.0e-9 = 3.3167e-5
+Elapsed time for the iterative (non-recursive) mst algorithm: 
+(mst_iter_t2 - mst_iter_t1) * 1.0e-9 = 0.033908551
+=====================================
