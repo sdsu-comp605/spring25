@@ -4,4 +4,5 @@ re
 lectures/.ipynb_checkpoints/
 lectures/*.png
 lectures/*.cvs
+lectures/*.o
 sys
