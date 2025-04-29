@@ -218,6 +218,7 @@
 <li class="toctree-l2"><a class="reference internal" href="hw4_solution.html">31) HW4 Solution</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">32) ISPC, OpenMP target, OpenACC, and all that</a></li>
 <li class="toctree-l2"><a class="reference internal" href="module9-2_parallel_io.html">33) I/O in HPC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module10-1_careers.html">34) Careers in HPSC</a></li>
 </ul>
 </details></li>
 </ul>
@@ -507,7 +508,7 @@ document.write(`
 <section id="ispc-intel-spmd-program-compiler">
 <h2>1. <a class="reference external" href="https://ispc.github.io/ispc.html">ISPC: Intel SPMD Program Compiler</a><a class="headerlink" href="#ispc-intel-spmd-program-compiler" title="Link to this heading">#</a></h2>
 <p>The Intel <strong>Implicit SPMD Program Compiler (ISPC)</strong> is a compiler for writing <strong>single program multiple data (SPMD)</strong> programs to run on the CPU and GPU.</p>
-<p>The SPMD programming approach is similar to approaches used in computer graphics and general-purpose-GPU programming; it is used for GPU shaders and CUDA and OpenCL kernels, for example.</p>
+<p>The SPMD programming approach is similar to approaches used in computer graphics and general-purpose-GPU programming; it is used for GPU shaders and CUDA and OpenCL (standard for cross-platform, parallel programming of heterogeneous systems) kernels, for example.</p>
 <ul class="simple">
 <li><p>The main idea behind SPMD is that one writes programs as if they were operating on a single data element (a pixel for a pixel shader, for example), but then the underlying hardware and runtime system executes multiple invocations of the program in parallel with different inputs (the values for different pixels, for example).</p></li>
 <li><p>In summary, we can program <strong>SIMT</strong> (e.g., CUDA) devices using directives, but we can also program <strong>SIMD</strong> (e.g., Intel CPUs) using a <strong>SPMD</strong> (recall, the CUDA-like, acronym that comes from “single program” versus “single instruction”) programming model.</p></li>

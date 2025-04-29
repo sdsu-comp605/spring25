@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>33) I/O in HPC &#8212; Scientific Computing</title>
+    <title>34) Careers in HPSC &#8212; Scientific Computing</title>
   
   
   
@@ -57,14 +57,11 @@
     <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
-    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'lectures/module9-2_parallel_io';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'lectures/module10-1_careers';</script>
     <link rel="icon" href="../_static/SDSU-comp605_logo.svg"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="34) Careers in HPSC" href="module10-1_careers.html" />
-    <link rel="prev" title="32) ISPC, OpenMP target, OpenACC, and all that" href="module9-1_ispc_and_others.html" />
+    <link rel="prev" title="33) I/O in HPC" href="module9-2_parallel_io.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -219,8 +216,8 @@
 <li class="toctree-l2"><a class="reference internal" href="module8-3_cuda_jl_reduction.html">30) Parallel reductions with CUDA.jl</a></li>
 <li class="toctree-l2"><a class="reference internal" href="hw4_solution.html">31) HW4 Solution</a></li>
 <li class="toctree-l2"><a class="reference internal" href="module9-1_ispc_and_others.html">32) ISPC, OpenMP target, OpenACC, and all that</a></li>
-<li class="toctree-l2 current active"><a class="current reference internal" href="#">33) I/O in HPC</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module10-1_careers.html">34) Careers in HPSC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module9-2_parallel_io.html">33) I/O in HPC</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">34) Careers in HPSC</a></li>
 </ul>
 </details></li>
 </ul>
@@ -325,7 +322,7 @@
       
       
       
-      <li><a href="https://github.com/sdsu-comp605/spring25/issues/new?title=Issue%20on%20page%20%2Flectures/module9-2_parallel_io.html&body=Your%20issue%20content%20here." target="_blank"
+      <li><a href="https://github.com/sdsu-comp605/spring25/issues/new?title=Issue%20on%20page%20%2Flectures/module10-1_careers.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm btn-source-issues-button dropdown-item"
    title="Open an issue"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -355,7 +352,7 @@
       
       
       
-      <li><a href="../_sources/lectures/module9-2_parallel_io.ipynb" target="_blank"
+      <li><a href="../_sources/lectures/module10-1_careers.ipynb" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -439,7 +436,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>33) I/O in HPC</h1>
+    <h1>34) Careers in HPSC</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -449,14 +446,19 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hiding-latency">1. Hiding latency</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#how-much-storage-bandwidth-does-a-simulation-need">How much storage bandwidth does a simulation need?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#careers-in-hpc-hpsc">1. Careers in HPC/HPSC</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#national-labs">1. National Labs</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#examples-of-lab-agency-led-software">Examples of lab/agency-led software</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#examples-of-hpc-file-systems">2. Examples of HPC File Systems</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#summit-file-systems">2.1 Summit File Systems</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#industrial-r-d">2. Industrial R&amp;D</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#academia">3. Academia</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#research-software-engineering">4. Research Software Engineering</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#performance-engineering">5. Performance Engineering</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#conferences-of-relevance-to-the-hpc-community">Conferences of relevance to the HPC community:</a></li>
 </ul>
 </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#personal-resources">6. Personal Resources</a></li>
 </ul>
             </nav>
         </div>
@@ -468,156 +470,169 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="i-o-in-hpc">
-<h1>33) I/O in HPC<a class="headerlink" href="#i-o-in-hpc" title="Link to this heading">#</a></h1>
+  <section class="tex2jax_ignore mathjax_ignore" id="careers-in-hpsc">
+<h1>34) Careers in HPSC<a class="headerlink" href="#careers-in-hpsc" title="Link to this heading">#</a></h1>
 <p>Last time:</p>
 <ul class="simple">
-<li><p>ISPC</p></li>
-<li><p>OpenMP and OpenACC</p></li>
+<li><p>I/O in HPC</p></li>
 </ul>
 <p>Today:</p>
 <ol class="arabic simple">
-<li><p>Hiding latency</p></li>
-<li><p>Examples of HPC File Systems<br />
-2.1 Summit File Systems</p></li>
+<li><p>Careers in HPC/HPSC</p></li>
 </ol>
-<section id="hiding-latency">
-<h2>1. Hiding latency<a class="headerlink" href="#hiding-latency" title="Link to this heading">#</a></h2>
-<p>Throughout this course, we’ve discussed ways in which computer architecture and algorithms hide latency.</p>
+<section id="careers-in-hpc-hpsc">
+<h2>1. Careers in HPC/HPSC<a class="headerlink" href="#careers-in-hpc-hpsc" title="Link to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p>National Labs</p></li>
+<li><p>Industrial R&amp;D</p></li>
+<li><p>Academia</p></li>
+<li><p>Research Software Engineering</p></li>
+<li><p>Performance Engineering</p></li>
+<li><p>Personal resources</p></li>
+</ol>
+</section>
+<section id="national-labs">
+<h2>1. National Labs<a class="headerlink" href="#national-labs" title="Link to this heading">#</a></h2>
 <ul class="simple">
-<li><p>instruction-level parallelism</p></li>
-<li><p>SMT/SIMT multi-threading</p></li>
-<li><p>memory prefetch</p></li>
-<li><p>organizing data structures for streaming access and cache reuse</p></li>
-<li><p>tiling, etc.</p></li>
+<li><p>Department of Energy</p>
+<ul>
+<li><p>Office of Science (Berkeley, Argonne, Pacific Northwest, …)</p></li>
+<li><p>National Nuclear Security Administration (Livermore, Los Alamos, Sandia)</p></li>
+<li><p>Office of Renewable Energy (NREL)</p></li>
 </ul>
-<p>But the reality is that file latency is vastly <em>higher</em> than memory.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="k">using</span><span class="w"> </span><span class="n">IJulia</span>
-
-<span class="sa">html</span><span class="s">&quot;&quot;&quot;&lt;iframe src=&quot;https://people.eecs.berkeley.edu/~rcs/research/interactive_latency.html&quot; width=&quot;1200&quot; height=&quot;700&quot;&gt;&lt;/iframe&gt;&quot;&quot;&quot;</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_html"><iframe src="https://people.eecs.berkeley.edu/~rcs/research/interactive_latency.html" width="1200" height="700"></iframe></div></div>
-</div>
-<div class="pst-scrollable-table-container"><table class="table">
-<thead>
-<tr class="row-odd"><th class="head"><p>Device</p></th>
-<th class="head"><p>Bandwidth (GB/s)</p></th>
-<th class="head"><p>Cost ($/TB)</p></th>
-<th class="head"><p>Seek Latency (<span class="math notranslate nohighlight">\(\mu\)</span>s)</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p>7200 RPM disk</p></td>
-<td><p>0.3</p></td>
-<td><p>30</p></td>
-<td><p>&gt;3000</p></td>
-</tr>
-<tr class="row-odd"><td><p>SSD (SATA 3.0)</p></td>
-<td><p>0.6</p></td>
-<td><p>70-80</p></td>
-<td><p>15-50</p></td>
-</tr>
-<tr class="row-even"><td><p>SSD/NVMe (PCIe-3 x4)</p></td>
-<td><p>3</p></td>
-<td><p>120-1000</p></td>
-<td><p>10-20</p></td>
-</tr>
-<tr class="row-odd"><td><p>DRAM DDR4</p></td>
-<td><p>25</p></td>
-<td><p>5000</p></td>
-<td><p>0.1</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<p><img alt="Scientific Workflows" src="../_images/scientific-workflows.png" /></p>
-<p>Guess which one is one of the most data-intense application field?</p>
-<p><img alt="ICON Example" src="../_images/icon_example.png" /></p>
-<p>The most used file formats are:</p>
+</li>
+<li><p>National Oceanic and Atmospheric Administration (NOAA)</p>
+<ul>
+<li><p>Weather and climate, operational numerical weather prediction and research</p></li>
+</ul>
+</li>
+<li><p>National Center for Atmospheric Research (NCAR)</p>
+<ul>
+<li><p>Comprehensive climate focus (includes ocean, sea ice, land ice, land)</p></li>
+</ul>
+</li>
+<li><p>National Institute of Standards and Technology</p>
+<ul>
+<li><p>Fundamental materials (e.g., gas equations of state), metrology</p></li>
+</ul>
+</li>
+<li><p>National Aeronautics and Space Administration (NASA)</p>
+<ul>
+<li><p>Earth research, especially remote sensing (satellite and aerial)</p></li>
+<li><p>Fluid and structural mechanics for safe, reliable, efficient flight (includes partnerships with the Federal Aviation Administration (FAA))</p></li>
+<li><p>Materials science and engineering (overlapping scope with industry)</p></li>
+</ul>
+</li>
+</ul>
+<section id="examples-of-lab-agency-led-software">
+<h3>Examples of lab/agency-led software<a class="headerlink" href="#examples-of-lab-agency-led-software" title="Link to this heading">#</a></h3>
 <ul class="simple">
-<li><p>NetCDF (Network Common Data Form)</p></li>
-<li><p>(parallel) HDF5</p></li>
+<li><p>HPC Middleware (MPI implementations, resource managers)</p></li>
+<li><p>Numerical Libraries (PETSc, hypre, Sundials, Trilinos, MFEM)</p></li>
+<li><p>Open source simulation applications (MOOSE library, LAMMPS, Nek, Albany)</p></li>
+<li><p>Internal/export controlled simulation (BLAST, FUN3D, Sierra, MCNP, MOOSE apps)</p>
+<ul>
+<li><p>Nuclear reactor safety, stockpile stewardship, proprietary designs</p></li>
+<li><p><a class="reference external" href="https://newsreleases.sandia.gov/goodyear-sandia/">Goodyear-Sandia partnership on tire simulation</a></p></li>
 </ul>
+</li>
+<li><p>Community Earth System Model (NCAR), Energy Exascale Earth System Model (E3SM)</p></li>
+<li><p>Some orgs publicly embrace open source <a class="reference external" href="https://software.llnl.gov/">LLNL Open Source</a></p></li>
+</ul>
+</section>
+</section>
+<section id="industrial-r-d">
+<h2>2. Industrial R&amp;D<a class="headerlink" href="#industrial-r-d" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Hardware vendors and cloud providers: CUDA, HIP, SYCL, OpenMP, MPI</p>
+<ul>
+<li><p>“Science/engineering should use our programming models/run fast on our hardware”</p></li>
+<li><p>“Data science” (statistical computing) should also be fast</p></li>
+</ul>
+</li>
+<li><p>High-stakes methods development</p>
+<ul>
+<li><p>Example: <a class="reference external" href="https://hiliftpw.larc.nasa.gov/">High-Lift Prediction Workshop</a> (<a class="reference external" href="https://hiliftpw.larc.nasa.gov/Workshop3/participantlist.html">participants</a>)</p></li>
+</ul>
+</li>
+<li><p>Research papers in specific venues are valuable</p></li>
+<li><p>Windows into industrial research culture</p>
+<ul>
+<li><p>Who participates in comparison studies, standards organizations, etc.?</p></li>
+<li><p>Who attends technical conferences (not trade shows) and holds elected positions in professional societies?</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="academia">
+<h2>3. Academia<a class="headerlink" href="#academia" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Tenure-track</p>
+<ul>
+<li><p>Teaching</p></li>
+<li><p>External funding is mainly to support students and research staff</p></li>
+<li><p>Eternally swimming in hats</p></li>
+</ul>
+</li>
+<li><p>Research faculty/research software engineer</p>
+<ul>
+<li><p>Usually reliant on external grants, often a “center”</p></li>
+<li><p>There are some “research software engineering” facility/service groups (e.g., <a class="reference external" href="https://researchcomputing.princeton.edu/news/2022/princeton-bets-big-research-software-engineering">Princeton</a>) that may serve several projects. On the other hand, there are positions that are project specifc. See a few examples below:</p></li>
+<li><p>The <a class="reference external" href="https://iccs.cam.ac.uk/">Institute of Computing for Climate Science (ICCS)</a> at the University of Cambridge</p></li>
+<li><p><a class="reference external" href="https://www.colorado.edu/research/research-institutes">CU Institutes</a> (CIRES, INSTAAR, LASP, JILA, BioFrontiers, …)</p></li>
+<li><p><a class="reference external" href="https://clima.caltech.edu/">CliMA</a></p></li>
+<li><p><a class="reference external" href="https://www.schmidtsciences.org/virtual-earth-system-research-institute-vesri/">VESRI</a></p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="research-software-engineering">
+<h2>4. Research Software Engineering<a class="headerlink" href="#research-software-engineering" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Resources for community Scientific Software in CSE: <a class="reference external" href="https://bssw.io/">Better Scientific Software (BSSw)</a></p></li>
+<li><p>United States Research Software Engineering Association (<a class="reference external" href="https://us-rse.org/">US-RSE</a>)</p></li>
+</ul>
+</section>
+<section id="performance-engineering">
+<h2>5. Performance Engineering<a class="headerlink" href="#performance-engineering" title="Link to this heading">#</a></h2>
+<p>A <em>performance engineer</em> is a specialist who ensures that software applications and systems perform efficiently and reliably, meeting specific requirements like speed, scalability, and responsiveness.</p>
+<p>They focus on identifying and resolving performance bottlenecks throughout the software development lifecycle, often working with developers and other engineers to optimize code and system architecture.</p>
 <blockquote>
-<div><p><a class="reference external" href="http://www.pdsw.org/pdsw-discs18/slides/luttgau-pdsw-discs18-slides.pdf">Slides credit: “Toward Understanding I/O Behavior in HPC Workflows” SC 18</a></p>
+<div><ul class="simple">
+<li><p>Reading: <a class="reference external" href="https://medium.com/riskified-technology/becoming-a-high-performance-software-engineer-895ec6949782">Becoming a High-Performance Software Engineer</a></p></li>
+</ul>
 </div></blockquote>
-<section id="how-much-storage-bandwidth-does-a-simulation-need">
-<h3>How much storage bandwidth does a simulation need?<a class="headerlink" href="#how-much-storage-bandwidth-does-a-simulation-need" title="Link to this heading">#</a></h3>
-<p>Example: NEK5000 (CFD application)</p>
-<p><img alt="NEK5000 example of storage needed" src="../_images/nek_gpu_new3.png" /></p>
-</section>
-</section>
-<section id="examples-of-hpc-file-systems">
-<h2>2. Examples of HPC File Systems<a class="headerlink" href="#examples-of-hpc-file-systems" title="Link to this heading">#</a></h2>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">wall_clock_per_timestep</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.6</span>
-<span class="n">dofs_per_node</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1800</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">1e4</span>
-<span class="n">MBps_per_node</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dofs_per_node</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">8</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">wall_clock_per_timestep</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mf">1e6</span>
-<span class="n">dofs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">95e6</span>
-<span class="n">MBps</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dofs</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">8</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">wall_clock_per_timestep</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mf">1e6</span>
-
-<span class="p">(</span><span class="n">MBps_per_node</span><span class="p">,</span><span class="w"> </span><span class="n">MBps</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(240.0, 1266.6666666666667)
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">seconds_per_day</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">24</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">60</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">60</span>
-<span class="n">TB_per_day</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MBps</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">seconds_per_day</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mf">1e6</span><span class="w"> </span><span class="c"># TB</span>
-<span class="n">TB_per_day</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>109.44
-</pre></div>
-</div>
-</div>
-</div>
-<p>What if all nodes in a cluster used storage at this rate?</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">MBps_per_node</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">4600</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mf">1e6</span><span class="w"> </span><span class="c"># TB/s</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.104
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">TB_per_day</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">4600</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">8</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mf">1e3</span><span class="w"> </span><span class="c"># PB/day</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>62.928
-</pre></div>
-</div>
-</div>
-</div>
-<section id="summit-file-systems">
-<h3>2.1 <a class="reference external" href="https://www.olcf.ornl.gov/wp-content/uploads/2018/05/Intro_Summit_File_Systems_Data_Transfers.pdf">Summit File Systems</a><a class="headerlink" href="#summit-file-systems" title="Link to this heading">#</a></h3>
+<p>These could be working for industry, e.g.,:</p>
 <ul class="simple">
-<li><p>Capacity: 250 PB</p></li>
-<li><p>Theoretical Bandwidth: 2.5 TB/s</p></li>
+<li><p>Intel</p></li>
+<li><p>NVIDIA</p></li>
+<li><p>AMD</p></li>
+<li><p>ARM</p></li>
+<li><p>IBM</p></li>
+</ul>
+<p>or Academia and National Labs, especially DOE Labs:</p>
+<ul class="simple">
+<li><p>Argonne National Lab (ANL)</p></li>
+<li><p>Oak Ridge National Lab (ORNL)</p></li>
+<li><p>Lawrence Livermore National Lab (LLNL)</p></li>
+<li><p>Lawrence Berkeley National Lab (LBNL)</p></li>
+<li><p>Los Alamos National Lab (LANL)</p></li>
+<li><p>Sandia National Lab (SNL), etc.</p></li>
+</ul>
+<section id="conferences-of-relevance-to-the-hpc-community">
+<h3>Conferences of relevance to the HPC community:<a class="headerlink" href="#conferences-of-relevance-to-the-hpc-community" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><a class="reference external" href="https://isc-hpc.com/">International Supercomputing Conference</a>, (June)</p></li>
+<li><p><a class="reference external" href="https://supercomputing.org/">ACM/IEEE Supercomputing Conference</a>, a.k.a., Supercomputing (November); student paper prizes</p></li>
+<li><p><a class="reference external" href="https://icpp2025.sdsc.edu/">International Conference on Parallel Processing</a></p></li>
+<li><p><a class="reference external" href="https://www.siam.org/conferences-events/past-event-archive/pp24/">SIAM Conference on Parallel Processing for Scientific Computing (SIAM PP)</a>, every other year</p></li>
+<li><p><a class="reference external" href="https://www.pasc-conference.org/">The Platform for Advanced Scientific Computing (PASC)</a>, (June, in Switzerland); student paper prizes</p></li>
 </ul>
 </section>
+</section>
+<section id="personal-resources">
+<h2>6. Personal Resources<a class="headerlink" href="#personal-resources" title="Link to this heading">#</a></h2>
+<p>You can find a talk on my <a class="reference external" href="https://valeriabarra.org/talks/">website</a> that I gave a few years ago to my Alma Mather. Let’s give a look together at the <a class="reference external" href="https://valeriabarra.org/talks/NJITAlumnaTalk22.pdf">slides</a>.</p>
 </section>
 </section>
 
@@ -630,16 +645,16 @@ document.write(`
         },
         codeMirrorConfig: {
             theme: "abcdef",
-            mode: "julia-1.10"
+            mode: "python"
         },
         kernelOptions: {
-            name: "julia-1.10",
+            name: "python3",
             path: "./lectures"
         },
         predefinedOutput: true
     }
     </script>
-    <script>kernelName = 'julia-1.10'</script>
+    <script>kernelName = 'python3'</script>
 
                 </article>
               
@@ -652,22 +667,13 @@ document.write(`
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="module9-1_ispc_and_others.html"
+       href="module9-2_parallel_io.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">32) ISPC, OpenMP target, OpenACC, and all that</p>
+        <p class="prev-next-title">33) I/O in HPC</p>
       </div>
-    </a>
-    <a class="right-next"
-       href="module10-1_careers.html"
-       title="next page">
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">34) Careers in HPSC</p>
-      </div>
-      <i class="fa-solid fa-angle-right"></i>
     </a>
 </div>
                 </footer>
@@ -685,14 +691,19 @@ document.write(`
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hiding-latency">1. Hiding latency</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#how-much-storage-bandwidth-does-a-simulation-need">How much storage bandwidth does a simulation need?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#careers-in-hpc-hpsc">1. Careers in HPC/HPSC</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#national-labs">1. National Labs</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#examples-of-lab-agency-led-software">Examples of lab/agency-led software</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#examples-of-hpc-file-systems">2. Examples of HPC File Systems</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#summit-file-systems">2.1 Summit File Systems</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#industrial-r-d">2. Industrial R&amp;D</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#academia">3. Academia</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#research-software-engineering">4. Research Software Engineering</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#performance-engineering">5. Performance Engineering</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#conferences-of-relevance-to-the-hpc-community">Conferences of relevance to the HPC community:</a></li>
 </ul>
 </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#personal-resources">6. Personal Resources</a></li>
 </ul>
   </nav></div>
 
