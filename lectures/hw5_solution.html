@@ -668,9 +668,10 @@ Simply put, the <code class="docutils literal notranslate"><span class="pre">knl
 </ol>
 <p>Solution:</p>
 <p>The bandwidth analysis for the <code class="docutils literal notranslate"><span class="pre">knl_reversevecs_inplace!</span></code> kernel is the same as for the <code class="docutils literal notranslate"><span class="pre">knl_reversevecs_inplace_bad!</span></code> kernel given, that is,</p>
-<div class="highlight-math notranslate"><div class="highlight"><pre><span></span>\textrm{bandwidth} = 2 N * {\textrm{sizeof}(T)} / \textrm{time}
-</pre></div>
-</div>
+<div class="math notranslate nohighlight">
+\[
+\textrm{bandwidth} = 2 N * {\textrm{sizeof}(T)} / \textrm{time}
+\]</div>
 <p>where <span class="math notranslate nohighlight">\({\tt \textrm{time}}\)</span> is the kernel runtime in seconds, and <span class="math notranslate nohighlight">\(\textrm{T}\)</span> is the float type you are executing with (it could be <code class="docutils literal notranslate"><span class="pre">Float32</span></code>, <code class="docutils literal notranslate"><span class="pre">Float64</span></code>, etc.), since we need to load all the data once and write all the data once. We can also divide this by <span class="math notranslate nohighlight">\(1024^3\)</span> to obtain Gigabytes per second (Gib/s).</p>
 <ol class="arabic simple" start="5">
 <li><p>(40%) In <a class="reference internal" href="#Report.ipynb"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">Report.ipynb</span></code></span></a> add a performance analysis that should produce at least the following two figures and related commentary. Figures that should be included:
@@ -679,20 +680,24 @@ Simply put, the <code class="docutils literal notranslate"><span class="pre">knl
 </ol>
 <p><img alt="HW5 solution: Fig 5.1" src="../_images/bandwidth_F64_Vs_F32.png" /></p>
 <p>For the roofline plot, we define:</p>
-<div class="highlight-math notranslate"><div class="highlight"><pre><span></span>\textrm{FLOPs} = 4 N
-</pre></div>
-</div>
+<div class="math notranslate nohighlight">
+\[
+  \textrm{FLOPs} = 4 N
+  \]</div>
 <p>Since each assignment that involves floating-point numbers (as opposed to binary integer operations) counts as FLOPs.</p>
-<div class="highlight-math notranslate"><div class="highlight"><pre><span></span>\textrm{intensity} =  \frac{\textrm{FLOPs}}{ \textrm{Memory moved}} = \frac{4 N}{ 2 N  {\textrm{sizeof}(T)}}
-</pre></div>
-</div>
-<div class="highlight-math notranslate"><div class="highlight"><pre><span></span>\textrm{work} = 4 N  {\textrm{sizeof}(T)} / 1024^3
-</pre></div>
-</div>
+<div class="math notranslate nohighlight">
+\[
+  \textrm{intensity} =  \frac{\textrm{FLOPs}}{ \textrm{Memory moved}} = \frac{4 N}{ 2 N  {\textrm{sizeof}(T)}}
+  \]</div>
+<div class="math notranslate nohighlight">
+\[
+  \textrm{work} = 4 N  {\textrm{sizeof}(T)} / 1024^3
+  \]</div>
 <p>and</p>
-<div class="highlight-math notranslate"><div class="highlight"><pre><span></span>\textrm{rate} = \textrm{work} / \textrm{execution time}.
-</pre></div>
-</div>
+<div class="math notranslate nohighlight">
+\[
+  \textrm{rate} = \textrm{work} / \textrm{execution time}.
+  \]</div>
 <p>Hence, for this particular problem, our roofline plots don’t really look like “roofs”, rather more like streight walls.</p>
 <p><img alt="HW5 solution: Fig 5.1" src="../_images/roofline.png" /></p>
 </section>

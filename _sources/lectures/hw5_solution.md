@@ -59,9 +59,9 @@ Solution:
 The bandwidth analysis for the `knl_reversevecs_inplace!` kernel is the same as for the `knl_reversevecs_inplace_bad!` kernel given, that is,
 
 
-```math
+$$
 \textrm{bandwidth} = 2 N * {\textrm{sizeof}(T)} / \textrm{time}
-```
+$$
 where ${\tt \textrm{time}}$ is the kernel runtime in seconds, and $\textrm{T}$ is the float type you are executing with (it could be `Float32`, `Float64`, etc.), since we need to load all the data once and write all the data once. We can also divide this by $1024^3$ to obtain Gigabytes per second (Gib/s).
 
 5. (40%) In [`Report.ipynb`](Report.ipynb) add a performance analysis that should produce at least the following two figures and related commentary. Figures that should be included:
@@ -72,24 +72,24 @@ where ${\tt \textrm{time}}$ is the kernel runtime in seconds, and $\textrm{T}$ i
 
   For the roofline plot, we define:
 
-  ```math
+  $$
   \textrm{FLOPs} = 4 N
-  ```
+  $$
   Since each assignment that involves floating-point numbers (as opposed to binary integer operations) counts as FLOPs.
 
-  ```math
+  $$
   \textrm{intensity} =  \frac{\textrm{FLOPs}}{ \textrm{Memory moved}} = \frac{4 N}{ 2 N  {\textrm{sizeof}(T)}}
-  ```
+  $$
 
-  ```math
+  $$
   \textrm{work} = 4 N  {\textrm{sizeof}(T)} / 1024^3
-  ```
+  $$
 
   and
 
-  ```math
+  $$
   \textrm{rate} = \textrm{work} / \textrm{execution time}.
-  ```
+  $$
 
   Hence, for this particular problem, our roofline plots don't really look like "roofs", rather more like streight walls.
 
