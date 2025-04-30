@@ -1,0 +1,820 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>34) HW5 Solution &#8212; Scientific Computing</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'lectures/hw5_solution';</script>
+    <link rel="icon" href="../_static/SDSU-comp605_logo.svg"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="35) Careers in HPSC" href="module10-1_careers.html" />
+    <link rel="prev" title="33) I/O in HPC" href="module9-2_parallel_io.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/SDSU-comp605_logo.svg" class="logo__image only-light" alt="Scientific Computing - Home"/>
+    <script>document.write(`<img src="../_static/SDSU-comp605_logo.svg" class="logo__image only-dark" alt="Scientific Computing - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../index.html">
+                    Welcome
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../syllabus.html">Syllabus</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../lectures.html">Lectures</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="module1-1_first_class.html">1) First Class: Reproducibility and Git</a></li>
+
+
+<li class="toctree-l2"><a class="reference internal" href="module1-2_linux.html">2) The Linux Filesystem and commands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module1-3_community_projects.html">3) Community Projects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module1-4_intro_architectures.html">4) Introduction to Computer Architectures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module1-5_intro_vectorization.html">5) Introduction to Vectorization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module2-1_measuring_performance.html">6) Measuring Performance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module2-2_cpu_optimization.html">7) CPU Optimization: Matrix-Matrix Multiply</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module2-3_blocked_mmm.html">8) Blocked Matrix-Matrix Multiplication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module2-4_packing_for_cache.html">9) Packing for cache</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module2-5_intro_multithreading.html">10) Introduction to Multithreading</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module3-1_intro_parallel_scaling.html">11) Introduction to Parallel Scaling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module3-2_intro_to_openmp.html">12) Introduction to OpenMP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module3-3_openmp_tasks.html">13) More on OpenMP and OpenMP Tasks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module4-1_case_study_1_libceed.html">14) Case Study 1: libCEED</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module4-2_case_study_2_climacore.html">15) Case Study 2: ClimaCore</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hw2_notebook.html">16) HW2 solution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module5-1_reductions_and_scans.html">17) Parallel reductions and scans</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module5-2_intro_to_mpi.html">18) Introduction to MPI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module5-3_intro_to_slurm.html">19) Introduction to Batch Jobs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module5-4_parallel_linear_alegebra.html">20) Parallel Linear Algebra</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module6-1_intro_to_mpi_jl.html">21) Introduction to MPI.jl</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module6-2_blocking_vs_nonblocking.html">22) Blocking and non-blocking communication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module6-3_collectives.html">23) Collective communication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hw3_solution.html">24) HW3 solution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module7-1_coprocessors.html">25) Coprocessor architectures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module7-2_cuda.html">26) GPUs and CUDA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module7-3_practical_cuda.html">27) Practical CUDA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module8-1_cuda_jl.html">28) Intro to GPU programming in Julia</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module8-2_cuda_jl_memory.html">29) Memory management with CUDA.jl</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module8-3_cuda_jl_reduction.html">30) Parallel reductions with CUDA.jl</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hw4_solution.html">31) HW4 Solution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module9-1_ispc_and_others.html">32) ISPC, OpenMP target, OpenACC, and all that</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module9-2_parallel_io.html">33) I/O in HPC</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">34) HW5 Solution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module10-1_careers.html">35) Careers in HPSC</a></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/sdsu-comp605/spring25" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/sdsu-comp605/spring25/issues/new?title=Issue%20on%20page%20%2Flectures/hw5_solution.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/lectures/hw5_solution.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>34) HW5 Solution</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#assignment-steps">Assignment steps:</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="hw5-solution">
+<h1>34) HW5 Solution<a class="headerlink" href="#hw5-solution" title="Link to this heading">#</a></h1>
+<section id="assignment-steps">
+<h2>Assignment steps:<a class="headerlink" href="#assignment-steps" title="Link to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p>(25%) Write your own correct <code class="docutils literal notranslate"><span class="pre">knl_reversevecs_inplace!</span></code> kernel</p></li>
+</ol>
+<p>Solution:</p>
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="c"># Real GPU kernel</span>
+<span class="k">function</span><span class="w"> </span><span class="n">knl_reversevecs_inplace!</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+
+<span class="w">  </span><span class="n">N</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">length</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+
+<span class="w">  </span><span class="n">tidx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">threadIdx</span><span class="p">()</span><span class="o">.</span><span class="n">x</span><span class="w"> </span><span class="c"># get the thread ID</span>
+<span class="w">  </span><span class="n">bidx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">blockIdx</span><span class="p">()</span><span class="o">.</span><span class="n">x</span><span class="w">  </span><span class="c"># get the block ID</span>
+<span class="w">  </span><span class="n">bdim</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">blockDim</span><span class="p">()</span><span class="o">.</span><span class="n">x</span><span class="w">  </span><span class="c"># how many threads in each block</span>
+
+<span class="w">  </span><span class="c"># figure out which index we should handle</span>
+<span class="w">  </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">bidx</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">bdim</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">tidx</span>
+<span class="w">  </span><span class="nd">@inbounds</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">div</span><span class="p">(</span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
+<span class="w">    </span><span class="n">a1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+<span class="w">    </span><span class="n">a2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="p">[</span><span class="n">N</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">]</span>
+<span class="w">    </span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a2</span>
+<span class="w">    </span><span class="n">a</span><span class="p">[</span><span class="n">N</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a1</span>
+<span class="w">  </span><span class="k">end</span>
+
+<span class="w">  </span><span class="c">#Kernel must return nothing</span>
+<span class="w">  </span><span class="nb">nothing</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+<p>Note that in the kernel above we use two temporaries. They are not both necessary, we could have used only one temporary, by creating the <code class="docutils literal notranslate"><span class="pre">a1</span></code> temporary, <code class="docutils literal notranslate"><span class="pre">a1</span> <span class="pre">=</span> <span class="pre">a[i]</span></code>, then assigning <code class="docutils literal notranslate"><span class="pre">a[i]</span> <span class="pre">=</span> <span class="pre">a[N</span> <span class="pre">-</span> <span class="pre">i</span> <span class="pre">+</span> <span class="pre">1]</span></code> directly, and finally assigning <code class="docutils literal notranslate"><span class="pre">a[N</span> <span class="pre">-</span> <span class="pre">i</span> <span class="pre">+</span> <span class="pre">1]</span> <span class="pre">=</span> <span class="pre">a1</span></code>.</p>
+<ol class="arabic simple" start="2">
+<li><p>(15%) Add testing and timing of this kernel. Your testing should include at least a correctness check.</p></li>
+</ol>
+<p>Solution:</p>
+<p>This is done in the code provided in <a class="reference external" href="https://github.com/sdsu-comp605/spring25/tree/main/julia_codes/hw5_sol/reverse_vec_sol.jl"><code class="docutils literal notranslate"><span class="pre">julia_codes/hw5_sol/reverse_vec_sol.jl</span></code></a>.</p>
+<p>Correctness checks are performed using the <code class="docutils literal notranslate"><span class="pre">&#64;assert</span></code> macro, comparing our computed values with the reference value <code class="docutils literal notranslate"><span class="pre">a_ref</span></code>.</p>
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="linenos">  1</span><span class="k">using</span><span class="w"> </span><span class="n">CUDA</span>
+<span class="linenos">  2</span>
+<span class="linenos">  3</span><span class="c"># Loop based function</span>
+<span class="linenos">  4</span><span class="k">function</span><span class="w"> </span><span class="n">reversevec!</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">)</span>
+<span class="linenos">  5</span><span class="w">  </span><span class="n">N</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">length</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+<span class="linenos">  6</span><span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="o">:</span><span class="n">N</span>
+<span class="linenos">  7</span><span class="w">    </span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">b</span><span class="p">[</span><span class="n">N</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">]</span>
+<span class="linenos">  8</span><span class="w">  </span><span class="k">end</span>
+<span class="linenos">  9</span><span class="k">end</span>
+<span class="linenos"> 10</span>
+<span class="linenos"> 11</span><span class="c"># Loop based fake &quot;GPU&quot; kernel</span>
+<span class="linenos"> 12</span><span class="k">function</span><span class="w"> </span><span class="n">fake_knl_reversevecs!</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">numblocks</span><span class="p">,</span><span class="w"> </span><span class="n">bdim</span><span class="p">)</span>
+<span class="linenos"> 13</span><span class="w">  </span><span class="n">N</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">length</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+<span class="linenos"> 14</span><span class="w">  </span><span class="c"># loop over the &quot;blocks&quot;</span>
+<span class="linenos"> 15</span><span class="w">  </span><span class="nd">@inbounds</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">bidx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="o">:</span><span class="n">numblocks</span>
+<span class="linenos"> 16</span><span class="w">    </span><span class="c"># loop over the &quot;threads&quot;</span>
+<span class="linenos"> 17</span><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">tidx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="o">:</span><span class="n">bdim</span>
+<span class="linenos"> 18</span><span class="w">      </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">bidx</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">bdim</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">tidx</span>
+<span class="linenos"> 19</span><span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">N</span>
+<span class="linenos"> 20</span><span class="w">        </span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">b</span><span class="p">[</span><span class="n">N</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">]</span>
+<span class="linenos"> 21</span><span class="w">      </span><span class="k">end</span>
+<span class="linenos"> 22</span><span class="w">    </span><span class="k">end</span>
+<span class="linenos"> 23</span><span class="w">  </span><span class="k">end</span>
+<span class="linenos"> 24</span><span class="k">end</span>
+<span class="linenos"> 25</span>
+<span class="linenos"> 26</span><span class="c"># Real GPU kernel</span>
+<span class="linenos"> 27</span><span class="k">function</span><span class="w"> </span><span class="n">knl_reversevecs!</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">)</span>
+<span class="linenos"> 28</span>
+<span class="linenos"> 29</span><span class="w">  </span><span class="n">N</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">length</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+<span class="linenos"> 30</span>
+<span class="linenos"> 31</span><span class="w">  </span><span class="n">tidx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">threadIdx</span><span class="p">()</span><span class="o">.</span><span class="n">x</span><span class="w"> </span><span class="c"># get the thread ID</span>
+<span class="linenos"> 32</span><span class="w">  </span><span class="n">bidx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">blockIdx</span><span class="p">()</span><span class="o">.</span><span class="n">x</span><span class="w">  </span><span class="c"># get the block ID</span>
+<span class="linenos"> 33</span><span class="w">  </span><span class="n">bdim</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">blockDim</span><span class="p">()</span><span class="o">.</span><span class="n">x</span><span class="w">  </span><span class="c"># how many threads in each block</span>
+<span class="linenos"> 34</span>
+<span class="linenos"> 35</span><span class="w">  </span><span class="c"># figure out which index we should handle</span>
+<span class="linenos"> 36</span><span class="w">  </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">bidx</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">bdim</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">tidx</span>
+<span class="linenos"> 37</span><span class="w">  </span><span class="nd">@inbounds</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">N</span>
+<span class="linenos"> 38</span><span class="w">    </span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">b</span><span class="p">[</span><span class="n">N</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">]</span>
+<span class="linenos"> 39</span><span class="w">  </span><span class="k">end</span>
+<span class="linenos"> 40</span>
+<span class="linenos"> 41</span><span class="w">  </span><span class="c">#Kernel must return nothing</span>
+<span class="linenos"> 42</span><span class="w">  </span><span class="nb">nothing</span>
+<span class="linenos"> 43</span><span class="k">end</span>
+<span class="linenos"> 44</span>
+<span class="linenos"> 45</span><span class="c"># Real GPU kernel</span>
+<span class="linenos"> 46</span><span class="k">function</span><span class="w"> </span><span class="n">knl_reversevecs_inplace_bad!</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+<span class="linenos"> 47</span>
+<span class="linenos"> 48</span><span class="w">  </span><span class="n">N</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">length</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+<span class="linenos"> 49</span>
+<span class="linenos"> 50</span><span class="w">  </span><span class="n">tidx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">threadIdx</span><span class="p">()</span><span class="o">.</span><span class="n">x</span><span class="w"> </span><span class="c"># get the thread ID</span>
+<span class="linenos"> 51</span><span class="w">  </span><span class="n">bidx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">blockIdx</span><span class="p">()</span><span class="o">.</span><span class="n">x</span><span class="w">  </span><span class="c"># get the block ID</span>
+<span class="linenos"> 52</span><span class="w">  </span><span class="n">bdim</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">blockDim</span><span class="p">()</span><span class="o">.</span><span class="n">x</span><span class="w">  </span><span class="c"># how many threads in each block</span>
+<span class="linenos"> 53</span>
+<span class="linenos"> 54</span><span class="w">  </span><span class="c"># figure out which index we should handle</span>
+<span class="linenos"> 55</span><span class="w">  </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">bidx</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">bdim</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">tidx</span>
+<span class="linenos"> 56</span><span class="w">  </span><span class="nd">@inbounds</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">N</span>
+<span class="linenos"> 57</span><span class="w">    </span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="p">[</span><span class="n">N</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">]</span>
+<span class="linenos"> 58</span><span class="w">  </span><span class="k">end</span>
+<span class="linenos"> 59</span>
+<span class="linenos"> 60</span><span class="w">  </span><span class="c">#Kernel must return nothing</span>
+<span class="linenos"> 61</span><span class="w">  </span><span class="nb">nothing</span>
+<span class="linenos"> 62</span><span class="k">end</span>
+<span class="linenos"> 63</span>
+<span class="linenos"> 64</span><span class="c"># Real GPU kernel</span>
+<span class="linenos"> 65</span><span class="k">function</span><span class="w"> </span><span class="n">knl_reversevecs_inplace!</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+<span class="linenos"> 66</span>
+<span class="linenos"> 67</span><span class="w">  </span><span class="n">N</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">length</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+<span class="linenos"> 68</span>
+<span class="linenos"> 69</span><span class="w">  </span><span class="n">tidx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">threadIdx</span><span class="p">()</span><span class="o">.</span><span class="n">x</span><span class="w"> </span><span class="c"># get the thread ID</span>
+<span class="linenos"> 70</span><span class="w">  </span><span class="n">bidx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">blockIdx</span><span class="p">()</span><span class="o">.</span><span class="n">x</span><span class="w">  </span><span class="c"># get the block ID</span>
+<span class="linenos"> 71</span><span class="w">  </span><span class="n">bdim</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">blockDim</span><span class="p">()</span><span class="o">.</span><span class="n">x</span><span class="w">  </span><span class="c"># how many threads in each block</span>
+<span class="linenos"> 72</span>
+<span class="linenos"> 73</span><span class="w">  </span><span class="c"># figure out which index we should handle</span>
+<span class="linenos"> 74</span><span class="w">  </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">bidx</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">bdim</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">tidx</span>
+<span class="linenos"> 75</span><span class="w">  </span><span class="nd">@inbounds</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">div</span><span class="p">(</span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
+<span class="linenos"> 76</span><span class="w">    </span><span class="n">a1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+<span class="linenos"> 77</span><span class="w">    </span><span class="n">a2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="p">[</span><span class="n">N</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">]</span>
+<span class="linenos"> 78</span><span class="w">    </span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a2</span>
+<span class="linenos"> 79</span><span class="w">    </span><span class="n">a</span><span class="p">[</span><span class="n">N</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a1</span>
+<span class="linenos"> 80</span><span class="w">  </span><span class="k">end</span>
+<span class="linenos"> 81</span>
+<span class="linenos"> 82</span><span class="w">  </span><span class="c">#Kernel must return nothing</span>
+<span class="linenos"> 83</span><span class="w">  </span><span class="nb">nothing</span>
+<span class="linenos"> 84</span><span class="k">end</span>
+<span class="linenos"> 85</span>
+<span class="linenos"> 86</span><span class="c">### Start of testing/driver code</span>
+<span class="linenos"> 87</span><span class="k">let</span>
+<span class="linenos"> 88</span><span class="w">  </span><span class="n">T</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">Float64</span>
+<span class="linenos"> 89</span><span class="w">  </span><span class="n">N</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">100000000</span>
+<span class="linenos"> 90</span><span class="w">  </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rand</span><span class="p">(</span><span class="n">T</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="p">)</span>
+<span class="linenos"> 91</span><span class="w">  </span><span class="n">a_ref</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">b</span><span class="p">[</span><span class="k">end</span><span class="o">:-</span><span class="mi">1</span><span class="o">:</span><span class="mi">1</span><span class="p">]</span>
+<span class="linenos"> 92</span>
+<span class="linenos"> 93</span><span class="w">  </span><span class="c">#</span>
+<span class="linenos"> 94</span><span class="w">  </span><span class="c">### Simple reference for loop CPU implementation call</span>
+<span class="linenos"> 95</span><span class="w">  </span><span class="c">#</span>
+<span class="linenos"> 96</span><span class="w">  </span><span class="n">print</span><span class="p">(</span><span class="s">&quot;First version: reference loop-based double array reverse </span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="linenos"> 97</span><span class="w">  </span><span class="n">a1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">similar</span><span class="p">(</span><span class="n">a_ref</span><span class="p">)</span>
+<span class="linenos"> 98</span><span class="w">  </span><span class="c"># &quot;Warm-up&quot; call</span>
+<span class="linenos"> 99</span><span class="w">  </span><span class="n">reversevec!</span><span class="p">(</span><span class="n">a1</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">)</span>
+<span class="linenos">100</span><span class="w">  </span><span class="c"># Timing call</span>
+<span class="linenos">101</span><span class="w">  </span><span class="nd">@time</span><span class="w"> </span><span class="n">reversevec!</span><span class="p">(</span><span class="n">a1</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">)</span>
+<span class="linenos">102</span><span class="w">  </span><span class="nd">@assert</span><span class="w"> </span><span class="n">a1</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">a_ref</span>
+<span class="linenos">103</span>
+<span class="linenos">104</span><span class="w">  </span><span class="c">#</span>
+<span class="linenos">105</span><span class="w">  </span><span class="c">### Fake GPU kernel call</span>
+<span class="linenos">106</span><span class="w">  </span><span class="c">#</span>
+<span class="linenos">107</span><span class="w">  </span><span class="n">print</span><span class="p">(</span><span class="s">&quot;Second version: fake GPU kernel </span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="linenos">108</span><span class="w">  </span><span class="n">a2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">similar</span><span class="p">(</span><span class="n">a_ref</span><span class="p">)</span>
+<span class="linenos">109</span><span class="w">  </span><span class="n">numthreads</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">256</span>
+<span class="linenos">110</span><span class="w">  </span><span class="n">numblocks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">div</span><span class="p">(</span><span class="n">N</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">numthreads</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">numthreads</span><span class="p">)</span>
+<span class="linenos">111</span><span class="w">  </span><span class="c"># &quot;Warm-up&quot; call</span>
+<span class="linenos">112</span><span class="w">  </span><span class="n">fake_knl_reversevecs!</span><span class="p">(</span><span class="n">a2</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">numblocks</span><span class="p">,</span><span class="w"> </span><span class="n">numthreads</span><span class="p">)</span>
+<span class="linenos">113</span><span class="w">  </span><span class="c"># Timing call</span>
+<span class="linenos">114</span><span class="w">  </span><span class="nd">@time</span><span class="w"> </span><span class="n">fake_knl_reversevecs!</span><span class="p">(</span><span class="n">a2</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">numblocks</span><span class="p">,</span><span class="w"> </span><span class="n">numthreads</span><span class="p">)</span>
+<span class="linenos">115</span><span class="w">  </span><span class="nd">@assert</span><span class="w"> </span><span class="n">a_ref</span><span class="w"> </span><span class="o">≈</span><span class="w"> </span><span class="n">a2</span>
+<span class="linenos">116</span>
+<span class="linenos">117</span><span class="w">  </span><span class="c">#</span>
+<span class="linenos">118</span><span class="w">  </span><span class="c">### Double array reverse call</span>
+<span class="linenos">119</span><span class="w">  </span><span class="c">#</span>
+<span class="linenos">120</span><span class="w">  </span><span class="n">print</span><span class="p">(</span><span class="s">&quot;Third version: real double-array reverse GPU kernel </span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="linenos">121</span><span class="w">  </span><span class="n">d_b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">CuArray</span><span class="p">(</span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="c"># Copy data to GPU</span>
+<span class="linenos">122</span><span class="w">  </span><span class="n">d_a3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">CuArray</span><span class="p">{</span><span class="kt">T</span><span class="p">}(</span><span class="nb">undef</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="p">)</span><span class="w"> </span><span class="c"># Allocate array on GPU</span>
+<span class="linenos">123</span><span class="w">  </span><span class="c"># &quot;Warm-up&quot; call</span>
+<span class="linenos">124</span><span class="w">  </span><span class="c"># Launch GPU kernel</span>
+<span class="linenos">125</span><span class="w">  </span><span class="nd">@cuda</span><span class="w"> </span><span class="n">threads</span><span class="o">=</span><span class="n">numthreads</span><span class="w"> </span><span class="n">blocks</span><span class="o">=</span><span class="n">numblocks</span><span class="w"> </span><span class="n">knl_reversevecs!</span><span class="p">(</span><span class="n">d_a3</span><span class="p">,</span><span class="w"> </span><span class="n">d_b</span><span class="p">)</span>
+<span class="linenos">126</span><span class="w">  </span><span class="c"># Barrier before timing</span>
+<span class="linenos">127</span><span class="w">  </span><span class="n">synchronize</span><span class="p">()</span>
+<span class="linenos">128</span><span class="w">  </span><span class="nd">@time</span><span class="w"> </span><span class="k">begin</span>
+<span class="linenos">129</span><span class="w">    </span><span class="c"># Timing call</span>
+<span class="linenos">130</span><span class="w">    </span><span class="nd">@cuda</span><span class="w"> </span><span class="n">threads</span><span class="o">=</span><span class="n">numthreads</span><span class="w"> </span><span class="n">blocks</span><span class="o">=</span><span class="n">numblocks</span><span class="w"> </span><span class="n">knl_reversevecs!</span><span class="p">(</span><span class="n">d_a3</span><span class="p">,</span><span class="w"> </span><span class="n">d_b</span><span class="p">)</span>
+<span class="linenos">131</span><span class="w">    </span><span class="c"># Barrier before completing</span>
+<span class="linenos">132</span><span class="w">    </span><span class="n">synchronize</span><span class="p">()</span>
+<span class="linenos">133</span><span class="w">  </span><span class="k">end</span>
+<span class="linenos">134</span>
+<span class="linenos">135</span><span class="w">  </span><span class="c"># Copy back to the CPU</span>
+<span class="linenos">136</span><span class="w">  </span><span class="n">a3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">Array</span><span class="p">(</span><span class="n">d_a3</span><span class="p">)</span>
+<span class="linenos">137</span><span class="w">  </span><span class="c"># Check correctness of result</span>
+<span class="linenos">138</span><span class="w">  </span><span class="nd">@assert</span><span class="w"> </span><span class="n">a_ref</span><span class="w"> </span><span class="o">≈</span><span class="w"> </span><span class="n">a3</span>
+<span class="linenos">139</span>
+<span class="linenos">140</span><span class="w">  </span><span class="c">#</span>
+<span class="linenos">141</span><span class="w">  </span><span class="c">### Inplace reverse GPU kernel (BAD) call</span>
+<span class="linenos">142</span><span class="w">  </span><span class="c">#</span>
+<span class="linenos">143</span><span class="w">  </span><span class="n">print</span><span class="p">(</span><span class="s">&quot;Fourth version: inplace GPU kernel (BAD) </span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="linenos">144</span><span class="w">  </span><span class="n">d_a4</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">CuArray</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+<span class="linenos">145</span><span class="w">  </span><span class="c"># &quot;Warm-up&quot; call</span>
+<span class="linenos">146</span><span class="w">  </span><span class="c"># Launch GPU kernel</span>
+<span class="linenos">147</span><span class="w">  </span><span class="nd">@cuda</span><span class="w"> </span><span class="n">threads</span><span class="o">=</span><span class="n">numthreads</span><span class="w"> </span><span class="n">blocks</span><span class="o">=</span><span class="n">numblocks</span><span class="w"> </span><span class="n">knl_reversevecs_inplace_bad!</span><span class="p">(</span><span class="n">d_a4</span><span class="p">)</span>
+<span class="linenos">148</span><span class="w">  </span><span class="c"># Barrier before timing</span>
+<span class="linenos">149</span><span class="w">  </span><span class="n">synchronize</span><span class="p">()</span>
+<span class="linenos">150</span><span class="w">  </span><span class="n">d_a4</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">CuArray</span><span class="p">(</span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="c"># need to reinitialize because the previous call to knl_reversevecs_inplace_bad! changed its content</span>
+<span class="linenos">151</span><span class="w">  </span><span class="nd">@time</span><span class="w"> </span><span class="k">begin</span>
+<span class="linenos">152</span><span class="w">    </span><span class="c"># Timing call</span>
+<span class="linenos">153</span><span class="w">    </span><span class="nd">@cuda</span><span class="w"> </span><span class="n">threads</span><span class="o">=</span><span class="n">numthreads</span><span class="w"> </span><span class="n">blocks</span><span class="o">=</span><span class="n">numblocks</span><span class="w"> </span><span class="n">knl_reversevecs_inplace_bad!</span><span class="p">(</span><span class="n">d_a4</span><span class="p">)</span>
+<span class="linenos">154</span><span class="w">    </span><span class="c"># Barrier before completing</span>
+<span class="linenos">155</span><span class="w">    </span><span class="n">synchronize</span><span class="p">()</span>
+<span class="linenos">156</span><span class="w">  </span><span class="k">end</span>
+<span class="linenos">157</span>
+<span class="linenos">158</span><span class="w">  </span><span class="c"># Copy back to the CPU</span>
+<span class="linenos">159</span><span class="w">  </span><span class="n">a4</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">Array</span><span class="p">(</span><span class="n">d_a4</span><span class="p">)</span>
+<span class="linenos">160</span><span class="w">  </span><span class="c"># Check correctness of result</span>
+<span class="linenos">161</span><span class="w">  </span><span class="c"># @assert a_ref ≈ a4 # If you try to uncomment this line, it will break.... why? The knl_reversevecs_inplace_bad! kernel does not guarantee correct results, since to swap any two entries/values you always need at least a third temporary entry/value.</span>
+<span class="linenos">162</span>
+<span class="linenos">163</span><span class="w">  </span><span class="c">#</span>
+<span class="linenos">164</span><span class="w">  </span><span class="c">### Inplace correct reverse GPU kernel call</span>
+<span class="linenos">165</span><span class="w">  </span><span class="c">#</span>
+<span class="linenos">166</span><span class="w">  </span><span class="n">print</span><span class="p">(</span><span class="s">&quot;Fifth version: correct inplace GPU kernel </span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="linenos">167</span><span class="w">  </span><span class="n">d_a5</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">CuArray</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+<span class="linenos">168</span><span class="w">  </span><span class="c"># &quot;Warm-up&quot; call</span>
+<span class="linenos">169</span><span class="w">  </span><span class="c"># Launch GPU kernel</span>
+<span class="linenos">170</span><span class="w">  </span><span class="nd">@cuda</span><span class="w"> </span><span class="n">threads</span><span class="o">=</span><span class="n">numthreads</span><span class="w"> </span><span class="n">blocks</span><span class="o">=</span><span class="n">numblocks</span><span class="w"> </span><span class="n">knl_reversevecs_inplace!</span><span class="p">(</span><span class="n">d_a5</span><span class="p">)</span>
+<span class="linenos">171</span><span class="w">  </span><span class="c"># Barrier before timing</span>
+<span class="linenos">172</span><span class="w">  </span><span class="n">synchronize</span><span class="p">()</span>
+<span class="linenos">173</span><span class="w">  </span><span class="n">d_a5</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">CuArray</span><span class="p">(</span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="c"># need to reinitialize because the previous call to knl_reversevecs_inplace_bad! changed its content</span>
+<span class="linenos">174</span><span class="w">  </span><span class="nd">@time</span><span class="w"> </span><span class="k">begin</span>
+<span class="linenos">175</span><span class="w">    </span><span class="c"># Timing call</span>
+<span class="linenos">176</span><span class="w">    </span><span class="nd">@cuda</span><span class="w"> </span><span class="n">threads</span><span class="o">=</span><span class="n">numthreads</span><span class="w"> </span><span class="n">blocks</span><span class="o">=</span><span class="n">numblocks</span><span class="w"> </span><span class="n">knl_reversevecs_inplace!</span><span class="p">(</span><span class="n">d_a5</span><span class="p">)</span>
+<span class="linenos">177</span><span class="w">    </span><span class="c"># Barrier before completing</span>
+<span class="linenos">178</span><span class="w">    </span><span class="n">synchronize</span><span class="p">()</span>
+<span class="linenos">179</span><span class="w">  </span><span class="k">end</span>
+<span class="linenos">180</span>
+<span class="linenos">181</span><span class="w">  </span><span class="c"># Copy back to the CPU</span>
+<span class="linenos">182</span><span class="w">  </span><span class="n">a5</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">Array</span><span class="p">(</span><span class="n">d_a5</span><span class="p">)</span>
+<span class="linenos">183</span><span class="w">  </span><span class="c"># Check correctness of result</span>
+<span class="linenos">184</span><span class="w">  </span><span class="nd">@assert</span><span class="w"> </span><span class="n">a_ref</span><span class="w"> </span><span class="o">≈</span><span class="w"> </span><span class="n">a5</span><span class="w"> </span><span class="c"># This time the assert check passes, since the correct version of the kernel guarantees that the array is flipped properly</span>
+<span class="linenos">185</span>
+<span class="linenos">186</span><span class="k">end</span>
+<span class="linenos">187</span><span class="nb">nothing</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>(10%) In <a class="reference internal" href="#Report.ipynb"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">Report.ipynb</span></code></span></a> explain in your own words what problem the <code class="docutils literal notranslate"><span class="pre">knl_reversevecs_inplace_bad!</span></code> version has.</p></li>
+</ol>
+<p>Solution:
+Simply put, the <code class="docutils literal notranslate"><span class="pre">knl_reversevecs_inplace_bad!</span></code> kernel does not use any intermediate temporary variable to swap two entries of an array, which results in incorrect (garbage) values. From the side of GPU computing aspects, it can also lead to race conditions.</p>
+<ol class="arabic simple" start="4">
+<li><p>(10%) In <a class="reference internal" href="#Report.ipynb"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">Report.ipynb</span></code></span></a> provide a bandwidth analysis of the correct <code class="docutils literal notranslate"><span class="pre">knl_reversevecs_inplace!</span></code> kernel</p></li>
+</ol>
+<p>Solution:</p>
+<p>The bandwidth analysis for the <code class="docutils literal notranslate"><span class="pre">knl_reversevecs_inplace!</span></code> kernel is the same as for the <code class="docutils literal notranslate"><span class="pre">knl_reversevecs_inplace_bad!</span></code> kernel given, that is,</p>
+<div class="highlight-math notranslate"><div class="highlight"><pre><span></span>\textrm{bandwidth} = 2 N * {\textrm{sizeof}(T)} / \textrm{time}
+</pre></div>
+</div>
+<p>where <span class="math notranslate nohighlight">\({\tt \textrm{time}}\)</span> is the kernel runtime in seconds, and <span class="math notranslate nohighlight">\(\textrm{T}\)</span> is the float type you are executing with (it could be <code class="docutils literal notranslate"><span class="pre">Float32</span></code>, <code class="docutils literal notranslate"><span class="pre">Float64</span></code>, etc.), since we need to load all the data once and write all the data once. We can also divide this by <span class="math notranslate nohighlight">\(1024^3\)</span> to obtain Gigabytes per second (Gib/s).</p>
+<ol class="arabic simple" start="5">
+<li><p>(40%) In <a class="reference internal" href="#Report.ipynb"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">Report.ipynb</span></code></span></a> add a performance analysis that should produce at least the following two figures and related commentary. Figures that should be included:
+5.1) Bandwidth vs problem size <span class="math notranslate nohighlight">\(N\)</span> (you need to test for different values of <span class="math notranslate nohighlight">\(N\)</span>) for <code class="docutils literal notranslate"><span class="pre">Float64</span></code> and <code class="docutils literal notranslate"><span class="pre">Float32</span></code>.
+5.2) A roofline plot (reference <a class="reference external" href="https://sdsu-comp605.github.io/spring25/lectures/module2-1_measuring_performance.html">Lecture 6</a>).</p></li>
+</ol>
+<p><img alt="HW5 solution: Fig 5.1" src="../_images/bandwidth_F64_Vs_F32.png" /></p>
+<p>For the roofline plot, we define:</p>
+<div class="highlight-math notranslate"><div class="highlight"><pre><span></span>\textrm{FLOPs} = 4 N
+</pre></div>
+</div>
+<p>Since each assignment that involves floating-point numbers (as opposed to binary integer operations) counts as FLOPs.</p>
+<div class="highlight-math notranslate"><div class="highlight"><pre><span></span>\textrm{intensity} =  \frac{\textrm{FLOPs}}{ \textrm{Memory moved}} = \frac{4 N}{ 2 N  {\textrm{sizeof}(T)}}
+</pre></div>
+</div>
+<div class="highlight-math notranslate"><div class="highlight"><pre><span></span>\textrm{work} = 4 N  {\textrm{sizeof}(T)} / 1024^3
+</pre></div>
+</div>
+<p>and</p>
+<div class="highlight-math notranslate"><div class="highlight"><pre><span></span>\textrm{rate} = \textrm{work} / \textrm{execution time}.
+</pre></div>
+</div>
+<p>Hence, for this particular problem, our roofline plots don’t really look like “roofs”, rather more like streight walls.</p>
+<p><img alt="HW5 solution: Fig 5.1" src="../_images/roofline.png" /></p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "sdsu-comp605/spring25",
+            ref: "main",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./lectures"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="module9-2_parallel_io.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">33) I/O in HPC</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="module10-1_careers.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">35) Careers in HPSC</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#assignment-steps">Assignment steps:</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Valeria Barra
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
