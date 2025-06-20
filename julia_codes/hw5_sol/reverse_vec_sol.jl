@@ -86,7 +86,7 @@ end
 ### Start of testing/driver code
 let
   T = Float64
-  N = 100000000
+  N = 10000000
   b = rand(T, N)
   a_ref = b[end:-1:1]
 

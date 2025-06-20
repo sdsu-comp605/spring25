@@ -22,7 +22,7 @@ chapters:
   - file: lectures/module3-3_openmp_tasks.ipynb
   - file: lectures/module4-1_case_study_1_libceed.ipynb
   - file: lectures/module4-2_case_study_2_climacore.ipynb
-  - file: lectures/hw2_notebook.ipynb
+  # - file: lectures/hw2_notebook.ipynb
   - file: lectures/module5-1_reductions_and_scans.ipynb
   - file: lectures/module5-2_intro_to_mpi.ipynb
   - file: lectures/module5-3_intro_to_slurm.ipynb
@@ -30,16 +30,16 @@ chapters:
   - file: lectures/module6-1_intro_to_mpi_jl.ipynb
   - file: lectures/module6-2_blocking_vs_nonblocking.ipynb
   - file: lectures/module6-3_collectives.ipynb
-  - file: lectures/hw3_solution.ipynb
+  # - file: lectures/hw3_solution.ipynb
   - file: lectures/module7-1_coprocessors.ipynb
   - file: lectures/module7-2_cuda.ipynb
   - file: lectures/module7-3_practical_cuda.ipynb
   - file: lectures/module8-1_cuda_jl.ipynb
   - file: lectures/module8-2_cuda_jl_memory.ipynb
   - file: lectures/module8-3_cuda_jl_reduction.ipynb
-  - file: lectures/hw4_solution.ipynb
+  # - file: lectures/hw4_solution.ipynb
   - file: lectures/module9-1_ispc_and_others.ipynb
   - file: lectures/module9-2_parallel_io.ipynb
-  - file: lectures/hw5_solution.md
+  # - file: lectures/hw5_solution.md
   - file: lectures/module10-1_careers.ipynb
 
