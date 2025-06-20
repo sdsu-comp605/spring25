@@ -25,16 +25,22 @@ Traceback (most recent call last):
     raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
 nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
 ------------------
-using CUDA
+using Plots
+using DataFrames
+using Printf
+default(linewidth=4, legendfontsize=12)
 
-a = CuArray([1])
+ps = exp10.(range(log10(1), log10(1000), length=50))
 
-a[1] += 1
+plot(ps, [exec_time(.99, ps, latency=0), exec_time(1, ps, latency=0)],
+    xscale=:log10, yscale=:log10, labels=["f=0.99" "f=1"],
+    title="A first look at strong scaling", xlabel="p", ylabel="time")
+
 ------------------
 
 
-ArgumentError: Package CUDA not found in current path.
-- Run `import Pkg; Pkg.add("CUDA")` to install the CUDA package.
+ArgumentError: Package DataFrames not found in current path.
+- Run `import Pkg; Pkg.add("DataFrames")` to install the DataFrames package.
 
 Stacktrace:
  [1] [0m[1mmacro expansion[22m

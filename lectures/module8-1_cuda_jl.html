@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>28) Intro to GPU programming in Julia &#8212; Scientific Computing</title>
+    <title>26) Intro to GPU programming in Julia &#8212; Scientific Computing</title>
   
   
   
@@ -28,8 +28,8 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
@@ -63,7 +63,8 @@
     <link rel="icon" href="../_static/SDSU-comp605_logo.svg"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="prev" title="27) Practical CUDA" href="module7-3_practical_cuda.html" />
+    <link rel="next" title="27) Memory management with CUDA.jl" href="module8-2_cuda_jl_memory.html" />
+    <link rel="prev" title="25) Practical CUDA" href="module7-3_practical_cuda.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -201,19 +202,22 @@
 <li class="toctree-l2"><a class="reference internal" href="module3-3_openmp_tasks.html">13) More on OpenMP and OpenMP Tasks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="module4-1_case_study_1_libceed.html">14) Case Study 1: libCEED</a></li>
 <li class="toctree-l2"><a class="reference internal" href="module4-2_case_study_2_climacore.html">15) Case Study 2: ClimaCore</a></li>
-<li class="toctree-l2"><a class="reference internal" href="hw2_notebook.html">16) HW2 solution</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module5-1_reductions_and_scans.html">17) Parallel reductions and scans</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module5-2_intro_to_mpi.html">18) Introduction to MPI</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module5-3_intro_to_slurm.html">19) Introduction to Batch Jobs</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module5-4_parallel_linear_alegebra.html">20) Parallel Linear Algebra</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module6-1_intro_to_mpi_jl.html">21) Introduction to MPI.jl</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module6-2_blocking_vs_nonblocking.html">22) Blocking and non-blocking communication</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module6-3_collectives.html">23) Collective communication</a></li>
-<li class="toctree-l2"><a class="reference internal" href="hw3_solution.html">24) HW3 solution</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module7-1_coprocessors.html">25) Coprocessor architectures</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module7-2_cuda.html">26) GPUs and CUDA</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module7-3_practical_cuda.html">27) Practical CUDA</a></li>
-<li class="toctree-l2 current active"><a class="current reference internal" href="#">28) Intro to GPU programming in Julia</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module5-1_reductions_and_scans.html">16) Parallel reductions and scans</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module5-2_intro_to_mpi.html">17) Introduction to MPI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module5-3_intro_to_slurm.html">18) Introduction to Batch Jobs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module5-4_parallel_linear_alegebra.html">19) Parallel Linear Algebra</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module6-1_intro_to_mpi_jl.html">20) Introduction to MPI.jl</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module6-2_blocking_vs_nonblocking.html">21) Blocking and non-blocking communication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module6-3_collectives.html">22) Collective communication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module7-1_coprocessors.html">23) Coprocessor architectures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module7-2_cuda.html">24) GPUs and CUDA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module7-3_practical_cuda.html">25) Practical CUDA</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">26) Intro to GPU programming in Julia</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module8-2_cuda_jl_memory.html">27) Memory management with CUDA.jl</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module8-3_cuda_jl_reduction.html">28) Parallel reductions with CUDA.jl</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module9-1_ispc_and_others.html">29) ISPC, OpenMP target, OpenACC, and all that</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module9-2_parallel_io.html">30) I/O in HPC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module10-1_careers.html">31) Careers in HPSC</a></li>
 </ul>
 </details></li>
 </ul>
@@ -432,7 +436,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>28) Intro to GPU programming in Julia</h1>
+    <h1>26) Intro to GPU programming in Julia</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -482,7 +486,7 @@ document.write(`
                 <article class="bd-article">
                   
   <section class="tex2jax_ignore mathjax_ignore" id="intro-to-gpu-programming-in-julia">
-<h1>28) Intro to GPU programming in Julia<a class="headerlink" href="#intro-to-gpu-programming-in-julia" title="Link to this heading">#</a></h1>
+<h1>26) Intro to GPU programming in Julia<a class="headerlink" href="#intro-to-gpu-programming-in-julia" title="Link to this heading">#</a></h1>
 <p>Last time:</p>
 <ul class="simple">
 <li><p>Practical CUDA</p></li>
@@ -634,7 +638,22 @@ A_i := A_{N - i + 1}
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>my_kernel (generic function with 1 method)
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="ne">ArgumentError</span>: Package CUDA not found in current path.
+<span class="o">-</span> <span class="n">Run</span> <span class="err">`</span><span class="kn">import</span><span class="w"> </span><span class="nn">Pkg</span><span class="p">;</span> <span class="n">Pkg</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">&quot;CUDA&quot;</span><span class="p">)</span><span class="err">`</span> <span class="n">to</span> <span class="n">install</span> <span class="n">the</span> <span class="n">CUDA</span> <span class="n">package</span><span class="o">.</span>
+
+<span class="ne">Stacktrace</span>:
+ <span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="n">macro</span> <span class="n">expansion</span>
+   <span class="o">@</span> <span class="o">./</span><span class="n">loading</span><span class="o">.</span><span class="n">jl</span><span class="p">:</span><span class="mi">1842</span> <span class="p">[</span><span class="n">inlined</span><span class="p">]</span>
+ <span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="n">macro</span> <span class="n">expansion</span>
+   <span class="o">@</span> <span class="o">./</span><span class="n">lock</span><span class="o">.</span><span class="n">jl</span><span class="p">:</span><span class="mi">267</span> <span class="p">[</span><span class="n">inlined</span><span class="p">]</span>
+ <span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="n">__require</span><span class="p">(</span><span class="n">into</span><span class="p">::</span><span class="n">Module</span><span class="p">,</span> <span class="n">mod</span><span class="p">::</span><span class="n">Symbol</span><span class="p">)</span>
+   <span class="o">@</span> <span class="n">Base</span> <span class="o">./</span><span class="n">loading</span><span class="o">.</span><span class="n">jl</span><span class="p">:</span><span class="mi">1823</span>
+ <span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="c1">#invoke_in_world#3</span>
+   <span class="o">@</span> <span class="o">./</span><span class="n">essentials</span><span class="o">.</span><span class="n">jl</span><span class="p">:</span><span class="mi">926</span> <span class="p">[</span><span class="n">inlined</span><span class="p">]</span>
+ <span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="n">invoke_in_world</span>
+   <span class="o">@</span> <span class="o">./</span><span class="n">essentials</span><span class="o">.</span><span class="n">jl</span><span class="p">:</span><span class="mi">923</span> <span class="p">[</span><span class="n">inlined</span><span class="p">]</span>
+ <span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="n">require</span><span class="p">(</span><span class="n">into</span><span class="p">::</span><span class="n">Module</span><span class="p">,</span> <span class="n">mod</span><span class="p">::</span><span class="n">Symbol</span><span class="p">)</span>
+   <span class="o">@</span> <span class="n">Base</span> <span class="o">./</span><span class="n">loading</span><span class="o">.</span><span class="n">jl</span><span class="p">:</span><span class="mi">1816</span>
 </pre></div>
 </div>
 </div>
@@ -650,12 +669,6 @@ A_i := A_{N - i + 1}
 <div class="cell_input docutils container">
 <div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="nd">@cuda</span><span class="w"> </span><span class="n">my_kernel</span><span class="p">(</span><span class="n">a</span><span class="p">);</span>
 <span class="n">a</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1-element CuArray{Int64, 1, CUDA.DeviceMemory}:
- 42
 </pre></div>
 </div>
 </div>
@@ -680,16 +693,6 @@ A_i := A_{N - i + 1}
 <span class="nd">@cuda</span><span class="w"> </span><span class="n">threads</span><span class="o">=</span><span class="n">length</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="w"> </span><span class="n">my_kernel</span><span class="p">(</span><span class="n">a</span><span class="p">);</span>
 
 <span class="n">a</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>5-element CuArray{Int64, 1, CUDA.DeviceMemory}:
- 42
- 42
- 42
- 42
- 42
 </pre></div>
 </div>
 </div>
@@ -1063,8 +1066,17 @@ CopyCuArray<span class="w">   </span><span class="p">|</span><span class="w">   
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">27) Practical CUDA</p>
+        <p class="prev-next-title">25) Practical CUDA</p>
       </div>
+    </a>
+    <a class="right-next"
+       href="module8-2_cuda_jl_memory.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">27) Memory management with CUDA.jl</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
     </a>
 </div>
                 </footer>

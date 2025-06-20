@@ -25,16 +25,28 @@ Traceback (most recent call last):
     raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
 nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
 ------------------
-using CUDA
+using CSV
+using DataFrames
 
-a = CuArray([1])
+data = """
+package,cores,lanes/core,clock (MHz),peak (GF),bandwidth (GB/s),TDP (W),MSRP
+Xeon 8280,28,8,2700,2400,141,205,10000
+NVIDIA V100,80,64,1455,7800,900,300,10664
+AMD MI60,64,64,1800,7362,1024,300,
+AMD Rome,64,4,2000,2048,205,200,6450
+"""
 
-a[1] += 1
+# Read the data into a DataFrame
+df = CSV.File(IOBuffer(data)) |> DataFrame
+
+# Set the index column to "package"
+df.package .= String.(df.package);  # Ensure package names are strings
+
 ------------------
 
 
-ArgumentError: Package CUDA not found in current path.
-- Run `import Pkg; Pkg.add("CUDA")` to install the CUDA package.
+ArgumentError: Package CSV not found in current path.
+- Run `import Pkg; Pkg.add("CSV")` to install the CSV package.
 
 Stacktrace:
  [1] [0m[1mmacro expansion[22m

@@ -27,9 +27,10 @@ nbclient.exceptions.CellExecutionError: An error occurred while executing the fo
 ------------------
 using CUDA
 
-a = CuArray([1])
-
-a[1] += 1
+function my_kernel(a)
+    a[1] = 42
+    return
+end
 ------------------
 
 

@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>26) GPUs and CUDA &#8212; Scientific Computing</title>
+    <title>24) GPUs and CUDA &#8212; Scientific Computing</title>
   
   
   
@@ -28,8 +28,8 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
@@ -61,8 +61,8 @@
     <link rel="icon" href="../_static/SDSU-comp605_logo.svg"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="27) Practical CUDA" href="module7-3_practical_cuda.html" />
-    <link rel="prev" title="25) Coprocessor architectures" href="module7-1_coprocessors.html" />
+    <link rel="next" title="25) Practical CUDA" href="module7-3_practical_cuda.html" />
+    <link rel="prev" title="23) Coprocessor architectures" href="module7-1_coprocessors.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -200,18 +200,22 @@
 <li class="toctree-l2"><a class="reference internal" href="module3-3_openmp_tasks.html">13) More on OpenMP and OpenMP Tasks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="module4-1_case_study_1_libceed.html">14) Case Study 1: libCEED</a></li>
 <li class="toctree-l2"><a class="reference internal" href="module4-2_case_study_2_climacore.html">15) Case Study 2: ClimaCore</a></li>
-<li class="toctree-l2"><a class="reference internal" href="hw2_notebook.html">16) HW2 solution</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module5-1_reductions_and_scans.html">17) Parallel reductions and scans</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module5-2_intro_to_mpi.html">18) Introduction to MPI</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module5-3_intro_to_slurm.html">19) Introduction to Batch Jobs</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module5-4_parallel_linear_alegebra.html">20) Parallel Linear Algebra</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module6-1_intro_to_mpi_jl.html">21) Introduction to MPI.jl</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module6-2_blocking_vs_nonblocking.html">22) Blocking and non-blocking communication</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module6-3_collectives.html">23) Collective communication</a></li>
-<li class="toctree-l2"><a class="reference internal" href="hw3_solution.html">24) HW3 solution</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module7-1_coprocessors.html">25) Coprocessor architectures</a></li>
-<li class="toctree-l2 current active"><a class="current reference internal" href="#">26) GPUs and CUDA</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module7-3_practical_cuda.html">27) Practical CUDA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module5-1_reductions_and_scans.html">16) Parallel reductions and scans</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module5-2_intro_to_mpi.html">17) Introduction to MPI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module5-3_intro_to_slurm.html">18) Introduction to Batch Jobs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module5-4_parallel_linear_alegebra.html">19) Parallel Linear Algebra</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module6-1_intro_to_mpi_jl.html">20) Introduction to MPI.jl</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module6-2_blocking_vs_nonblocking.html">21) Blocking and non-blocking communication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module6-3_collectives.html">22) Collective communication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module7-1_coprocessors.html">23) Coprocessor architectures</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">24) GPUs and CUDA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module7-3_practical_cuda.html">25) Practical CUDA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module8-1_cuda_jl.html">26) Intro to GPU programming in Julia</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module8-2_cuda_jl_memory.html">27) Memory management with CUDA.jl</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module8-3_cuda_jl_reduction.html">28) Parallel reductions with CUDA.jl</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module9-1_ispc_and_others.html">29) ISPC, OpenMP target, OpenACC, and all that</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module9-2_parallel_io.html">30) I/O in HPC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module10-1_careers.html">31) Careers in HPSC</a></li>
 </ul>
 </details></li>
 </ul>
@@ -430,7 +434,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>26) GPUs and CUDA</h1>
+    <h1>24) GPUs and CUDA</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -484,7 +488,7 @@ document.write(`
                 <article class="bd-article">
                   
   <section class="tex2jax_ignore mathjax_ignore" id="gpus-and-cuda">
-<h1>26) GPUs and CUDA<a class="headerlink" href="#gpus-and-cuda" title="Link to this heading">#</a></h1>
+<h1>24) GPUs and CUDA<a class="headerlink" href="#gpus-and-cuda" title="Link to this heading">#</a></h1>
 <p>Last time:</p>
 <ul class="simple">
 <li><p>Coprocessors</p></li>
@@ -692,7 +696,7 @@ document.write(`
     <span class="nb">float</span><span class="o">*</span> <span class="n">d_C</span><span class="p">;</span>
     <span class="n">cudaMalloc</span><span class="p">(</span><span class="o">&amp;</span><span class="n">d_C</span><span class="p">,</span> <span class="n">size</span><span class="p">);</span>
 
-    <span class="o">//</span> <span class="n">Copy</span> <span class="n">vectors</span> <span class="kn">from</span> <span class="nn">host</span> <span class="n">memory</span> <span class="n">to</span> <span class="n">device</span> <span class="n">memory</span>
+    <span class="o">//</span> <span class="n">Copy</span> <span class="n">vectors</span> <span class="kn">from</span><span class="w"> </span><span class="nn">host</span> <span class="n">memory</span> <span class="n">to</span> <span class="n">device</span> <span class="n">memory</span>
     <span class="n">cudaMemcpy</span><span class="p">(</span><span class="n">d_A</span><span class="p">,</span> <span class="n">h_A</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">cudaMemcpyHostToDevice</span><span class="p">);</span>
     <span class="n">cudaMemcpy</span><span class="p">(</span><span class="n">d_B</span><span class="p">,</span> <span class="n">h_B</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">cudaMemcpyHostToDevice</span><span class="p">);</span>
 
@@ -703,7 +707,7 @@ document.write(`
     <span class="n">VecAdd</span><span class="o">&lt;&lt;&lt;</span><span class="n">blocksPerGrid</span><span class="p">,</span> <span class="n">threadsPerBlock</span><span class="o">&gt;&gt;&gt;</span><span class="p">(</span><span class="n">d_A</span><span class="p">,</span> <span class="n">d_B</span><span class="p">,</span> <span class="n">d_C</span><span class="p">,</span> <span class="n">N</span><span class="p">);</span>
 
 
-    <span class="o">//</span> <span class="n">Copy</span> <span class="n">result</span> <span class="kn">from</span> <span class="nn">device</span> <span class="n">memory</span> <span class="n">to</span> <span class="n">host</span> <span class="n">memory</span>
+    <span class="o">//</span> <span class="n">Copy</span> <span class="n">result</span> <span class="kn">from</span><span class="w"> </span><span class="nn">device</span> <span class="n">memory</span> <span class="n">to</span> <span class="n">host</span> <span class="n">memory</span>
     <span class="o">//</span> <span class="n">h_C</span> <span class="n">contains</span> <span class="n">the</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">host</span> <span class="n">memory</span>
     <span class="n">cudaMemcpy</span><span class="p">(</span><span class="n">h_C</span><span class="p">,</span> <span class="n">d_C</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">cudaMemcpyDeviceToHost</span><span class="p">);</span>
 
@@ -843,7 +847,7 @@ document.write(`
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">25) Coprocessor architectures</p>
+        <p class="prev-next-title">23) Coprocessor architectures</p>
       </div>
     </a>
     <a class="right-next"
@@ -851,7 +855,7 @@ document.write(`
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">27) Practical CUDA</p>
+        <p class="prev-next-title">25) Practical CUDA</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

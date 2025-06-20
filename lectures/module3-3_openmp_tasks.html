@@ -28,8 +28,8 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
@@ -202,10 +202,22 @@
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">13) More on OpenMP and OpenMP Tasks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="module4-1_case_study_1_libceed.html">14) Case Study 1: libCEED</a></li>
 <li class="toctree-l2"><a class="reference internal" href="module4-2_case_study_2_climacore.html">15) Case Study 2: ClimaCore</a></li>
-<li class="toctree-l2"><a class="reference internal" href="hw2_notebook.html">16) HW2 solution</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module5-1_reductions_and_scans.html">17) Parallel reductions and scans</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module5-2_intro_to_mpi.html">18) Introduction to MPI</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module5-3_intro_to_slurm.html">19) Introduction to Batch Jobs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module5-1_reductions_and_scans.html">16) Parallel reductions and scans</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module5-2_intro_to_mpi.html">17) Introduction to MPI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module5-3_intro_to_slurm.html">18) Introduction to Batch Jobs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module5-4_parallel_linear_alegebra.html">19) Parallel Linear Algebra</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module6-1_intro_to_mpi_jl.html">20) Introduction to MPI.jl</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module6-2_blocking_vs_nonblocking.html">21) Blocking and non-blocking communication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module6-3_collectives.html">22) Collective communication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module7-1_coprocessors.html">23) Coprocessor architectures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module7-2_cuda.html">24) GPUs and CUDA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module7-3_practical_cuda.html">25) Practical CUDA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module8-1_cuda_jl.html">26) Intro to GPU programming in Julia</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module8-2_cuda_jl_memory.html">27) Memory management with CUDA.jl</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module8-3_cuda_jl_reduction.html">28) Parallel reductions with CUDA.jl</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module9-1_ispc_and_others.html">29) ISPC, OpenMP target, OpenACC, and all that</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module9-2_parallel_io.html">30) I/O in HPC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module10-1_careers.html">31) Careers in HPSC</a></li>
 </ul>
 </details></li>
 </ul>
@@ -506,94 +518,95 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0000000000001379 &lt;main+0x1b9&gt; call   0000000000001849 &lt;dot_opt3&gt;
-0000000000001849 &lt;dot_opt3&gt; push   r12
-000000000000184b &lt;dot_opt3+0x2&gt; mov    r12,rdx
-000000000000184e &lt;dot_opt3+0x5&gt; push   rbp
-000000000000184f &lt;dot_opt3+0x6&gt; mov    rbp,rsi
-0000000000001852 &lt;dot_opt3+0x9&gt; push   rbx
-0000000000001853 &lt;dot_opt3+0xa&gt; mov    rbx,rdi
-0000000000001856 &lt;dot_opt3+0xd&gt; mov    edi,0x4
-000000000000185b &lt;dot_opt3+0x12&gt; sub    rsp,0x30
-000000000000185f &lt;dot_opt3+0x16&gt; mov    rax,QWORD PTR fs:0x28
-0000000000001868 &lt;dot_opt3+0x1f&gt; mov    QWORD PTR [rsp+0x28],rax
-000000000000186d &lt;dot_opt3+0x24&gt; xor    eax,eax
-000000000000186f &lt;dot_opt3+0x26&gt; call   0000000000001140 &lt;omp_set_num_threads@plt&gt;
-0000000000001874 &lt;dot_opt3+0x2b&gt; lea    rsi,[rsp+0x8]
-0000000000001879 &lt;dot_opt3+0x30&gt; xor    ecx,ecx
-000000000000187b &lt;dot_opt3+0x32&gt; xor    edx,edx
-000000000000187d &lt;dot_opt3+0x34&gt; lea    rdi,[rip+0xc4]        # 0000000000001948 &lt;dot_opt3._omp_fn.0&gt;
-0000000000001884 &lt;dot_opt3+0x3b&gt; mov    QWORD PTR [rsp+0x18],r12
-0000000000001889 &lt;dot_opt3+0x40&gt; mov    QWORD PTR [rsp+0x10],rbp
-000000000000188e &lt;dot_opt3+0x45&gt; mov    QWORD PTR [rsp+0x8],rbx
-0000000000001893 &lt;dot_opt3+0x4a&gt; mov    QWORD PTR [rsp+0x20],0x0
-000000000000189c &lt;dot_opt3+0x53&gt; call   00000000000011b0 &lt;GOMP_parallel@plt&gt;
-00000000000018a1 &lt;dot_opt3+0x58&gt; vmovsd xmm0,QWORD PTR [rsp+0x20]
-00000000000018a7 &lt;dot_opt3+0x5e&gt; mov    rax,QWORD PTR [rsp+0x28]
-00000000000018ac &lt;dot_opt3+0x63&gt; sub    rax,QWORD PTR fs:0x28
-00000000000018b5 &lt;dot_opt3+0x6c&gt; je     00000000000018bc &lt;dot_opt3+0x73&gt;
-00000000000018b7 &lt;dot_opt3+0x6e&gt; call   0000000000001150 &lt;__stack_chk_fail@plt&gt;
-00000000000018bc &lt;dot_opt3+0x73&gt; add    rsp,0x30
-00000000000018c0 &lt;dot_opt3+0x77&gt; pop    rbx
-00000000000018c1 &lt;dot_opt3+0x78&gt; pop    rbp
-00000000000018c2 &lt;dot_opt3+0x79&gt; pop    r12
-00000000000018c4 &lt;dot_opt3+0x7b&gt; ret
-0000000000001948 &lt;dot_opt3._omp_fn.0&gt; endbr64
-000000000000194c &lt;dot_opt3._omp_fn.0+0x4&gt; push   r14
-000000000000194e &lt;dot_opt3._omp_fn.0+0x6&gt; mov    r14,QWORD PTR [rdi+0x8]
-0000000000001952 &lt;dot_opt3._omp_fn.0+0xa&gt; push   r13
-0000000000001954 &lt;dot_opt3._omp_fn.0+0xc&gt; mov    r13,QWORD PTR [rdi+0x10]
-0000000000001958 &lt;dot_opt3._omp_fn.0+0x10&gt; push   r12
-000000000000195a &lt;dot_opt3._omp_fn.0+0x12&gt; push   rbp
-000000000000195b &lt;dot_opt3._omp_fn.0+0x13&gt; mov    rbp,rdi
-000000000000195e &lt;dot_opt3._omp_fn.0+0x16&gt; push   rbx
-000000000000195f &lt;dot_opt3._omp_fn.0+0x17&gt; mov    rbx,QWORD PTR [rdi]
-0000000000001962 &lt;dot_opt3._omp_fn.0+0x1a&gt; test   rbx,rbx
-0000000000001965 &lt;dot_opt3._omp_fn.0+0x1d&gt; jne    0000000000001996 &lt;dot_opt3._omp_fn.0+0x4e&gt;
-0000000000001967 &lt;dot_opt3._omp_fn.0+0x1f&gt; vxorpd xmm0,xmm0,xmm0
-000000000000196b &lt;dot_opt3._omp_fn.0+0x23&gt; mov    rdx,QWORD PTR [rbp+0x18]
-000000000000196f &lt;dot_opt3._omp_fn.0+0x27&gt; lea    rcx,[rbp+0x18]
-0000000000001973 &lt;dot_opt3._omp_fn.0+0x2b&gt; vmovq  xmm2,rdx
-0000000000001978 &lt;dot_opt3._omp_fn.0+0x30&gt; mov    rax,rdx
-000000000000197b &lt;dot_opt3._omp_fn.0+0x33&gt; vaddsd xmm1,xmm0,xmm2
-000000000000197f &lt;dot_opt3._omp_fn.0+0x37&gt; vmovq  rsi,xmm1
-0000000000001984 &lt;dot_opt3._omp_fn.0+0x3c&gt; lock cmpxchg QWORD PTR [rcx],rsi
-0000000000001989 &lt;dot_opt3._omp_fn.0+0x41&gt; mov    rsi,rdx
-000000000000198c &lt;dot_opt3._omp_fn.0+0x44&gt; mov    rdx,rax
-000000000000198f &lt;dot_opt3._omp_fn.0+0x47&gt; cmp    rsi,rax
-0000000000001992 &lt;dot_opt3._omp_fn.0+0x4a&gt; je     00000000000019e7 &lt;dot_opt3._omp_fn.0+0x9f&gt;
-0000000000001994 &lt;dot_opt3._omp_fn.0+0x4c&gt; jmp    0000000000001973 &lt;dot_opt3._omp_fn.0+0x2b&gt;
-0000000000001996 &lt;dot_opt3._omp_fn.0+0x4e&gt; call   0000000000001170 &lt;omp_get_num_threads@plt&gt;
-000000000000199b &lt;dot_opt3._omp_fn.0+0x53&gt; mov    r12d,eax
-000000000000199e &lt;dot_opt3._omp_fn.0+0x56&gt; call   0000000000001130 &lt;omp_get_thread_num@plt&gt;
-00000000000019a3 &lt;dot_opt3._omp_fn.0+0x5b&gt; movsxd rsi,r12d
-00000000000019a6 &lt;dot_opt3._omp_fn.0+0x5e&gt; xor    edx,edx
-00000000000019a8 &lt;dot_opt3._omp_fn.0+0x60&gt; movsxd rcx,eax
-00000000000019ab &lt;dot_opt3._omp_fn.0+0x63&gt; mov    rax,rbx
-00000000000019ae &lt;dot_opt3._omp_fn.0+0x66&gt; div    rsi
-00000000000019b1 &lt;dot_opt3._omp_fn.0+0x69&gt; cmp    rcx,rdx
-00000000000019b4 &lt;dot_opt3._omp_fn.0+0x6c&gt; jb     00000000000019e0 &lt;dot_opt3._omp_fn.0+0x98&gt;
-00000000000019b6 &lt;dot_opt3._omp_fn.0+0x6e&gt; imul   rcx,rax
-00000000000019ba &lt;dot_opt3._omp_fn.0+0x72&gt; vxorpd xmm0,xmm0,xmm0
-00000000000019be &lt;dot_opt3._omp_fn.0+0x76&gt; add    rdx,rcx
-00000000000019c1 &lt;dot_opt3._omp_fn.0+0x79&gt; add    rax,rdx
-00000000000019c4 &lt;dot_opt3._omp_fn.0+0x7c&gt; cmp    rdx,rax
-00000000000019c7 &lt;dot_opt3._omp_fn.0+0x7f&gt; jae    000000000000196b &lt;dot_opt3._omp_fn.0+0x23&gt;
-00000000000019c9 &lt;dot_opt3._omp_fn.0+0x81&gt; vmovsd xmm3,QWORD PTR [r14+rdx*8]
-00000000000019cf &lt;dot_opt3._omp_fn.0+0x87&gt; vfmadd231sd xmm0,xmm3,QWORD PTR [r13+rdx*8+0x0]
-00000000000019d6 &lt;dot_opt3._omp_fn.0+0x8e&gt; inc    rdx
-00000000000019d9 &lt;dot_opt3._omp_fn.0+0x91&gt; cmp    rax,rdx
-00000000000019dc &lt;dot_opt3._omp_fn.0+0x94&gt; jne    00000000000019c9 &lt;dot_opt3._omp_fn.0+0x81&gt;
-00000000000019de &lt;dot_opt3._omp_fn.0+0x96&gt; jmp    000000000000196b &lt;dot_opt3._omp_fn.0+0x23&gt;
-00000000000019e0 &lt;dot_opt3._omp_fn.0+0x98&gt; inc    rax
-00000000000019e3 &lt;dot_opt3._omp_fn.0+0x9b&gt; xor    edx,edx
-00000000000019e5 &lt;dot_opt3._omp_fn.0+0x9d&gt; jmp    00000000000019b6 &lt;dot_opt3._omp_fn.0+0x6e&gt;
-00000000000019e7 &lt;dot_opt3._omp_fn.0+0x9f&gt; pop    rbx
-00000000000019e8 &lt;dot_opt3._omp_fn.0+0xa0&gt; pop    rbp
-00000000000019e9 &lt;dot_opt3._omp_fn.0+0xa1&gt; pop    r12
-00000000000019eb &lt;dot_opt3._omp_fn.0+0xa3&gt; pop    r13
-00000000000019ed &lt;dot_opt3._omp_fn.0+0xa5&gt; pop    r14
-00000000000019ef &lt;dot_opt3._omp_fn.0+0xa7&gt; ret
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0000000000001379 &lt;main+0x1b9&gt; call   000000000000184c &lt;dot_opt3&gt;
+000000000000184c &lt;dot_opt3&gt; push   r12
+000000000000184e &lt;dot_opt3+0x2&gt; mov    r12,rdx
+0000000000001851 &lt;dot_opt3+0x5&gt; push   rbp
+0000000000001852 &lt;dot_opt3+0x6&gt; mov    rbp,rsi
+0000000000001855 &lt;dot_opt3+0x9&gt; push   rbx
+0000000000001856 &lt;dot_opt3+0xa&gt; mov    rbx,rdi
+0000000000001859 &lt;dot_opt3+0xd&gt; mov    edi,0x4
+000000000000185e &lt;dot_opt3+0x12&gt; sub    rsp,0x30
+0000000000001862 &lt;dot_opt3+0x16&gt; mov    rax,QWORD PTR fs:0x28
+000000000000186b &lt;dot_opt3+0x1f&gt; mov    QWORD PTR [rsp+0x28],rax
+0000000000001870 &lt;dot_opt3+0x24&gt; xor    eax,eax
+0000000000001872 &lt;dot_opt3+0x26&gt; call   0000000000001140 &lt;omp_set_num_threads@plt&gt;
+0000000000001877 &lt;dot_opt3+0x2b&gt; xor    ecx,ecx
+0000000000001879 &lt;dot_opt3+0x2d&gt; xor    edx,edx
+000000000000187b &lt;dot_opt3+0x2f&gt; lea    rsi,[rsp+0x8]
+0000000000001880 &lt;dot_opt3+0x34&gt; lea    rdi,[rip+0xc4]        # 000000000000194b &lt;dot_opt3._omp_fn.0&gt;
+0000000000001887 &lt;dot_opt3+0x3b&gt; mov    QWORD PTR [rsp+0x18],r12
+000000000000188c &lt;dot_opt3+0x40&gt; mov    QWORD PTR [rsp+0x10],rbp
+0000000000001891 &lt;dot_opt3+0x45&gt; mov    QWORD PTR [rsp+0x8],rbx
+0000000000001896 &lt;dot_opt3+0x4a&gt; mov    QWORD PTR [rsp+0x20],0x0
+000000000000189f &lt;dot_opt3+0x53&gt; call   00000000000011b0 &lt;GOMP_parallel@plt&gt;
+00000000000018a4 &lt;dot_opt3+0x58&gt; vmovsd xmm0,QWORD PTR [rsp+0x20]
+00000000000018aa &lt;dot_opt3+0x5e&gt; mov    rax,QWORD PTR [rsp+0x28]
+00000000000018af &lt;dot_opt3+0x63&gt; sub    rax,QWORD PTR fs:0x28
+00000000000018b8 &lt;dot_opt3+0x6c&gt; je     00000000000018bf &lt;dot_opt3+0x73&gt;
+00000000000018ba &lt;dot_opt3+0x6e&gt; call   0000000000001150 &lt;__stack_chk_fail@plt&gt;
+00000000000018bf &lt;dot_opt3+0x73&gt; add    rsp,0x30
+00000000000018c3 &lt;dot_opt3+0x77&gt; pop    rbx
+00000000000018c4 &lt;dot_opt3+0x78&gt; pop    rbp
+00000000000018c5 &lt;dot_opt3+0x79&gt; pop    r12
+00000000000018c7 &lt;dot_opt3+0x7b&gt; ret
+000000000000194b &lt;dot_opt3._omp_fn.0&gt; endbr64
+000000000000194f &lt;dot_opt3._omp_fn.0+0x4&gt; push   r14
+0000000000001951 &lt;dot_opt3._omp_fn.0+0x6&gt; mov    r14,QWORD PTR [rdi+0x8]
+0000000000001955 &lt;dot_opt3._omp_fn.0+0xa&gt; push   r13
+0000000000001957 &lt;dot_opt3._omp_fn.0+0xc&gt; mov    r13,QWORD PTR [rdi+0x10]
+000000000000195b &lt;dot_opt3._omp_fn.0+0x10&gt; push   r12
+000000000000195d &lt;dot_opt3._omp_fn.0+0x12&gt; push   rbp
+000000000000195e &lt;dot_opt3._omp_fn.0+0x13&gt; mov    rbp,rdi
+0000000000001961 &lt;dot_opt3._omp_fn.0+0x16&gt; push   rbx
+0000000000001962 &lt;dot_opt3._omp_fn.0+0x17&gt; mov    rbx,QWORD PTR [rdi]
+0000000000001965 &lt;dot_opt3._omp_fn.0+0x1a&gt; test   rbx,rbx
+0000000000001968 &lt;dot_opt3._omp_fn.0+0x1d&gt; jne    0000000000001999 &lt;dot_opt3._omp_fn.0+0x4e&gt;
+000000000000196a &lt;dot_opt3._omp_fn.0+0x1f&gt; vxorpd xmm0,xmm0,xmm0
+000000000000196e &lt;dot_opt3._omp_fn.0+0x23&gt; mov    rdx,QWORD PTR [rbp+0x18]
+0000000000001972 &lt;dot_opt3._omp_fn.0+0x27&gt; lea    rcx,[rbp+0x18]
+0000000000001976 &lt;dot_opt3._omp_fn.0+0x2b&gt; vmovq  xmm3,rdx
+000000000000197b &lt;dot_opt3._omp_fn.0+0x30&gt; mov    rax,rdx
+000000000000197e &lt;dot_opt3._omp_fn.0+0x33&gt; vaddsd xmm2,xmm0,xmm3
+0000000000001982 &lt;dot_opt3._omp_fn.0+0x37&gt; vmovq  rsi,xmm2
+0000000000001987 &lt;dot_opt3._omp_fn.0+0x3c&gt; lock cmpxchg QWORD PTR [rcx],rsi
+000000000000198c &lt;dot_opt3._omp_fn.0+0x41&gt; mov    rsi,rdx
+000000000000198f &lt;dot_opt3._omp_fn.0+0x44&gt; mov    rdx,rax
+0000000000001992 &lt;dot_opt3._omp_fn.0+0x47&gt; cmp    rsi,rax
+0000000000001995 &lt;dot_opt3._omp_fn.0+0x4a&gt; je     00000000000019ee &lt;dot_opt3._omp_fn.0+0xa3&gt;
+0000000000001997 &lt;dot_opt3._omp_fn.0+0x4c&gt; jmp    0000000000001976 &lt;dot_opt3._omp_fn.0+0x2b&gt;
+0000000000001999 &lt;dot_opt3._omp_fn.0+0x4e&gt; call   0000000000001170 &lt;omp_get_num_threads@plt&gt;
+000000000000199e &lt;dot_opt3._omp_fn.0+0x53&gt; mov    r12d,eax
+00000000000019a1 &lt;dot_opt3._omp_fn.0+0x56&gt; call   0000000000001130 &lt;omp_get_thread_num@plt&gt;
+00000000000019a6 &lt;dot_opt3._omp_fn.0+0x5b&gt; xor    edx,edx
+00000000000019a8 &lt;dot_opt3._omp_fn.0+0x5d&gt; movsxd rsi,r12d
+00000000000019ab &lt;dot_opt3._omp_fn.0+0x60&gt; movsxd rcx,eax
+00000000000019ae &lt;dot_opt3._omp_fn.0+0x63&gt; mov    rax,rbx
+00000000000019b1 &lt;dot_opt3._omp_fn.0+0x66&gt; div    rsi
+00000000000019b4 &lt;dot_opt3._omp_fn.0+0x69&gt; cmp    rcx,rdx
+00000000000019b7 &lt;dot_opt3._omp_fn.0+0x6c&gt; jb     00000000000019e7 &lt;dot_opt3._omp_fn.0+0x9c&gt;
+00000000000019b9 &lt;dot_opt3._omp_fn.0+0x6e&gt; imul   rcx,rax
+00000000000019bd &lt;dot_opt3._omp_fn.0+0x72&gt; vxorpd xmm0,xmm0,xmm0
+00000000000019c1 &lt;dot_opt3._omp_fn.0+0x76&gt; add    rdx,rcx
+00000000000019c4 &lt;dot_opt3._omp_fn.0+0x79&gt; add    rax,rdx
+00000000000019c7 &lt;dot_opt3._omp_fn.0+0x7c&gt; cmp    rdx,rax
+00000000000019ca &lt;dot_opt3._omp_fn.0+0x7f&gt; jae    000000000000196e &lt;dot_opt3._omp_fn.0+0x23&gt;
+00000000000019cc &lt;dot_opt3._omp_fn.0+0x81&gt; vmovsd xmm1,QWORD PTR [r14+rdx*8]
+00000000000019d2 &lt;dot_opt3._omp_fn.0+0x87&gt; vmulsd xmm1,xmm1,QWORD PTR [r13+rdx*8+0x0]
+00000000000019d9 &lt;dot_opt3._omp_fn.0+0x8e&gt; inc    rdx
+00000000000019dc &lt;dot_opt3._omp_fn.0+0x91&gt; cmp    rax,rdx
+00000000000019df &lt;dot_opt3._omp_fn.0+0x94&gt; vaddsd xmm0,xmm0,xmm1
+00000000000019e3 &lt;dot_opt3._omp_fn.0+0x98&gt; jne    00000000000019cc &lt;dot_opt3._omp_fn.0+0x81&gt;
+00000000000019e5 &lt;dot_opt3._omp_fn.0+0x9a&gt; jmp    000000000000196e &lt;dot_opt3._omp_fn.0+0x23&gt;
+00000000000019e7 &lt;dot_opt3._omp_fn.0+0x9c&gt; inc    rax
+00000000000019ea &lt;dot_opt3._omp_fn.0+0x9f&gt; xor    edx,edx
+00000000000019ec &lt;dot_opt3._omp_fn.0+0xa1&gt; jmp    00000000000019b9 &lt;dot_opt3._omp_fn.0+0x6e&gt;
+00000000000019ee &lt;dot_opt3._omp_fn.0+0xa3&gt; pop    rbx
+00000000000019ef &lt;dot_opt3._omp_fn.0+0xa4&gt; pop    rbp
+00000000000019f0 &lt;dot_opt3._omp_fn.0+0xa5&gt; pop    r12
+00000000000019f2 &lt;dot_opt3._omp_fn.0+0xa7&gt; pop    r13
+00000000000019f4 &lt;dot_opt3._omp_fn.0+0xa9&gt; pop    r14
+00000000000019f6 &lt;dot_opt3._omp_fn.0+0xab&gt; ret
 </pre></div>
 </div>
 </div>
@@ -689,21 +702,21 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> Performance counter stats for &#39;../c_codes/module3-3/dot -n 10000&#39;:
-
-             11.21 msec task-clock                       #    2.441 CPUs utilized             
-                 0      context-switches                 #    0.000 /sec                      
-                 0      cpu-migrations                   #    0.000 /sec                      
-               119      page-faults                      #   10.614 K/sec                     
-        19,901,621      cycles                           #    1.775 GHz                       
-        11,499,889      instructions                     #    0.58  insn per cycle            
-         1,015,154      branches                         #   90.548 M/sec                     
-            14,598      branch-misses                    #    1.44% of all branches           
-
-       0.004592519 seconds time elapsed
-
-       0.007619000 seconds user
-       0.004232000 seconds sys
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Error:
+Access to performance monitoring and observability operations is limited.
+Consider adjusting /proc/sys/kernel/perf_event_paranoid setting to open
+access to performance monitoring and observability operations for processes
+without CAP_PERFMON, CAP_SYS_PTRACE or CAP_SYS_ADMIN Linux capability.
+More information can be found at &#39;Perf events and tool security&#39; document:
+https://www.kernel.org/doc/html/latest/admin-guide/perf-security.html
+perf_event_paranoid setting is 4:
+  -1: Allow use of (almost) all events by all users
+      Ignore mlock limit after perf_event_mlock_kb without CAP_IPC_LOCK
+&gt;= 0: Disallow raw and ftrace function tracepoint access
+&gt;= 1: Disallow CPU event access
+&gt;= 2: Disallow kernel profiling
+To make the adjusted perf_event_paranoid setting permanent preserve it
+in /etc/sysctl.conf (e.g. kernel.perf_event_paranoid = &lt;setting&gt;)
 </pre></div>
 </div>
 </div>
@@ -715,24 +728,21 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING: Kernel address maps (/proc/{kallsyms,modules}) are restricted,
-check /proc/sys/kernel/kptr_restrict and /proc/sys/kernel/perf_event_paranoid.
-
-Samples in kernel functions may not be resolved if a suitable vmlinux
-file is not found in the buildid cache or in the vmlinux path.
-
-Samples in kernel modules won&#39;t be resolved at all.
-
-If some relocation was applied (e.g. kexec) symbols may be misresolved
-even with a suitable vmlinux or kallsyms file.
-
-Couldn&#39;t record kernel reference relocation symbol
-Symbol resolution may be skewed if relocation was used (e.g. kexec).
-Check /proc/kallsyms permission or run as root.
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 0.195 MB perf.data (2115 samples) ]
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Error:
+Access to performance monitoring and observability operations is limited.
+Consider adjusting /proc/sys/kernel/perf_event_paranoid setting to open
+access to performance monitoring and observability operations for processes
+without CAP_PERFMON, CAP_SYS_PTRACE or CAP_SYS_ADMIN Linux capability.
+More information can be found at &#39;Perf events and tool security&#39; document:
+https://www.kernel.org/doc/html/latest/admin-guide/perf-security.html
+perf_event_paranoid setting is 4:
+  -1: Allow use of (almost) all events by all users
+      Ignore mlock limit after perf_event_mlock_kb without CAP_IPC_LOCK
+&gt;= 0: Disallow raw and ftrace function tracepoint access
+&gt;= 1: Disallow CPU event access
+&gt;= 2: Disallow kernel profiling
+To make the adjusted perf_event_paranoid setting permanent preserve it
+in /etc/sysctl.conf (e.g. kernel.perf_event_paranoid = &lt;setting&gt;)
 </pre></div>
 </div>
 </div>
@@ -744,12 +754,7 @@ Check /proc/kallsyms permission or run as root.
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class="err"></span>7?47h<span class=" -Color -Color-White -Color-White-BGBlack">                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  ┌Processing events... [2K/199K]────────────────────────────────────────────────┐│</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">                                                                             │└──────────────────────────────────────────────────────────────────────────────┘                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  5</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">7</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">10K/199K]</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">2</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">57</span><span class=" -Color -Color-Black -Color-Black-BGYellow">  </span><span class=" -Color -Color-White -Color-White-BGBlack">20</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">3</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">5</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">8</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">30</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">3</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">5</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">8</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">40</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">3</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">6</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">851</span><span class=" -Color -Color-Black -Color-Black-BGYellow">  </span><span class=" -Color -Color-White -Color-White-BGBlack">3</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">6</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">861</span><span class=" -Color -Color-Black -Color-Black-BGYellow">  </span><span class=" -Color -Color-White -Color-White-BGBlack">3</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">6</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">9</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">71</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">4</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">6</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">981</span><span class=" -Color -Color-Black -Color-Black-BGYellow">  </span><span class=" -Color -Color-White -Color-White-BGBlack">4</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">7</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">9</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">92</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">4</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">79</span><span class=" -Color -Color-Black -Color-Black-BGYellow">  </span><span class=" -Color -Color-White -Color-White-BGBlack">102K/199K]</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">4</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">7</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">9</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">12</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">5</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">7</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">202</span><span class=" -Color -Color-Black -Color-Black-BGYellow">  </span><span class=" -Color -Color-White -Color-White-BGBlack">5</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">7</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">302</span><span class=" -Color -Color-Black -Color-Black-BGYellow">  </span><span class=" -Color -Color-White -Color-White-BGBlack">5</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">8</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">403</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">5</span><span class=" -Color -Color-Black -Color-Black-BGYellow">  </span><span class=" -Color -Color-White -Color-White-BGBlack">850</span><span class=" -Color -Color-Black -Color-Black-BGYellow">  </span><span class=" -Color -Color-White -Color-White-BGBlack">3</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">5</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">861</span><span class=" -Color -Color-Black -Color-Black-BGYellow">  </span><span class=" -Color -Color-White -Color-White-BGBlack">3</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">68</span><span class=" -Color -Color-Black -Color-Black-BGYellow">  </span><span class=" -Color -Color-White -Color-White-BGBlack">713</span><span class=" -Color -Color-Black -Color-Black-BGYellow">  </span><span class=" -Color -Color-White -Color-White-BGBlack">6</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">881</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">4</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">6</span><span class=" -Color -Color-Black -Color-Black-BGYellow">  </span><span class=" -Color -Color-White -Color-White-BGBlack">9</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">    914</span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">   6</span><span class=" -Color -Color-Black -Color-Black-BGYellow">  </span><span class=" -Color -Color-White -Color-White-BGBlack"> 9time ordered events...                                                                              </span><span class=" -Color -Color-Black -Color-Black-BGYellow">                                                                          </span><span class=" -Color -Color-White -Color-White-BGBlack">    </span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">   </span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">  </span><span class=" -Color -Color-Black -Color-Black-BGYellow"> </span><span class=" -Color -Color-White -Color-White-BGBlack">                                                                                                                                                                                                                                                 ┌─Warning:─────────────────────────────────────────────────────────┐│Kernel address maps (/proc/{kallsyms,modules}) were restricted.   ││││Check /proc/sys/kernel/kptr_restrict before running &#39;perf record&#39;.││││As no suitable kallsyms nor vmlinux was found, kernel samples││can&#39;t be resolved.││││Samples in kernel modules can&#39;t be resolved as well.││││││││Press any key...│└──────────────────────────────────────────────────────────────────┘</span>
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>                                                                                     
-                                                                               
-?47l<span class="err"></span>8
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>zero-sized data (perf.data), nothing to do!
 </pre></div>
 </div>
 </div>
@@ -814,6 +819,20 @@ with the <code class="docutils literal notranslate"><span class="pre">#pragma</s
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>x + 1 = 3. x + 2 = 4. 
+x + 2 = 4. x + 1 = 3. 
+x + 1 = 3. x + 2 = 4. 
+x + 2 = 4. x + 1 = 3. 
+x + 1 = 3. x + 2 = 4. 
+x + 2 = 4. x + 1 = 3. 
+x + 1 = 3. x + 2 = 4. 
+x + 1 = 3. x + 2 = 4. 
+x + 1 = 3. x + 2 = 4. 
+x + 1 = 3. x + 2 = 4. 
+</pre></div>
+</div>
+</div>
 </div>
 <ul class="simple">
 <li><p>The <a class="reference external" href="https://www.openmp.org/spec-html/5.0/openmpsu38.html"><strong><code class="docutils literal notranslate"><span class="pre">single</span></code></strong></a> construct specifies that the associated structured block is executed by only one of the threads in the team (not necessarily the master thread), in the context of its implicit task. The other threads in the team, which do not execute the block, wait at an implicit barrier at the end of the <code class="docutils literal notranslate"><span class="pre">single</span></code> construct unless a <code class="docutils literal notranslate"><span class="pre">nowait</span></code> clause is specified.</p></li>
@@ -856,6 +875,20 @@ will access data</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span><span class="w"> </span><span class="k">for</span><span class="w"> </span>i<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="o">{</span><span class="m">1</span>..10<span class="o">}</span><span class="p">;</span><span class="w"> </span><span class="k">do</span><span class="w"> </span>./task_dep.4inout<span class="p">;</span><span class="w"> </span><span class="k">done</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>x + 1 = 3. x + 2 = 4. 
+x + 1 = 3. x + 2 = 4. 
+x + 1 = 3. x + 2 = 4. 
+x + 1 = 3. x + 2 = 4. 
+x + 1 = 3. x + 2 = 4. 
+x + 1 = 3. x + 2 = 4. 
+x + 1 = 3. x + 2 = 4. 
+x + 1 = 3. x + 2 = 4. 
+x + 1 = 3. x + 2 = 4. 
+x + 1 = 3. x + 2 = 4. 
 </pre></div>
 </div>
 </div>

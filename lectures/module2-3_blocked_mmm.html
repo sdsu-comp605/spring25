@@ -28,8 +28,8 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
@@ -196,6 +196,28 @@
 <li class="toctree-l2"><a class="reference internal" href="module2-2_cpu_optimization.html">7) CPU Optimization: Matrix-Matrix Multiply</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">8) Blocked Matrix-Matrix Multiplication</a></li>
 <li class="toctree-l2"><a class="reference internal" href="module2-4_packing_for_cache.html">9) Packing for cache</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module2-5_intro_multithreading.html">10) Introduction to Multithreading</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module3-1_intro_parallel_scaling.html">11) Introduction to Parallel Scaling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module3-2_intro_to_openmp.html">12) Introduction to OpenMP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module3-3_openmp_tasks.html">13) More on OpenMP and OpenMP Tasks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module4-1_case_study_1_libceed.html">14) Case Study 1: libCEED</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module4-2_case_study_2_climacore.html">15) Case Study 2: ClimaCore</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module5-1_reductions_and_scans.html">16) Parallel reductions and scans</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module5-2_intro_to_mpi.html">17) Introduction to MPI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module5-3_intro_to_slurm.html">18) Introduction to Batch Jobs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module5-4_parallel_linear_alegebra.html">19) Parallel Linear Algebra</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module6-1_intro_to_mpi_jl.html">20) Introduction to MPI.jl</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module6-2_blocking_vs_nonblocking.html">21) Blocking and non-blocking communication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module6-3_collectives.html">22) Collective communication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module7-1_coprocessors.html">23) Coprocessor architectures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module7-2_cuda.html">24) GPUs and CUDA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module7-3_practical_cuda.html">25) Practical CUDA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module8-1_cuda_jl.html">26) Intro to GPU programming in Julia</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module8-2_cuda_jl_memory.html">27) Memory management with CUDA.jl</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module8-3_cuda_jl_reduction.html">28) Parallel reductions with CUDA.jl</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module9-1_ispc_and_others.html">29) ISPC, OpenMP target, OpenACC, and all that</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module9-2_parallel_io.html">30) I/O in HPC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module10-1_careers.html">31) Careers in HPSC</a></li>
 </ul>
 </details></li>
 </ul>
@@ -902,17 +924,17 @@ Julia.</p>
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>;  @ In[1]:1 within `foo`
-define 
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Cyan">i64</span> @julia_foo_752<span class=" -Color -Color-Yellow">(</span><span class=" -Color -Color-Cyan">i64</span> signext %0<span class=" -Color -Color-Yellow">)</span> #0 <span class=" -Color -Color-Yellow">{</span>
+define <span class=" -Color -Color-Cyan">i64</span> @julia_foo_742<span class=" -Color -Color-Yellow">(</span><span class=" -Color -Color-Cyan">i64</span> signext %0<span class=" -Color -Color-Yellow">)</span> #0 <span class=" -Color -Color-Yellow">{</span>
 top:
 ;  @ In[1]:3 within `foo`
 ; ┌ @ range.jl:897 within `iterate`
 ; │┌ @ range.jl:672 within `isempty`
 ; ││┌ @ operators.jl:378 within `&gt;`
 ; │││┌ @ int.jl:83 within `&lt;`
-      %1 = <span class=" -Color -Color-Bold">icmp</span> <span class=" -Color -Color-Bold">slt</span> <span class=" -Color -Color-Cyan">i64</span> %0, <span class=" -Color -Color-Yellow">1</span>
+      %1 
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>= <span class=" -Color -Color-Bold">icmp</span> <span class=" -Color -Color-Bold">slt</span> <span class=" -Color -Color-Cyan">i64</span> %0, <span class=" -Color -Color-Yellow">1</span>
 ; └└└└
   <span class=" -Color -Color-Bold">br</span> <span class=" -Color -Color-Cyan">i1</span> %1, <span class=" -Color -Color-Cyan">label</span> %L32, <span class=" -Color -Color-Cyan">label</span> %L17.preheader
 
@@ -947,7 +969,7 @@ L32:                                              ; preds = %L17.preheader, %top
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>;  @ In[2]:1 within `bar`
-define <span class=" -Color -Color-Cyan">i64</span> @julia_bar_777<span class=" -Color -Color-Yellow">()</span> #0 <span class=" -Color -Color-Yellow">{</span>
+define <span class=" -Color -Color-Cyan">i64</span> @julia_bar_767<span class=" -Color -Color-Yellow">()</span> #0 <span class=" -Color -Color-Yellow">{</span>
 top:
 ;  @ In[2]:6 within `bar`
   <span class=" -Color -Color-Bold">ret</span> <span class=" -Color -Color-Cyan">i64</span> <span class=" -Color -Color-Yellow">55</span>
@@ -1012,7 +1034,7 @@ top:
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>;  @ In[7]:1 within `baz`
-define <span class=" -Color -Color-Cyan">i64</span> @julia_baz_914<span class=" -Color -Color-Yellow">()</span> #0 <span class=" -Color -Color-Yellow">{</span>
+define <span class=" -Color -Color-Cyan">i64</span> @julia_baz_904<span class=" -Color -Color-Yellow">()</span> #0 <span class=" -Color -Color-Yellow">{</span>
 top:
 ;  @ In[7]:2 within `baz`
 ; ┌ @ In[1]:6 within `foo`
@@ -1067,14 +1089,22 @@ top:
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold -Color-Bold-Green">    Updating</span> registry at `~/.julia/registries/General.toml`
-</pre></div>
-</div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold -Color-Bold-Green">   Resolving</span> package versions...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold -Color-Bold-Green">  No Changes</span> to `~/.julia/environments/v1.10/Project.toml`
-<span class=" -Color -Color-Bold -Color-Bold-Green">  No Changes</span> to `~/.julia/environments/v1.10/Manifest.toml`
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold -Color-Bold-Green">    Updating</span> `~/.julia/environments/v1.10/Project.toml`
+  [90137ffa] + StaticArrays v1.9.13
+<span class=" -Color -Color-Bold -Color-Bold-Green">    Updating</span> `~/.julia/environments/v1.10/Manifest.toml`
+  [90137ffa] + StaticArrays v1.9.13
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold -Color-Bold-Green">Precompiling</span> packages...
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>    627.5 ms<span class=" -Color -Color-Green">  ✓ </span>ConstructionBase → ConstructionBaseStaticArraysExt
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  1 dependency successfully precompiled in 2 seconds. 168 already precompiled.
 </pre></div>
 </div>
 </div>
@@ -1156,8 +1186,39 @@ top:
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold -Color-Bold-Green">   Resolving</span> package versions...
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold -Color-Bold-Green">  No Changes</span> to `~/.julia/environments/v1.10/Project.toml`
-<span class=" -Color -Color-Bold -Color-Bold-Green">  No Changes</span> to `~/.julia/environments/v1.10/Manifest.toml`
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold -Color-Bold-Green">   Installed</span> UnsafeAtomics ────── v0.3.0
+<span class=" -Color -Color-Bold -Color-Bold-Green">   Installed</span> Atomix ───────────── v1.1.1
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold -Color-Bold-Green">   Installed</span> KernelAbstractions ─ v0.9.35
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold -Color-Bold-Green">    Updating</span> `~/.julia/environments/v1.10/Project.toml`
+  [63c18a36] + KernelAbstractions v0.9.35
+<span class=" -Color -Color-Bold -Color-Bold-Green">    Updating</span> `~/.julia/environments/v1.10/Manifest.toml`
+  [79e6a3ab] + Adapt v4.3.0
+  [a9b6321e] + Atomix v1.1.1
+  [63c18a36] + KernelAbstractions v0.9.35
+  [013be700] + UnsafeAtomics v0.3.0
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold -Color-Bold-Green">Precompiling</span> packages...
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>   1651.3 ms<span class=" -Color -Color-Green">  ✓ </span>UnsafeAtomics
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>    465.2 ms<span class=" -Color -Color-Green">  ✓ </span>Atomix
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>   2173.7 ms<span class=" -Color -Color-Green">  ✓ </span>KernelAbstractions
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>    645.9 ms<span class=" -Color -Color-Green">  ✓ </span>KernelAbstractions → LinearAlgebraExt
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>    759.4 ms<span class=" -Color -Color-Green">  ✓ </span>KernelAbstractions → SparseArraysExt
+  5 dependencies successfully precompiled in 6 seconds. 172 already precompiled.
 </pre></div>
 </div>
 </div>
