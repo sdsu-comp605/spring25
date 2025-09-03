@@ -1,7 +1,7 @@
 # Book settings
 # Learn more at https://jupyterbook.org/customize/config.html
 
-title: Scientific Computing
+title: Scientific Computing Spring 25
 author: Valeria Barra
 logo: img/SDSU-comp605_logo.svg
 
@@ -23,8 +23,9 @@ execute:
 
 # Define the name of the latex output file for PDF builds
 latex:
+  use_jupyterbook_latex: true
   latex_documents:
-    targetname: book.tex
+    targetname: comp605_spring25_book.tex
 
 # Add a bibtex file so that we can create citations
 bibtex_bibfiles:
